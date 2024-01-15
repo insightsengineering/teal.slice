@@ -1,16 +1,19 @@
 #' @name ChoicesFilterState
 #' @title `FilterState` object for factor or character variable
-#' @description Manages choosing elements from a set
+#' @description Manages choosing elements from a set.
 #' @docType class
-#' @keywords internal
-#'
-#'
 #' @examples
-#' filter_state <- teal.slice:::ChoicesFilterState$new(
+#' # use non-exported function from teal.slice
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' ChoicesFilterState <- getFromNamespace("ChoicesFilterState", "teal.slice")
+#'
+#' filter_state <- ChoicesFilterState$new(
 #'   x = c(LETTERS, NA),
 #'   slice = teal_slice(varname = "x", dataname = "data")
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #' filter_state$set_state(
 #'   teal_slice(
 #'     dataname = "data",
@@ -19,15 +22,14 @@
 #'     keep_na = TRUE
 #'   )
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #'
 #' # working filter in an app
-#' library(shiny)
 #' library(shinyjs)
 #'
 #' data_choices <- c(sample(letters[1:4], 100, replace = TRUE), NA)
 #' attr(data_choices, "label") <- "lowercase letters"
-#' fs <- teal.slice:::ChoicesFilterState$new(
+#' fs <- ChoicesFilterState$new(
 #'   x = data_choices,
 #'   slice = teal_slice(
 #'     dataname = "data", varname = "variable", selected = c("a", "c"), keep_na = TRUE
@@ -36,8 +38,8 @@
 #'
 #' ui <- fluidPage(
 #'   useShinyjs(),
-#'   teal.slice:::include_css_files(pattern = "filter-panel"),
-#'   teal.slice:::include_js_files(pattern = "count-bar-labels"),
+#'   include_css_files(pattern = "filter-panel"),
+#'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("ChoicesFilterState"),
 #'     fs$ui("fs")
@@ -102,6 +104,8 @@
 #'   shinyApp(ui, server)
 #' }
 #'
+#' @keywords internal
+#'
 ChoicesFilterState <- R6::R6Class( # nolint
   "ChoicesFilterState",
   inherit = FilterState,
@@ -128,11 +132,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'   reflected in all places which refer to the same `teal_slice`.
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by `dataname`. Possible values:
-    #' \itemize{
-    #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-    #' }
+    #'
+    #' * `character(0)` (default) `varname` in the condition call will not be prefixed
+    #' * `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
+    #' * `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
+    #'
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,

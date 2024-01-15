@@ -27,9 +27,9 @@ object created using \code{\link[=teal_slice]{teal_slice()}}.}
 \item{extract_type}{(\code{character(0)}, \code{character(1)})\cr
 specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
-\item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
+\item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
+\item \code{"list"} \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}
+\item \code{"matrix"} \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}
 }}
 
 \item{...}{additional arguments to be saved as a list in \code{private$extras} field}
@@ -41,7 +41,11 @@ specifying whether condition calls should be prefixed by \code{dataname}. Possib
 Initializes \code{FilterState} depending on a variable class.\cr
 }
 \examples{
-filter_state <- teal.slice:::init_filter_state(
+# use non-exported function from teal.slice
+include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+init_filter_state <- getFromNamespace("init_filter_state", "teal.slice")
+
+filter_state <- init_filter_state(
   x = c(1:10, NA, Inf),
   x_reactive = reactive(c(1:10, NA, Inf)),
   slice = teal_slice(
@@ -51,22 +55,23 @@ filter_state <- teal.slice:::init_filter_state(
   extract_type = "matrix"
 )
 
-shiny::isolate(filter_state$get_call())
-app <- shinyApp(
-  ui = fluidPage(
-    filter_state$ui(id = "app"),
-    verbatimTextOutput("call")
-  ),
-  server = function(input, output, session) {
-    filter_state$server("app")
+isolate(filter_state$get_call())
 
-    output$call <- renderText(
-      deparse1(filter_state$get_call(), collapse = "\n")
-    )
-  }
+ui <- fluidPage(
+  filter_state$ui(id = "app"),
+  verbatimTextOutput("call")
 )
-if (interactive()) {
-  shinyApp(app$ui, app$server)
+server <- function(input, output, session) {
+  filter_state$server("app")
+
+  output$call <- renderText(
+    deparse1(filter_state$get_call(), collapse = "\n")
+  )
 }
+
+if (interactive()) {
+  shinyApp(ui, server)
+}
+
 }
 \keyword{internal}

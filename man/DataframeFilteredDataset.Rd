@@ -2,15 +2,17 @@
 % Please edit documentation in R/FilteredDatasetDataframe.R
 \name{DataframeFilteredDataset}
 \alias{DataframeFilteredDataset}
-\title{The \code{DataframeFilteredDataset} R6 class}
+\title{The \code{DataframeFilteredDataset} \code{R6} class}
 \description{
-The \code{DataframeFilteredDataset} R6 class
+The \code{DataframeFilteredDataset} \code{R6} class
 
-The \code{DataframeFilteredDataset} R6 class
+The \code{DataframeFilteredDataset} \code{R6} class
 }
 \examples{
-library(shiny)
-ds <- teal.slice:::DataframeFilteredDataset$new(iris, "iris")
+# use non-exported function from teal.slice
+DataframeFilteredDataset <- getFromNamespace("DataframeFilteredDataset", "teal.slice")
+
+ds <- DataframeFilteredDataset$new(iris, "iris")
 ds$set_filter_state(
   teal_slices(
     teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
@@ -20,18 +22,14 @@ ds$set_filter_state(
 isolate(ds$get_filter_state())
 isolate(ds$get_call())
 
-## ------------------------------------------------
-## Method `DataframeFilteredDataset$set_filter_state`
-## ------------------------------------------------
-
-dataset <- teal.slice:::DataframeFilteredDataset$new(iris, "iris")
+## set_filter_state
+dataset <- DataframeFilteredDataset$new(iris, "iris")
 fs <- teal_slices(
   teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
   teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
 )
 dataset$set_filter_state(state = fs)
-shiny::isolate(dataset$get_filter_state())
-
+isolate(dataset$get_filter_state())
 }
 \keyword{internal}
 \section{Super class}{
@@ -163,21 +161,6 @@ Set filter state
 \subsection{Returns}{
 \code{NULL} invisibly
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{dataset <- teal.slice:::DataframeFilteredDataset$new(iris, "iris")
-fs <- teal_slices(
-  teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
-  teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
-)
-dataset$set_filter_state(state = fs)
-shiny::isolate(dataset$get_filter_state())
-
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DataframeFilteredDataset-remove_filter_state"></a>}}

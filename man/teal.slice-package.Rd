@@ -4,9 +4,9 @@
 \name{teal.slice-package}
 \alias{teal.slice}
 \alias{teal.slice-package}
-\title{teal.slice: Interactive Exploration of Clinical Trials Data}
+\title{\code{teal.slice}: Interactive Exploration of Clinical Trials Data}
 \description{
-\code{teal.slice} is an R library used in the development of \code{teal} \code{shiny} modules.
+\code{teal.slice} is an \code{R} library used in the development of \code{teal} \code{shiny} modules.
 }
 \seealso{
 Useful links:

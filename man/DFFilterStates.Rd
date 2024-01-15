@@ -4,12 +4,15 @@
 \alias{DFFilterStates}
 \title{\code{FilterStates} subclass for data frames}
 \description{
-Handles filter states in a \code{data.frame}
+Handles filter states in a \code{data.frame}.
 }
 \examples{
-# working filters in an app
+# use non-exported function from teal.slice
+include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+init_filter_states <- getFromNamespace("init_filter_states", "teal.slice")
 
-library(shiny)
 library(shinyjs)
 
 # create data frame to filter
@@ -31,7 +34,6 @@ data_na <- data.frame(
 )
 data_df <- rbind(data_df, data_na)
 
-
 # initiate `FilterStates` object
 filter_states_df <- init_filter_states(
   data = data_df,
@@ -41,8 +43,8 @@ filter_states_df <- init_filter_states(
 
 ui <- fluidPage(
   useShinyjs(),
-  teal.slice:::include_css_files(pattern = "filter-panel"),
-  teal.slice:::include_js_files(pattern = "count-bar-labels"),
+  include_css_files(pattern = "filter-panel"),
+  include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("Active filters"),
     filter_states_df$ui_active("fsdf")
@@ -110,18 +112,42 @@ server <- function(input, output, session) {
     )
     filter_states_df$set_filter_state(state = filter_state)
   })
-  observeEvent(input$button7_df, filter_states_df$remove_filter_state(state_id = "NUM1"))
-  observeEvent(input$button8_df, filter_states_df$remove_filter_state(state_id = "NUM2"))
-  observeEvent(input$button9_df, filter_states_df$remove_filter_state(state_id = "CHAR1"))
-  observeEvent(input$button10_df, filter_states_df$remove_filter_state(state_id = "CHAR2"))
-  observeEvent(input$button11_df, filter_states_df$remove_filter_state(state_id = "DATE"))
-  observeEvent(input$button12_df, filter_states_df$remove_filter_state(state_id = "DATETIME"))
+
+  observeEvent(input$button7_df, {
+    filter_state <- teal_slices(teal_slice("dataset", "NUM1"))
+    filter_states_df$remove_filter_state(filter_state)
+  })
+  observeEvent(input$button8_df, {
+    filter_state <- teal_slices(teal_slice("dataset", "NUM2"))
+    filter_states_df$remove_filter_state(filter_state)
+  })
+  observeEvent(input$button9_df, {
+    filter_state <- teal_slices(teal_slice("dataset", "CHAR1"))
+    filter_states_df$remove_filter_state(filter_state)
+  })
+  observeEvent(input$button10_df, {
+    filter_state <- teal_slices(teal_slice("dataset", "CHAR2"))
+    filter_states_df$remove_filter_state(filter_state)
+  })
+  observeEvent(input$button11_df, {
+    filter_state <- teal_slices(
+      teal_slice("dataset", "DATE")
+    )
+    filter_states_df$remove_filter_state(filter_state)
+  })
+  observeEvent(input$button12_df, {
+    filter_state <- teal_slices(
+      teal_slice("dataset", "DATETIME", selected = as.POSIXct(c("2020-01-01", "2020-02-02")))
+    )
+    filter_states_df$remove_filter_state(filter_state)
+  })
+
   observeEvent(input$button0_df, filter_states_df$clear_filter_states())
 }
+
 if (interactive()) {
   shinyApp(ui, server)
 }
-
 }
 \keyword{internal}
 \section{Super class}{
@@ -176,7 +202,7 @@ which means that when calling the subset function associated with this class
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{(\code{data.frame})\cr
-the R object which \code{dplyr::filter} function is applied on.}
+the \code{R} object which \code{dplyr::filter} function is applied on.}
 
 \item{\code{data_reactive}}{(\verb{function(sid)})\cr
 should return a \code{data.frame} object or \code{NULL}.

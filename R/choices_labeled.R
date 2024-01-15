@@ -1,4 +1,4 @@
-#' Set "`<choice>:<label>`" type of Names
+#' Set "`<choice>:<label>`" type of names
 #'
 #' @description `r lifecycle::badge("stable")`
 #' This is often useful for as it marks up the drop-down boxes for [shiny::selectInput()].

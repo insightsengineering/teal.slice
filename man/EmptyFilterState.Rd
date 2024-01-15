@@ -5,17 +5,21 @@
 \alias{EmptyFilterState}
 \title{\code{FilterState} object for empty variable}
 \description{
-\code{FilterState} subclass representing an empty variable
+\code{FilterState} subclass representing an empty variable.
 }
 \examples{
-filter_state <- teal.slice:::EmptyFilterState$new(
+# use non-exported function from teal.slice
+include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+EmptyFilterState <- getFromNamespace("EmptyFilterState", "teal.slice")
+
+filter_state <- EmptyFilterState$new(
   x = NA,
   slice = teal_slice(varname = "x", dataname = "data"),
   extract_type = character(0)
 )
-shiny::isolate(filter_state$get_call())
+isolate(filter_state$get_call())
 filter_state$set_state(teal_slice(dataname = "data", varname = "x", keep_na = TRUE))
-shiny::isolate(filter_state$get_call())
+isolate(filter_state$get_call())
 
 }
 \keyword{internal}
@@ -72,9 +76,9 @@ dataset are not shown.}
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
-\item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
+\item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
+\item \code{"list"} \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}
+\item \code{"matrix"} \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}
 }}
 
 \item{\code{slice}}{(\code{teal_slice})\cr

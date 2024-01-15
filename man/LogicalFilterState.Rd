@@ -5,33 +5,39 @@
 \alias{LogicalFilterState}
 \title{\code{FilterState} object for logical variable}
 \description{
-Manages choosing a logical state
+Manages choosing a logical state.
 }
 \examples{
-filter_state <- teal.slice:::LogicalFilterState$new(
+# use non-exported function from teal.slice
+include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+LogicalFilterState <- getFromNamespace("LogicalFilterState", "teal.slice")
+
+
+filter_state <- LogicalFilterState$new(
   x = sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
   slice = teal_slice(varname = "x", dataname = "data")
 )
-shiny::isolate(filter_state$get_call())
+isolate(filter_state$get_call())
 filter_state$set_state(
   teal_slice(dataname = "data", varname = "x", selected = TRUE, keep_na = TRUE)
 )
-shiny::isolate(filter_state$get_call())
+isolate(filter_state$get_call())
 
 # working filter in an app
-library(shiny)
 library(shinyjs)
 
 data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
-fs <- teal.slice:::LogicalFilterState$new(
+fs <- LogicalFilterState$new(
   x = data_logical,
   slice = teal_slice(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
 )
 
 ui <- fluidPage(
   useShinyjs(),
-  teal.slice:::include_css_files(pattern = "filter-panel"),
-  teal.slice:::include_js_files(pattern = "count-bar-labels"),
+  include_css_files(pattern = "filter-panel"),
+  include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("LogicalFilterState"),
     fs$ui("fs")
@@ -139,9 +145,9 @@ dataset are not shown.}
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
-\item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
+\item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
+\item \code{"list"} \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}
+\item \code{"matrix"} \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}
 }}
 
 \item{\code{slice}}{(\code{teal_slice})\cr

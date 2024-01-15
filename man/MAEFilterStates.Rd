@@ -4,7 +4,7 @@
 \alias{MAEFilterStates}
 \title{\code{FilterStates} subclass for \code{MultiAssayExperiments}}
 \description{
-Handles filter states in a \code{MultiAssayExperiment}
+Handles filter states in a \code{MultiAssayExperiment}.
 }
 \keyword{internal}
 \section{Super class}{
@@ -55,7 +55,7 @@ Initialize \code{MAEFilterStates} object
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{(\code{MultiAssayExperiment})\cr
-the R object which \code{MultiAssayExperiment::subsetByColData} function is applied on.}
+the \code{R} object which \code{MultiAssayExperiment::subsetByColData} function is applied on.}
 
 \item{\code{data_reactive}}{(\verb{function(sid)})\cr
 should return a \code{MultiAssayExperiment} object or \code{NULL}.

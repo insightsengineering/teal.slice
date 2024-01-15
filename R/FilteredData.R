@@ -28,14 +28,14 @@
 #'
 #' Common arguments are:
 #' 1. `filtered`: whether to return a filtered result or not
-#' 2. `dataname`: the name of one of the datasets in this `FilteredData`
+#' 2. `dataname`: the name of one of the datasets in this `FilteredData` object
 #' 3. `varname`: one of the columns in a dataset
 #'
-#' @keywords internal
-#'
 #' @examples
-#' library(shiny)
-#' datasets <- teal.slice:::FilteredData$new(list(iris = iris, mtcars = mtcars))
+#' # use non-exported function from teal.slice
+#' FilteredData <- getFromNamespace("FilteredData", "teal.slice")
+#'
+#' datasets <- FilteredData$new(list(iris = iris, mtcars = mtcars))
 #'
 #' # get datanames
 #' datasets$datanames()
@@ -52,6 +52,36 @@
 #' isolate(datasets$get_filter_state())
 #' isolate(datasets$get_call("iris"))
 #' isolate(datasets$get_call("mtcars"))
+#'
+#' ### set_filter_state
+#'
+#' utils::data(miniACC, package = "MultiAssayExperiment")
+#' datasets <- FilteredData$new(list(iris = iris, mae = miniACC))
+#' fs <-
+#'   teal_slices(
+#'     teal_slice(
+#'       dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+#'       keep_na = TRUE, keep_inf = FALSE
+#'     ),
+#'     teal_slice(
+#'       dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
+#'       keep_na = FALSE
+#'     ),
+#'     teal_slice(
+#'       dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
+#'       keep_na = TRUE, keep_inf = FALSE
+#'     ),
+#'     teal_slice(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
+#'     teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
+#'     teal_slice(
+#'       dataname = "mae", varname = "ARRAY_TYPE",
+#'       selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset"
+#'     )
+#'   )
+#' datasets$set_filter_state(state = fs)
+#' isolate(datasets$get_filter_state())
+#'
+#' @keywords internal
 #'
 FilteredData <- R6::R6Class( # nolint
   "FilteredData",
@@ -121,7 +151,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' Unlike adding new filter from the column, these filters can come with some prespecified settings.
     #' `teal_slices` are wrapped in a `reactive` so they can be updated from elsewhere in the app.
-    #' Filters passed in `x` are limited to those that can be set for this `FilteredData`,
+    #' Filters passed in `x` are limited to those that can be set for this `FilteredData` object,
     #' i.e. they have the correct `dataname` and `varname` (waived `teal_slice_fixed` as they do not have `varname`).
     #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
     #' @param x (`reactive`)\cr
@@ -365,28 +395,6 @@ FilteredData <- R6::R6Class( # nolint
     #' @param state (`teal_slices`) object
     #'
     #' @return `NULL` invisibly
-    #'
-    #' @examples
-    #' utils::data(miniACC, package = "MultiAssayExperiment")
-    #'
-    #' datasets <- teal.slice:::FilteredData$new(list(iris = iris, mae = miniACC))
-    #'
-    #' fs <-
-    #'   teal_slices(
-    #'     teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
-    #'                keep_na = TRUE, keep_inf = FALSE),
-    #'     teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
-    #'                keep_na = FALSE),
-    #'     teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
-    #'                keep_na = TRUE, keep_inf = FALSE),
-    #'     teal_slice(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    #'     teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    #'     teal_slice(dataname = "mae", varname = "ARRAY_TYPE",
-    #'                selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
-    #'   )
-    #' datasets$set_filter_state(state = fs)
-    #' shiny::isolate(datasets$get_filter_state())
-    #'
     set_filter_state = function(state) {
       shiny::isolate({
         logger::log_trace("{ class(self)[1] }$set_filter_state initializing")

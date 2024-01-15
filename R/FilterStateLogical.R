@@ -1,35 +1,38 @@
 #' @name LogicalFilterState
 #' @title `FilterState` object for logical variable
-#' @description Manages choosing a logical state
+#' @description Manages choosing a logical state.
 #' @docType class
-#' @keywords internal
-#'
-#'
 #' @examples
-#' filter_state <- teal.slice:::LogicalFilterState$new(
+#' # use non-exported function from teal.slice
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' LogicalFilterState <- getFromNamespace("LogicalFilterState", "teal.slice")
+#'
+#'
+#' filter_state <- LogicalFilterState$new(
 #'   x = sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
 #'   slice = teal_slice(varname = "x", dataname = "data")
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #' filter_state$set_state(
 #'   teal_slice(dataname = "data", varname = "x", selected = TRUE, keep_na = TRUE)
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #'
 #' # working filter in an app
-#' library(shiny)
 #' library(shinyjs)
 #'
 #' data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
-#' fs <- teal.slice:::LogicalFilterState$new(
+#' fs <- LogicalFilterState$new(
 #'   x = data_logical,
 #'   slice = teal_slice(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
 #' )
 #'
 #' ui <- fluidPage(
 #'   useShinyjs(),
-#'   teal.slice:::include_css_files(pattern = "filter-panel"),
-#'   teal.slice:::include_js_files(pattern = "count-bar-labels"),
+#'   include_css_files(pattern = "filter-panel"),
+#'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("LogicalFilterState"),
 #'     fs$ui("fs")
@@ -82,6 +85,8 @@
 #'   shinyApp(ui, server)
 #' }
 #'
+#' @keywords internal
+#'
 LogicalFilterState <- R6::R6Class( # nolint
   "LogicalFilterState",
   inherit = FilterState,
@@ -107,11 +112,11 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'   reflected in all places which refer to the same `teal_slice`.
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by `dataname`. Possible values:
-    #' \itemize{
-    #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-    #' }
+    #'
+    #' * `character(0)` (default) `varname` in the condition call will not be prefixed
+    #' * `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
+    #' * `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
+    #'
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,

@@ -14,7 +14,7 @@ init_filter_states(
 }
 \arguments{
 \item{data}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
-the R object which \code{subset} function is applied on.}
+the \code{R} object which \code{subset} function is applied on.}
 
 \item{data_reactive}{(\verb{function(sid)})\cr
 should return an object of the same type as \code{data} or \code{NULL}.
@@ -35,38 +35,42 @@ text label value.}
 additional arguments for specific classes: keys.}
 }
 \description{
-Initialize \code{FilterStates} object
+Initialize \code{FilterStates} object.
 }
 \examples{
-library(shiny)
+# use non-exported function from teal.slice
+init_filter_states <- getFromNamespace("init_filter_states", "teal.slice")
+
 df <- data.frame(
   character = letters,
   numeric = seq_along(letters),
   date = seq(Sys.Date(), length.out = length(letters), by = "1 day"),
   datetime = seq(Sys.time(), length.out = length(letters), by = "33.33 hours")
 )
-rf <- teal.slice:::init_filter_states(
+rf <- init_filter_states(
   data = df,
   dataname = "DF"
 )
-app <- shinyApp(
-  ui = fluidPage(
-    actionButton("clear", span(icon("xmark"), "Remove all filters")),
-    rf$ui_add(id = "add"),
-    rf$ui_active("states"),
-    verbatimTextOutput("expr"),
-  ),
-  server = function(input, output, session) {
-    rf$srv_add(id = "add")
-    rf$srv_active(id = "states")
-    output$expr <- renderText({
-      deparse1(rf$get_call(), collapse = "\n")
-    })
-    observeEvent(input$clear, rf$state_list_empty())
-  }
+
+ui <- fluidPage(
+  actionButton("clear", span(icon("xmark"), "Remove all filters")),
+  rf$ui_add(id = "add"),
+  rf$ui_active("states"),
+  verbatimTextOutput("expr"),
 )
-if (interactive()) {
-  shinyApp(app$ui, app$server)
+
+server <- function(input, output, session) {
+  rf$srv_add(id = "add")
+  rf$srv_active(id = "states")
+  output$expr <- renderText({
+    deparse1(rf$get_call(), collapse = "\n")
+  })
+  observeEvent(input$clear, rf$clear_filter_states())
 }
+
+if (interactive()) {
+  shinyApp(ui, server)
+}
+
 }
 \keyword{internal}

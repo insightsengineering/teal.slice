@@ -1,19 +1,22 @@
 #' @name EmptyFilterState
 #' @title `FilterState` object for empty variable
-#' @description `FilterState` subclass representing an empty variable
+#' @description `FilterState` subclass representing an empty variable.
 #' @docType class
-#' @keywords internal
-#'
-#'
 #' @examples
-#' filter_state <- teal.slice:::EmptyFilterState$new(
+#' # use non-exported function from teal.slice
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' EmptyFilterState <- getFromNamespace("EmptyFilterState", "teal.slice")
+#'
+#' filter_state <- EmptyFilterState$new(
 #'   x = NA,
 #'   slice = teal_slice(varname = "x", dataname = "data"),
 #'   extract_type = character(0)
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #' filter_state$set_state(teal_slice(dataname = "data", varname = "x", keep_na = TRUE))
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
+#'
+#' @keywords internal
 #'
 EmptyFilterState <- R6::R6Class( # nolint
   "EmptyFilterState",
@@ -40,11 +43,11 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'   reflected in all places which refer to the same `teal_slice`.
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by `dataname`. Possible values:
-    #' \itemize{
-    #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-    #' }
+    #'
+    #' * `character(0)` (default) `varname` in the condition call will not be prefixed
+    #' * `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
+    #' * `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
+    #'
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,

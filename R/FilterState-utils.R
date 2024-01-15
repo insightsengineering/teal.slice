@@ -12,17 +12,19 @@
 #'   object created using [teal_slice()].
 #' @param extract_type (`character(0)`, `character(1)`)\cr
 #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
-#' \itemize{
-#' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-#' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-#' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-#' }
+#'
+#' * `character(0)` (default) `varname` in the condition call will not be prefixed
+#' * `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
+#' * `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
+#'
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #'
-#' @keywords internal
-#'
 #' @examples
-#' filter_state <- teal.slice:::init_filter_state(
+#' # use non-exported function from teal.slice
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' init_filter_state <- getFromNamespace("init_filter_state", "teal.slice")
+#'
+#' filter_state <- init_filter_state(
 #'   x = c(1:10, NA, Inf),
 #'   x_reactive = reactive(c(1:10, NA, Inf)),
 #'   slice = teal_slice(
@@ -32,24 +34,26 @@
 #'   extract_type = "matrix"
 #' )
 #'
-#' shiny::isolate(filter_state$get_call())
-#' app <- shinyApp(
-#'   ui = fluidPage(
-#'     filter_state$ui(id = "app"),
-#'     verbatimTextOutput("call")
-#'   ),
-#'   server = function(input, output, session) {
-#'     filter_state$server("app")
+#' isolate(filter_state$get_call())
 #'
-#'     output$call <- renderText(
-#'       deparse1(filter_state$get_call(), collapse = "\n")
-#'     )
-#'   }
+#' ui <- fluidPage(
+#'   filter_state$ui(id = "app"),
+#'   verbatimTextOutput("call")
 #' )
-#' if (interactive()) {
-#'   shinyApp(app$ui, app$server)
+#' server <- function(input, output, session) {
+#'   filter_state$server("app")
+#'
+#'   output$call <- renderText(
+#'     deparse1(filter_state$get_call(), collapse = "\n")
+#'   )
 #' }
+#'
+#' if (interactive()) {
+#'   shinyApp(ui, server)
+#' }
+#'
 #' @return `FilterState` object
+#' @keywords internal
 init_filter_state <- function(x,
                               x_reactive = reactive(NULL),
                               slice,
@@ -239,12 +243,6 @@ init_filter_state_expr <- function(slice) {
 #'              set to NULL to omit adding the alpha channel
 #'
 #' @return Named `character(1)` containing a hexadecimal color representation.
-#'
-#' @examples
-#' teal.slice:::fetch_bs_color("primary")
-#' teal.slice:::fetch_bs_color("danger", 0.35)
-#' teal.slice:::fetch_bs_color("danger", "80")
-#'
 #' @keywords internal
 #'
 fetch_bs_color <- function(color, alpha = NULL) {

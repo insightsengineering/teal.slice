@@ -1,5 +1,5 @@
 #' @title `FilterStates` subclass for `MultiAssayExperiments`
-#' @description Handles filter states in a `MultiAssayExperiment`
+#' @description Handles filter states in a `MultiAssayExperiment`.
 #' @keywords internal
 #'
 #'
@@ -14,7 +14,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' Initialize `MAEFilterStates` object
     #'
     #' @param data (`MultiAssayExperiment`)\cr
-    #'   the R object which `MultiAssayExperiment::subsetByColData` function is applied on.
+    #'   the `R` object which `MultiAssayExperiment::subsetByColData` function is applied on.
     #' @param data_reactive (`function(sid)`)\cr
     #'   should return a `MultiAssayExperiment` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
