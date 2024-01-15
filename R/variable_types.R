@@ -5,7 +5,32 @@
 #'   Set to `NULL` to get classes of all columns.
 #'
 #' @return Character vector of classes of `columns` from provided `data`.
-#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
+#' @examples
+#' # use non-exported function from teal.slice
+#' variable_types <- getFromNamespace("variable_types", "teal.slice")
+#'
+#' variable_types(
+#'   data.frame(
+#'     x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
+#'     stringsAsFactors = FALSE
+#'   ),
+#'   "x"
+#' )
+#'
+#' variable_types(
+#'   data.frame(
+#'     x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
+#'     stringsAsFactors = FALSE
+#'   ),
+#'   c("x", "z")
+#' )
+#'
+#' variable_types(
+#'   data.frame(
+#'     x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
+#'     stringsAsFactors = FALSE
+#'   )
+#' )
 #' @keywords internal
 #'
 variable_types <- function(data, columns = NULL) {

@@ -198,7 +198,7 @@ ui <- fluidPage(
     column(
       width = 9,
       id = "teal_primary_col",
-      shiny::tagList(
+      tagList(
         actionButton("add_species_filter", "Set iris$Species filter"),
         actionButton("remove_species_filter", "Remove iris$Species filter"),
         actionButton("remove_all_filters", "Remove all filters"),

@@ -16,7 +16,11 @@ A \code{c} call.
 This function takes a vector of values and returns a \code{c} call. If the vector
 has only one element, the element is returned directly.
 }
-\seealso{
-examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
+\examples{
+# use non-exported function from teal.slice
+make_c_call <- getFromNamespace("make_c_call", "teal.slice")
+make_c_call(1:3)
+make_c_call(1)
+
 }
 \keyword{internal}

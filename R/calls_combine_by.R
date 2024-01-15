@@ -13,8 +13,18 @@
 #' @return
 #' A `call` where elements of `calls` are composed with `operator` or `NULL` if `calls` is an empty list.
 #'
-#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
+#' @return call or NULL, if `calls` is an empty list
+#' @return a combined `call`
+#' @examples
+#' # use non-exported function from teal.slice
+#' calls_combine_by <- getFromNamespace("calls_combine_by", "teal.slice")
 #'
+#' calls <- list(
+#'   quote(SEX == "F"), # subsetting on factor
+#'   quote(AGE >= 20 & AGE <= 50), # subsetting on range
+#'   quote(!SURV) # subsetting on logical
+#' )
+#' calls_combine_by(calls, "&")
 #' @keywords internal
 calls_combine_by <- function(calls, operator) {
   checkmate::assert_list(calls)
