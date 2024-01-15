@@ -52,7 +52,7 @@
 #' isolate(datasets$get_filter_state())
 #' isolate(datasets$get_call("iris"))
 #' isolate(datasets$get_call("mtcars"))
-#'
+#' @examplesIf requireNamespace("MultiAssayExperiment")
 #' ### set_filter_state
 #'
 #' utils::data(miniACC, package = "MultiAssayExperiment")
