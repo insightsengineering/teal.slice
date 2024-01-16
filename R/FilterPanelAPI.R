@@ -43,7 +43,7 @@
 #'
 FilterPanelAPI <- R6::R6Class( # nolint
   "FilterPanelAPI",
-  # public methods ====
+  # public methods ----
   public = list(
     #' @description
     #' Initialize a `FilterPanelAPI` object.
@@ -106,7 +106,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
       invisible(NULL)
     }
   ),
-  # private methods ====
+  # private methods ----
   private = list(
     filtered_data = NULL
   )

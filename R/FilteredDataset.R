@@ -13,7 +13,7 @@
 #' @keywords internal
 FilteredDataset <- R6::R6Class( # nolint
   "FilteredDataset",
-  # public methods ====
+  # public methods ----
   public = list(
     #' @description
     #' Initializes this `FilteredDataset` object.
@@ -377,7 +377,7 @@ FilteredDataset <- R6::R6Class( # nolint
       )
     }
   ),
-  # private fields ====
+  # private fields ----
   private = list(
     dataset = NULL, # data.frame or MultiAssayExperiment
     data_filtered = NULL,
