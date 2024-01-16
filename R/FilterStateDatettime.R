@@ -1,3 +1,5 @@
+# DatetimeFilterState ------
+
 #' @rdname DatetimeFilterState
 #' @docType class
 #'

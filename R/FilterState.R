@@ -1,3 +1,5 @@
+# FilterState ------
+
 #' @name FilterState
 #' @docType class
 #'
@@ -281,11 +283,11 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny module UI.
+    #' Shiny module `ui`.
     #'
     #' @param id (`character(1)`)\cr
     #'  shiny element (module instance) id;
-    #'  the UI for this class contains simple message stating that it is not supported
+    #'  the `ui` for this class contains simple message stating that it is not supported
     #' @param parent_id (`character(1)`) id of the `FilterStates` card container
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)
@@ -403,7 +405,7 @@ FilterState <- R6::R6Class( # nolint
 
     # private methods ----
 
-    ## setters for state features ----
+    # setters for state features ----
 
     # @description
     # Set values that can be selected from.
@@ -493,7 +495,7 @@ FilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    ## getters for state features ----
+    # getters for state features ----
 
     # @description
     # Returns dataname.
@@ -562,7 +564,7 @@ FilterState <- R6::R6Class( # nolint
       shiny::isolate(isTRUE(private$teal_slice$multiple))
     },
 
-    ## other ----
+    # other ----
 
     # @description
     # Returns variable label.
@@ -658,7 +660,7 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    ## shiny modules -----
+    # shiny modules -----
 
     # @description
     # Server module to display filter summary

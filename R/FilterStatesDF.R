@@ -1,3 +1,8 @@
+# DFFilterStates ------
+
+#' @name DFFilterStates
+#' @docType class
+#'
 #' @title `FilterStates` subclass for data frames
 #'
 #' @description Handles filter states in a `data.frame`.

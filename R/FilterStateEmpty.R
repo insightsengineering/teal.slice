@@ -1,3 +1,5 @@
+# EmptyFilterState ------
+
 #' @name EmptyFilterState
 #' @docType class
 #'

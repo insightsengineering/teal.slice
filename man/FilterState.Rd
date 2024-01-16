@@ -222,7 +222,7 @@ signaling that remove button has been clicked
 \if{html}{\out{<a id="method-FilterState-ui"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-ui}{}}}
 \subsection{Method \code{ui()}}{
-Shiny module UI.
+Shiny module \code{ui}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id, parent_id = "cards")}\if{html}{\out{</div>}}
 }
@@ -232,7 +232,7 @@ Shiny module UI.
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 shiny element (module instance) id;
-the UI for this class contains simple message stating that it is not supported}
+the \code{ui} for this class contains simple message stating that it is not supported}
 
 \item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}
 }

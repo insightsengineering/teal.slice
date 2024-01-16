@@ -1,3 +1,7 @@
+# FilterStates ------
+
+#' @name FilterStates
+#' @docType class
 #' @title `FilterStates` `R6` class
 #'
 #' @description
@@ -188,7 +192,7 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Remove one or more `FilterState`s from the `state_list` along with their UI elements.
+    #' Remove one or more `FilterState`s from the `state_list` along with their `ui` elements.
     #'
     #' @param state (`teal_slices`)\cr
     #'   specifying `FilterState` objects to remove;
@@ -301,7 +305,7 @@ FilterStates <- R6::R6Class( # nolint
     # shiny modules ----
 
     #' @description
-    #' Shiny UI element that stores `FilterState` UI elements.
+    #' Shiny `ui` element that stores `FilterState` `ui` elements.
     #' Populated with elements created with `renderUI` in the module server.
     #'
     #' @param id (`character(1)`)\cr
@@ -392,7 +396,7 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny UI module to add filter variable.
+    #' Shiny `ui` module to add filter variable.
     #'
     #' @param id (`character(1)`)\cr
     #'  shiny element (module instance) id
@@ -422,7 +426,7 @@ FilterStates <- R6::R6Class( # nolint
     #' Removing a filter variable adds it back to available choices.
     #'
     #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #'   an id string that corresponds with the id used to call the module's `ui` function.
     #'
     #' @return `moduleServer` function which returns `NULL`
     srv_add = function(id) {

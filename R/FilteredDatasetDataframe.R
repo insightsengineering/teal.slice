@@ -1,4 +1,7 @@
 # DataframeFilteredDataset ------
+
+#' @name DataframeFilteredDataset
+#' @docType class
 #' @title The `DataframeFilteredDataset` `R6` class
 #' @examples
 #' # use non-exported function from teal.slice
@@ -28,11 +31,11 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
   classname = "DataframeFilteredDataset",
   inherit = FilteredDataset,
 
-  ## Public Fields ----
+  # public fields ----
   public = list(
 
     #' @description
-    #' Initializes this `DataframeFilteredDataset` object
+    #' Initializes this `DataframeFilteredDataset` object.
     #'
     #' @param dataset (`data.frame`)\cr
     #'  single data.frame for which filters are rendered
@@ -112,7 +115,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets the filter expression
+    #' Gets the filter expression.
     #'
     #' This functions returns filter calls equivalent to selected items
     #' within each of `filter_states`. Configuration of the calls is constant and
@@ -175,7 +178,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set filter state
+    #' Set filter state.
     #'
     #' @param state (`teal_slices`)
     #' @return `NULL` invisibly
@@ -193,7 +196,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Remove one or more `FilterState` form a `FilteredDataset`
+    #' Remove one or more `FilterState` form a `FilteredDataset`.
     #'
     #' @param state (`teal_slices`)\cr
     #'   specifying `FilterState` objects to remove;
@@ -217,13 +220,12 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' UI module to add filter variable for this dataset
+    #' `ui` module to add filter variable for this dataset.
     #'
-    #' UI module to add filter variable for this dataset
     #' @param id (`character(1)`)\cr
     #'  identifier of the element - preferably containing dataset name
     #'
-    #' @return function - shiny UI module
+    #' @return function - shiny `ui` module
     ui_add = function(id) {
       ns <- NS(id)
       tagList(
@@ -233,7 +235,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Get number of observations based on given keys
+    #' Get number of observations based on given keys.
     #' The output shows the comparison between `filtered_dataset`
     #' function parameter and the dataset inside self
     #' @return `list` containing character `#filtered/#not_filtered`
@@ -266,7 +268,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     }
   ),
 
-  ## Private Fields ----
+  # private fields ----
   private = list(
     parent_name = character(0),
     join_keys = character(0)

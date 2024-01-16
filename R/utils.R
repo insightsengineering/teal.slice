@@ -26,7 +26,7 @@ check_simple_name <- function(name) {
 #'
 #' `system.file` should not be used to access files in other packages, it does
 #' not work with `devtools`. Therefore, we redefine this method in each package
-#' as needed. Thus, we do not export this method
+#' as needed. Thus, we do not export this method.
 #'
 #' @param pattern (`character`) pattern of files to be included, passed to `system.file`
 #' @param except (`character`) vector of basename filenames to be excluded

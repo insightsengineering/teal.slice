@@ -1,3 +1,5 @@
+# RangeFilterState ------
+
 #' @name RangeFilterState
 #' @docType class
 #'

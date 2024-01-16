@@ -1,3 +1,5 @@
+# ChoicesFilterState ------
+
 #' @name ChoicesFilterState
 #' @docType class
 #'

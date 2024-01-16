@@ -3,7 +3,7 @@
 \docType{class}
 \name{FilterStateExpr}
 \alias{FilterStateExpr}
-\title{\code{FilterStateExpr} Class}
+\title{\code{FilterStateExpr} \code{R6} class}
 \description{
 Class to handle filter expression.
 }
@@ -79,7 +79,7 @@ if (interactive()) {
 \if{html}{\out{<a id="method-FilterStateExpr-new"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{FilterStateExpr} object
+Initialize a \code{FilterStateExpr} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$new(slice)}\if{html}{\out{</div>}}
 }
@@ -172,7 +172,7 @@ Sets filtering state.
 \if{html}{\out{<a id="method-FilterStateExpr-get_call"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-get_call}{}}}
 \subsection{Method \code{get_call()}}{
-Get reproducible call
+Get reproducible call.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$get_call(dataname)}\if{html}{\out{</div>}}
 }
@@ -232,7 +232,7 @@ signaling that remove button has been clicked
 \if{html}{\out{<a id="method-FilterStateExpr-ui"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-ui}{}}}
 \subsection{Method \code{ui()}}{
-Shiny module UI.
+Shiny module \code{ui}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$ui(id, parent_id = "cards")}\if{html}{\out{</div>}}
 }
@@ -242,7 +242,7 @@ Shiny module UI.
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 shiny element (module instance) id;
-the UI for this class contains simple message stating that it is not supported}
+the \code{ui} for this class contains simple message stating that it is not supported}
 
 \item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}
 }

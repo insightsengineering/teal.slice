@@ -1,3 +1,5 @@
+# DateFilterState ------
+
 #' @name DateFilterState
 #' @docType class
 #'
@@ -112,7 +114,7 @@ DateFilterState <- R6::R6Class( # nolint
   public = list(
 
     #' @description
-    #' Initialize a `FilterState` object
+    #' Initialize a `FilterState` object.
     #'
     #' @param x (`Date`)\cr
     #'   values of the variable used in filter

@@ -1,7 +1,10 @@
+# SEFilterStates ------
+
+#' @name SEFilterStates
+#' @docType class
 #' @title `FilterStates` subclass for `SummarizedExperiments`
 #' @description Handles filter states in a `SummaryExperiment`.
 #' @keywords internal
-#'
 #'
 SEFilterStates <- R6::R6Class( # nolint
   classname = "SEFilterStates",
@@ -9,9 +12,8 @@ SEFilterStates <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
-    #' @description Initialize `SEFilterStates` object
-    #'
-    #' Initialize `SEFilterStates` object
+    #' @description
+    #' Initialize `SEFilterStates` object.
     #'
     #' @param data (`SummarizedExperiment`)\cr
     #'   the `R` object which `subset` function is applied on.
@@ -91,7 +93,7 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny UI module to add filter variable.
+    #' Shiny `ui` module to add filter variable.
     #' @param id (`character(1)`)\cr
     #'  id of shiny module
     #' @return `shiny.tag`
@@ -146,7 +148,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #' `rowData`.
     #'
     #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #'   an id string that corresponds with the id used to call the module's `ui` function.
     #' @return `moduleServer` function which returns `NULL`
     srv_add = function(id) {
       data <- private$data

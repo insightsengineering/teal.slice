@@ -9,7 +9,7 @@
 \alias{c.teal_slices}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
-\title{Complete filter specification.}
+\title{Complete filter specification}
 \usage{
 teal_slices(
   ...,

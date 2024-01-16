@@ -1,6 +1,9 @@
 # FilteredDataset abstract --------
 
-#' @title `FilterStates` `R6` class
+#' @name FilteredDataset
+#' @docType class
+#'
+#' @title `FilteredDataset` `R6` class
 #' @description
 #' `FilteredDataset` is a class which renders/controls `FilterStates`(s)
 #' Each `FilteredDataset` contains `filter_states` field - a `list` which contains one
@@ -10,7 +13,7 @@
 #' @keywords internal
 FilteredDataset <- R6::R6Class( # nolint
   "FilteredDataset",
-  ## __Public Methods ====
+  # public methods ====
   public = list(
     #' @description
     #' Initializes this `FilteredDataset` object.
@@ -211,14 +214,14 @@ FilteredDataset <- R6::R6Class( # nolint
 
     # modules ------
     #' @description
-    #' UI module for dataset active filters.
-    #'
-    #' UI module containing dataset active filters along with
+    #' `ui` module for dataset active filters.
+    #' @details
+    #' `ui` module containing dataset active filters along with
     #' title and remove button.
     #' @param id (`character(1)`)\cr
     #'  identifier of the element - preferably containing dataset name
     #'
-    #' @return function - shiny UI module
+    #' @return function - shiny `ui` module
     ui_active = function(id) {
       dataname <- self$get_dataname()
       checkmate::assert_string(dataname)
@@ -284,7 +287,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' Server module for a dataset active filters.
     #'
     #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #'   an id string that corresponds with the id used to call the module's `ui` function.
     #' @return `moduleServer` function which returns `NULL`
     srv_active = function(id) {
       moduleServer(
@@ -335,12 +338,12 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' UI module to add filter variable for this dataset.
+    #' `ui` module to add filter variable for this dataset.
     #'
     #' @param id (`character(1)`)\cr
     #'  identifier of the element - preferably containing dataset name
     #'
-    #' @return function - shiny UI module
+    #' @return function - shiny `ui` module
     ui_add = function(id) {
       stop("Pure virtual method")
     },
@@ -353,7 +356,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' experiment.
     #'
     #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #'   an id string that corresponds with the id used to call the module's `ui` function.
     #'
     #' @return `moduleServer` function which returns `NULL`
     #'
@@ -374,7 +377,7 @@ FilteredDataset <- R6::R6Class( # nolint
       )
     }
   ),
-  ## __Private Fields ====
+  # private fields ====
   private = list(
     dataset = NULL, # data.frame or MultiAssayExperiment
     data_filtered = NULL,

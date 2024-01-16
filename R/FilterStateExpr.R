@@ -1,7 +1,9 @@
+# FilterStateExpr ------
+
 #' @name FilterStateExpr
 #' @docType class
 #'
-#' @title `FilterStateExpr` Class
+#' @title `FilterStateExpr` `R6` class
 #'
 #' @description Class to handle filter expression.
 #'
@@ -63,7 +65,7 @@ FilterStateExpr <- R6::R6Class( # nolint
   # public methods ----
   public = list(
     #' @description
-    #' Initialize a `FilterStateExpr` object
+    #' Initialize a `FilterStateExpr` object.
     #' @param slice (`teal_slice_expr`)\cr
     #'   object created by [teal_slice()]
     #' @return `FilterStateExpr`
@@ -119,7 +121,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Get reproducible call
+    #' Get reproducible call.
     #'
     #' @param dataname (`ignored`) for a consistency with `FilterState`
     #'
@@ -175,11 +177,11 @@ FilterStateExpr <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny module UI.
+    #' Shiny module `ui`.
     #'
     #' @param id (`character(1)`)\cr
     #'  shiny element (module instance) id;
-    #'  the UI for this class contains simple message stating that it is not supported
+    #'  the `ui` for this class contains simple message stating that it is not supported
     #' @param parent_id (`character(1)`) id of the `FilterStates` card container
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)

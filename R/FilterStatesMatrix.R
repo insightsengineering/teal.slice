@@ -1,3 +1,7 @@
+# MatrixFilterStates ------
+
+#' @name MatrixFilterStates
+#' @docType class
 #' @title `FilterStates` subclass for matrices
 #' @description Handles filter states in a `matrix`.
 #' @keywords internal

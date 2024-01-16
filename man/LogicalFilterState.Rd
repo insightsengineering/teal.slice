@@ -120,7 +120,7 @@ if (interactive()) {
 \if{html}{\out{<a id="method-LogicalFilterState-new"></a>}}
 \if{latex}{\out{\hypertarget{method-LogicalFilterState-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{FilterState} object
+Initialize a \code{FilterState} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{LogicalFilterState$new(
   x,

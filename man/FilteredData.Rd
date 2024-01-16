@@ -127,7 +127,7 @@ isolate(datasets$get_filter_state())
 \if{html}{\out{<a id="method-FilteredData-new"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{FilteredData} object
+Initialize a \code{FilteredData} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$new(data_objects, join_keys = teal.data::join_keys())}\if{html}{\out{</div>}}
 }
@@ -148,7 +148,7 @@ Names of the list will serve as \code{dataname}.}
 \if{html}{\out{<a id="method-FilteredData-datanames"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-datanames}{}}}
 \subsection{Method \code{datanames()}}{
-Gets \code{datanames}
+Gets \code{datanames}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$datanames()}\if{html}{\out{</div>}}
 }
@@ -166,8 +166,7 @@ evaluated (in case of dependencies).
 \if{html}{\out{<a id="method-FilteredData-get_datalabel"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_datalabel}{}}}
 \subsection{Method \code{get_datalabel()}}{
-Gets data label for the dataset
-
+Gets data label for the dataset.
 Useful to display in \verb{Show R Code}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_datalabel(dataname)}\if{html}{\out{</div>}}
@@ -308,7 +307,7 @@ Get join keys between two datasets.
 \if{html}{\out{<a id="method-FilteredData-get_filter_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_filter_overview}{}}}
 \subsection{Method \code{get_filter_overview()}}{
-Get filter overview table in form of X (filtered) / Y (non-filtered).
+Get filter overview table in form of \code{X (filtered) / Y (non-filtered)}.
 
 This is intended to be presented in the application.
 The content for each of the data names is defined in \code{get_filter_overview_info} method.
@@ -548,7 +547,7 @@ module id}
 \if{html}{\out{<a id="method-FilteredData-srv_filter_panel"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-srv_filter_panel}{}}}
 \subsection{Method \code{srv_filter_panel()}}{
-Server function for filter panel
+Server function for filter panel.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_filter_panel(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
 }
@@ -557,7 +556,7 @@ Server function for filter panel
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
+an id string that corresponds with the id used to call the module's \code{ui} function.}
 
 \item{\code{active_datanames}}{\verb{function / reactive} returning \code{datanames} that
 should be shown on the filter panel,
@@ -584,7 +583,7 @@ Server module responsible for displaying active filters.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
+an id string that corresponds with the id used to call the module's \code{ui} function.}
 }
 \if{html}{\out{</div>}}
 }
@@ -605,7 +604,7 @@ Server module responsible for displaying active filters.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
+an id string that corresponds with the id used to call the module's \code{ui} function.}
 
 \item{\code{active_datanames}}{(\code{reactive})\cr
 defining subset of \code{self$datanames()} to be displayed.}
@@ -629,7 +628,7 @@ Server module responsible for displaying drop-downs with variables to add a filt
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
+an id string that corresponds with the id used to call the module's \code{ui} function.}
 }
 \if{html}{\out{</div>}}
 }
@@ -650,7 +649,7 @@ Server module responsible for displaying drop-downs with variables to add a filt
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
+an id string that corresponds with the id used to call the module's \code{ui} function.}
 
 \item{\code{active_datanames}}{(\code{reactive})\cr
 defining subset of \code{self$datanames()} to be displayed.}
@@ -665,8 +664,8 @@ defining subset of \code{self$datanames()} to be displayed.}
 \if{html}{\out{<a id="method-FilteredData-ui_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-ui_overview}{}}}
 \subsection{Method \code{ui_overview()}}{
-Creates the UI for the module showing counts for each dataset
-contrasting the filtered to the full unfiltered dataset
+Creates the \code{ui} for the module showing counts for each dataset
+contrasting the filtered to the full unfiltered dataset.
 
 Per dataset, it displays
 the number of rows/observations in each dataset,
@@ -688,7 +687,7 @@ the number of unique subjects.
 \if{latex}{\out{\hypertarget{method-FilteredData-srv_overview}{}}}
 \subsection{Method \code{srv_overview()}}{
 Server function to display the number of records in the filtered and unfiltered
-data
+data.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_overview(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
 }
@@ -697,7 +696,7 @@ data
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
+an id string that corresponds with the id used to call the module's \code{ui} function.}
 
 \item{\code{active_datanames}}{(\code{reactive})\cr
 returning \code{datanames} that should be shown on the filter panel,

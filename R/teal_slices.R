@@ -1,8 +1,7 @@
-#' Complete filter specification.
+#' Complete filter specification
 #'
 #' Create `teal_slices` object to package multiple filters and additional settings.
 #'
-#' @details
 #' `teal_slices()` collates multiple `teal_slice` objects into a `teal_slices` object,
 #' a complete filter specification. This is used by all classes above `FilterState`
 #' as well as `filter_panel_api` wrapper functions.

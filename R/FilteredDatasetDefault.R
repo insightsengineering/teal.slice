@@ -1,5 +1,7 @@
 # DefaultFilteredDataset ----
 
+#' @name DefaultFilteredDataset
+#' @docType class
 #' @title `DefaultFilteredDataset` `R6` class
 #' @description Stores any object as inert entity. Filtering is not supported.
 #' @examples
@@ -14,7 +16,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
   classname = "DefaultFilteredDataset",
   inherit = FilteredDataset,
 
-  ## Public Methods ----
+  # public methods ----
   public = list(
 
     #' @description
@@ -79,12 +81,12 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       data.frame(dataname = private$dataname, obs = NA, obs_filtered = NA)
     },
 
-    ### shiny modules ----
+    # shiny modules ----
 
     #' @description
     #' Overwrites parent method.
     #' @details
-    #' Blank module UI that would list active filter states for this dataset.
+    #' Blank module `ui` that would list active filter states for this dataset.
     #' @param id (`character(1)`)\cr
     #'  `shiny` module id
     #' @return empty `div`
@@ -96,7 +98,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Overwrites parent method.
     #' @details
-    #' Blank module UI that would list active filter states for this dataset.
+    #' Blank module `ui` that would list active filter states for this dataset.
     #' @param id (`character(1)`)\cr
     #'  `shiny` module id
     #' @return empty `div`
@@ -106,7 +108,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     }
   ),
   private = list(
-    ## Private Methods ----
-    ## Private Fields ----
+    # private methods ----
+    # private fields ----
   )
 )

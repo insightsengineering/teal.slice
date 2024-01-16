@@ -1,4 +1,4 @@
-#' Specify single filter.
+#' Specify single filter
 #'
 #' Create a `teal_slice` object that holds complete information on filtering one variable.
 #'
@@ -8,14 +8,14 @@
 #' `dataname` and  either `varname` or `expr` must be specified, while the others have default
 #' values.
 #'
-#' Setting any of the other values to NULL means that those properties will not be modified
+#' Setting any of the other values to `NULL` means that those properties will not be modified
 #' (when setting an existing state) or that they will be determined by data (when creating new a new one).
 #' Entire object is `FilterState` class member and can be accessed with `FilterState$get_state()`.
 #'
 #' A `teal_slice` can come in two flavors:
 #' 1. `teal_slice_var` -
 #' this describes a typical interactive filter that refers to a single variable, managed by the `FilterState` class.
-#' This class is created when `varname is specified.
+#' This class is created when `varname` is specified.
 #' The object retains all fields specified in the call. `id` can be created by default and need not be specified.
 #' 2. `teal_slice_expr` -
 #' this describes a filter state that refers to an expression, which can potentially include multiple variables,
@@ -44,7 +44,7 @@
 #' For filters referring to `colData` no extra arguments are needed.
 #' If a filter state is created for an experiment, that experiment name must be specified in the `experiment` argument.
 #' Furthermore, to specify filter for an `SummarizedExperiment` one must also set `arg`
-#' (`"subset"`  or `"select`, arguments in the [subset()] function for `SummarizedExperiment`)
+#' (`"subset"`  or `"select"`, arguments in the [subset()] function for `SummarizedExperiment`)
 #' in order to determine whether the filter refers to the `SE`'s `rowData` or `colData`.
 #'
 #' @param dataname (`character(1)`) name of data set

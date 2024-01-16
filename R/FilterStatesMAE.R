@@ -1,3 +1,7 @@
+# MAEFilterStates ------
+
+#' @name MAEFilterStates
+#' @docType class
 #' @title `FilterStates` subclass for `MultiAssayExperiments`
 #' @description Handles filter states in a `MultiAssayExperiment`.
 #' @keywords internal
@@ -5,9 +9,8 @@
 MAEFilterStates <- R6::R6Class( # nolint
   classname = "MAEFilterStates",
   inherit = FilterStates,
+  # public methods ----
   public = list(
-    # public methods ----
-
     #' @description
     #' Initialize `MAEFilterStates` object.
     #'

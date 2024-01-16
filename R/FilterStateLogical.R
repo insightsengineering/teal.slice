@@ -1,3 +1,5 @@
+# LogicalFilterState ------
+
 #' @name LogicalFilterState
 #' @docType class
 #'
@@ -98,7 +100,7 @@ LogicalFilterState <- R6::R6Class( # nolint
   public = list(
 
     #' @description
-    #' Initialize a `FilterState` object
+    #' Initialize a `FilterState` object.
     #'
     #' @param x (`logical`)\cr
     #'   values of the variable used in filter
