@@ -3,6 +3,9 @@
 #'
 #' @title Class to encapsulate filtered datasets
 #'
+#' @description
+#' Class is designed to manage and encapsulate filtered datasets.
+#'
 #' @details
 #' The main purpose of this class is to provide a collection of reactive datasets,
 #' each dataset having a filter state that determines how it is filtered.
@@ -129,26 +132,28 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' Gets `datanames`
-    #'
+    #' @details
     #' The `datanames` are returned in the order in which they must be
     #' evaluated (in case of dependencies).
-    #' @return (`character` vector) of `datanames`
+    #' @return `character` vector of `datanames`
     datanames = function() {
       names(private$filtered_datasets)
     },
 
+    #' @description
     #' Gets data label for the dataset
     #'
     #' Useful to display in `Show R Code`.
     #'
     #' @param dataname (`character(1)`) name of the dataset
-    #' @return (`character`) keys of dataset
+    #' @return `character` keys of dataset
     get_datalabel = function(dataname) {
       private$get_filtered_dataset(dataname)$get_dataset_label()
     },
 
+    #' @description
     #' Set list of external filter states available for activation.
-    #'
+    #' @details
     #' Unlike adding new filter from the column, these filters can come with some prespecified settings.
     #' `teal_slices` are wrapped in a `reactive` so they can be updated from elsewhere in the app.
     #' Filters passed in `x` are limited to those that can be set for this `FilteredData` object,
@@ -156,7 +161,7 @@ FilteredData <- R6::R6Class( # nolint
     #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
     #' @param x (`reactive`)\cr
     #'  should return `teal_slices`
-    #' @return invisible `NULL`
+    #' @return `NULL` invisibly
     set_available_teal_slices = function(x) {
       checkmate::assert_class(x, "reactive")
       private$available_teal_slices <- reactive({
@@ -181,8 +186,9 @@ FilteredData <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
+    #' @description
     #' Get list of filter states available for this object.
-    #'
+    #' @details
     #' All `teal_slice` objects that have been created since the beginning of the app session
     #' are stored in one `teal_slices` object. This returns a subset of that `teal_slices`,
     #' describing filter states that can be set for this object.
@@ -195,7 +201,7 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' Gets a `call` to filter the dataset according to the filter state.
-    #'
+    #' @details
     #' It returns a `call` to filter the dataset only, assuming the
     #' other (filtered) datasets it depends on are available.
     #'
@@ -239,7 +245,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Get join keys between two datasets.
     #'
-    #' @return (`join_keys`)
+    #' @return `join_keys`
     #'
     get_join_keys = function() {
       return(private$join_keys)
@@ -253,7 +259,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @param datanames (`character` vector) names of the dataset
     #'
-    #' @return (`matrix`) matrix of observations and subjects of all datasets
+    #' @return `matrix` of observations and subjects of all datasets
     #'
     get_filter_overview = function(datanames) {
       rows <- lapply(
@@ -271,7 +277,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @param dataname (`character(1)`) name of the dataset
     #'
-    #' @return (`character`) keys of dataset
+    #' @return `character` keys of dataset
     #'
     get_keys = function(dataname) {
       private$get_filtered_dataset(dataname)$get_keys()
@@ -293,7 +299,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @param dataname (`string`)\cr
     #'   the name of the `dataset` to be added to this object
     #'
-    #' @return (`self`) invisibly this `FilteredData`
+    #' @return `self` invisibly
     #'
     set_dataset = function(data, dataname) {
       checkmate::assert_string(dataname)
@@ -333,7 +339,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @param join_keys (`join_keys`) join_key (converted to a nested list)
     #'
-    #' @return (`self`) invisibly this `FilteredData`
+    #' @return `self` invisibly
     #'
     set_join_keys = function(join_keys) {
       checkmate::assert_class(join_keys, "join_keys")
@@ -482,6 +488,7 @@ FilteredData <- R6::R6Class( # nolint
 
     # shiny modules -----
 
+    #' @description
     #' Module for the right filter panel in the teal app
     #' with a filter overview panel and a filter variable panel.
     #'
@@ -504,6 +511,7 @@ FilteredData <- R6::R6Class( # nolint
       )
     },
 
+    #' @description
     #' Server function for filter panel
     #'
     #' @param id (`character(1)`)\cr
@@ -740,6 +748,7 @@ FilteredData <- R6::R6Class( # nolint
       })
     },
 
+    #' @description
     #' Creates the UI for the module showing counts for each dataset
     #' contrasting the filtered to the full unfiltered dataset
     #'
@@ -780,6 +789,7 @@ FilteredData <- R6::R6Class( # nolint
       )
     },
 
+    #' @description
     #' Server function to display the number of records in the filtered and unfiltered
     #' data
     #'

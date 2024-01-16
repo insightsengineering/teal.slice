@@ -1,10 +1,12 @@
 #' @name FilterStateExpr
 #' @docType class
 #'
-#'
 #' @title `FilterStateExpr` Class
 #'
 #' @description Class to handle filter expression.
+#'
+#' @details
+#' This class is responsible for displaying filter card and returning filter expression.
 #'
 #' @examples
 #' # use non-exported function from teal.slice
@@ -53,8 +55,6 @@
 #' if (interactive()) {
 #'   shinyApp(ui, server)
 #' }
-#' @details
-#' This class is responsible for displaying filter card and returning filter expression
 #'
 #' @keywords internal
 #'
@@ -135,7 +135,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @description
     #' Destroy observers stored in `private$observers`.
     #'
-    #' @return NULL invisibly
+    #' @return `NULL` invisibly
     #'
     destroy_observers = function() {
       lapply(private$observers, function(x) x$destroy())

@@ -181,8 +181,6 @@ if (interactive()) {
 \if{html}{\out{<a id="method-DFFilterStates-new"></a>}}
 \if{latex}{\out{\hypertarget{method-DFFilterStates-new}{}}}
 \subsection{Method \code{new()}}{
-Initializes \code{DFFilterStates} object.
-
 Initializes \code{DFFilterStates} object by setting \code{dataname}
 and initializing \code{state_list} (\code{shiny::reactiveVal}).
 This class contains a single \code{state_list} with no specified name,

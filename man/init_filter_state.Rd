@@ -38,7 +38,7 @@ specifying whether condition calls should be prefixed by \code{dataname}. Possib
 \code{FilterState} object
 }
 \description{
-Initializes \code{FilterState} depending on a variable class.\cr
+Initializes \code{FilterState} depending on a variable class.
 }
 \examples{
 # use non-exported function from teal.slice

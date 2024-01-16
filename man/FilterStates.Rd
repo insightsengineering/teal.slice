@@ -41,8 +41,6 @@ Currently implemented for \code{data.frame}, \code{matrix},
 \if{html}{\out{<a id="method-FilterStates-new"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-new}{}}}
 \subsection{Method \code{new()}}{
-Initializes \code{FilterStates} object.
-
 Initializes \code{FilterStates} object by setting
 \code{dataname}, and \code{datalabel}.
 \subsection{Usage}{
@@ -260,8 +258,6 @@ include locked filter states}
 \if{html}{\out{<a id="method-FilterStates-ui_active"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-ui_active}{}}}
 \subsection{Method \code{ui_active()}}{
-Shiny module UI
-
 Shiny UI element that stores \code{FilterState} UI elements.
 Populated with elements created with \code{renderUI} in the module server.
 \subsection{Usage}{

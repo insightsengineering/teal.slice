@@ -1,7 +1,10 @@
 #' @rdname DatetimeFilterState
-#' @title `FilterState` object for `POSIXct` variable
-#' @description  Manages choosing a range of date-times.
 #' @docType class
+#'
+#' @title `FilterState` object for `POSIXct` variable
+#'
+#' @description  Manages choosing a range of date-times.
+#'
 #' @examples
 #' # use non-exported function from teal.slice
 #' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
@@ -172,7 +175,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' `<varname> >= as.POSIXct(<min>) & <varname> <= <max>)`
     #' with optional `is.na(<varname>)`.
     #' @param dataname name of data set; defaults to `private$get_dataname()`
-    #' @return (`call`)
+    #' @return `call`
     #'
     get_call = function(dataname) {
       if (isFALSE(private$is_any_filtered())) {

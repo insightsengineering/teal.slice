@@ -18,7 +18,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
   public = list(
 
     #' @description
-    #' Initializes this `DefaultFilteredDataset` object
+    #' Initializes this `DefaultFilteredDataset` object.
     #'
     #' @param dataset
     #'  Any type of object; will not be filtered.

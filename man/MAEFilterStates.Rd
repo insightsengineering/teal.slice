@@ -38,9 +38,7 @@ Handles filter states in a \code{MultiAssayExperiment}.
 \if{html}{\out{<a id="method-MAEFilterStates-new"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilterStates-new}{}}}
 \subsection{Method \code{new()}}{
-Initializes \code{MAEFilterStates} object
-
-Initialize \code{MAEFilterStates} object
+Initialize \code{MAEFilterStates} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$new(
   data,

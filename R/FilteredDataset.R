@@ -1,4 +1,5 @@
 # FilteredDataset abstract --------
+
 #' @title `FilterStates` `R6` class
 #' @description
 #' `FilteredDataset` is a class which renders/controls `FilterStates`(s)
@@ -12,7 +13,7 @@ FilteredDataset <- R6::R6Class( # nolint
   ## __Public Methods ====
   public = list(
     #' @description
-    #' Initializes this `FilteredDataset` object
+    #' Initializes this `FilteredDataset` object.
     #'
     #' @param dataset (`data.frame` or `MultiAssayExperiment`)\cr
     #'  single dataset for which filters are rendered
@@ -82,7 +83,8 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Removes all active filter items applied to this dataset
+    #' Removes all active filter items applied to this dataset.
+    #'
     #' @param force (`logical(1)`)\cr
     #'   include locked filter states
     #'
@@ -101,7 +103,7 @@ FilteredDataset <- R6::R6Class( # nolint
 
     # getters ----
     #' @description
-    #' Gets a filter expression
+    #' Gets a filter expression.
     #'
     #' This functions returns filter calls equivalent to selected items
     #' within each of `filter_states`. Configuration of the calls is constant and
@@ -124,7 +126,7 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets states of all active `FilterState` objects
+    #' Gets states of all active `FilterState` objects.
     #'
     #' @return A `teal_slices` object.
     #'
@@ -134,7 +136,7 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set filter state
+    #' Set filter state.
     #'
     #' @param state (`teal_slices`) object
     #'
@@ -152,7 +154,7 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets the name of the dataset
+    #' Gets the name of the dataset.
     #'
     #' @return `character(1)` as a name of this dataset
     get_dataname = function() {
@@ -160,7 +162,8 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets the dataset object in this `FilteredDataset`
+    #' Gets the dataset object in this `FilteredDataset`.
+    #'
     #' @param filtered (`logical(1)`)\cr
     #'
     #' @return `data.frame` or `MultiAssayExperiment`, either raw
@@ -175,9 +178,9 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Get filter overview rows of a dataset
+    #' Get filter overview rows of a dataset.
     #' The output shows the comparison between `filtered_dataset`
-    #' function parameter and the dataset inside self
+    #' function parameter and the dataset inside self.
     #' @param filtered_dataset comparison object, of the same class
     #' as `self$get_dataset()`, if `NULL` then `self$get_dataset()`
     #' is used.
@@ -193,22 +196,22 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets the keys for the dataset of this `FilteredDataset`
-    #' @return (`character`) the keys of dataset
+    #' Gets the keys for the dataset of this `FilteredDataset`.
+    #' @return `character` the keys of dataset
     get_keys = function() {
       private$keys
     },
 
     #' @description
-    #' Gets the dataset label
-    #' @return (`character`) the dataset label
+    #' Gets the dataset label.
+    #' @return `character` the dataset label
     get_dataset_label = function() {
       private$label
     },
 
     # modules ------
     #' @description
-    #' UI module for dataset active filters
+    #' UI module for dataset active filters.
     #'
     #' UI module containing dataset active filters along with
     #' title and remove button.
@@ -278,9 +281,8 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Server module for a dataset active filters
+    #' Server module for a dataset active filters.
     #'
-    #' Server module managing a  active filters.
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
@@ -333,9 +335,8 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' UI module to add filter variable for this dataset
+    #' UI module to add filter variable for this dataset.
     #'
-    #' UI module to add filter variable for this dataset
     #' @param id (`character(1)`)\cr
     #'  identifier of the element - preferably containing dataset name
     #'
@@ -345,8 +346,6 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Server module to add filter variable for this dataset
-    #'
     #' Server module to add filter variable for this dataset.
     #' For this class `srv_add` calls multiple modules
     #' of the same name from `FilterStates` as `MAEFilteredDataset`

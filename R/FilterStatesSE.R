@@ -42,7 +42,7 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set filter state
+    #' Set filter state.
     #'
     #' @param state (`teal_slices`)\cr
     #'    `teal_slice` objects should contain the field `arg %in% c("subset", "select")`
@@ -91,10 +91,10 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny UI module to add filter variable
+    #' Shiny UI module to add filter variable.
     #' @param id (`character(1)`)\cr
     #'  id of shiny module
-    #' @return shiny.tag
+    #' @return `shiny.tag`
     ui_add = function(id) {
       data <- private$data
       checkmate::assert_string(id)
@@ -136,7 +136,7 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny server module to add filter variable
+    #' Shiny server module to add filter variable.
     #'
     #' Module controls available choices to select as a filter variable.
     #' Selected filter variable is being removed from available choices.

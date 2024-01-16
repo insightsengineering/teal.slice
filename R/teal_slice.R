@@ -2,7 +2,6 @@
 #'
 #' Create a `teal_slice` object that holds complete information on filtering one variable.
 #'
-#' @details
 #' `teal_slice` object fully describes filter state and can be used to create,
 #' modify, and delete a filter state. A `teal_slice` contains a number of common fields
 #' (all named arguments of `teal_slice`), some of which are mandatory, but only

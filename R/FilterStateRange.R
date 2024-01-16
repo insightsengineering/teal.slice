@@ -1,7 +1,10 @@
 #' @name RangeFilterState
-#' @title `FilterState` object for numeric variable
-#' @description Manages choosing a numeric range.
 #' @docType class
+#'
+#' @title `FilterState` object for numeric variable
+#'
+#' @description Manages choosing a numeric range.
+#'
 #' @examples
 #' # use non-exported function from teal.slice
 #' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
@@ -122,7 +125,7 @@ RangeFilterState <- R6::R6Class( # nolint
   public = list(
 
     #' @description
-    #' Initialize a `FilterState` object for range selection
+    #' Initialize a `FilterState` object for range selection.
     #' @param x (`numeric`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
@@ -233,7 +236,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' `<varname> >= <min value> & <varname> <= <max value>` with
     #' optional `is.na(<varname>)` and `is.finite(<varname>)`.
     #' @param dataname name of data set; defaults to `private$get_dataname()`
-    #' @return (`call`)
+    #' @return `call`
     #'
     get_call = function(dataname) {
       if (isFALSE(private$is_any_filtered())) {
@@ -251,8 +254,8 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns current `keep_inf` selection
-    #' @return (`logical(1)`)
+    #' Returns current `keep_inf` selection.
+    #' @return `logical(1)`
     get_keep_inf = function() {
       private$teal_slice$keep_inf
     }

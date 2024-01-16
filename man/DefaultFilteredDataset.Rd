@@ -51,7 +51,7 @@ isolate(ds$get_call())
 \if{html}{\out{<a id="method-DefaultFilteredDataset-new"></a>}}
 \if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-new}{}}}
 \subsection{Method \code{new()}}{
-Initializes this \code{DefaultFilteredDataset} object
+Initializes this \code{DefaultFilteredDataset} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$new(dataset, dataname, label = character(0))}\if{html}{\out{</div>}}
 }

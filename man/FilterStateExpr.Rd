@@ -8,7 +8,7 @@
 Class to handle filter expression.
 }
 \details{
-This class is responsible for displaying filter card and returning filter expression
+This class is responsible for displaying filter card and returning filter expression.
 }
 \examples{
 # use non-exported function from teal.slice
@@ -57,6 +57,7 @@ server <- function(input, output, session) {
 if (interactive()) {
   shinyApp(ui, server)
 }
+
 }
 \keyword{internal}
 \section{Methods}{
@@ -202,7 +203,7 @@ Destroy observers stored in \code{private$observers}.
 }
 
 \subsection{Returns}{
-NULL invisibly
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}

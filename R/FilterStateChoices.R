@@ -1,7 +1,10 @@
 #' @name ChoicesFilterState
-#' @title `FilterState` object for factor or character variable
-#' @description Manages choosing elements from a set.
 #' @docType class
+#'
+#' @title `FilterState` object for factor or character variable
+#'
+#' @description Manages choosing elements from a set.
+#'
 #' @examples
 #' # use non-exported function from teal.slice
 #' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
@@ -115,7 +118,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
   public = list(
 
     #' @description
-    #' Initialize a `InteractiveFilterState` object
+    #' Initialize a `InteractiveFilterState` object.
     #'
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
@@ -195,7 +198,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' `<varname> %in%  c(<values selected>)` with
     #' optional `is.na(<varname>)`.
     #' @param dataname name of data set; defaults to `private$get_dataname()`
-    #' @return (`call`) or `NULL`
+    #' @return `call` or `NULL`
     #'
     get_call = function(dataname) {
       if (isFALSE(private$is_any_filtered())) {

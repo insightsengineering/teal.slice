@@ -5,9 +5,7 @@
 \alias{FilterPanelAPI}
 \title{Class to encapsulate the API of the filter panel of a teal app}
 \description{
-Class to encapsulate the API of the filter panel of a teal app
-
-Class to encapsulate the API of the filter panel of a teal app
+An API class for managing filter states in a teal application's filter panel.
 }
 \details{
 The purpose of this class is to encapsulate the API of the filter panel in a new class \code{FilterPanelAPI} so
@@ -57,7 +55,7 @@ isolate(fpa$get_filter_state())
 \if{html}{\out{<a id="method-FilterPanelAPI-new"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterPanelAPI-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{FilterPanelAPI} object
+Initialize a \code{FilterPanelAPI} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterPanelAPI$new(datasets)}\if{html}{\out{</div>}}
 }

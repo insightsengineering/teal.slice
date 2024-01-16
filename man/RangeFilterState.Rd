@@ -148,7 +148,7 @@ if (interactive()) {
 \if{html}{\out{<a id="method-RangeFilterState-new"></a>}}
 \if{latex}{\out{\hypertarget{method-RangeFilterState-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{FilterState} object for range selection
+Initialize a \code{FilterState} object for range selection.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$new(
   x,
@@ -210,20 +210,20 @@ optional \verb{is.na(<varname>)} and \verb{is.finite(<varname>)}.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(\code{call})
+\code{call}
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-RangeFilterState-get_keep_inf"></a>}}
 \if{latex}{\out{\hypertarget{method-RangeFilterState-get_keep_inf}{}}}
 \subsection{Method \code{get_keep_inf()}}{
-Returns current \code{keep_inf} selection
+Returns current \code{keep_inf} selection.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$get_keep_inf()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-(\code{logical(1)})
+\code{logical(1)}
 }
 }
 \if{html}{\out{<hr>}}

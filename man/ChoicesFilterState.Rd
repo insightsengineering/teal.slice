@@ -139,7 +139,7 @@ if (interactive()) {
 \if{html}{\out{<a id="method-ChoicesFilterState-new"></a>}}
 \if{latex}{\out{\hypertarget{method-ChoicesFilterState-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{InteractiveFilterState} object
+Initialize a \code{InteractiveFilterState} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$new(
   x,
@@ -201,7 +201,7 @@ optional \verb{is.na(<varname>)}.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(\code{call}) or \code{NULL}
+\code{call} or \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

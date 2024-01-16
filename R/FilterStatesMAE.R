@@ -2,16 +2,14 @@
 #' @description Handles filter states in a `MultiAssayExperiment`.
 #' @keywords internal
 #'
-#'
 MAEFilterStates <- R6::R6Class( # nolint
   classname = "MAEFilterStates",
   inherit = FilterStates,
   public = list(
     # public methods ----
 
-    #' @description Initializes `MAEFilterStates` object
-    #'
-    #' Initialize `MAEFilterStates` object
+    #' @description
+    #' Initialize `MAEFilterStates` object.
     #'
     #' @param data (`MultiAssayExperiment`)\cr
     #'   the `R` object which `MultiAssayExperiment::subsetByColData` function is applied on.

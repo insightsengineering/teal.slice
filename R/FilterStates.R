@@ -23,8 +23,6 @@ FilterStates <- R6::R6Class( # nolint
   # public members ----
   public = list(
     #' @description
-    #' Initializes `FilterStates` object.
-    #'
     #' Initializes `FilterStates` object by setting
     #' `dataname`, and `datalabel`.
     #'
@@ -303,8 +301,6 @@ FilterStates <- R6::R6Class( # nolint
     # shiny modules ----
 
     #' @description
-    #' Shiny module UI
-    #'
     #' Shiny UI element that stores `FilterState` UI elements.
     #' Populated with elements created with `renderUI` in the module server.
     #'

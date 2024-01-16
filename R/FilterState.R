@@ -1,7 +1,6 @@
 #' @name FilterState
 #' @docType class
 #'
-#'
 #' @title `FilterState` abstract Class
 #'
 #' @description Abstract class to encapsulate single filter state.
@@ -46,7 +45,7 @@ FilterState <- R6::R6Class( # nolint
   public = list(
 
     #' @description
-    #' Initialize a `FilterState` object
+    #' Initialize a `FilterState` object.
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
@@ -65,7 +64,7 @@ FilterState <- R6::R6Class( # nolint
     #'
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
-    #' @return self invisibly
+    #' @return `self` invisibly
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
@@ -377,7 +376,7 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Destroy observers stored in `private$observers`.
     #'
-    #' @return NULL invisibly
+    #' @return `NULL` invisibly
     #'
     destroy_observers = function() {
       if (!is.null(private$destroy_shiny)) {

@@ -1,7 +1,10 @@
 #' @name LogicalFilterState
-#' @title `FilterState` object for logical variable
-#' @description Manages choosing a logical state.
 #' @docType class
+#'
+#' @title `FilterState` object for logical variable
+#'
+#' @description Manages choosing a logical state.
+#'
 #' @examples
 #' # use non-exported function from teal.slice
 #' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
@@ -148,7 +151,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' For `LogicalFilterState` it's a `!<varname>` or `<varname>` and optionally
     #' `is.na(<varname>)`
     #' @param dataname name of data set; defaults to `private$get_dataname()`
-    #' @return (`call`)
+    #' @return `call`
     #'
     get_call = function(dataname) {
       if (isFALSE(private$is_any_filtered())) {

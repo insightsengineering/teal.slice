@@ -35,7 +35,7 @@ text label value.}
 additional arguments for specific classes: keys.}
 }
 \description{
-Initialize \code{FilterStates} object.
+Initialize \code{FilterStates} object
 }
 \examples{
 # use non-exported function from teal.slice

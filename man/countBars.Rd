@@ -33,9 +33,9 @@ list of \code{shiny.tag}
 }
 \description{
 \code{shiny} element showing progress bar counts. Each element can have an
-unique \code{id} attribute so each can be used independently.
-Progress bar size is dependent on the ratio \code{choicesnow[i] / countsmax[i]}.
-Label is \code{choices[i] (countsnow[i]/countsmax)}
+unique \code{id} attribute so each can be used independently.\cr
+Progress bar size is dependent on the ratio: \cr\code{choicesnow[i] / countsmax[i]}.\cr
+Label is:\cr \code{choices[i] (countsnow[i]/countsmax)}
 }
 \examples{
 # use non-exported function from teal.slice

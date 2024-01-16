@@ -1,6 +1,5 @@
 #' Initialize `FilterStates` object
 #'
-#' Initialize `FilterStates` object.
 #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
 #'   the `R` object which `subset` function is applied on.
 #' @param data_reactive (`function(sid)`)\cr
@@ -193,7 +192,7 @@ get_supported_filter_varnames.MultiAssayExperiment <- function(data) { # nolint
   }
 }
 
-#' @title Returns a `choices_labeled` object
+#' Returns a `choices_labeled` object
 #'
 #' @param data (`data.frame`, `DFrame`, `list`)\cr
 #'   where labels can be taken from in case when `varlabels` is not specified.
@@ -223,6 +222,8 @@ data_choices_labeled <- function(data,
   )
 }
 
+#' @noRd
+#' @keywords internal
 get_varlabels <- function(data) {
   if (!is.array(data)) {
     vapply(

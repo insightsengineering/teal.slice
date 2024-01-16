@@ -1,7 +1,10 @@
 #' @name EmptyFilterState
-#' @title `FilterState` object for empty variable
-#' @description `FilterState` subclass representing an empty variable.
 #' @docType class
+#'
+#' @title `FilterState` object for empty variable
+#'
+#' @description `FilterState` subclass representing an empty variable.
+#'
 #' @examples
 #' # use non-exported function from teal.slice
 #' include_js_files <- getFromNamespace("include_js_files", "teal.slice")

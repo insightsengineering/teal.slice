@@ -66,7 +66,7 @@ to the \code{set_state} method, or using
 \if{html}{\out{<a id="method-FilterState-new"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{FilterState} object
+Initialize a \code{FilterState} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$new(
   x,
@@ -104,7 +104,7 @@ specifying whether condition calls should be prefixed by \code{dataname}. Possib
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-self invisibly
+\code{self} invisibly
 }
 }
 \if{html}{\out{<hr>}}
@@ -249,7 +249,7 @@ Destroy observers stored in \code{private$observers}.
 }
 
 \subsection{Returns}{
-NULL invisibly
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}

@@ -1,7 +1,10 @@
 #' @name DateFilterState
-#' @title `FilterState` object for Date variable
-#' @description Manages choosing a range of Dates.
 #' @docType class
+#'
+#' @title `FilterState` object for Date variable
+#'
+#' @description Manages choosing a range of Dates.
+#'
 #' @examples
 #' # use non-exported function from teal.slice
 #' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
@@ -162,7 +165,7 @@ DateFilterState <- R6::R6Class( # nolint
     #' `<varname> >= <min value> & <varname> <= <max value>` with
     #' optional `is.na(<varname>)`.
     #' @param dataname `character(1)` containing possibly prefixed name of data set
-    #' @return (`call`)
+    #' @return `call`
     #'
     get_call = function(dataname) {
       if (isFALSE(private$is_any_filtered())) {

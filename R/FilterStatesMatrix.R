@@ -9,9 +9,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
-    #' @description Initialize `MatrixFilterStates` object
-    #'
-    #' Initialize `MatrixFilterStates` object
+    #' @description
+    #' Initialize `MatrixFilterStates` object.
     #'
     #' @param data (`matrix`)\cr
     #'   the `R` object which `subset` function is applied on.

@@ -181,7 +181,7 @@ For \code{LogicalFilterState} it's a \verb{!<varname>} or \verb{<varname>} and o
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(\code{call})
+\code{call}
 }
 }
 \if{html}{\out{<hr>}}

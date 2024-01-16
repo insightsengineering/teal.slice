@@ -205,7 +205,7 @@ with optional \verb{is.na(<varname>)}.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(\code{call})
+\code{call}
 }
 }
 \if{html}{\out{<hr>}}

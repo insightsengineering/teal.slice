@@ -1,5 +1,7 @@
 #' @title `FilterStates` subclass for data frames
+#'
 #' @description Handles filter states in a `data.frame`.
+#'
 #' @examples
 #' # use non-exported function from teal.slice
 #' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
@@ -150,8 +152,7 @@ DFFilterStates <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
-    #' @description Initializes `DFFilterStates` object.
-    #'
+    #' @description
     #' Initializes `DFFilterStates` object by setting `dataname`
     #'  and initializing `state_list` (`shiny::reactiveVal`).
     #' This class contains a single `state_list` with no specified name,

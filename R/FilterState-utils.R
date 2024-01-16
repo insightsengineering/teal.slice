@@ -1,6 +1,7 @@
 #' Initializes `FilterState`
 #'
-#' Initializes `FilterState` depending on a variable class.\cr
+#' Initializes `FilterState` depending on a variable class.
+#'
 #' @param x (`vector`)\cr
 #'   values of the variable used in filter
 #' @param x_reactive (`reactive`)\cr
@@ -218,7 +219,6 @@ init_filter_state.POSIXlt <- function(x,
 
 #' Initialize a `FilterStateExpr` object
 #'
-#' Initialize a `FilterStateExpr` object
 #' @param slice (`teal_slice_expr`)\cr
 #'   object created using [teal_slice()]. `teal_slice` is stored
 #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
