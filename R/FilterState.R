@@ -32,11 +32,11 @@
 #' \cr
 #' @section Modifying state:
 #' Modifying a `FilterState` object is possible in three scenarios:
-#' * In the interactive session by passing an appropriate `teal_slice`
+#' - In the interactive session by passing an appropriate `teal_slice`
 #'   to the `set_state` method, or using
 #'   `set_selected`, `set_keep_na` or `set_keep_inf` methods.
-#' * In a running application by changing appropriate inputs.
-#' * In a running application by using [filter_state_api] which directly uses
+#' - In a running application by changing appropriate inputs.
+#' - In a running application by using [filter_state_api] which directly uses
 #' `set_state` method of the `InteractiveFilterState` object.
 #'
 #' @keywords internal
@@ -60,9 +60,9 @@ FilterState <- R6::R6Class( # nolint
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
     #'
-    #' * `character(0)` (default) `varname` in the condition call will not be prefixed
-    #' * `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
-    #' * `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
+    #' - `character(0)` (default) `varname` in the condition call will not be prefixed
+    #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
+    #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
     #'
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
