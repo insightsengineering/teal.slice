@@ -23,18 +23,53 @@
 #' @seealso [`teal_slice`]
 #'
 #' @examples
-#' library(MultiAssayExperiment)
-#' data(miniACC)
-#'
 #' datasets <- init_filtered_data(
 #'   x = list(
 #'     iris = list(dataset = iris),
-#'     mae = list(dataset = miniACC)
+#'     mtcars = list(dataset = mtcars)
 #'   )
 #' )
 #' fs <- teal_slices(
 #'   teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
 #'   teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+#'   teal_slice(dataname = "mtcars", varname = "gear", selected = c(4, 5)),
+#'   teal_slice(dataname = "mtcars", varname = "carb", selected = c(4, 10))
+#' )
+#'
+#' # set initial filter state
+#' set_filter_state(datasets, filter = fs)
+#'
+#' # get filter state
+#' get_filter_state(datasets)
+#'
+#' # modify filter state
+#' set_filter_state(
+#'   datasets,
+#'   teal_slices(
+#'     teal_slice(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
+#'   )
+#' )
+#'
+#' # remove specific filters
+#' remove_filter_state(
+#'   datasets,
+#'   teal_slices(
+#'     teal_slice(dataname = "iris", varname = "Species"),
+#'     teal_slice(dataname = "mtcars", varname = "gear"),
+#'     teal_slice(dataname = "mtcars", varname = "carb")
+#'   )
+#' )
+#'
+#' # remove all states
+#' clear_filter_states(datasets)
+#' @examplesIf requireNamespace("MultiAssayExperiment")
+#'
+#' # Requires MultiAssayExperiment from Bioconductor
+#' library(MultiAssayExperiment)
+#' data(miniACC)
+#'
+#' datasets <- init_filtered_data(x = list(mae = list(dataset = miniAcc)))
+#' fs <- teal_slices(
 #'   teal_slice(
 #'     dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
 #'     keep_na = TRUE, keep_inf = FALSE
@@ -63,7 +98,7 @@
 #' set_filter_state(
 #'   datasets,
 #'   teal_slices(
-#'     teal_slice(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
+#'     teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(40, 60))
 #'   )
 #' )
 #'
@@ -71,7 +106,6 @@
 #' remove_filter_state(
 #'   datasets,
 #'   teal_slices(
-#'     teal_slice(dataname = "iris", varname = "Species"),
 #'     teal_slice(dataname = "mae", varname = "years_to_birth"),
 #'     teal_slice(dataname = "mae", varname = "vital_status")
 #'   )

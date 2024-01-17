@@ -9,6 +9,7 @@
 \code{MAEFilteredDataset} \code{R6} class
 }
 \examples{
+\dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # use non-exported function from teal.slice
 MAEFilteredDataset <- getFromNamespace("MAEFilteredDataset", "teal.slice")
 
@@ -30,7 +31,7 @@ fs <- teal_slices(
 )
 dataset$set_filter_state(state = fs)
 isolate(dataset$get_filter_state())
-
+\dontshow{\}) # examplesIf}
 }
 \keyword{internal}
 \section{Super class}{

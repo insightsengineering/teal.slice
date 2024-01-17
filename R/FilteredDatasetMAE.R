@@ -2,7 +2,7 @@
 
 #' @title `MAEFilteredDataset` `R6` class
 #' @keywords internal
-#' @examples
+#' @examplesIf requireNamespace("MultiAssayExperiment")
 #' # use non-exported function from teal.slice
 #' MAEFilteredDataset <- getFromNamespace("MAEFilteredDataset", "teal.slice")
 #'
