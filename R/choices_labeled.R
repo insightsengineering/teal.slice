@@ -1,8 +1,10 @@
 #' Set "`<choice>:<label>`" type of names
 #'
-#' `r lifecycle::badge("stable")`\cr
+#' @description `r lifecycle::badge("stable")`
+#'
 #' This is often useful for as it marks up the drop-down boxes for [shiny::selectInput()].
 #'
+#' @details
 #' If either `choices` or `labels` are factors, they are coerced to character.
 #' Duplicated elements from `choices` get removed.
 #'
