@@ -82,7 +82,7 @@ clear_filter_states(datasets)
 
 # Requires MultiAssayExperiment from Bioconductor
 library(MultiAssayExperiment)
-data(miniACC)
+data(miniACC, package = "MultiAssayExperiment")
 
 datasets <- init_filtered_data(x = list(mae = list(dataset = miniAcc)))
 fs <- teal_slices(

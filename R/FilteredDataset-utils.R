@@ -43,7 +43,7 @@
 #' @examplesIf requireNamespace("MultiAssayExperiment")
 #' # MAEFilteredDataset example
 #' library(MultiAssayExperiment)
-#' data(miniACC)
+#' data(miniACC, package = "MultiAssayExperiment")
 #' MAE_fd <- init_filtered_dataset(miniACC, "MAE")
 #' ui <- fluidPage(
 #'   MAE_fd$ui_add(id = "add"),
