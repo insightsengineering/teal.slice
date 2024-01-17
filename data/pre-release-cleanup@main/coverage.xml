@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.657448291889379" branch-rate="0" lines-covered="2829" lines-valid="4303" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-01-17 08:01:55.798352">
+<coverage line-rate="0.657448291889379" branch-rate="0" lines-covered="2829" lines-valid="4303" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-01-17 09:12:12.556168">
   <sources>
     <source>/__w/teal.slice/teal.slice/teal.slice</source>
   </sources>
@@ -764,7 +764,7 @@
             </method>
             <method name="topological_sort" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="200" hits="66" branch="false"/>
+                <line number="193" hits="66" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -836,7 +836,7 @@
             <line number="176" hits="3" branch="false"/>
             <line number="178" hits="3" branch="false"/>
             <line number="180" hits="3" branch="false"/>
-            <line number="200" hits="66" branch="false"/>
+            <line number="193" hits="66" branch="false"/>
           </lines>
         </class>
         <class name="FilteredData.R" filename="R/FilteredData.R" line-rate="0.606498194945848" branch-rate="0" complexity="0">
