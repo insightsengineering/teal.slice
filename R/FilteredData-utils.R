@@ -180,14 +180,7 @@ toggle_title <- function(input_id, titles, one_way = FALSE) {
   invisible(NULL)
 }
 
-#' Topological graph sort
-#'
-#' Graph is a list which for each node contains a vector of child nodes
-#' in the returned list, parents appear before their children.
-#'
-#' Implementation of `Kahn` algorithm with a modification to maintain the order of input elements.
-#'
-#' @param graph (named `list`) list with node vector elements
+#' @inherit teal.data::topological_sort description details params title
 #' @examples
 #' # use non-exported function from teal.slice
 #' topological_sort <- getFromNamespace("topological_sort", "teal.slice")

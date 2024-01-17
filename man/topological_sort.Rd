@@ -7,10 +7,10 @@
 topological_sort(graph)
 }
 \arguments{
-\item{graph}{(named \code{list}) list with node vector elements}
+\item{graph}{(\verb{named list}) with node vector elements}
 }
 \description{
-Graph is a list which for each node contains a vector of child nodes
+Graph is a \code{list} which for each node contains a vector of child nodes
 in the returned list, parents appear before their children.
 }
 \details{
