@@ -128,20 +128,20 @@ RangeFilterState <- R6::R6Class( # nolint
 
     #' @description
     #' Initialize a `FilterState` object for range selection.
-    #' @param x (`numeric`)\cr
+    #' @param x (`numeric`)
     #'   values of the variable used in filter
-    #' @param x_reactive (`reactive`)\cr
+    #' @param x_reactive (`reactive`)
     #'   returning vector of the same type as `x`. Is used to update
     #'   counts following the change in values of the filtered dataset.
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
-    #' @param slice (`teal_slice`)\cr
+    #' @param slice (`teal_slice`)
     #'   object created using [teal_slice()]. `teal_slice` is stored
     #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
     #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
     #'   is a `reactiveValues` which means that changes in particular object are automatically
     #'   reflected in all places which refer to the same `teal_slice`.
-    #' @param extract_type (`character(0)`, `character(1)`)\cr
+    #' @param extract_type (`character(0)`, `character(1)`)
     #' whether condition calls should be prefixed by `dataname`. Possible values:
     #'
     #' - `character(0)` (default) `varname` in the condition call will not be prefixed
@@ -405,7 +405,7 @@ RangeFilterState <- R6::R6Class( # nolint
     # UI Module for `RangeFilterState`.
     # This UI element contains two values for `min` and `max`
     # of the range and two checkboxes whether to keep the `NA` or `Inf`  values.
-    # @param id (`character(1)`)\cr
+    # @param id (`character(1)`)
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
@@ -477,7 +477,7 @@ RangeFilterState <- R6::R6Class( # nolint
 
     # @description
     # Server module
-    # @param id (`character(1)`)\cr
+    # @param id (`character(1)`)
     #   an ID string that corresponds with the ID used to call the module's UI function.
     # return `moduleServer` function which returns `NULL`
     server_inputs = function(id) {

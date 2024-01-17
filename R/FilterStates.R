@@ -30,17 +30,17 @@ FilterStates <- R6::R6Class( # nolint
     #' Initializes `FilterStates` object by setting
     #' `dataname`, and `datalabel`.
     #'
-    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
+    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)
     #'   the `R` object which `subset` function is applied on.
-    #' @param data_reactive (`function(sid)`)\cr
+    #' @param data_reactive (`function(sid)`)
     #'   should return an object of the same type as `data` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
-    #' @param dataname (`character(1)`)\cr
+    #' @param dataname (`character(1)`)
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`
-    #' @param datalabel (`NULL` or `character(1)`)\cr
+    #' @param datalabel (`NULL` or `character(1)`)
     #'   text label value
     #'
     #' @return
@@ -117,7 +117,7 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' If no filters are applied, `NULL` is returned to avoid no-op calls such as `dataname <- dataname`.
     #'
-    #' @param sid (`character`)\cr
+    #' @param sid (`character`)
     #'  when specified then method returns code containing filter conditions of
     #'  `FilterState` objects which `"sid"` attribute is different than this `sid` argument.
     #'
@@ -194,7 +194,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Remove one or more `FilterState`s from the `state_list` along with their `ui` elements.
     #'
-    #' @param state (`teal_slices`)\cr
+    #' @param state (`teal_slices`)
     #'   specifying `FilterState` objects to remove;
     #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
@@ -244,7 +244,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Sets active `FilterState` objects.
     #'
-    #' @param data (`data.frame`)\cr
+    #' @param data (`data.frame`)
     #'   data which are supposed to be filtered
     #' @param state (`teal_slices`)
     #' @return function which throws an error
@@ -292,7 +292,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Remove all `FilterState` objects from this `FilterStates` object.
     #'
-    #' @param force (`logical(1)`)\cr
+    #' @param force (`logical(1)`)
     #'   include locked filter states
     #'
     #' @return `NULL`, invisibly
@@ -308,7 +308,7 @@ FilterStates <- R6::R6Class( # nolint
     #' Shiny `ui` element that stores `FilterState` `ui` elements.
     #' Populated with elements created with `renderUI` in the module server.
     #'
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'   shiny element (module instance) id
     #'
     #' @return `shiny.tag`
@@ -329,7 +329,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Shiny server module.
     #'
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'   shiny module instance id
     #'
     #' @return `moduleServer` function which returns `NULL`
@@ -398,7 +398,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Shiny `ui` module to add filter variable.
     #'
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'  shiny element (module instance) id
     #'
     #' @return `shiny.tag`
@@ -425,7 +425,7 @@ FilterStates <- R6::R6Class( # nolint
     #' Once selected, a variable is removed from available choices.
     #' Removing a filter variable adds it back to available choices.
     #'
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'   an id string that corresponds with the id used to call the module's `ui` function.
     #'
     #' @return `moduleServer` function which returns `NULL`
@@ -580,7 +580,7 @@ FilterStates <- R6::R6Class( # nolint
     # @description
     # Returns a list of `FilterState` objects stored in this `FilterStates`.
     #
-    # @param state_id (`character(1)`)\cr
+    # @param state_id (`character(1)`)
     #   name of element in a filter state (which is a `reactiveVal` containing a list)
     #
     # @return `list` of `FilterState` objects
@@ -596,12 +596,12 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     # @description
-    # Adds a new `FilterState` object to this `FilterStates`.\cr
+    # Adds a new `FilterState` object to this `FilterStates`.
     # Raises error if the length of `x` does not match the length of `state_id`.
     #
-    # @param x (`FilterState`)\cr
+    # @param x (`FilterState`)
     #   object to be added to filter state list
-    # @param state_id (`character(1)`)\cr
+    # @param state_id (`character(1)`)
     #   name of element in a filter state (which is a `reactiveVal` containing a list)
     #
     # @return NULL
@@ -622,14 +622,14 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     # @description
-    # Removes a single filter state with all associated shiny elements:\cr
+    # Removes a single filter state with all associated shiny elements:
     # * specified `FilterState` from `private$state_list`
     # * UI card created for this filter
     # * observers tracking the selection and remove button
     #
-    # @param state_id (`character`)\cr
+    # @param state_id (`character`)
     #   names of element in a filter state (which is a `reactiveVal` containing a list)
-    # @param force (`logical(1)`)\cr
+    # @param force (`logical(1)`)
     #   include locked filter states
     #
     # @return NULL
@@ -668,7 +668,7 @@ FilterStates <- R6::R6Class( # nolint
 
     # @description
     # Remove all `FilterState` objects from this `FilterStates` object.
-    # @param force (`logical(1)`)\cr
+    # @param force (`logical(1)`)
     #   include locked filter states
     # @return invisible NULL
     #

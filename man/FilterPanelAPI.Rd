@@ -116,7 +116,7 @@ Remove one or more \code{FilterState} of a \code{FilteredDataset} in the \code{F
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{filter}}{(\code{teal_slices})\cr
+\item{\code{filter}}{(\code{teal_slices})
 specifying \code{FilterState} objects to remove;
 \code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
@@ -138,7 +138,7 @@ Remove all \code{FilterStates} of the \code{FilteredData} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{datanames}}{(\code{character})\cr
+\item{\code{datanames}}{(\code{character})
 \code{datanames} to remove their \code{FilterStates};
 omit to remove all \code{FilterStates} in the \code{FilteredData} object}
 }

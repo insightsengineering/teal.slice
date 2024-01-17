@@ -7,7 +7,7 @@
 get_supported_filter_varnames(data)
 }
 \arguments{
-\item{data}{(\code{object})\cr
+\item{data}{(\code{object})
 the \code{R} object containing elements which class can be checked through \code{vapply} or \code{apply}.}
 }
 \value{

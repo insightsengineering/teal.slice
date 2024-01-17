@@ -84,16 +84,16 @@ Initialize \code{MAEFilteredDataset} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataset}}{(\code{MulitiAssayExperiment})\cr
+\item{\code{dataset}}{(\code{MulitiAssayExperiment})
 a single \code{MultiAssayExperiment} for which to define a subset}
 
-\item{\code{dataname}}{(\code{character})\cr
+\item{\code{dataname}}{(\code{character})
 a given name for the dataset it may not contain spaces}
 
-\item{\code{keys}}{optional, (\code{character})\cr
+\item{\code{keys}}{optional, (\code{character})
 vector with primary keys}
 
-\item{\code{label}}{(\code{character})\cr
+\item{\code{label}}{(\code{character})
 label to describe the dataset}
 }
 \if{html}{\out{</div>}}
@@ -131,7 +131,7 @@ Remove one or more \code{FilterState} of a \code{MAEFilteredDataset}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\code{teal_slices})\cr
+\item{\code{state}}{(\code{teal_slices})
 specifying \code{FilterState} objects to remove;
 \code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
@@ -153,7 +153,7 @@ specifying \code{FilterState} objects to remove;
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 identifier of the element - preferably containing dataset name}
 }
 \if{html}{\out{</div>}}

@@ -7,10 +7,10 @@
 calls_combine_by(calls, operator)
 }
 \arguments{
-\item{calls}{(\code{list})\cr
+\item{calls}{(\code{list})
 containing calls (or symbols) to be combined by \code{operator}}
 
-\item{operator}{(\code{character(1)})\cr
+\item{operator}{(\code{character(1)})
 infix operator to use in predicate composition, \emph{e.g.} \code{"&"}}
 }
 \value{

@@ -62,10 +62,10 @@ Initializes this \code{DefaultFilteredDataset} object.
 \describe{
 \item{\code{dataset}}{Any type of object; will not be filtered.}
 
-\item{\code{dataname}}{(\code{character(1)})\cr
+\item{\code{dataname}}{(\code{character(1)})
 Name given to the dataset; must not contain spaces.}
 
-\item{\code{label}}{(\code{character(1)})\cr
+\item{\code{label}}{(\code{character(1)})
 Label to describe the dataset.}
 }
 \if{html}{\out{</div>}}
@@ -188,7 +188,7 @@ Overwrites parent method.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 \code{shiny} module id}
 }
 \if{html}{\out{</div>}}
@@ -213,7 +213,7 @@ Overwrites parent method.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 \code{shiny} module id}
 }
 \if{html}{\out{</div>}}

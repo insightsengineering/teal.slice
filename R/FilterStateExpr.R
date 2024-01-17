@@ -66,7 +66,7 @@ FilterStateExpr <- R6::R6Class( # nolint
   public = list(
     #' @description
     #' Initialize a `FilterStateExpr` object.
-    #' @param slice (`teal_slice_expr`)\cr
+    #' @param slice (`teal_slice_expr`)
     #'   object created by [teal_slice()]
     #' @return `FilterStateExpr`
     initialize = function(slice) {
@@ -153,7 +153,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @description
     #' Shiny module server.
     #'
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'   shiny module instance id
     #'
     #' @return `moduleServer` function which returns reactive value
@@ -179,7 +179,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @description
     #' Shiny module `ui`.
     #'
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'  shiny element (module instance) id;
     #'  the `ui` for this class contains simple message stating that it is not supported
     #' @param parent_id (`character(1)`) id of the `FilterStates` card container

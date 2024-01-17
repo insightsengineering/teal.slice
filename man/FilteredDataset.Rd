@@ -52,16 +52,16 @@ Initializes this \code{FilteredDataset} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataset}}{(\code{data.frame} or \code{MultiAssayExperiment})\cr
+\item{\code{dataset}}{(\code{data.frame} or \code{MultiAssayExperiment})
 single dataset for which filters are rendered}
 
-\item{\code{dataname}}{(\code{character(1)})\cr
+\item{\code{dataname}}{(\code{character(1)})
 A given name for the dataset it may not contain spaces}
 
-\item{\code{keys}}{optional, (\code{character})\cr
+\item{\code{keys}}{optional, (\code{character})
 Vector with primary keys}
 
-\item{\code{label}}{(\code{character(1)})\cr
+\item{\code{label}}{(\code{character(1)})
 Label to describe the dataset.}
 }
 \if{html}{\out{</div>}}
@@ -118,7 +118,7 @@ Removes all active filter items applied to this dataset.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{force}}{(\code{logical(1)})\cr
+\item{\code{force}}{(\code{logical(1)})
 include locked filter states}
 }
 \if{html}{\out{</div>}}
@@ -143,7 +143,7 @@ depends on \code{filter_states} type and order which are set during initializati
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{sid}}{(\code{character})\cr
+\item{\code{sid}}{(\code{character})
 when specified then method returns code containing filter conditions of
 \code{FilterState} objects which \code{"sid"} attribute is different than this \code{sid} argument.}
 }
@@ -224,7 +224,7 @@ Gets the dataset object in this \code{FilteredDataset}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{filtered}}{(\code{logical(1)})\cr}
+\item{\code{filtered}}{(\code{logical(1)})}
 }
 \if{html}{\out{</div>}}
 }
@@ -295,7 +295,7 @@ Gets the dataset label.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 identifier of the element - preferably containing dataset name}
 }
 \if{html}{\out{</div>}}
@@ -321,7 +321,7 @@ Server module for a dataset active filters.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 an id string that corresponds with the id used to call the module's \code{ui} function.}
 }
 \if{html}{\out{</div>}}
@@ -342,7 +342,7 @@ an id string that corresponds with the id used to call the module's \code{ui} fu
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 identifier of the element - preferably containing dataset name}
 }
 \if{html}{\out{</div>}}
@@ -367,7 +367,7 @@ experiment.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 an id string that corresponds with the id used to call the module's \code{ui} function.}
 }
 \if{html}{\out{</div>}}

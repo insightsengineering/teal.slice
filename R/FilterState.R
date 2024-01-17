@@ -21,15 +21,14 @@
 #' - `POSIXct`, `POSIXlt`: `class = DatetimeFilterState`
 #' - all `NA` entries: `class: FilterState`, cannot be filtered
 #' - default: `FilterState`, cannot be filtered
-#' \cr
+#'
 #' Each variable's filter state is an `R6` object which contains `choices`,
 #' `selected`, `varname`, `dataname`, `labels`, `na_count`, `keep_na` and other
 #' variable type specific fields (`keep_inf`, `inf_count`, `timezone`).
 #' Object contains also shiny module (`ui` and `server`) which manages
 #' state of the filter through reactive values `selected`, `keep_na`, `keep_inf`
 #' which trigger `get_call()` and every `R` function call up in reactive chain.
-#' \cr
-#' \cr
+#'
 #' @section Modifying state:
 #' Modifying a `FilterState` object is possible in three scenarios:
 #' - In the interactive session by passing an appropriate `teal_slice`
@@ -48,22 +47,20 @@ FilterState <- R6::R6Class( # nolint
 
     #' @description
     #' Initialize a `FilterState` object.
-    #' @param x (`vector`)\cr
+    #' @param x (`vector`)
     #'   values of the variable used in filter
-    #' @param x_reactive (`reactive`)\cr
+    #' @param x_reactive (`reactive`)
     #'   returning vector of the same type as `x`. Is used to update
     #'   counts following the change in values of the filtered dataset.
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
-    #' @param slice (`teal_slice`)\cr
+    #' @param slice (`teal_slice`)
     #'   object created by [teal_slice()]
-    #' @param extract_type (`character(0)`, `character(1)`)\cr
+    #' @param extract_type (`character(0)`, `character(1)`)
     #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
-    #'
     #' - `character(0)` (default) `varname` in the condition call will not be prefixed
     #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
     #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
-    #'
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     #' @return `self` invisibly
@@ -197,7 +194,7 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Shiny module server.
     #'
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'   shiny module instance id
     #'
     #' @return `moduleServer` function which returns reactive value
@@ -285,7 +282,7 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Shiny module `ui`.
     #'
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'  shiny element (module instance) id;
     #'  the `ui` for this class contains simple message stating that it is not supported
     #' @param parent_id (`character(1)`) id of the `FilterStates` card container
@@ -416,7 +413,7 @@ FilterState <- R6::R6Class( # nolint
     # @description
     # Set selection.
     #
-    # @param value (`vector`)\cr
+    # @param value (`vector`)
     #   value(s) that come from filter selection; values are set in the
     #   module server after a selection is made in the app interface;
     #   values are stored in `teal_slice$selected` which is reactive;
@@ -451,7 +448,7 @@ FilterState <- R6::R6Class( # nolint
     # @description
     # Set whether to keep NAs.
     #
-    # @param value `logical(1)`\cr
+    # @param value `logical(1)`
     #   value(s) which come from the filter selection. Value is set in `server`
     #   modules after selecting check-box-input in the shiny interface. Values are set to
     #   `private$teal_slice$keep_na`
@@ -475,7 +472,7 @@ FilterState <- R6::R6Class( # nolint
     # @description
     # Set whether to keep Infs
     #
-    # @param value (`logical(1)`)\cr
+    # @param value (`logical(1)`)
     #  Value(s) which come from the filter selection. Value is set in `server`
     #  modules after selecting check-box-input in the shiny interface. Values are set to
     #  `private$teal_slice$keep_inf`

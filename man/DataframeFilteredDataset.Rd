@@ -86,29 +86,29 @@ Initializes this \code{DataframeFilteredDataset} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataset}}{(\code{data.frame})\cr
+\item{\code{dataset}}{(\code{data.frame})
 single data.frame for which filters are rendered}
 
-\item{\code{dataname}}{(\code{character})\cr
+\item{\code{dataname}}{(\code{character})
 A given name for the dataset it may not contain spaces}
 
-\item{\code{keys}}{optional, (\code{character})\cr
+\item{\code{keys}}{optional, (\code{character})
 Vector with primary keys}
 
-\item{\code{parent_name}}{(\code{character(1)})\cr
+\item{\code{parent_name}}{(\code{character(1)})
 Name of the parent dataset}
 
-\item{\code{parent}}{(\code{reactive})\cr
+\item{\code{parent}}{(\code{reactive})
 object returned by this reactive is a filtered \code{data.frame} from other \code{FilteredDataset}
 named \code{parent_name}. Consequence of passing \code{parent} is a \code{reactive} link which causes
 causing re-filtering of this \code{dataset} based on the changes in \code{parent}.}
 
-\item{\code{join_keys}}{(\code{character})\cr
+\item{\code{join_keys}}{(\code{character})
 Name of the columns in this dataset to join with \code{parent}
 dataset. If the column names are different if both datasets
 then the names of the vector define the \code{parent} columns.}
 
-\item{\code{label}}{(\code{character})\cr
+\item{\code{label}}{(\code{character})
 Label to describe the dataset}
 }
 \if{html}{\out{</div>}}
@@ -133,7 +133,7 @@ applies to one argument (\code{...}) in \code{dplyr::filter} call.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{sid}}{(\code{character})\cr
+\item{\code{sid}}{(\code{character})
 when specified then method returns code containing filter conditions of
 \code{FilterState} objects which \code{"sid"} attribute is different than this \code{sid} argument.}
 }
@@ -175,7 +175,7 @@ Remove one or more \code{FilterState} form a \code{FilteredDataset}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\code{teal_slices})\cr
+\item{\code{state}}{(\code{teal_slices})
 specifying \code{FilterState} objects to remove;
 \code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
@@ -197,7 +197,7 @@ specifying \code{FilterState} objects to remove;
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 identifier of the element - preferably containing dataset name}
 }
 \if{html}{\out{</div>}}

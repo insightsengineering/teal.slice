@@ -52,20 +52,20 @@ Initialize \code{SEFilterStates} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{(\code{SummarizedExperiment})\cr
+\item{\code{data}}{(\code{SummarizedExperiment})
 the \code{R} object which \code{subset} function is applied on.}
 
-\item{\code{data_reactive}}{(\verb{function(sid)})\cr
+\item{\code{data_reactive}}{(\verb{function(sid)})
 should return a \code{SummarizedExperiment} object or \code{NULL}.
 This object is needed for the \code{FilterState} counts being updated
 on a change in filters. If function returns \code{NULL} then filtered counts are not shown.
 Function has to have \code{sid} argument being a character.}
 
-\item{\code{dataname}}{(\code{character(1)})\cr
+\item{\code{dataname}}{(\code{character(1)})
 name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
 
-\item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})\cr
+\item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})
 text label value. Should be a name of experiment}
 }
 \if{html}{\out{</div>}}
@@ -83,7 +83,7 @@ Set filter state.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\code{teal_slices})\cr
+\item{\code{state}}{(\code{teal_slices})
 \code{teal_slice} objects should contain the field \code{arg \%in\% c("subset", "select")}}
 }
 \if{html}{\out{</div>}}
@@ -104,7 +104,7 @@ Shiny \code{ui} module to add filter variable.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 id of shiny module}
 }
 \if{html}{\out{</div>}}
@@ -132,7 +132,7 @@ sets of filter variables - one for \code{colData} and another for
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 an id string that corresponds with the id used to call the module's \code{ui} function.}
 }
 \if{html}{\out{</div>}}

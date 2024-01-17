@@ -53,26 +53,26 @@ Initialize \code{MAEFilterStates} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{(\code{MultiAssayExperiment})\cr
+\item{\code{data}}{(\code{MultiAssayExperiment})
 the \code{R} object which \code{MultiAssayExperiment::subsetByColData} function is applied on.}
 
-\item{\code{data_reactive}}{(\verb{function(sid)})\cr
+\item{\code{data_reactive}}{(\verb{function(sid)})
 should return a \code{MultiAssayExperiment} object or \code{NULL}.
 This object is needed for the \code{FilterState} counts being updated
 on a change in filters. If function returns \code{NULL} then filtered counts are not shown.
 Function has to have \code{sid} argument being a character.}
 
-\item{\code{dataname}}{(\code{character(1)})\cr
+\item{\code{dataname}}{(\code{character(1)})
 name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
 
-\item{\code{datalabel}}{(\code{NULL} or \code{character(1)})\cr
+\item{\code{datalabel}}{(\code{NULL} or \code{character(1)})
 text label value}
 
-\item{\code{keys}}{(\code{character})\cr
+\item{\code{keys}}{(\code{character})
 key columns names}
 
-\item{\code{varlabels}}{(\code{character})\cr
+\item{\code{varlabels}}{(\code{character})
 labels of the variables used in this object}
 }
 \if{html}{\out{</div>}}

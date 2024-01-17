@@ -1,9 +1,15 @@
 #' Progress bars with labels
 #'
 #' `shiny` element showing progress bar counts. Each element can have an
-#' unique `id` attribute so each can be used independently.\cr
-#' Progress bar size is dependent on the ratio: \cr`choicesnow[i] / countsmax[i]`.\cr
-#' Label is:\cr `choices[i] (countsnow[i]/countsmax)`
+#' unique `id` attribute so each can be used independently.
+#'
+#' Progress bar size is dependent on the ratio:
+#'
+#' `choicesnow[i] / countsmax[i]`.
+#'
+#' Label is:
+#'
+#'  `choices[i] (countsnow[i]/countsmax)`
 #'
 #' @param session (`session`) object passed to function given to `shinyServer`.
 #' @param inputId (`character(1)`) `shiny` id

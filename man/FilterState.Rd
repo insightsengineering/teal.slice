@@ -22,16 +22,14 @@ code relevant to selected values.
 \item \code{POSIXct}, \code{POSIXlt}: \code{class = DatetimeFilterState}
 \item all \code{NA} entries: \code{class: FilterState}, cannot be filtered
 \item default: \code{FilterState}, cannot be filtered
-\cr
+}
+
 Each variable's filter state is an \code{R6} object which contains \code{choices},
 \code{selected}, \code{varname}, \code{dataname}, \code{labels}, \code{na_count}, \code{keep_na} and other
 variable type specific fields (\code{keep_inf}, \code{inf_count}, \code{timezone}).
 Object contains also shiny module (\code{ui} and \code{server}) which manages
 state of the filter through reactive values \code{selected}, \code{keep_na}, \code{keep_inf}
 which trigger \code{get_call()} and every \code{R} function call up in reactive chain.
-\cr
-\cr
-}
 }
 \section{Modifying state}{
 
@@ -79,19 +77,19 @@ Initialize a \code{FilterState} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{x}}{(\code{vector})\cr
+\item{\code{x}}{(\code{vector})
 values of the variable used in filter}
 
-\item{\code{x_reactive}}{(\code{reactive})\cr
+\item{\code{x_reactive}}{(\code{reactive})
 returning vector of the same type as \code{x}. Is used to update
 counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
-\item{\code{slice}}{(\code{teal_slice})\cr
+\item{\code{slice}}{(\code{teal_slice})
 object created by \code{\link[=teal_slice]{teal_slice()}}}
 
-\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
+\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})
 specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
@@ -208,7 +206,7 @@ Shiny module server.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 shiny module instance id}
 }
 \if{html}{\out{</div>}}
@@ -230,7 +228,7 @@ Shiny module \code{ui}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 shiny element (module instance) id;
 the \code{ui} for this class contains simple message stating that it is not supported}
 

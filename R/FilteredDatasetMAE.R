@@ -36,13 +36,13 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Initialize `MAEFilteredDataset` object.
     #'
-    #' @param dataset (`MulitiAssayExperiment`)\cr
+    #' @param dataset (`MulitiAssayExperiment`)
     #'  a single `MultiAssayExperiment` for which to define a subset
-    #' @param dataname (`character`)\cr
+    #' @param dataname (`character`)
     #'  a given name for the dataset it may not contain spaces
-    #' @param keys optional, (`character`)\cr
+    #' @param keys optional, (`character`)
     #'   vector with primary keys
-    #' @param label (`character`)\cr
+    #' @param label (`character`)
     #'   label to describe the dataset
     initialize = function(dataset, dataname, keys = character(0), label = character(0)) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
@@ -130,7 +130,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Remove one or more `FilterState` of a `MAEFilteredDataset`.
     #'
-    #' @param state (`teal_slices`)\cr
+    #' @param state (`teal_slices`)
     #'   specifying `FilterState` objects to remove;
     #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
@@ -173,7 +173,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
     #' @description
     #' `ui` module to add filter variable for this dataset.
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'  identifier of the element - preferably containing dataset name
     #'
     #' @return function - shiny `ui` module

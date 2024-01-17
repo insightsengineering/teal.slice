@@ -1,18 +1,18 @@
 #' Initialize `FilterStates` object
 #'
-#' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
+#' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)
 #'   the `R` object which `subset` function is applied on.
-#' @param data_reactive (`function(sid)`)\cr
+#' @param data_reactive (`function(sid)`)
 #'   should return an object of the same type as `data` or `NULL`.
 #'   This object is needed for the `FilterState` shiny module to update
 #'   counts if filtered data changes.
 #'   If function returns `NULL` then filtered counts
 #'   are not shown. Function has to have `sid` argument being a character which
 #'   is related to `sid` argument in the `get_call` method.
-#' @param dataname (`character(1)`)\cr
+#' @param dataname (`character(1)`)
 #'   name of the data used in the expression
 #'   specified to the function argument attached to this `FilterStates`.
-#' @param datalabel (`character(0)` or `character(1)`)\cr
+#' @param datalabel (`character(0)` or `character(1)`)
 #'   text label value.
 #' @param ... (optional)
 #'   additional arguments for specific classes: keys.
@@ -136,7 +136,7 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
 #'
 #' Gets filterable variable names from a given object. The names match variables
 #' of classes in an vector `teal.slice:::.filterable_class`.
-#' @param data (`object`)\cr
+#' @param data (`object`)
 #'   the `R` object containing elements which class can be checked through `vapply` or `apply`.
 #' @return `character` vector of matched element names
 #' @examples
@@ -194,14 +194,14 @@ get_supported_filter_varnames.MultiAssayExperiment <- function(data) { # nolint
 
 #' Returns a `choices_labeled` object
 #'
-#' @param data (`data.frame`, `DFrame`, `list`)\cr
+#' @param data (`data.frame`, `DFrame`, `list`)
 #'   where labels can be taken from in case when `varlabels` is not specified.
 #'   `data` must be specified if `varlabels` is not specified.
-#' @param choices (`character`)\cr
+#' @param choices (`character`)
 #'  the vector of chosen variables
-#' @param varlabels (`character`)\cr
+#' @param varlabels (`character`)
 #'  the labels of variables in data
-#' @param keys (`character`)\cr
+#' @param keys (`character`)
 #'  the names of the key columns in data
 #' @return `character(0)` if choices are empty; a `choices_labeled` object otherwise
 #' @keywords internal

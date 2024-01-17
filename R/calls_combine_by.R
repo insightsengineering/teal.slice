@@ -5,9 +5,9 @@
 #' This function is used to combine logical predicates produced by `FilterState` objects
 #' to build a complete subsetting expression.
 #'
-#' @param calls (`list`)\cr
+#' @param calls (`list`)
 #'   containing calls (or symbols) to be combined by `operator`
-#' @param operator (`character(1)`)\cr
+#' @param operator (`character(1)`)
 #'   infix operator to use in predicate composition, _e.g._ `"&"`
 #'
 #' @return

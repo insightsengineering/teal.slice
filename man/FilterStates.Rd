@@ -56,20 +56,20 @@ Initializes \code{FilterStates} object by setting
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
+\item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})
 the \code{R} object which \code{subset} function is applied on.}
 
-\item{\code{data_reactive}}{(\verb{function(sid)})\cr
+\item{\code{data_reactive}}{(\verb{function(sid)})
 should return an object of the same type as \code{data} object or \code{NULL}.
 This object is needed for the \code{FilterState} counts being updated
 on a change in filters. If function returns \code{NULL} then filtered counts are not shown.
 Function has to have \code{sid} argument being a character.}
 
-\item{\code{dataname}}{(\code{character(1)})\cr
+\item{\code{dataname}}{(\code{character(1)})
 name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}}
 
-\item{\code{datalabel}}{(\code{NULL} or \code{character(1)})\cr
+\item{\code{datalabel}}{(\code{NULL} or \code{character(1)})
 text label value}
 }
 \if{html}{\out{</div>}}
@@ -146,7 +146,7 @@ If no filters are applied, \code{NULL} is returned to avoid no-op calls such as 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{sid}}{(\code{character})\cr
+\item{\code{sid}}{(\code{character})
 when specified then method returns code containing filter conditions of
 \code{FilterState} objects which \code{"sid"} attribute is different than this \code{sid} argument.}
 }
@@ -185,7 +185,7 @@ Remove one or more \code{FilterState}s from the \code{state_list} along with the
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\code{teal_slices})\cr
+\item{\code{state}}{(\code{teal_slices})
 specifying \code{FilterState} objects to remove;
 \code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
@@ -225,7 +225,7 @@ Sets active \code{FilterState} objects.
 \describe{
 \item{\code{state}}{(\code{teal_slices})}
 
-\item{\code{data}}{(\code{data.frame})\cr
+\item{\code{data}}{(\code{data.frame})
 data which are supposed to be filtered}
 }
 \if{html}{\out{</div>}}
@@ -246,7 +246,7 @@ Remove all \code{FilterState} objects from this \code{FilterStates} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{force}}{(\code{logical(1)})\cr
+\item{\code{force}}{(\code{logical(1)})
 include locked filter states}
 }
 \if{html}{\out{</div>}}
@@ -268,7 +268,7 @@ Populated with elements created with \code{renderUI} in the module server.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 shiny element (module instance) id}
 }
 \if{html}{\out{</div>}}
@@ -289,7 +289,7 @@ Shiny server module.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 shiny module instance id}
 }
 \if{html}{\out{</div>}}
@@ -310,7 +310,7 @@ Shiny \code{ui} module to add filter variable.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 shiny element (module instance) id}
 }
 \if{html}{\out{</div>}}
@@ -335,7 +335,7 @@ Removing a filter variable adds it back to available choices.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 an id string that corresponds with the id used to call the module's \code{ui} function.}
 }
 \if{html}{\out{</div>}}

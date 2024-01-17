@@ -18,13 +18,13 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Initializes this `FilteredDataset` object.
     #'
-    #' @param dataset (`data.frame` or `MultiAssayExperiment`)\cr
+    #' @param dataset (`data.frame` or `MultiAssayExperiment`)
     #'  single dataset for which filters are rendered
-    #' @param dataname (`character(1)`)\cr
+    #' @param dataname (`character(1)`)
     #'  A given name for the dataset it may not contain spaces
-    #' @param keys optional, (`character`)\cr
+    #' @param keys optional, (`character`)
     #'   Vector with primary keys
-    #' @param label (`character(1)`)\cr
+    #' @param label (`character(1)`)
     #'   Label to describe the dataset.
     initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label")) {
       logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
@@ -88,7 +88,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Removes all active filter items applied to this dataset.
     #'
-    #' @param force (`logical(1)`)\cr
+    #' @param force (`logical(1)`)
     #'   include locked filter states
     #'
     #' @return NULL
@@ -112,7 +112,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' within each of `filter_states`. Configuration of the calls is constant and
     #' depends on `filter_states` type and order which are set during initialization.
     #'
-    #' @param sid (`character`)\cr
+    #' @param sid (`character`)
     #'  when specified then method returns code containing filter conditions of
     #'  `FilterState` objects which `"sid"` attribute is different than this `sid` argument.
     #'
@@ -167,7 +167,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Gets the dataset object in this `FilteredDataset`.
     #'
-    #' @param filtered (`logical(1)`)\cr
+    #' @param filtered (`logical(1)`)
     #'
     #' @return `data.frame` or `MultiAssayExperiment`, either raw
     #'  or as a reactive with current filters applied
@@ -218,7 +218,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @details
     #' `ui` module containing dataset active filters along with
     #' title and remove button.
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'  identifier of the element - preferably containing dataset name
     #'
     #' @return function - shiny `ui` module
@@ -286,7 +286,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Server module for a dataset active filters.
     #'
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'   an id string that corresponds with the id used to call the module's `ui` function.
     #' @return `moduleServer` function which returns `NULL`
     srv_active = function(id) {
@@ -340,7 +340,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' `ui` module to add filter variable for this dataset.
     #'
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'  identifier of the element - preferably containing dataset name
     #'
     #' @return function - shiny `ui` module
@@ -355,7 +355,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' contains one `FilterStates` object for `colData` and one for each
     #' experiment.
     #'
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'   an id string that corresponds with the id used to call the module's `ui` function.
     #'
     #' @return `moduleServer` function which returns `NULL`
@@ -400,7 +400,7 @@ FilteredDataset <- R6::R6Class( # nolint
 
     # @description
     # Gets the active `FilterStates` objects.
-    # @param id (`character(1)`, `character(0)`)\cr
+    # @param id (`character(1)`, `character(0)`)
     #   the id of the `private$filter_states` list element where `FilterStates` is kept.
     # @return `FilterStates` or `list` of `FilterStates` objects.
     get_filter_states = function() {

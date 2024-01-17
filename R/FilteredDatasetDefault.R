@@ -24,9 +24,9 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #'
     #' @param dataset
     #'  Any type of object; will not be filtered.
-    #' @param dataname (`character(1)`)\cr
+    #' @param dataname (`character(1)`)
     #'  Name given to the dataset; must not contain spaces.
-    #' @param label (`character(1)`)\cr
+    #' @param label (`character(1)`)
     #'   Label to describe the dataset.
     initialize = function(dataset, dataname, label = character(0)) {
       super$initialize(dataset = dataset, dataname = dataname, label = label)
@@ -87,7 +87,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' Overwrites parent method.
     #' @details
     #' Blank module `ui` that would list active filter states for this dataset.
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'  `shiny` module id
     #' @return empty `div`
     ui_active = function(id) {
@@ -99,7 +99,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' Overwrites parent method.
     #' @details
     #' Blank module `ui` that would list active filter states for this dataset.
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'  `shiny` module id
     #' @return empty `div`
     ui_add = function(id) {

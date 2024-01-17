@@ -6,14 +6,15 @@
 #'
 #' @name filter_state_api
 #'
-#' @param datasets (`FilteredData`)\cr
-#'   object to store filter state and filtered datasets, shared across modules\cr
+#' @param datasets (`FilteredData`)
+#'   object to store filter state and filtered datasets, shared across modules
+#'
 #'   see [`FilteredData`] for details
 #'
-#' @param filter (`teal_slices`)\cr
+#' @param filter (`teal_slices`)
 #'   specify filters in place on app start-up
 #'
-#' @param force (`logical(1)`)\cr
+#' @param force (`logical(1)`)
 #'   include locked filter states
 #'
 #' @return

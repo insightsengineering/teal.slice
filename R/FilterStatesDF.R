@@ -164,19 +164,19 @@ DFFilterStates <- R6::R6Class( # nolint
     #' which means that when calling the subset function associated with this class
     #' (`dplyr::filter`), a list of conditions is passed to unnamed arguments (`...`).
     #'
-    #' @param data (`data.frame`)\cr
+    #' @param data (`data.frame`)
     #'   the `R` object which `dplyr::filter` function is applied on.
-    #' @param data_reactive (`function(sid)`)\cr
+    #' @param data_reactive (`function(sid)`)
     #'   should return a `data.frame` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
-    #' @param dataname (`character`)\cr
+    #' @param dataname (`character`)
     #'   name of the data used in the *subset expression*
     #'   specified to the function argument attached to this `FilterStates`
-    #' @param datalabel (`NULL` or `character(1)`)\cr
+    #' @param datalabel (`NULL` or `character(1)`)
     #'   text label value
-    #' @param keys (`character`)\cr
+    #' @param keys (`character`)
     #'   key columns names
     #'
     initialize = function(data,

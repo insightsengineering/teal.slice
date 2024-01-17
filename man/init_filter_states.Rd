@@ -13,10 +13,10 @@ init_filter_states(
 )
 }
 \arguments{
-\item{data}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
+\item{data}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})
 the \code{R} object which \code{subset} function is applied on.}
 
-\item{data_reactive}{(\verb{function(sid)})\cr
+\item{data_reactive}{(\verb{function(sid)})
 should return an object of the same type as \code{data} or \code{NULL}.
 This object is needed for the \code{FilterState} shiny module to update
 counts if filtered data changes.
@@ -24,11 +24,11 @@ If function returns \code{NULL} then filtered counts
 are not shown. Function has to have \code{sid} argument being a character which
 is related to \code{sid} argument in the \code{get_call} method.}
 
-\item{dataname}{(\code{character(1)})\cr
+\item{dataname}{(\code{character(1)})
 name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
 
-\item{datalabel}{(\code{character(0)} or \code{character(1)})\cr
+\item{datalabel}{(\code{character(0)} or \code{character(1)})
 text label value.}
 
 \item{...}{(optional)

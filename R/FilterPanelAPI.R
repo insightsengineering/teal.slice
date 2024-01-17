@@ -80,7 +80,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #' @description
     #' Remove one or more `FilterState` of a `FilteredDataset` in the `FilteredData` object.
     #'
-    #' @param filter (`teal_slices`)\cr
+    #' @param filter (`teal_slices`)
     #'   specifying `FilterState` objects to remove;
     #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
@@ -94,7 +94,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #' @description
     #' Remove all `FilterStates` of the `FilteredData` object.
     #'
-    #' @param datanames (`character`)\cr
+    #' @param datanames (`character`)
     #'  `datanames` to remove their `FilterStates`;
     #'  omit to remove all `FilterStates` in the `FilteredData` object
     #'

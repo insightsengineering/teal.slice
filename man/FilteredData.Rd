@@ -195,7 +195,7 @@ Set list of external filter states available for activation.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{x}}{(\code{reactive})\cr
+\item{\code{x}}{(\code{reactive})
 should return \code{teal_slices}}
 }
 \if{html}{\out{</div>}}
@@ -358,10 +358,10 @@ Adds a dataset to this \code{FilteredData}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment})\cr
+\item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment})
 data to be filtered.}
 
-\item{\code{dataname}}{(\code{string})\cr
+\item{\code{dataname}}{(\code{string})
 the name of the \code{dataset} to be added to this object}
 }
 \if{html}{\out{</div>}}
@@ -482,7 +482,7 @@ Removes one or more \code{FilterState} from a \code{FilteredData} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\code{teal_slices})\cr
+\item{\code{state}}{(\code{teal_slices})
 specifying \code{FilterState} objects to remove;
 \code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
@@ -505,11 +505,11 @@ of a \code{FilteredData} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{datanames}}{(\code{character})\cr
+\item{\code{datanames}}{(\code{character})
 \code{datanames} to remove their \code{FilterStates} or empty which removes
 all \code{FilterStates} in the \code{FilteredData} object}
 
-\item{\code{force}}{(\code{logical(1)})\cr
+\item{\code{force}}{(\code{logical(1)})
 include locked filter states}
 }
 \if{html}{\out{</div>}}
@@ -534,7 +534,7 @@ the (active) datasets and allows to filter the datasets.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 module id}
 }
 \if{html}{\out{</div>}}
@@ -555,7 +555,7 @@ Server function for filter panel.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 an id string that corresponds with the id used to call the module's \code{ui} function.}
 
 \item{\code{active_datanames}}{\verb{function / reactive} returning \code{datanames} that
@@ -582,7 +582,7 @@ Server module responsible for displaying active filters.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 an id string that corresponds with the id used to call the module's \code{ui} function.}
 }
 \if{html}{\out{</div>}}
@@ -603,10 +603,10 @@ Server module responsible for displaying active filters.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 an id string that corresponds with the id used to call the module's \code{ui} function.}
 
-\item{\code{active_datanames}}{(\code{reactive})\cr
+\item{\code{active_datanames}}{(\code{reactive})
 defining subset of \code{self$datanames()} to be displayed.}
 }
 \if{html}{\out{</div>}}
@@ -627,7 +627,7 @@ Server module responsible for displaying drop-downs with variables to add a filt
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 an id string that corresponds with the id used to call the module's \code{ui} function.}
 }
 \if{html}{\out{</div>}}
@@ -648,10 +648,10 @@ Server module responsible for displaying drop-downs with variables to add a filt
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 an id string that corresponds with the id used to call the module's \code{ui} function.}
 
-\item{\code{active_datanames}}{(\code{reactive})\cr
+\item{\code{active_datanames}}{(\code{reactive})
 defining subset of \code{self$datanames()} to be displayed.}
 }
 \if{html}{\out{</div>}}
@@ -695,10 +695,10 @@ data.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 an id string that corresponds with the id used to call the module's \code{ui} function.}
 
-\item{\code{active_datanames}}{(\code{reactive})\cr
+\item{\code{active_datanames}}{(\code{reactive})
 returning \code{datanames} that should be shown on the filter panel,
 must be a subset of the \code{datanames} argument provided to \code{ui_filter_panel};
 if the function returns \code{NULL} (as opposed to \code{character(0)}), the filter

@@ -87,7 +87,7 @@ Initialize a \code{FilterStateExpr} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{slice}}{(\code{teal_slice_expr})\cr
+\item{\code{slice}}{(\code{teal_slice_expr})
 object created by \code{\link[=teal_slice]{teal_slice()}}}
 }
 \if{html}{\out{</div>}}
@@ -218,7 +218,7 @@ Shiny module server.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 shiny module instance id}
 }
 \if{html}{\out{</div>}}
@@ -240,7 +240,7 @@ Shiny module \code{ui}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
+\item{\code{id}}{(\code{character(1)})
 shiny element (module instance) id;
 the \code{ui} for this class contains simple message stating that it is not supported}
 
