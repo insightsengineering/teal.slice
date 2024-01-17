@@ -240,8 +240,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
       private$set_is_choice_limited(private$x, choices)
       private$x <- private$x[
-        (as.POSIXct(trunc(private$x, units = "secs")) >= choices[1L] &
-          as.POSIXct(trunc(private$x, units = "secs")) <= choices[2L]) | is.na(private$x)
+        (
+          as.POSIXct(trunc(private$x, units = "secs")) >= choices[1L] &
+            as.POSIXct(trunc(private$x, units = "secs")) <= choices[2L]
+        ) | is.na(private$x)
       ]
       private$teal_slice$choices <- choices
       invisible(NULL)
