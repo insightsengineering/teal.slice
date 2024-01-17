@@ -62,35 +62,46 @@ testthat::test_that("set_filter_state and get_filter_state, sets and returns the
   expect_identical_slices(filter_states$get_filter_state(), fs)
 })
 
-testthat::test_that("set_filter_state updates FilterState when dataname and varname are matched between teal_slice and
-existing filter", {
-  filter_states <- FilterStates$new(data = data.frame(a = 1:10), dataname = "test")
-  fs <- teal_slices(
-    teal_slice(
-      dataname = "test", varname = "a", choices = c(1, 5), selected = c(1, 4), keep_na = FALSE, keep_inf = FALSE,
-      fixed = FALSE, anchored = FALSE, any_attribute = "a", another_attribute = "b"
-    ),
-    count_type = "none"
-  )
-  filter_states$set_filter_state(fs)
-  fs[[1]]$selected <- c(1, 5)
-  filter_states$set_filter_state(fs)
-  expect_identical_slices(filter_states$get_filter_state(), fs)
-})
+testthat::test_that(
+  paste(
+    "set_filter_state",
+    "updates FilterState when dataname and varname are matched between teal_slice and existing filter"
+  ),
+  {
+    filter_states <- FilterStates$new(data = data.frame(a = 1:10), dataname = "test")
+    fs <- teal_slices(
+      teal_slice(
+        dataname = "test", varname = "a", choices = c(1, 5), selected = c(1, 4), keep_na = FALSE, keep_inf = FALSE,
+        fixed = FALSE, anchored = FALSE, any_attribute = "a", another_attribute = "b"
+      ),
+      count_type = "none"
+    )
+    filter_states$set_filter_state(fs)
+    fs[[1]]$selected <- c(1, 5)
+    filter_states$set_filter_state(fs)
+    expect_identical_slices(filter_states$get_filter_state(), fs)
+  }
+)
 
-testthat::test_that("set_filter_state allows to create two filters on the same variable if combination of their
-fields (dataname, varname, varlabel, arg, id) differ", {
-  filter_states <- FilterStates$new(data = data.frame(a = 1:10), dataname = "a")
-  fs <- teal_slices(
-    teal_slice(dataname = "a", varname = "a"),
-    teal_slice(dataname = "a", varname = "a", experiment = "a"),
-    teal_slice(dataname = "a", varname = "a", experiment = "a", arg = "a"),
-    teal_slice(dataname = "a", varname = "a", experiment = "a", arg = "a", id = "a"),
-    count_type = "none"
-  )
-  filter_states$set_filter_state(fs)
-  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 4)
-})
+testthat::test_that(
+  paste(
+    "set_filter_state",
+    "allows to create two filters on the same variable if combination of their",
+    "fields (dataname, varname, varlabel, arg, id) differ"
+  ),
+  {
+    filter_states <- FilterStates$new(data = data.frame(a = 1:10), dataname = "a")
+    fs <- teal_slices(
+      teal_slice(dataname = "a", varname = "a"),
+      teal_slice(dataname = "a", varname = "a", experiment = "a"),
+      teal_slice(dataname = "a", varname = "a", experiment = "a", arg = "a"),
+      teal_slice(dataname = "a", varname = "a", experiment = "a", arg = "a", id = "a"),
+      count_type = "none"
+    )
+    filter_states$set_filter_state(fs)
+    testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 4)
+  }
+)
 
 
 testthat::test_that("set_filter_state creates a new FilterStateExpr", {
@@ -144,36 +155,41 @@ testthat::test_that("remove_filter_state of inexistent FilterState raiser warnin
   )
 })
 
-testthat::test_that("remove_filter_state removes FilterState objects identified by 'dataname', 'experiment',
-'varname', 'arg' and/or 'id'", {
-  filter_states <- FilterStates$new(data = data.frame(a = 1:5), dataname = "a")
-  fs <- teal_slices(
-    teal_slice(dataname = "a", varname = "a"),
-    teal_slice(dataname = "a", varname = "a", experiment = "a"),
-    teal_slice(dataname = "a", varname = "a", experiment = "a", arg = "a"),
-    teal_slice(dataname = "a", varname = "a", experiment = "a", arg = "a", id = "a"),
-    count_type = "none"
-  )
-  filter_states$set_filter_state(fs)
+testthat::test_that(
+  paste(
+    "remove_filter_state",
+    "removes FilterState objects identified by 'dataname', 'experiment', 'varname', 'arg' and/or 'id'"
+  ),
+  {
+    filter_states <- FilterStates$new(data = data.frame(a = 1:5), dataname = "a")
+    fs <- teal_slices(
+      teal_slice(dataname = "a", varname = "a"),
+      teal_slice(dataname = "a", varname = "a", experiment = "a"),
+      teal_slice(dataname = "a", varname = "a", experiment = "a", arg = "a"),
+      teal_slice(dataname = "a", varname = "a", experiment = "a", arg = "a", id = "a"),
+      count_type = "none"
+    )
+    filter_states$set_filter_state(fs)
 
-  filter_states$remove_filter_state(teal_slices(teal_slice(dataname = "a", varname = "a")))
-  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 3)
+    filter_states$remove_filter_state(teal_slices(teal_slice(dataname = "a", varname = "a")))
+    testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 3)
 
-  filter_states$remove_filter_state(teal_slices(
-    teal_slice(dataname = "a", varname = "a", experiment = "a")
-  ))
-  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 2)
+    filter_states$remove_filter_state(teal_slices(
+      teal_slice(dataname = "a", varname = "a", experiment = "a")
+    ))
+    testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 2)
 
-  filter_states$remove_filter_state(teal_slices(
-    teal_slice(dataname = "a", varname = "a", experiment = "a", arg = "a")
-  ))
-  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 1)
+    filter_states$remove_filter_state(teal_slices(
+      teal_slice(dataname = "a", varname = "a", experiment = "a", arg = "a")
+    ))
+    testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 1)
 
-  filter_states$remove_filter_state(teal_slices(
-    teal_slice(dataname = "a", varname = "a", experiment = "a", arg = "a", id = "a")
-  ))
-  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 0)
-})
+    filter_states$remove_filter_state(teal_slices(
+      teal_slice(dataname = "a", varname = "a", experiment = "a", arg = "a", id = "a")
+    ))
+    testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 0)
+  }
+)
 
 testthat::test_that("clearing empty `FilterStates` does not raise errors", {
   filter_states <- FilterStates$new(data = NULL, dataname = "test")
