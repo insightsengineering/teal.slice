@@ -448,7 +448,7 @@ FilterState <- R6::R6Class( # nolint
     # @description
     # Set whether to keep NAs.
     #
-    # @param value `logical(1)`
+    # @param value (`logical(1)`)
     #   value(s) which come from the filter selection. Value is set in `server`
     #   modules after selecting check-box-input in the shiny interface. Values are set to
     #   `private$teal_slice$keep_na`
