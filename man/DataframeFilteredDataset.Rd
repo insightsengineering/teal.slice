@@ -189,7 +189,7 @@ specifying \code{FilterState} objects to remove;
 \if{html}{\out{<a id="method-DataframeFilteredDataset-ui_add"></a>}}
 \if{latex}{\out{\hypertarget{method-DataframeFilteredDataset-ui_add}{}}}
 \subsection{Method \code{ui_add()}}{
-\code{ui} module to add filter variable for this dataset.
+UI module to add filter variable for this dataset.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataframeFilteredDataset$ui_add(id)}\if{html}{\out{</div>}}
 }
@@ -203,7 +203,7 @@ identifier of the element - preferably containing dataset name}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-function - shiny \code{ui} module
+function - shiny UI module
 }
 }
 \if{html}{\out{<hr>}}

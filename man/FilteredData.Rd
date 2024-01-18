@@ -556,7 +556,8 @@ Server function for filter panel.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-an id string that corresponds with the id used to call the module's \code{ui} function.}
+an id string that corresponds with the id used to call the module's
+\code{ui_filter_panel} function.}
 
 \item{\code{active_datanames}}{(\code{function} or \code{reactive}) returning \code{datanames} that
 should be shown on the filter panel,
@@ -583,7 +584,7 @@ Server module responsible for displaying active filters.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-an id string that corresponds with the id used to call the module's \code{ui} function.}
+an id string that corresponds with the id used to call the module's \code{srv_active} function.}
 }
 \if{html}{\out{</div>}}
 }
@@ -604,7 +605,7 @@ Server module responsible for displaying active filters.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-an id string that corresponds with the id used to call the module's \code{ui} function.}
+an id string that corresponds with the id used to call the module's \code{ui_active} function.}
 
 \item{\code{active_datanames}}{(\code{reactive})
 defining subset of \code{self$datanames()} to be displayed.}
@@ -628,7 +629,8 @@ Server module responsible for displaying drop-downs with variables to add a filt
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-an id string that corresponds with the id used to call the module's \code{ui} function.}
+an id string that corresponds with the id used to call the module's
+\code{ui_add} function.}
 }
 \if{html}{\out{</div>}}
 }
@@ -649,7 +651,8 @@ Server module responsible for displaying drop-downs with variables to add a filt
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-an id string that corresponds with the id used to call the module's \code{ui} function.}
+an id string that corresponds with the id used to call the module's
+\code{ui_add} function.}
 
 \item{\code{active_datanames}}{(\code{reactive})
 defining subset of \code{self$datanames()} to be displayed.}
@@ -664,7 +667,7 @@ defining subset of \code{self$datanames()} to be displayed.}
 \if{html}{\out{<a id="method-FilteredData-ui_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-ui_overview}{}}}
 \subsection{Method \code{ui_overview()}}{
-Creates the \code{ui} for the module showing counts for each dataset
+Creates the UI definition for the module showing counts for each dataset
 contrasting the filtered to the full unfiltered dataset.
 
 Per dataset, it displays
@@ -696,7 +699,8 @@ data.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-an id string that corresponds with the id used to call the module's \code{ui} function.}
+an id string that corresponds with the id used to call the module's
+\code{ui_overview} function.}
 
 \item{\code{active_datanames}}{(\code{reactive})
 returning \code{datanames} that should be shown on the filter panel,

@@ -287,7 +287,7 @@ Gets the dataset label.
 \if{html}{\out{<a id="method-FilteredDataset-ui_active"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-ui_active}{}}}
 \subsection{Method \code{ui_active()}}{
-\code{ui} module for dataset active filters.
+UI module for dataset active filters.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$ui_active(id)}\if{html}{\out{</div>}}
 }
@@ -301,12 +301,12 @@ identifier of the element - preferably containing dataset name}
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-\code{ui} module containing dataset active filters along with
+UI module containing dataset active filters along with
 title and remove button.
 }
 
 \subsection{Returns}{
-function - shiny \code{ui} module
+function - shiny UI module
 }
 }
 \if{html}{\out{<hr>}}
@@ -322,7 +322,7 @@ Server module for a dataset active filters.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-an id string that corresponds with the id used to call the module's \code{ui} function.}
+an id string that corresponds with the id used to call the module's \code{ui_active} function.}
 }
 \if{html}{\out{</div>}}
 }
@@ -334,7 +334,7 @@ an id string that corresponds with the id used to call the module's \code{ui} fu
 \if{html}{\out{<a id="method-FilteredDataset-ui_add"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-ui_add}{}}}
 \subsection{Method \code{ui_add()}}{
-\code{ui} module to add filter variable for this dataset.
+UI module to add filter variable for this dataset.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$ui_add(id)}\if{html}{\out{</div>}}
 }
@@ -348,7 +348,7 @@ identifier of the element - preferably containing dataset name}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-function - shiny \code{ui} module
+function - shiny UI module
 }
 }
 \if{html}{\out{<hr>}}
@@ -368,7 +368,8 @@ experiment.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-an id string that corresponds with the id used to call the module's \code{ui} function.}
+an id string that corresponds with the id used to call the module's
+\code{ui_add} function.}
 }
 \if{html}{\out{</div>}}
 }

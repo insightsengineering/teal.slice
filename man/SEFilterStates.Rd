@@ -96,7 +96,7 @@ Set filter state.
 \if{html}{\out{<a id="method-SEFilterStates-ui_add"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-ui_add}{}}}
 \subsection{Method \code{ui_add()}}{
-Shiny \code{ui} module to add filter variable.
+Shiny UI module to add filter variable.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$ui_add(id)}\if{html}{\out{</div>}}
 }
@@ -133,7 +133,7 @@ sets of filter variables - one for \code{colData} and another for
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-an id string that corresponds with the id used to call the module's \code{ui} function.}
+an id string that corresponds with the id used to call the module's \code{ui_add} function.}
 }
 \if{html}{\out{</div>}}
 }

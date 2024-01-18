@@ -172,11 +172,11 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' `ui` module to add filter variable for this dataset.
+    #' UI module to add filter variable for this dataset.
     #' @param id (`character(1)`)
     #'  identifier of the element - preferably containing dataset name
     #'
-    #' @return function - shiny `ui` module
+    #' @return function - shiny UI module
     #'
     ui_add = function(id) {
       ns <- NS(id)

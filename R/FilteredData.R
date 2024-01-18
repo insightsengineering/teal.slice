@@ -516,7 +516,8 @@ FilteredData <- R6::R6Class( # nolint
     #' Server function for filter panel.
     #'
     #' @param id (`character(1)`)
-    #'   an id string that corresponds with the id used to call the module's `ui` function.
+    #'   an id string that corresponds with the id used to call the module's
+    #'   `ui_filter_panel` function.
     #' @param active_datanames (`function` or `reactive`) returning `datanames` that
     #'   should be shown on the filter panel,
     #'   must be a subset of the `datanames` argument provided to `ui_filter_panel`;
@@ -550,7 +551,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Server module responsible for displaying active filters.
     #' @param id (`character(1)`)
-    #'   an id string that corresponds with the id used to call the module's `ui` function.
+    #'   an id string that corresponds with the id used to call the module's `srv_active` function.
     #' @return `shiny.tag`
     ui_active = function(id) {
       ns <- NS(id)
@@ -600,7 +601,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Server module responsible for displaying active filters.
     #' @param id (`character(1)`)
-    #'   an id string that corresponds with the id used to call the module's `ui` function.
+    #'   an id string that corresponds with the id used to call the module's `ui_active` function.
     #' @param active_datanames (`reactive`)
     #'   defining subset of `self$datanames()` to be displayed.
     #' @return `moduleServer` returning `NULL`
@@ -669,7 +670,8 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Server module responsible for displaying drop-downs with variables to add a filter.
     #' @param id (`character(1)`)
-    #'   an id string that corresponds with the id used to call the module's `ui` function.
+    #'   an id string that corresponds with the id used to call the module's
+    #'   `ui_add` function.
     #' @return `shiny.tag`
     ui_add = function(id) {
       ns <- NS(id)
@@ -711,7 +713,8 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Server module responsible for displaying drop-downs with variables to add a filter.
     #' @param id (`character(1)`)
-    #'   an id string that corresponds with the id used to call the module's `ui` function.
+    #'   an id string that corresponds with the id used to call the module's
+    #'   `ui_add` function.
     #' @param active_datanames (`reactive`)
     #'   defining subset of `self$datanames()` to be displayed.
     #' @return `moduleServer` returning `NULL`
@@ -750,7 +753,7 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Creates the `ui` for the module showing counts for each dataset
+    #' Creates the UI definition for the module showing counts for each dataset
     #' contrasting the filtered to the full unfiltered dataset.
     #'
     #' Per dataset, it displays
@@ -795,7 +798,8 @@ FilteredData <- R6::R6Class( # nolint
     #' data.
     #'
     #' @param id (`character(1)`)
-    #'   an id string that corresponds with the id used to call the module's `ui` function.
+    #'   an id string that corresponds with the id used to call the module's
+    #'   `ui_overview` function.
     #' @param active_datanames (`reactive`)
     #'   returning `datanames` that should be shown on the filter panel,
     #'   must be a subset of the `datanames` argument provided to `ui_filter_panel`;

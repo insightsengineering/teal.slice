@@ -194,7 +194,7 @@ Overwrites parent method.
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-Blank module \code{ui} that would list active filter states for this dataset.
+Blank UI module that would list active filter states for this dataset.
 }
 
 \subsection{Returns}{
@@ -219,7 +219,7 @@ Overwrites parent method.
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-Blank module \code{ui} that would list active filter states for this dataset.
+Blank UI module that would list active filter states for this dataset.
 }
 
 \subsection{Returns}{

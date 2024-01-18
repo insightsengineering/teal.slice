@@ -177,7 +177,7 @@ Prints this \code{FilterStates} object.
 \if{html}{\out{<a id="method-FilterStates-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Remove one or more \code{FilterState}s from the \code{state_list} along with their \code{ui} elements.
+Remove one or more \code{FilterState}s from the \code{state_list} along with their UI elements.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$remove_filter_state(state)}\if{html}{\out{</div>}}
 }
@@ -259,7 +259,7 @@ include locked filter states}
 \if{html}{\out{<a id="method-FilterStates-ui_active"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-ui_active}{}}}
 \subsection{Method \code{ui_active()}}{
-Shiny \code{ui} element that stores \code{FilterState} \code{ui} elements.
+Shiny UI definition that stores \code{FilterState} UI elements.
 Populated with elements created with \code{renderUI} in the module server.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui_active(id)}\if{html}{\out{</div>}}
@@ -302,7 +302,7 @@ shiny module instance id}
 \if{html}{\out{<a id="method-FilterStates-ui_add"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-ui_add}{}}}
 \subsection{Method \code{ui_add()}}{
-Shiny \code{ui} module to add filter variable.
+Shiny UI module to add filter variable.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui_add(id)}\if{html}{\out{</div>}}
 }
@@ -336,7 +336,7 @@ Removing a filter variable adds it back to available choices.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-an id string that corresponds with the id used to call the module's \code{ui} function.}
+an id string that corresponds with the id used to call the module's \code{ui_add} function.}
 }
 \if{html}{\out{</div>}}
 }
