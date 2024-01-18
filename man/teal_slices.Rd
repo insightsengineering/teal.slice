@@ -37,7 +37,7 @@ as.teal_slices(x)
 \item{...}{any number of \code{teal_slice} objects. For \code{print} and \code{format},
 additional arguments passed to other functions.}
 
-\item{include_varnames, exclude_varnames}{(\verb{named list}s of \code{character}) where list names
+\item{include_varnames, exclude_varnames}{(named \code{list}s of \code{character}) where list names
 match names of data sets and vector elements match variable names in respective data sets;
 specify which variables are allowed to be filtered; see \code{Details}}
 
