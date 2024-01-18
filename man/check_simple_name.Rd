@@ -7,7 +7,7 @@
 check_simple_name(name)
 }
 \arguments{
-\item{name}{\verb{character, single or vector} name to check}
+\item{name}{(\code{character}) vector of name to check}
 }
 \description{
 Spaces are problematic because the variables must be escaped with backticks.

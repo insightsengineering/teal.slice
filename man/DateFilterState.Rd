@@ -162,7 +162,7 @@ returns \code{teal_slice} object which can be reused in other places. Beware, th
 is a \code{reactiveValues} which means that changes in particular object are automatically
 reflected in all places which refer to the same \code{teal_slice}.}
 
-\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})
+\item{\code{extract_type}}{(\code{character})
 whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
@@ -190,7 +190,7 @@ optional \verb{is.na(<varname>)}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{\code{character(1)} containing possibly prefixed name of data set}
+\item{\code{dataname}}{(\code{character(1)}) containing possibly prefixed name of data set}
 }
 \if{html}{\out{</div>}}
 }

@@ -13,7 +13,7 @@ init_filter_states(
 )
 }
 \arguments{
-\item{data}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})
+\item{data}{(\code{data.frame} or \code{MultiAssayExperiment} or \code{SummarizedExperiment} or \code{matrix})
 the \code{R} object which \code{subset} function is applied on.}
 
 \item{data_reactive}{(\verb{function(sid)})
@@ -28,7 +28,7 @@ is related to \code{sid} argument in the \code{get_call} method.}
 name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
 
-\item{datalabel}{(\code{character(0)} or \code{character(1)})
+\item{datalabel}{(\code{NULL} or \code{character(1)})
 text label value.}
 
 \item{...}{(optional)

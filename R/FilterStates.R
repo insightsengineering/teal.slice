@@ -30,7 +30,7 @@ FilterStates <- R6::R6Class( # nolint
     #' Initializes `FilterStates` object by setting
     #' `dataname`, and `datalabel`.
     #'
-    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)
+    #' @param data (`data.frame` or `MultiAssayExperiment` or `SummarizedExperiment` or `matrix`)
     #'   the `R` object which `subset` function is applied on.
     #' @param data_reactive (`function(sid)`)
     #'   should return an object of the same type as `data` object or `NULL`.
@@ -69,8 +69,8 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Returns a formatted string representing this `FilterStates` object.
     #'
-    #' @param show_all `logical(1)` passed to `format.teal_slices`
-    #' @param trim_lines `logical(1)` passed to `format.teal_slices`
+    #' @param show_all (`logical(1)`) passed to `format.teal_slices`
+    #' @param trim_lines (`logical(1)`) passed to `format.teal_slices`
     #'
     #' @return `character(1)` the formatted string
     #'

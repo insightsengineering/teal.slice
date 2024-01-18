@@ -24,7 +24,7 @@ dataset are not shown.}
 \item{slice}{(\code{teal_slice})
 object created using \code{\link[=teal_slice]{teal_slice()}}.}
 
-\item{extract_type}{(\code{character(0)}, \code{character(1)})
+\item{extract_type}{(\code{character})
 specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed

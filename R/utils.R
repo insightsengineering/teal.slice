@@ -7,7 +7,7 @@
 #'
 #' @md
 #'
-#' @param name `character, single or vector` name to check
+#' @param name (`character`) vector of name to check
 #' @keywords internal
 #'
 check_simple_name <- function(name) {

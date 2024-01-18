@@ -25,7 +25,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @param dataname (`character(1)`)
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
-    #' @param datalabel (`character(0)` or `character(1)`)
+    #' @param datalabel (`NULL` or `character(1)`)
     #'   text label value. Should be a name of experiment
     #'
     initialize = function(data,

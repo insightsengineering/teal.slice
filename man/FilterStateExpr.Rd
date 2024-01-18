@@ -108,9 +108,9 @@ Returns a formatted string representing this \code{FilterStateExpr} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{show_all}}{\code{logical(1)} passed to \code{format.teal_slice}}
+\item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
 
-\item{\code{trim_lines}}{\code{logical(1)} passed to \code{format.teal_slice}}
+\item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
 }
 \if{html}{\out{</div>}}
 }

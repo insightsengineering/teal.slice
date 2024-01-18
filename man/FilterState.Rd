@@ -89,7 +89,7 @@ dataset are not shown.}
 \item{\code{slice}}{(\code{teal_slice})
 object created by \code{\link[=teal_slice]{teal_slice()}}}
 
-\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})
+\item{\code{extract_type}}{(\code{character})
 specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
@@ -117,9 +117,9 @@ Returns a formatted string representing this \code{FilterState} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{show_all}}{\code{logical(1)} passed to \code{format.teal_slice}}
+\item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
 
-\item{\code{trim_lines}}{\code{logical(1)} passed to \code{format.teal_slice}}
+\item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
 }
 \if{html}{\out{</div>}}
 }

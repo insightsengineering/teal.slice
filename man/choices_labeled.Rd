@@ -7,9 +7,9 @@
 choices_labeled(choices, labels, subset = NULL, types = NULL)
 }
 \arguments{
-\item{choices}{a character / numeric / logical vector}
+\item{choices}{(\code{character} or \code{numeric} or \code{logical}) vector}
 
-\item{labels}{character vector containing labels to be applied to \code{choices}. If \code{NA} then
+\item{labels}{(\code{character}) vector containing labels to be applied to \code{choices}. If \code{NA} then
 "Label Missing" will be used.}
 
 \item{subset}{a vector that is a subset of \code{choices}. This is useful if

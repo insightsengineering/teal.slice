@@ -1,6 +1,6 @@
 #' Initialize `FilterStates` object
 #'
-#' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)
+#' @param data (`data.frame` or `MultiAssayExperiment` or `SummarizedExperiment` or `matrix`)
 #'   the `R` object which `subset` function is applied on.
 #' @param data_reactive (`function(sid)`)
 #'   should return an object of the same type as `data` or `NULL`.
@@ -12,7 +12,7 @@
 #' @param dataname (`character(1)`)
 #'   name of the data used in the expression
 #'   specified to the function argument attached to this `FilterStates`.
-#' @param datalabel (`character(0)` or `character(1)`)
+#' @param datalabel (`NULL` or `character(1)`)
 #'   text label value.
 #' @param ... (optional)
 #'   additional arguments for specific classes: keys.
@@ -194,7 +194,7 @@ get_supported_filter_varnames.MultiAssayExperiment <- function(data) { # nolint
 
 #' Returns a `choices_labeled` object
 #'
-#' @param data (`data.frame`, `DFrame`, `list`)
+#' @param data (`data.frame` or `DFrame` or `list`)
 #'   where labels can be taken from in case when `varlabels` is not specified.
 #'   `data` must be specified if `varlabels` is not specified.
 #' @param choices (`character`)

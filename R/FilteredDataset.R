@@ -63,8 +63,8 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Returns a formatted string representing this `FilteredDataset` object.
     #'
-    #' @param show_all `logical(1)` passed to `format.teal_slice`
-    #' @param trim_lines `logical(1)` passed to `format.teal_slice`
+    #' @param show_all (`logical(1)`) passed to `format.teal_slice`
+    #' @param trim_lines (`logical(1)`) passed to `format.teal_slice`
     #'
     #' @return `character(1)` the formatted string
     #'

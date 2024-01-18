@@ -318,7 +318,7 @@ The content for each of the data names is defined in \code{get_filter_overview_i
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{datanames}}{(\code{character} vector) names of the dataset}
+\item{\code{datanames}}{(\code{character}) vector of dataset names}
 }
 \if{html}{\out{</div>}}
 }
@@ -358,7 +358,7 @@ Adds a dataset to this \code{FilteredData}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment})
+\item{\code{data}}{(\code{data.frame} or \code{MultiAssayExperiment})
 data to be filtered.}
 
 \item{\code{dataname}}{(\code{string})
@@ -423,9 +423,9 @@ Returns a formatted string representing this \code{FilteredData} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{show_all}}{\code{logical(1)} passed to \code{format.teal_slice}}
+\item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
 
-\item{\code{trim_lines}}{\code{logical(1)} passed to \code{format.teal_slice}}
+\item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
 }
 \if{html}{\out{</div>}}
 }
@@ -558,7 +558,7 @@ Server function for filter panel.
 \item{\code{id}}{(\code{character(1)})
 an id string that corresponds with the id used to call the module's \code{ui} function.}
 
-\item{\code{active_datanames}}{\verb{function / reactive} returning \code{datanames} that
+\item{\code{active_datanames}}{(\code{function} or \code{reactive}) returning \code{datanames} that
 should be shown on the filter panel,
 must be a subset of the \code{datanames} argument provided to \code{ui_filter_panel};
 if the function returns \code{NULL} (as opposed to \code{character(0)}), the filter

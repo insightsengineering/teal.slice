@@ -115,9 +115,8 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
     #'   is a `reactiveValues` which means that changes in particular object are automatically
     #'   reflected in all places which refer to the same `teal_slice`.
-    #' @param extract_type (`character(0)`, `character(1)`)
+    #' @param extract_type (`character`)
     #' whether condition calls should be prefixed by `dataname`. Possible values:
-    #'
     #' - `character(0)` (default) `varname` in the condition call will not be prefixed
     #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
     #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`

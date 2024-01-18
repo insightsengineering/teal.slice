@@ -258,7 +258,7 @@ FilteredData <- R6::R6Class( # nolint
     #' This is intended to be presented in the application.
     #' The content for each of the data names is defined in `get_filter_overview_info` method.
     #'
-    #' @param datanames (`character` vector) names of the dataset
+    #' @param datanames (`character`) vector of dataset names
     #'
     #' @return `matrix` of observations and subjects of all datasets
     #'
@@ -294,7 +294,7 @@ FilteredData <- R6::R6Class( # nolint
     #' "Child" dataset return filtered data then dependent on the reactive filtered data of the
     #' "parent". See more in documentation of `parent` argument in `DataframeFilteredDataset` constructor.
     #'
-    #' @param data (`data.frame`, `MultiAssayExperiment`)
+    #' @param data (`data.frame` or `MultiAssayExperiment`)
     #'   data to be filtered.
     #'
     #' @param dataname (`string`)
@@ -368,8 +368,8 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Returns a formatted string representing this `FilteredData` object.
     #'
-    #' @param show_all `logical(1)` passed to `format.teal_slice`
-    #' @param trim_lines `logical(1)` passed to `format.teal_slice`
+    #' @param show_all (`logical(1)`) passed to `format.teal_slice`
+    #' @param trim_lines (`logical(1)`) passed to `format.teal_slice`
     #'
     #' @return `character(1)` the formatted string
     #'
@@ -517,7 +517,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)
     #'   an id string that corresponds with the id used to call the module's `ui` function.
-    #' @param active_datanames `function / reactive` returning `datanames` that
+    #' @param active_datanames (`function` or `reactive`) returning `datanames` that
     #'   should be shown on the filter panel,
     #'   must be a subset of the `datanames` argument provided to `ui_filter_panel`;
     #'   if the function returns `NULL` (as opposed to `character(0)`), the filter

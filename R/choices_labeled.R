@@ -8,8 +8,8 @@
 #' If either `choices` or `labels` are factors, they are coerced to character.
 #' Duplicated elements from `choices` get removed.
 #'
-#' @param choices a character / numeric / logical vector
-#' @param labels character vector containing labels to be applied to `choices`. If `NA` then
+#' @param choices (`character` or `numeric` or `logical`) vector
+#' @param labels (`character`) vector containing labels to be applied to `choices`. If `NA` then
 #' "Label Missing" will be used.
 #' @param subset a vector that is a subset of `choices`. This is useful if
 #'   only a few variables need to be named. If this argument is used, the returned vector will

@@ -259,7 +259,7 @@ jsonify <- function(x, trim_lines) {
 #' Converts a list representation of `teal_slice` or `teal_slices` into a `JSON` string.
 #' Ensures proper unboxing of list elements.
 #' This function is used by the `format` methods for `teal_slice` and `teal_slices`.
-#' @param x `list`, possibly recursive, obtained from `teal_slice` or `teal_slices`.
+#' @param x (`list`) possibly recursive, obtained from `teal_slice` or `teal_slices`.
 #' @return A `JSON` string.
 #
 #' @param x (`list`) representation of `teal_slices` object.
@@ -332,7 +332,7 @@ justify_json <- function(json) {
 #' This function takes a `JSON` string as input and returns a modified version of the
 #' input where the values portion of each line is trimmed for a less messy console output.
 #'
-#' @param x A character string.
+#' @param x (`character`)
 #'
 #' @return A character string trimmed after a certain hard-coded number of characters in the value portion.
 #'

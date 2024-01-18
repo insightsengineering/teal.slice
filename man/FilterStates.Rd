@@ -56,7 +56,7 @@ Initializes \code{FilterStates} object by setting
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})
+\item{\code{data}}{(\code{data.frame} or \code{MultiAssayExperiment} or \code{SummarizedExperiment} or \code{matrix})
 the \code{R} object which \code{subset} function is applied on.}
 
 \item{\code{data_reactive}}{(\verb{function(sid)})
@@ -90,9 +90,9 @@ Returns a formatted string representing this \code{FilterStates} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{show_all}}{\code{logical(1)} passed to \code{format.teal_slices}}
+\item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slices}}
 
-\item{\code{trim_lines}}{\code{logical(1)} passed to \code{format.teal_slices}}
+\item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slices}}
 }
 \if{html}{\out{</div>}}
 }

@@ -11,11 +11,11 @@ toggle_icon(input_id, icons, one_way = FALSE)
 toggle_title(input_id, titles, one_way = FALSE)
 }
 \arguments{
-\item{input_id}{\code{character(1)} (name-spaced) id of the button}
+\item{input_id}{(\code{character(1)}) (name-spaced) id of the button}
 
-\item{icons, titles}{\code{character(2)} vector specifying values between which to toggle}
+\item{icons, titles}{(\code{character(2)}) vector specifying values between which to toggle}
 
-\item{one_way}{\code{logical(1)} flag specifying whether to keep toggling;
+\item{one_way}{(\code{logical(1)}) flag specifying whether to keep toggling;
 if TRUE, the target will be changed
 from the first element of \code{icons}/\code{titles} to the second}
 }

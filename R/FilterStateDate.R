@@ -129,9 +129,8 @@ DateFilterState <- R6::R6Class( # nolint
     #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
     #'   is a `reactiveValues` which means that changes in particular object are automatically
     #'   reflected in all places which refer to the same `teal_slice`.
-    #' @param extract_type (`character(0)`, `character(1)`)
+    #' @param extract_type (`character`)
     #' whether condition calls should be prefixed by `dataname`. Possible values:
-    #'
     #' - `character(0)` (default) `varname` in the condition call will not be prefixed
     #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
     #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
@@ -166,7 +165,7 @@ DateFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
     #' optional `is.na(<varname>)`.
-    #' @param dataname `character(1)` containing possibly prefixed name of data set
+    #' @param dataname (`character(1)`) containing possibly prefixed name of data set
     #' @return `call`
     #'
     get_call = function(dataname) {

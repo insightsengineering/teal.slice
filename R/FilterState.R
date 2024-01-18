@@ -56,7 +56,7 @@ FilterState <- R6::R6Class( # nolint
     #'   dataset are not shown.
     #' @param slice (`teal_slice`)
     #'   object created by [teal_slice()]
-    #' @param extract_type (`character(0)`, `character(1)`)
+    #' @param extract_type (`character`)
     #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
     #' - `character(0)` (default) `varname` in the condition call will not be prefixed
     #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
@@ -112,8 +112,8 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Returns a formatted string representing this `FilterState` object.
     #'
-    #' @param show_all `logical(1)` passed to `format.teal_slice`
-    #' @param trim_lines `logical(1)` passed to `format.teal_slice`
+    #' @param show_all (`logical(1)`) passed to `format.teal_slice`
+    #' @param trim_lines (`logical(1)`) passed to `format.teal_slice`
     #'
     #' @return `character(1)` the formatted string
     #'
