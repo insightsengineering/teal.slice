@@ -5,14 +5,16 @@
 #'
 #' @title Class to encapsulate the API of the filter panel of a teal app
 #'
-#' @description An API class for managing filter states in a teal application's filter panel.
+#' @description
+#' An API class for managing filter states in a teal application's filter panel.
 #'
 #' @details
-#'   The purpose of this class is to encapsulate the API of the filter panel in a new class `FilterPanelAPI` so
-#'   that it can be passed and used in the `server` call of any module instead of passing the whole `FilteredData`
-#'   object.
+#' The purpose of this class is to encapsulate the API of the filter panel in a
+#' new class `FilterPanelAPI` so that it can be passed and used in the server
+#' call of any module instead of passing the whole `FilteredData` object.
 #'
-#'   This class is supported by methods to set, get, remove filter states in the filter panel API.
+#' This class is supported by methods to set, get, remove filter states in the
+#' filter panel API.
 #'
 #' @examples
 #' library(teal.slice)

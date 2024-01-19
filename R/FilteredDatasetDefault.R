@@ -86,7 +86,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Overwrites parent method.
     #' @details
-    #' Blank module `ui` that would list active filter states for this dataset.
+    #' Blank UI module that would list active filter states for this dataset.
     #' @param id (`character(1)`)
     #'  `shiny` module id
     #' @return empty `div`
@@ -98,7 +98,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Overwrites parent method.
     #' @details
-    #' Blank module `ui` that would list active filter states for this dataset.
+    #' Blank UI module that would list active filter states for this dataset.
     #' @param id (`character(1)`)
     #'  `shiny` module id
     #' @return empty `div`

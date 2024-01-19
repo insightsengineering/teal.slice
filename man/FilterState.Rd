@@ -27,7 +27,7 @@ code relevant to selected values.
 Each variable's filter state is an \code{R6} object which contains \code{choices},
 \code{selected}, \code{varname}, \code{dataname}, \code{labels}, \code{na_count}, \code{keep_na} and other
 variable type specific fields (\code{keep_inf}, \code{inf_count}, \code{timezone}).
-Object contains also shiny module (\code{ui} and \code{server}) which manages
+Object also contains a shiny module (UI and server) which manages the
 state of the filter through reactive values \code{selected}, \code{keep_na}, \code{keep_inf}
 which trigger \code{get_call()} and every \code{R} function call up in reactive chain.
 }
@@ -220,7 +220,7 @@ signaling that remove button has been clicked
 \if{html}{\out{<a id="method-FilterState-ui"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-ui}{}}}
 \subsection{Method \code{ui()}}{
-Shiny module \code{ui}.
+Shiny UI module.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id, parent_id = "cards")}\if{html}{\out{</div>}}
 }
@@ -230,7 +230,7 @@ Shiny module \code{ui}.
 \describe{
 \item{\code{id}}{(\code{character(1)})
 shiny element (module instance) id;
-the \code{ui} for this class contains simple message stating that it is not supported}
+the UI for this class contains simple message stating that it is not supported}
 
 \item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}
 }
