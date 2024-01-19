@@ -7,7 +7,7 @@
 trim_lines_json(x)
 }
 \arguments{
-\item{x}{A character string.}
+\item{x}{(\code{character})}
 }
 \value{
 A character string trimmed after a certain hard-coded number of characters in the value portion.

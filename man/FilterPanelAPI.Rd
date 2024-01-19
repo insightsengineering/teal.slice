@@ -5,16 +5,15 @@
 \alias{FilterPanelAPI}
 \title{Class to encapsulate the API of the filter panel of a teal app}
 \description{
-Class to encapsulate the API of the filter panel of a teal app
-
-Class to encapsulate the API of the filter panel of a teal app
+An API class for managing filter states in a teal application's filter panel.
 }
 \details{
-The purpose of this class is to encapsulate the API of the filter panel in a new class \code{FilterPanelAPI} so
-that it can be passed and used in the \code{server} call of any module instead of passing the whole \code{FilteredData}
-object.
+The purpose of this class is to encapsulate the API of the filter panel in a
+new class \code{FilterPanelAPI} so that it can be passed and used in the server
+call of any module instead of passing the whole \code{FilteredData} object.
 
-This class is supported by methods to set, get, remove filter states in the filter panel API.
+This class is supported by methods to set, get, remove filter states in the
+filter panel API.
 }
 \examples{
 library(teal.slice)
@@ -57,7 +56,7 @@ isolate(fpa$get_filter_state())
 \if{html}{\out{<a id="method-FilterPanelAPI-new"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterPanelAPI-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{FilterPanelAPI} object
+Initialize a \code{FilterPanelAPI} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterPanelAPI$new(datasets)}\if{html}{\out{</div>}}
 }
@@ -118,7 +117,7 @@ Remove one or more \code{FilterState} of a \code{FilteredDataset} in the \code{F
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{filter}}{(\code{teal_slices})\cr
+\item{\code{filter}}{(\code{teal_slices})
 specifying \code{FilterState} objects to remove;
 \code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
@@ -140,7 +139,7 @@ Remove all \code{FilterStates} of the \code{FilteredData} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{datanames}}{(\code{character})\cr
+\item{\code{datanames}}{(\code{character})
 \code{datanames} to remove their \code{FilterStates};
 omit to remove all \code{FilterStates} in the \code{FilteredData} object}
 }

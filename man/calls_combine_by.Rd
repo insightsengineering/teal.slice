@@ -7,18 +7,14 @@
 calls_combine_by(calls, operator)
 }
 \arguments{
-\item{calls}{(\code{list})\cr
+\item{calls}{(\code{list})
 containing calls (or symbols) to be combined by \code{operator}}
 
-\item{operator}{(\code{character(1)})\cr
+\item{operator}{(\code{character(1)})
 infix operator to use in predicate composition, \emph{e.g.} \code{"&"}}
 }
 \value{
 A \code{call} where elements of \code{calls} are composed with \code{operator} or \code{NULL} if \code{calls} is an empty list.
-
-call or NULL, if \code{calls} is an empty list
-
-a combined \code{call}
 }
 \description{
 Combines calls with a logical operator.
@@ -37,5 +33,6 @@ calls <- list(
   quote(!SURV) # subsetting on logical
 )
 calls_combine_by(calls, "&")
+
 }
 \keyword{internal}

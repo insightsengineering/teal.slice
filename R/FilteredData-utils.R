@@ -1,10 +1,11 @@
 #' Initialize `FilteredData`
 #'
-#' Initialize `FilteredData`.
+#' Function creates a `FilteredData` object.
+#'
 #' @param x (named `list`) of datasets.
 #' @param join_keys (`join_keys`) see [teal.data::join_keys()].
-#' @param code (deprecated)
-#' @param check (deprecated)
+#' @param code `r lifecycle::badge("deprecated")`
+#' @param check `r lifecycle::badge("deprecated")`
 #' @examples
 #' datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
 #' datasets
@@ -32,9 +33,10 @@ init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, chec
 #' Method created for the `FilteredData` object to execute filter call with
 #' meaningful message. After evaluation used environment should contain
 #' all necessary bindings.
+#'
 #' @param expr (`language`)
 #' @param env (`environment`) where expression is evaluated.
-#' @return invisible `NULL`.
+#' @return `NULL` invisibly.
 #' @keywords internal
 eval_expr_with_msg <- function(expr, env) {
   lapply(
@@ -69,13 +71,13 @@ eval_expr_with_msg <- function(expr, env) {
 #' `removeClass` and `addClass` methods (when `one_way = TRUE`) to change icons.
 #' `toggle_title` calls the `attr` method to modify the `Title` attribute of the button.
 #'
-#' @param input_id `character(1)` (name-spaced) id of the button
-#' @param icons,titles `character(2)` vector specifying values between which to toggle
-#' @param one_way `logical(1)` flag specifying whether to keep toggling;
+#' @param input_id (`character(1)`) (name-spaced) id of the button
+#' @param icons,titles (`character(2)`) vector specifying values between which to toggle
+#' @param one_way (`logical(1)`) flag specifying whether to keep toggling;
 #'                if TRUE, the target will be changed
 #'                from the first element of `icons`/`titles` to the second
 #'
-#' @return Invisible NULL.
+#' @return `NULL` invisibly
 #' @examples
 #' # use non-exported function from teal.slice
 #' toggle_icon <- getFromNamespace("toggle_icon", "teal.slice")

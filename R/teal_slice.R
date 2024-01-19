@@ -1,22 +1,21 @@
-#' Specify single filter.
+#' Specify single filter
 #'
 #' Create a `teal_slice` object that holds complete information on filtering one variable.
 #'
-#' @details
 #' `teal_slice` object fully describes filter state and can be used to create,
 #' modify, and delete a filter state. A `teal_slice` contains a number of common fields
 #' (all named arguments of `teal_slice`), some of which are mandatory, but only
 #' `dataname` and  either `varname` or `expr` must be specified, while the others have default
 #' values.
 #'
-#' Setting any of the other values to NULL means that those properties will not be modified
+#' Setting any of the other values to `NULL` means that those properties will not be modified
 #' (when setting an existing state) or that they will be determined by data (when creating new a new one).
 #' Entire object is `FilterState` class member and can be accessed with `FilterState$get_state()`.
 #'
 #' A `teal_slice` can come in two flavors:
 #' 1. `teal_slice_var` -
 #' this describes a typical interactive filter that refers to a single variable, managed by the `FilterState` class.
-#' This class is created when `varname is specified.
+#' This class is created when `varname` is specified.
 #' The object retains all fields specified in the call. `id` can be created by default and need not be specified.
 #' 2. `teal_slice_expr` -
 #' this describes a filter state that refers to an expression, which can potentially include multiple variables,
@@ -45,7 +44,7 @@
 #' For filters referring to `colData` no extra arguments are needed.
 #' If a filter state is created for an experiment, that experiment name must be specified in the `experiment` argument.
 #' Furthermore, to specify filter for an `SummarizedExperiment` one must also set `arg`
-#' (`"subset"`  or `"select`, arguments in the [subset()] function for `SummarizedExperiment`)
+#' (`"subset"`  or `"select"`, arguments in the [subset()] function for `SummarizedExperiment`)
 #' in order to determine whether the filter refers to the `SE`'s `rowData` or `colData`.
 #'
 #' @param dataname (`character(1)`) name of data set
@@ -260,7 +259,7 @@ jsonify <- function(x, trim_lines) {
 #' Converts a list representation of `teal_slice` or `teal_slices` into a `JSON` string.
 #' Ensures proper unboxing of list elements.
 #' This function is used by the `format` methods for `teal_slice` and `teal_slices`.
-#' @param x `list`, possibly recursive, obtained from `teal_slice` or `teal_slices`.
+#' @param x (`list`) possibly recursive, obtained from `teal_slice` or `teal_slices`.
 #' @return A `JSON` string.
 #
 #' @param x (`list`) representation of `teal_slices` object.
@@ -333,7 +332,7 @@ justify_json <- function(json) {
 #' This function takes a `JSON` string as input and returns a modified version of the
 #' input where the values portion of each line is trimmed for a less messy console output.
 #'
-#' @param x A character string.
+#' @param x (`character`)
 #'
 #' @return A character string trimmed after a certain hard-coded number of characters in the value portion.
 #'

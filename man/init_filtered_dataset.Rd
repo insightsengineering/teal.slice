@@ -15,28 +15,28 @@ init_filtered_dataset(
 )
 }
 \arguments{
-\item{dataset}{(\code{data.frame} or \code{MultiAssayExperiment})\cr}
+\item{dataset}{(\code{data.frame} or \code{MultiAssayExperiment})}
 
-\item{dataname}{(\code{character})\cr
+\item{dataname}{(\code{character})
 A given name for the dataset it may not contain spaces}
 
-\item{keys}{optional, (\code{character})\cr
+\item{keys}{optional, (\code{character})
 Vector with primary keys}
 
-\item{parent_name}{(\code{character(1)})\cr
+\item{parent_name}{(\code{character(1)})
 Name of the parent dataset}
 
-\item{parent}{(\code{reactive})\cr
+\item{parent}{(\code{reactive})
 object returned by this reactive is a filtered \code{data.frame} from other \code{FilteredDataset}
 named \code{parent_name}. Consequence of passing \code{parent} is a \code{reactive} link which causes
 causing re-filtering of this \code{dataset} based on the changes in \code{parent}.}
 
-\item{join_keys}{(\code{character})\cr
+\item{join_keys}{(\code{character})
 Name of the columns in this dataset to join with \code{parent}
 dataset. If the column names are different if both datasets
 then the names of the vector define the \code{parent} columns.}
 
-\item{label}{(\code{character})\cr
+\item{label}{(\code{character})
 Label to describe the dataset}
 }
 \description{

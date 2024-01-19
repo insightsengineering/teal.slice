@@ -12,7 +12,7 @@ eval_expr_with_msg(expr, env)
 \item{env}{(\code{environment}) where expression is evaluated.}
 }
 \value{
-invisible \code{NULL}.
+\code{NULL} invisibly.
 }
 \description{
 Method created for the \code{FilteredData} object to execute filter call with

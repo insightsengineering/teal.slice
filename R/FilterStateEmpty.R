@@ -1,7 +1,12 @@
+# EmptyFilterState ------
+
 #' @name EmptyFilterState
-#' @title `FilterState` object for empty variable
-#' @description `FilterState` subclass representing an empty variable.
 #' @docType class
+#'
+#' @title `FilterState` object for empty variable
+#'
+#' @description `FilterState` subclass representing an empty variable.
+#'
 #' @examples
 #' # use non-exported function from teal.slice
 #' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
@@ -28,25 +33,24 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' @description
     #' Initialize `EmptyFilterState` object.
     #'
-    #' @param x (`vector`)\cr
+    #' @param x (`vector`)
     #'   values of the variable used in filter
-    #' @param x_reactive (`reactive`)\cr
+    #' @param x_reactive (`reactive`)
     #'   returning vector of the same type as `x`. Is used to update
     #'   counts following the change in values of the filtered dataset.
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
-    #' @param slice (`teal_slice`)\cr
+    #' @param slice (`teal_slice`)
     #'   object created using [teal_slice()]. `teal_slice` is stored
     #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
     #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
     #'   is a `reactiveValues` which means that changes in particular object are automatically
     #'   reflected in all places which refer to the same `teal_slice`.
-    #' @param extract_type (`character(0)`, `character(1)`)\cr
+    #' @param extract_type (`character`)
     #' whether condition calls should be prefixed by `dataname`. Possible values:
-    #'
-    #' * `character(0)` (default) `varname` in the condition call will not be prefixed
-    #' * `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
-    #' * `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
+    #' - `character(0)` (default) `varname` in the condition call will not be prefixed
+    #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
+    #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
     #'
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
@@ -121,7 +125,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     # UI Module for `EmptyFilterState`.
     # This UI element contains a checkbox input to filter or keep missing values.
     #
-    # @param id (`character(1)`)\cr
+    # @param id (`character(1)`)
     #   shiny element (module instance) id
     #
     ui_inputs = function(id) {
@@ -137,7 +141,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     # @description
     # Controls state of the `keep_na` checkbox input.
     #
-    # @param id (`character(1)`)\cr
+    # @param id (`character(1)`)
     #   shiny module instance id
     #
     # @return `moduleServer` function which returns `NULL`

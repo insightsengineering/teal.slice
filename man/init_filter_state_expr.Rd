@@ -7,7 +7,7 @@
 init_filter_state_expr(slice)
 }
 \arguments{
-\item{slice}{(\code{teal_slice_expr})\cr
+\item{slice}{(\code{teal_slice_expr})
 object created using \code{\link[=teal_slice]{teal_slice()}}. \code{teal_slice} is stored
 in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
 returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}

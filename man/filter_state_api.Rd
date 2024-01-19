@@ -17,14 +17,15 @@ remove_filter_state(datasets, filter)
 clear_filter_states(datasets, force = FALSE)
 }
 \arguments{
-\item{datasets}{(\code{FilteredData})\cr
-object to store filter state and filtered datasets, shared across modules\cr
+\item{datasets}{(\code{FilteredData})
+object to store filter state and filtered datasets, shared across modules
+
 see \code{\link{FilteredData}} for details}
 
-\item{filter}{(\code{teal_slices})\cr
+\item{filter}{(\code{teal_slices})
 specify filters in place on app start-up}
 
-\item{force}{(\code{logical(1)})\cr
+\item{force}{(\code{logical(1)})
 include locked filter states}
 }
 \value{
@@ -36,6 +37,7 @@ containing a \code{teal_slice} for every existing \code{FilterState}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Set, get and remove filter states of \code{FilteredData} object.
 }
 \examples{

@@ -1,7 +1,10 @@
+# SEFilterStates ------
+
+#' @name SEFilterStates
+#' @docType class
 #' @title `FilterStates` subclass for `SummarizedExperiments`
 #' @description Handles filter states in a `SummaryExperiment`.
 #' @keywords internal
-#'
 #'
 SEFilterStates <- R6::R6Class( # nolint
   classname = "SEFilterStates",
@@ -9,21 +12,20 @@ SEFilterStates <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
-    #' @description Initialize `SEFilterStates` object
+    #' @description
+    #' Initialize `SEFilterStates` object.
     #'
-    #' Initialize `SEFilterStates` object
-    #'
-    #' @param data (`SummarizedExperiment`)\cr
+    #' @param data (`SummarizedExperiment`)
     #'   the `R` object which `subset` function is applied on.
-    #' @param data_reactive (`function(sid)`)\cr
+    #' @param data_reactive (`function(sid)`)
     #'   should return a `SummarizedExperiment` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
-    #' @param dataname (`character(1)`)\cr
+    #' @param dataname (`character(1)`)
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
-    #' @param datalabel (`character(0)` or `character(1)`)\cr
+    #' @param datalabel (`NULL` or `character(1)`)
     #'   text label value. Should be a name of experiment
     #'
     initialize = function(data,
@@ -42,9 +44,9 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set filter state
+    #' Set filter state.
     #'
-    #' @param state (`teal_slices`)\cr
+    #' @param state (`teal_slices`)
     #'    `teal_slice` objects should contain the field `arg %in% c("subset", "select")`
     #'
     #' @return `NULL` invisibly
@@ -91,10 +93,10 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny UI module to add filter variable
-    #' @param id (`character(1)`)\cr
+    #' Shiny UI module to add filter variable.
+    #' @param id (`character(1)`)
     #'  id of shiny module
-    #' @return shiny.tag
+    #' @return `shiny.tag`
     ui_add = function(id) {
       data <- private$data
       checkmate::assert_string(id)
@@ -136,7 +138,7 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny server module to add filter variable
+    #' Shiny server module to add filter variable.
     #'
     #' Module controls available choices to select as a filter variable.
     #' Selected filter variable is being removed from available choices.
@@ -145,8 +147,8 @@ SEFilterStates <- R6::R6Class( # nolint
     #' sets of filter variables - one for `colData` and another for
     #' `rowData`.
     #'
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @param id (`character(1)`)
+    #'   an id string that corresponds with the id used to call the module's `ui_add` function.
     #' @return `moduleServer` function which returns `NULL`
     srv_add = function(id) {
       data <- private$data

@@ -1,22 +1,21 @@
 #' Initializes `FilterState`
 #'
-#' Initializes `FilterState` depending on a variable class.\cr
-#' @param x (`vector`)\cr
+#' Initializes `FilterState` depending on a variable class.
+#'
+#' @param x (`vector`)
 #'   values of the variable used in filter
-#' @param x_reactive (`reactive`)\cr
+#' @param x_reactive (`reactive`)
 #'   returning vector of the same type as `x`. Is used to update
 #'   counts following the change in values of the filtered dataset.
 #'   If it is set to `reactive(NULL)` then counts based on filtered
 #'   dataset are not shown.
-#' @param slice (`teal_slice`)\cr
+#' @param slice (`teal_slice`)
 #'   object created using [teal_slice()].
-#' @param extract_type (`character(0)`, `character(1)`)\cr
+#' @param extract_type (`character`)
 #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
-#'
-#' * `character(0)` (default) `varname` in the condition call will not be prefixed
-#' * `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
-#' * `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
-#'
+#' - `character(0)` (default) `varname` in the condition call will not be prefixed
+#' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
+#' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #'
 #' @examples
@@ -218,8 +217,7 @@ init_filter_state.POSIXlt <- function(x,
 
 #' Initialize a `FilterStateExpr` object
 #'
-#' Initialize a `FilterStateExpr` object
-#' @param slice (`teal_slice_expr`)\cr
+#' @param slice (`teal_slice_expr`)
 #'   object created using [teal_slice()]. `teal_slice` is stored
 #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
 #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
@@ -237,7 +235,7 @@ init_filter_state_expr <- function(slice) {
 #'
 #' Determines the color specification for the currently active Bootstrap color theme and returns one queried color.
 #'
-#' @param color `character(1)` naming one of the available theme colors
+#' @param color (`character(1)`) naming one of the available theme colors
 #' @param alpha either a `numeric(1)` or `character(1)` specifying transparency
 #'              in the range of `0-1` or a hexadecimal value `00-ff`, respectively;
 #'              set to NULL to omit adding the alpha channel

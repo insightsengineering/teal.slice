@@ -2,8 +2,15 @@
 #'
 #' `shiny` element showing progress bar counts. Each element can have an
 #' unique `id` attribute so each can be used independently.
-#' Progress bar size is dependent on the ratio `choicesnow[i] / countsmax[i]`.
-#' Label is `choices[i] (countsnow[i]/countsmax)`
+#'
+#' Progress bar size is dependent on the ratio:
+#'
+#' `choicesnow[i] / countsmax[i]`.
+#'
+#' Label is:
+#'
+#'  `choices[i] (countsnow[i]/countsmax)`
+#'
 #' @param session (`session`) object passed to function given to `shinyServer`.
 #' @param inputId (`character(1)`) `shiny` id
 #' @param choices (`vector`) determines label text.
@@ -86,7 +93,6 @@ countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
 
 #' Progress bar with label
 #'
-#' Progress bar with label.
 #' @param session (`session`) object passed to function given to `shinyServer`.
 #' @param inputId (`character(1)`) `shiny` id
 #' @param label (`character(1)`) Text to display followed by counts
@@ -94,7 +100,7 @@ countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
 #' @param countnow (`numeric(1)`) current count of a single item.
 #' @param counttotal (`numeric(1)`) total count to make whole progress bar
 #'  taking part of the container. Ratio between `countmax / counttotal`
-#'  determines `<style="width: <countmax / counttotal>%""`.
+#'  determines `<style="width: <countmax / counttotal>%">`.
 #' @return `shiny.tag` object with a progress bar and a label.
 #' @keywords internal
 countBar <- function(inputId, label, countmax, countnow = NULL, counttotal = countmax) { # nolint
@@ -194,6 +200,7 @@ updateCountText <- function(session = getDefaultReactiveDomain(), inputId, label
 #' Returns a text describing filtered counts. The text is composed in the following way:
 #' - when `countnow` is not `NULL`: `<label> (<countnow>/<countmax>)`
 #' - when `countnow` is `NULL`: `<label> (<countmax>)`
+#'
 #' @param label (`character(1)`) Text displayed before counts
 #' @param countnow (`numeric(1)`) filtered counts
 #' @param countmax (`numeric(1)`) unfiltered counts

@@ -1,4 +1,7 @@
 # DataframeFilteredDataset ------
+
+#' @name DataframeFilteredDataset
+#' @docType class
 #' @title The `DataframeFilteredDataset` `R6` class
 #' @examples
 #' # use non-exported function from teal.slice
@@ -28,30 +31,30 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
   classname = "DataframeFilteredDataset",
   inherit = FilteredDataset,
 
-  ## Public Fields ----
+  # public fields ----
   public = list(
 
     #' @description
-    #' Initializes this `DataframeFilteredDataset` object
+    #' Initializes this `DataframeFilteredDataset` object.
     #'
-    #' @param dataset (`data.frame`)\cr
+    #' @param dataset (`data.frame`)
     #'  single data.frame for which filters are rendered
-    #' @param dataname (`character`)\cr
+    #' @param dataname (`character`)
     #'  A given name for the dataset it may not contain spaces
-    #' @param keys optional, (`character`)\cr
+    #' @param keys optional, (`character`)
     #'   Vector with primary keys
-    #' @param parent_name (`character(1)`)\cr
+    #' @param parent_name (`character(1)`)
     #'   Name of the parent dataset
-    #' @param parent (`reactive`)\cr
+    #' @param parent (`reactive`)
     #'   object returned by this reactive is a filtered `data.frame` from other `FilteredDataset`
     #'   named `parent_name`. Consequence of passing `parent` is a `reactive` link which causes
     #'   causing re-filtering of this `dataset` based on the changes in `parent`.
-    #' @param join_keys (`character`)\cr
+    #' @param join_keys (`character`)
     #'   Name of the columns in this dataset to join with `parent`
     #'   dataset. If the column names are different if both datasets
     #'   then the names of the vector define the `parent` columns.
     #'
-    #' @param label (`character`)\cr
+    #' @param label (`character`)
     #'   Label to describe the dataset
     initialize = function(dataset,
                           dataname,
@@ -112,7 +115,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets the filter expression
+    #' Gets the filter expression.
     #'
     #' This functions returns filter calls equivalent to selected items
     #' within each of `filter_states`. Configuration of the calls is constant and
@@ -121,7 +124,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #' which contains single `state_list` and all `FilterState` objects
     #' applies to one argument (`...`) in `dplyr::filter` call.
     #'
-    #' @param sid (`character`)\cr
+    #' @param sid (`character`)
     #'  when specified then method returns code containing filter conditions of
     #'  `FilterState` objects which `"sid"` attribute is different than this `sid` argument.
     #'
@@ -175,7 +178,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set filter state
+    #' Set filter state.
     #'
     #' @param state (`teal_slices`)
     #' @return `NULL` invisibly
@@ -193,9 +196,9 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Remove one or more `FilterState` form a `FilteredDataset`
+    #' Remove one or more `FilterState` form a `FilteredDataset`.
     #'
-    #' @param state (`teal_slices`)\cr
+    #' @param state (`teal_slices`)
     #'   specifying `FilterState` objects to remove;
     #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
@@ -217,10 +220,9 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' UI module to add filter variable for this dataset
+    #' UI module to add filter variable for this dataset.
     #'
-    #' UI module to add filter variable for this dataset
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'  identifier of the element - preferably containing dataset name
     #'
     #' @return function - shiny UI module
@@ -233,7 +235,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Get number of observations based on given keys
+    #' Get number of observations based on given keys.
     #' The output shows the comparison between `filtered_dataset`
     #' function parameter and the dataset inside self
     #' @return `list` containing character `#filtered/#not_filtered`
@@ -266,7 +268,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     }
   ),
 
-  ## Private Fields ----
+  # private fields ----
   private = list(
     parent_name = character(0),
     join_keys = character(0)

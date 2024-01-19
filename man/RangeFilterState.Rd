@@ -148,7 +148,7 @@ if (interactive()) {
 \if{html}{\out{<a id="method-RangeFilterState-new"></a>}}
 \if{latex}{\out{\hypertarget{method-RangeFilterState-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{FilterState} object for range selection
+Initialize a \code{FilterState} object for range selection.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$new(
   x,
@@ -161,16 +161,16 @@ Initialize a \code{FilterState} object for range selection
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{x}}{(\code{numeric})\cr
+\item{\code{x}}{(\code{numeric})
 values of the variable used in filter}
 
-\item{\code{x_reactive}}{(\code{reactive})\cr
+\item{\code{x_reactive}}{(\code{reactive})
 returning vector of the same type as \code{x}. Is used to update
 counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
-\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
+\item{\code{extract_type}}{(\code{character})
 whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
@@ -178,7 +178,7 @@ whether condition calls should be prefixed by \code{dataname}. Possible values:
 \item \code{"matrix"} \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}
 }}
 
-\item{\code{slice}}{(\code{teal_slice})\cr
+\item{\code{slice}}{(\code{teal_slice})
 object created using \code{\link[=teal_slice]{teal_slice()}}. \code{teal_slice} is stored
 in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
 returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
@@ -210,20 +210,20 @@ optional \verb{is.na(<varname>)} and \verb{is.finite(<varname>)}.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(\code{call})
+\code{call}
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-RangeFilterState-get_keep_inf"></a>}}
 \if{latex}{\out{\hypertarget{method-RangeFilterState-get_keep_inf}{}}}
 \subsection{Method \code{get_keep_inf()}}{
-Returns current \code{keep_inf} selection
+Returns current \code{keep_inf} selection.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$get_keep_inf()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-(\code{logical(1)})
+\code{logical(1)}
 }
 }
 \if{html}{\out{<hr>}}

@@ -133,7 +133,7 @@ if (interactive()) {
 \if{html}{\out{<a id="method-DateFilterState-new"></a>}}
 \if{latex}{\out{\hypertarget{method-DateFilterState-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{FilterState} object
+Initialize a \code{FilterState} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DateFilterState$new(
   x,
@@ -146,23 +146,23 @@ Initialize a \code{FilterState} object
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{x}}{(\code{Date})\cr
+\item{\code{x}}{(\code{Date})
 values of the variable used in filter}
 
-\item{\code{x_reactive}}{(\code{reactive})\cr
+\item{\code{x_reactive}}{(\code{reactive})
 returning vector of the same type as \code{x}. Is used to update
 counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
-\item{\code{slice}}{(\code{teal_slice})\cr
+\item{\code{slice}}{(\code{teal_slice})
 object created using \code{\link[=teal_slice]{teal_slice()}}. \code{teal_slice} is stored
 in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
 returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
 is a \code{reactiveValues} which means that changes in particular object are automatically
 reflected in all places which refer to the same \code{teal_slice}.}
 
-\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
+\item{\code{extract_type}}{(\code{character})
 whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
@@ -190,12 +190,12 @@ optional \verb{is.na(<varname>)}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{\code{character(1)} containing possibly prefixed name of data set}
+\item{\code{dataname}}{(\code{character(1)}) containing possibly prefixed name of data set}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(\code{call})
+\code{call}
 }
 }
 \if{html}{\out{<hr>}}

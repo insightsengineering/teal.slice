@@ -1,7 +1,12 @@
+# FilteredData ------
+
 #' @name FilteredData
 #' @docType class
 #'
 #' @title Class to encapsulate filtered datasets
+#'
+#' @description
+#' Class is designed to manage and encapsulate filtered datasets.
 #'
 #' @details
 #' The main purpose of this class is to provide a collection of reactive datasets,
@@ -85,10 +90,10 @@
 #'
 FilteredData <- R6::R6Class( # nolint
   "FilteredData",
-  ## __Public Methods ====
+  # public methods ----
   public = list(
     #' @description
-    #' Initialize a `FilteredData` object
+    #' Initialize a `FilteredData` object.
     #' @param data_objects (`list`)
     #'   Named list of data objects.
     #'   Names of the list will serve as `dataname`.
@@ -128,35 +133,36 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets `datanames`
-    #'
+    #' Gets `datanames`.
+    #' @details
     #' The `datanames` are returned in the order in which they must be
     #' evaluated (in case of dependencies).
-    #' @return (`character` vector) of `datanames`
+    #' @return `character` vector of `datanames`
     datanames = function() {
       names(private$filtered_datasets)
     },
 
-    #' Gets data label for the dataset
-    #'
+    #' @description
+    #' Gets data label for the dataset.
     #' Useful to display in `Show R Code`.
     #'
     #' @param dataname (`character(1)`) name of the dataset
-    #' @return (`character`) keys of dataset
+    #' @return `character` keys of dataset
     get_datalabel = function(dataname) {
       private$get_filtered_dataset(dataname)$get_dataset_label()
     },
 
+    #' @description
     #' Set list of external filter states available for activation.
-    #'
+    #' @details
     #' Unlike adding new filter from the column, these filters can come with some prespecified settings.
     #' `teal_slices` are wrapped in a `reactive` so they can be updated from elsewhere in the app.
     #' Filters passed in `x` are limited to those that can be set for this `FilteredData` object,
     #' i.e. they have the correct `dataname` and `varname` (waived `teal_slice_fixed` as they do not have `varname`).
     #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
-    #' @param x (`reactive`)\cr
+    #' @param x (`reactive`)
     #'  should return `teal_slices`
-    #' @return invisible `NULL`
+    #' @return `NULL` invisibly
     set_available_teal_slices = function(x) {
       checkmate::assert_class(x, "reactive")
       private$available_teal_slices <- reactive({
@@ -181,8 +187,9 @@ FilteredData <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
+    #' @description
     #' Get list of filter states available for this object.
-    #'
+    #' @details
     #' All `teal_slice` objects that have been created since the beginning of the app session
     #' are stored in one `teal_slices` object. This returns a subset of that `teal_slices`,
     #' describing filter states that can be set for this object.
@@ -195,7 +202,7 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' Gets a `call` to filter the dataset according to the filter state.
-    #'
+    #' @details
     #' It returns a `call` to filter the dataset only, assuming the
     #' other (filtered) datasets it depends on are available.
     #'
@@ -239,21 +246,21 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Get join keys between two datasets.
     #'
-    #' @return (`join_keys`)
+    #' @return `join_keys`
     #'
     get_join_keys = function() {
       return(private$join_keys)
     },
 
     #' @description
-    #' Get filter overview table in form of X (filtered) / Y (non-filtered).
+    #' Get filter overview table in form of `X (filtered) / Y (non-filtered)`.
     #'
     #' This is intended to be presented in the application.
     #' The content for each of the data names is defined in `get_filter_overview_info` method.
     #'
-    #' @param datanames (`character` vector) names of the dataset
+    #' @param datanames (`character`) vector of dataset names
     #'
-    #' @return (`matrix`) matrix of observations and subjects of all datasets
+    #' @return `matrix` of observations and subjects of all datasets
     #'
     get_filter_overview = function(datanames) {
       rows <- lapply(
@@ -271,7 +278,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @param dataname (`character(1)`) name of the dataset
     #'
-    #' @return (`character`) keys of dataset
+    #' @return `character` keys of dataset
     #'
     get_keys = function(dataname) {
       private$get_filtered_dataset(dataname)$get_keys()
@@ -287,13 +294,13 @@ FilteredData <- R6::R6Class( # nolint
     #' "Child" dataset return filtered data then dependent on the reactive filtered data of the
     #' "parent". See more in documentation of `parent` argument in `DataframeFilteredDataset` constructor.
     #'
-    #' @param data (`data.frame`, `MultiAssayExperiment`)\cr
+    #' @param data (`data.frame` or `MultiAssayExperiment`)
     #'   data to be filtered.
     #'
-    #' @param dataname (`string`)\cr
+    #' @param dataname (`string`)
     #'   the name of the `dataset` to be added to this object
     #'
-    #' @return (`self`) invisibly this `FilteredData`
+    #' @return `self` invisibly
     #'
     set_dataset = function(data, dataname) {
       checkmate::assert_string(dataname)
@@ -333,7 +340,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @param join_keys (`join_keys`) join_key (converted to a nested list)
     #'
-    #' @return (`self`) invisibly this `FilteredData`
+    #' @return `self` invisibly
     #'
     set_join_keys = function(join_keys) {
       checkmate::assert_class(join_keys, "join_keys")
@@ -361,8 +368,8 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Returns a formatted string representing this `FilteredData` object.
     #'
-    #' @param show_all `logical(1)` passed to `format.teal_slice`
-    #' @param trim_lines `logical(1)` passed to `format.teal_slice`
+    #' @param show_all (`logical(1)`) passed to `format.teal_slice`
+    #' @param trim_lines (`logical(1)`) passed to `format.teal_slice`
     #'
     #' @return `character(1)` the formatted string
     #'
@@ -418,7 +425,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Removes one or more `FilterState` from a `FilteredData` object.
     #'
-    #' @param state (`teal_slices`)\cr
+    #' @param state (`teal_slices`)
     #'   specifying `FilterState` objects to remove;
     #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
@@ -451,10 +458,10 @@ FilteredData <- R6::R6Class( # nolint
     #' Remove all `FilterStates` of a `FilteredDataset` or all `FilterStates`
     #' of a `FilteredData` object.
     #'
-    #' @param datanames (`character`)\cr
+    #' @param datanames (`character`)
     #'   `datanames` to remove their `FilterStates` or empty which removes
     #'   all `FilterStates` in the `FilteredData` object
-    #' @param force (`logical(1)`)\cr
+    #' @param force (`logical(1)`)
     #'   include locked filter states
     #'
     #' @return `NULL` invisibly
@@ -482,13 +489,14 @@ FilteredData <- R6::R6Class( # nolint
 
     # shiny modules -----
 
+    #' @description
     #' Module for the right filter panel in the teal app
     #' with a filter overview panel and a filter variable panel.
     #'
     #' This panel contains info about the number of observations left in
     #' the (active) datasets and allows to filter the datasets.
     #'
-    #' @param id (`character(1)`)\cr
+    #' @param id (`character(1)`)
     #'   module id
     #' @return `shiny.tag`
     ui_filter_panel = function(id) {
@@ -504,11 +512,13 @@ FilteredData <- R6::R6Class( # nolint
       )
     },
 
-    #' Server function for filter panel
+    #' @description
+    #' Server function for filter panel.
     #'
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param active_datanames `function / reactive` returning `datanames` that
+    #' @param id (`character(1)`)
+    #'   an id string that corresponds with the id used to call the module's
+    #'   `ui_filter_panel` function.
+    #' @param active_datanames (`function` or `reactive`) returning `datanames` that
     #'   should be shown on the filter panel,
     #'   must be a subset of the `datanames` argument provided to `ui_filter_panel`;
     #'   if the function returns `NULL` (as opposed to `character(0)`), the filter
@@ -540,8 +550,8 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' Server module responsible for displaying active filters.
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @param id (`character(1)`)
+    #'   an id string that corresponds with the id used to call the module's `srv_active` function.
     #' @return `shiny.tag`
     ui_active = function(id) {
       ns <- NS(id)
@@ -590,9 +600,9 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' Server module responsible for displaying active filters.
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param active_datanames (`reactive`)\cr
+    #' @param id (`character(1)`)
+    #'   an id string that corresponds with the id used to call the module's `ui_active` function.
+    #' @param active_datanames (`reactive`)
     #'   defining subset of `self$datanames()` to be displayed.
     #' @return `moduleServer` returning `NULL`
     srv_active = function(id, active_datanames = self$datanames) {
@@ -659,8 +669,9 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' Server module responsible for displaying drop-downs with variables to add a filter.
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @param id (`character(1)`)
+    #'   an id string that corresponds with the id used to call the module's
+    #'   `ui_add` function.
     #' @return `shiny.tag`
     ui_add = function(id) {
       ns <- NS(id)
@@ -701,9 +712,10 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' Server module responsible for displaying drop-downs with variables to add a filter.
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param active_datanames (`reactive`)\cr
+    #' @param id (`character(1)`)
+    #'   an id string that corresponds with the id used to call the module's
+    #'   `ui_add` function.
+    #' @param active_datanames (`reactive`)
     #'   defining subset of `self$datanames()` to be displayed.
     #' @return `moduleServer` returning `NULL`
     srv_add = function(id, active_datanames = reactive(self$datanames())) {
@@ -740,8 +752,9 @@ FilteredData <- R6::R6Class( # nolint
       })
     },
 
-    #' Creates the UI for the module showing counts for each dataset
-    #' contrasting the filtered to the full unfiltered dataset
+    #' @description
+    #' Creates the UI definition for the module showing counts for each dataset
+    #' contrasting the filtered to the full unfiltered dataset.
     #'
     #' Per dataset, it displays
     #' the number of rows/observations in each dataset,
@@ -780,12 +793,14 @@ FilteredData <- R6::R6Class( # nolint
       )
     },
 
+    #' @description
     #' Server function to display the number of records in the filtered and unfiltered
-    #' data
+    #' data.
     #'
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param active_datanames (`reactive`)\cr
+    #' @param id (`character(1)`)
+    #'   an id string that corresponds with the id used to call the module's
+    #'   `ui_overview` function.
+    #' @param active_datanames (`reactive`)
     #'   returning `datanames` that should be shown on the filter panel,
     #'   must be a subset of the `datanames` argument provided to `ui_filter_panel`;
     #'   if the function returns `NULL` (as opposed to `character(0)`), the filter
@@ -883,7 +898,7 @@ FilteredData <- R6::R6Class( # nolint
     }
   ),
 
-  ## __Private Members ====
+  # private members ----
   private = list(
     # selectively hide / show to only show `active_datanames` out of all datanames
 
@@ -908,7 +923,7 @@ FilteredData <- R6::R6Class( # nolint
     # Gets `FilteredDataset` object which contains all information
     # pertaining to the specified dataset.
     #
-    # @param dataname (`character(1)`)\cr
+    # @param dataname (`character(1)`)
     #   name of the dataset
     #
     # @return `FilteredDataset` object or list of `FilteredDataset`s
