@@ -18,7 +18,8 @@
 #'  match names of data sets and vector elements match variable names in respective data sets;
 #'  specify which variables are allowed to be filtered; see `Details`
 #' @param count_type `r lifecycle::badge("experimental")`
-#' _This is a new feature. Do kindly share your opinions on [`teal.slice`'s GitHub repository](https://github.com/insightsengineering/teal.slice/)._
+#' _This is a new feature. Do kindly share your opinions on
+#' [`teal.slice`'s GitHub repository](https://github.com/insightsengineering/teal.slice/)._
 #'
 #'  (`character(1)`) string specifying how observations are tallied by these filter states.
 #'  Possible options:
