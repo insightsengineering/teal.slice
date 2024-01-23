@@ -16,7 +16,6 @@ This class is supported by methods to set, get, remove filter states in the
 filter panel API.
 }
 \examples{
-library(teal.slice)
 fd <- init_filtered_data(list(iris = list(dataset = iris)))
 fpa <- FilterPanelAPI$new(fd)
 
