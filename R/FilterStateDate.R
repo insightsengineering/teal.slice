@@ -3,9 +3,9 @@
 #' @name DateFilterState
 #' @docType class
 #'
-#' @title `FilterState` object for Date variable
+#' @title `FilterState` object for `Date` variable
 #'
-#' @description Manages choosing a range of Dates.
+#' @description Manages choosing a range of `Date`s.
 #'
 #' @examples
 #' # use non-exported function from teal.slice

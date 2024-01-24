@@ -3,9 +3,9 @@
 \docType{class}
 \name{DateFilterState}
 \alias{DateFilterState}
-\title{\code{FilterState} object for Date variable}
+\title{\code{FilterState} object for \code{Date} variable}
 \description{
-Manages choosing a range of Dates.
+Manages choosing a range of \code{Date}s.
 }
 \examples{
 # use non-exported function from teal.slice
