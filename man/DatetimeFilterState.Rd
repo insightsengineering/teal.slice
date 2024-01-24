@@ -9,7 +9,6 @@ Manages choosing a range of date-times.
 }
 \examples{
 # use non-exported function from teal.slice
-include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 include_css_files <- getFromNamespace("include_css_files", "teal.slice")
 include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 DatetimeFilterState <- getFromNamespace("DatetimeFilterState", "teal.slice")
