@@ -71,7 +71,7 @@ only applicable to \code{ChoicesFilterState} and \code{LogicalFilterState}}
 \item{...}{in \code{teal_slice} method these are additional arguments which can be handled by extensions
 of \code{teal.slice} classes. In other methods these are further arguments passed to or from other methods.}
 
-\item{x}{(\code{teal.slice}) object.}
+\item{x}{(\code{teal.slice})}
 
 \item{show_all}{(\code{logical(1)}) indicating whether to show all fields. If set to \code{FALSE},
 only non-NULL elements will be printed.}

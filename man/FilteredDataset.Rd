@@ -178,7 +178,7 @@ Set filter state.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\code{teal_slices}) object}
+\item{\code{state}}{(\code{teal_slices})}
 }
 \if{html}{\out{</div>}}
 }

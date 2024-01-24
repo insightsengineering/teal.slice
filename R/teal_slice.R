@@ -69,7 +69,7 @@
 #' @param title (optional `character(1)`) title of the filter. Ignored when `varname` is set.
 #' @param ... in `teal_slice` method these are additional arguments which can be handled by extensions
 #'  of `teal.slice` classes. In other methods these are further arguments passed to or from other methods.
-#' @param x (`teal.slice`) object.
+#' @param x (`teal.slice`)
 #' @param show_all (`logical(1)`) indicating whether to show all fields. If set to `FALSE`,
 #'  only non-NULL elements will be printed.
 #' @param trim_lines (`logical(1)`) indicating whether to trim lines when printing.

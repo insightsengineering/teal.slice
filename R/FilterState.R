@@ -139,7 +139,7 @@ FilterState <- R6::R6Class( # nolint
     #' - `fixed` state is prevented from changing state
     #' - `anchored` state is prevented from removing state
     #'
-    #' @param state (`teal_slice`) object
+    #' @param state (`teal_slice`)
     #'
     #' @return `self` invisibly
     #'

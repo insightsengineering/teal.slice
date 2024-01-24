@@ -48,7 +48,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
   public = list(
     #' @description
     #' Initialize a `FilterPanelAPI` object.
-    #' @param datasets (`FilteredData`) object.
+    #' @param datasets (`FilteredData`)
     #'
     initialize = function(datasets) {
       checkmate::assert_class(datasets, "FilteredData")

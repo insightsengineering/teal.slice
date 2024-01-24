@@ -7,7 +7,7 @@
 variable_types(data, columns = NULL)
 }
 \arguments{
-\item{data}{(\code{matrix} or \code{data.frame}-like) object to determine variable types from.}
+\item{data}{(\code{matrix} or \code{data.frame}-like) to determine variable types from.}
 
 \item{columns}{(\code{character}) vector of columns in \code{data} to get classes from.
 Set to \code{NULL} to get classes of all columns.}

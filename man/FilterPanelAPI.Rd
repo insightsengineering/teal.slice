@@ -63,7 +63,7 @@ Initialize a \code{FilterPanelAPI} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{datasets}}{(\code{FilteredData}) object.}
+\item{\code{datasets}}{(\code{FilteredData})}
 }
 \if{html}{\out{</div>}}
 }

@@ -398,7 +398,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Sets active filter states.
     #'
-    #' @param state (`teal_slices`) object
+    #' @param state (`teal_slices`)
     #'
     #' @return `NULL` invisibly
     set_filter_state = function(state) {

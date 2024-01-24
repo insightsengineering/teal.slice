@@ -242,7 +242,7 @@ print.teal_slices <- function(x, ...) {
 #' `setdiff` method for `teal_slices`
 #'
 #' Compare two teal slices objects and return `teal_slices` containing slices present in `x` but not in `y`.
-#' @param x,y (`teal_slices`) objects
+#' @param x,y (`teal_slices`)
 #' @return `teal_slices`
 #' @keywords internal
 #'

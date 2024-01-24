@@ -1,6 +1,6 @@
 #' Get classes of selected columns from dataset
 #'
-#' @param data (`matrix` or `data.frame`-like) object to determine variable types from.
+#' @param data (`matrix` or `data.frame`-like) to determine variable types from.
 #' @param columns (`character`) vector of columns in `data` to get classes from.
 #'   Set to `NULL` to get classes of all columns.
 #'

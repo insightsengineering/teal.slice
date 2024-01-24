@@ -136,7 +136,7 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
 #'
 #' Gets filterable variable names from a given object. The names match variables
 #' of classes in an vector `teal.slice:::.filterable_class`.
-#' @param data (`object`)
+#' @param data
 #'   the `R` object containing elements which class can be checked through `vapply` or `apply`.
 #' @return `character` vector of matched element names
 #' @examples

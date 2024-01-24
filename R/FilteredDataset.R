@@ -141,7 +141,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Set filter state.
     #'
-    #' @param state (`teal_slices`) object
+    #' @param state (`teal_slices`)
     #'
     #' @return `NULL` invisibly
     #'
