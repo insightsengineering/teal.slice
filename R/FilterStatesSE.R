@@ -93,9 +93,9 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny UI module to add filter variable.
+    #' `shiny` UI module to add filter variable.
     #' @param id (`character(1)`)
-    #'  id of shiny module
+    #'  id of `shiny` module
     #' @return `shiny.tag`
     ui_add = function(id) {
       data <- private$data
@@ -138,7 +138,7 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny server module to add filter variable.
+    #' `shiny` server module to add filter variable.
     #'
     #' Module controls available choices to select as a filter variable.
     #' Selected filter variable is being removed from available choices.

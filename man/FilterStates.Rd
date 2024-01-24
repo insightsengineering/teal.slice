@@ -259,7 +259,7 @@ include locked filter states}
 \if{html}{\out{<a id="method-FilterStates-ui_active"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-ui_active}{}}}
 \subsection{Method \code{ui_active()}}{
-Shiny UI definition that stores \code{FilterState} UI elements.
+\code{shiny} UI definition that stores \code{FilterState} UI elements.
 Populated with elements created with \code{renderUI} in the module server.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui_active(id)}\if{html}{\out{</div>}}
@@ -269,7 +269,7 @@ Populated with elements created with \code{renderUI} in the module server.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-shiny element (module instance) id}
+\code{shiny} element (module instance) id}
 }
 \if{html}{\out{</div>}}
 }
@@ -281,7 +281,7 @@ shiny element (module instance) id}
 \if{html}{\out{<a id="method-FilterStates-srv_active"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-srv_active}{}}}
 \subsection{Method \code{srv_active()}}{
-Shiny server module.
+\code{shiny} server module.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$srv_active(id)}\if{html}{\out{</div>}}
 }
@@ -290,7 +290,7 @@ Shiny server module.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-shiny module instance id}
+\code{shiny} module instance id}
 }
 \if{html}{\out{</div>}}
 }
@@ -302,7 +302,7 @@ shiny module instance id}
 \if{html}{\out{<a id="method-FilterStates-ui_add"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-ui_add}{}}}
 \subsection{Method \code{ui_add()}}{
-Shiny UI module to add filter variable.
+\code{shiny} UI module to add filter variable.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui_add(id)}\if{html}{\out{</div>}}
 }
@@ -311,7 +311,7 @@ Shiny UI module to add filter variable.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-shiny element (module instance) id}
+\code{shiny} element (module instance) id}
 }
 \if{html}{\out{</div>}}
 }
@@ -323,7 +323,7 @@ shiny element (module instance) id}
 \if{html}{\out{<a id="method-FilterStates-srv_add"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-srv_add}{}}}
 \subsection{Method \code{srv_add()}}{
-Shiny server module to add filter variable.
+\code{shiny} server module to add filter variable.
 
 This module controls available choices to select as a filter variable.
 Once selected, a variable is removed from available choices.

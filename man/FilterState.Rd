@@ -27,7 +27,7 @@ code relevant to selected values.
 Each variable's filter state is an \code{R6} object which contains \code{choices},
 \code{selected}, \code{varname}, \code{dataname}, \code{labels}, \code{na_count}, \code{keep_na} and other
 variable type specific fields (\code{keep_inf}, \code{inf_count}, \code{timezone}).
-Object also contains a shiny module (UI and server) which manages the
+Object also contains a \code{shiny} module (UI and server) which manages the
 state of the filter through reactive values \code{selected}, \code{keep_na}, \code{keep_inf}
 which trigger \code{get_call()} and every \code{R} function call up in reactive chain.
 }
@@ -198,7 +198,7 @@ and must be executed in reactive or isolated context.
 \if{html}{\out{<a id="method-FilterState-server"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-server}{}}}
 \subsection{Method \code{server()}}{
-Shiny module server.
+\code{shiny} module server.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$server(id)}\if{html}{\out{</div>}}
 }
@@ -207,7 +207,7 @@ Shiny module server.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-shiny module instance id}
+\code{shiny} module instance id}
 }
 \if{html}{\out{</div>}}
 }
@@ -220,7 +220,7 @@ signaling that remove button has been clicked
 \if{html}{\out{<a id="method-FilterState-ui"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-ui}{}}}
 \subsection{Method \code{ui()}}{
-Shiny UI module.
+\code{shiny} UI module.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id, parent_id = "cards")}\if{html}{\out{</div>}}
 }
@@ -229,7 +229,7 @@ Shiny UI module.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-shiny element (module instance) id;
+\code{shiny} element (module instance) id;
 the UI for this class contains simple message stating that it is not supported}
 
 \item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}

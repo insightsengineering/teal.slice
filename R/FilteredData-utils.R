@@ -3,7 +3,7 @@
 #' Function creates a `FilteredData` object.
 #'
 #' @param x (named `list`) of datasets.
-#' @param join_keys (`join_keys`) see [teal.data::join_keys()].
+#' @param join_keys (`join_keys`) see [`teal.data::join_keys()`].
 #' @param code `r lifecycle::badge("deprecated")`
 #' @param check `r lifecycle::badge("deprecated")`
 #' @examples

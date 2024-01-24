@@ -25,7 +25,7 @@
 #' Each variable's filter state is an `R6` object which contains `choices`,
 #' `selected`, `varname`, `dataname`, `labels`, `na_count`, `keep_na` and other
 #' variable type specific fields (`keep_inf`, `inf_count`, `timezone`).
-#' Object also contains a shiny module (UI and server) which manages the
+#' Object also contains a `shiny` module (UI and server) which manages the
 #' state of the filter through reactive values `selected`, `keep_na`, `keep_inf`
 #' which trigger `get_call()` and every `R` function call up in reactive chain.
 #'
@@ -192,10 +192,10 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny module server.
+    #' `shiny` module server.
     #'
     #' @param id (`character(1)`)
-    #'   shiny module instance id
+    #'   `shiny` module instance id
     #'
     #' @return `moduleServer` function which returns reactive value
     #'   signaling that remove button has been clicked
@@ -280,10 +280,10 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny UI module.
+    #' `shiny` UI module.
     #'
     #' @param id (`character(1)`)
-    #'  shiny element (module instance) id;
+    #'  `shiny` element (module instance) id;
     #'  the UI for this class contains simple message stating that it is not supported
     #' @param parent_id (`character(1)`) id of the `FilterStates` card container
     ui = function(id, parent_id = "cards") {

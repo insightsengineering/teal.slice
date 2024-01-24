@@ -96,7 +96,7 @@ Set filter state.
 \if{html}{\out{<a id="method-SEFilterStates-ui_add"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-ui_add}{}}}
 \subsection{Method \code{ui_add()}}{
-Shiny UI module to add filter variable.
+\code{shiny} UI module to add filter variable.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$ui_add(id)}\if{html}{\out{</div>}}
 }
@@ -105,7 +105,7 @@ Shiny UI module to add filter variable.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-id of shiny module}
+id of \code{shiny} module}
 }
 \if{html}{\out{</div>}}
 }
@@ -117,7 +117,7 @@ id of shiny module}
 \if{html}{\out{<a id="method-SEFilterStates-srv_add"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-srv_add}{}}}
 \subsection{Method \code{srv_add()}}{
-Shiny server module to add filter variable.
+\code{shiny} server module to add filter variable.
 
 Module controls available choices to select as a filter variable.
 Selected filter variable is being removed from available choices.

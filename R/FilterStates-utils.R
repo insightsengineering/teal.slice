@@ -4,7 +4,7 @@
 #'   the `R` object which `subset` function is applied on.
 #' @param data_reactive (`function(sid)`)
 #'   should return an object of the same type as `data` or `NULL`.
-#'   This object is needed for the `FilterState` shiny module to update
+#'   This object is needed for the `FilterState` `shiny` module to update
 #'   counts if filtered data changes.
 #'   If function returns `NULL` then filtered counts
 #'   are not shown. Function has to have `sid` argument being a character which

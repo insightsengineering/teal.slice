@@ -210,7 +210,7 @@ Destroy observers stored in \code{private$observers}.
 \if{html}{\out{<a id="method-FilterStateExpr-server"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-server}{}}}
 \subsection{Method \code{server()}}{
-Shiny module server.
+\code{shiny} module server.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$server(id)}\if{html}{\out{</div>}}
 }
@@ -219,7 +219,7 @@ Shiny module server.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-shiny module instance id}
+\code{shiny} module instance id}
 }
 \if{html}{\out{</div>}}
 }
@@ -232,7 +232,7 @@ signaling that remove button has been clicked
 \if{html}{\out{<a id="method-FilterStateExpr-ui"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-ui}{}}}
 \subsection{Method \code{ui()}}{
-Shiny module UI.
+\code{shiny} module UI.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$ui(id, parent_id = "cards")}\if{html}{\out{</div>}}
 }
@@ -241,7 +241,7 @@ Shiny module UI.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-shiny element (module instance) id;
+\code{shiny} element (module instance) id;
 the UI for this class contains simple message stating that it is not supported}
 
 \item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}

@@ -15,7 +15,7 @@
 #' For each dataset, `get_filter_expr` returns the call to filter the dataset according
 #' to the filter state. The data itself can be obtained through `get_data`.
 #'
-#' The datasets are filtered lazily, i.e. only when requested / needed in a Shiny app.
+#' The datasets are filtered lazily, i.e. only when requested / needed in a `shiny` app.
 #'
 #' By design, any `dataname` set through `set_dataset` cannot be removed because
 #' other code may already depend on it. As a workaround, the underlying
@@ -210,7 +210,7 @@ FilteredData <- R6::R6Class( # nolint
     #' `FilteredData$get_filter_code`.
     #'
     #' For the return type, note that `rlang::is_expression` returns `TRUE` on the
-    #' return type, both for base R expressions and calls (single expression,
+    #' return type, both for base `R` expressions and calls (single expression,
     #' capturing a function call).
     #'
     #' The filtered dataset has the name given by `self$filtered_dataname(dataname)`

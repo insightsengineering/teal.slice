@@ -203,7 +203,7 @@ identifier of the element - preferably containing dataset name}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-function - shiny UI module
+function - \code{shiny} UI module
 }
 }
 \if{html}{\out{<hr>}}

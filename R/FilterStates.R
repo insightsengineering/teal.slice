@@ -305,11 +305,11 @@ FilterStates <- R6::R6Class( # nolint
     # shiny modules ----
 
     #' @description
-    #' Shiny UI definition that stores `FilterState` UI elements.
+    #' `shiny` UI definition that stores `FilterState` UI elements.
     #' Populated with elements created with `renderUI` in the module server.
     #'
     #' @param id (`character(1)`)
-    #'   shiny element (module instance) id
+    #'   `shiny` element (module instance) id
     #'
     #' @return `shiny.tag`
     #'
@@ -327,10 +327,10 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny server module.
+    #' `shiny` server module.
     #'
     #' @param id (`character(1)`)
-    #'   shiny module instance id
+    #'   `shiny` module instance id
     #'
     #' @return `moduleServer` function which returns `NULL`
     #'
@@ -396,10 +396,10 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny UI module to add filter variable.
+    #' `shiny` UI module to add filter variable.
     #'
     #' @param id (`character(1)`)
-    #'  shiny element (module instance) id
+    #'  `shiny` element (module instance) id
     #'
     #' @return `shiny.tag`
     #'
@@ -419,7 +419,7 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny server module to add filter variable.
+    #' `shiny` server module to add filter variable.
     #'
     #' This module controls available choices to select as a filter variable.
     #' Once selected, a variable is removed from available choices.

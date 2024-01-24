@@ -14,7 +14,7 @@ each dataset having a filter state that determines how it is filtered.
 For each dataset, \code{get_filter_expr} returns the call to filter the dataset according
 to the filter state. The data itself can be obtained through \code{get_data}.
 
-The datasets are filtered lazily, i.e. only when requested / needed in a Shiny app.
+The datasets are filtered lazily, i.e. only when requested / needed in a \code{shiny} app.
 
 By design, any \code{dataname} set through \code{set_dataset} cannot be removed because
 other code may already depend on it. As a workaround, the underlying
@@ -255,7 +255,7 @@ evaluation order, this generates the whole filter code, see the function
 \code{FilteredData$get_filter_code}.
 
 For the return type, note that \code{rlang::is_expression} returns \code{TRUE} on the
-return type, both for base R expressions and calls (single expression,
+return type, both for base \code{R} expressions and calls (single expression,
 capturing a function call).
 
 The filtered dataset has the name given by \code{self$filtered_dataname(dataname)}

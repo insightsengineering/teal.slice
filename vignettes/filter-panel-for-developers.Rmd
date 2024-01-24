@@ -87,7 +87,7 @@ set_filter_state(
 )
 ```
 
-#### 2. Updating filter states. *Works only in the shiny reactive context.
+#### 2. Updating filter states. *Works only in the `shiny` reactive context.
 ```{r, message=FALSE, warning=FALSE}
 set_filter_state(
   datasets = datasets,
@@ -165,7 +165,7 @@ to allow the user to add new filters.
 
 ## Filter panel as a module
 
-All the instructions herein can be utilized to build a shiny app.
+All the instructions herein can be utilized to build a `shiny` app.
 
 ```{r}
 # initializing FilteredData

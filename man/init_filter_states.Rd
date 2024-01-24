@@ -18,7 +18,7 @@ the \code{R} object which \code{subset} function is applied on.}
 
 \item{data_reactive}{(\verb{function(sid)})
 should return an object of the same type as \code{data} or \code{NULL}.
-This object is needed for the \code{FilterState} shiny module to update
+This object is needed for the \code{FilterState} \code{shiny} module to update
 counts if filtered data changes.
 If function returns \code{NULL} then filtered counts
 are not shown. Function has to have \code{sid} argument being a character which
