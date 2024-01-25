@@ -3,7 +3,7 @@
 Each FilteredDataset contains filter_states field - a list which contains one
 (data.frame) or multiple (MultiAssayExperiment) FilterStates objects.
 Each FilterStates is responsible for one filter/subset expression applied for specific
-components of the dataset."><title>FilterStates R6 class — FilteredDataset • teal.slice</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="FilterStates R6 class — FilteredDataset"><meta property="og:description" content="FilteredDataset is a class which renders/controls FilterStates(s)
+components of the dataset."><title>FilteredDataset R6 class — FilteredDataset • teal.slice</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="FilteredDataset R6 class — FilteredDataset"><meta property="og:description" content="FilteredDataset is a class which renders/controls FilterStates(s)
 Each FilteredDataset contains filter_states field - a list which contains one
 (data.frame) or multiple (MultiAssayExperiment) FilterStates objects.
 Each FilterStates is responsible for one filter/subset expression applied for specific
@@ -18,7 +18,7 @@ components of the dataset."><!-- mathjax --><script src="https://cdnjs.cloudflar
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9033</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9034</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,16 +42,6 @@ components of the dataset."><!-- mathjax --><script src="https://cdnjs.cloudflar
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -75,7 +65,7 @@ components of the dataset."><!-- mathjax --><script src="https://cdnjs.cloudflar
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1><code>FilterStates</code> R6 class</h1>
+      <img src="" class="logo" alt=""><h1><code>FilteredDataset</code> <code>R6</code> class</h1>
       <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.slice/blob/HEAD/R/FilteredDataset.R" class="external-link"><code>R/FilteredDataset.R</code></a></small>
       <div class="d-none name"><code>FilteredDataset.Rd</code></div>
     </div>
@@ -114,8 +104,8 @@ components of the dataset.</p>
 <li><p><a href="#method-FilteredDataset-srv_add"><code>FilteredDataset$srv_add()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-clone"><code>FilteredDataset$clone()</code></a></p></li>
 </ul></div><p></p><hr><a id="method-FilteredDataset-new"></a><div class="section">
-<h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
-<p>Initializes this <code>FilteredDataset</code> object</p><div class="section">
+<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
+<p>Initializes this <code>FilteredDataset</code> object.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/FilteredDataset.html">FilteredDataset</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  <span class="va">dataset</span>,</span>
@@ -128,22 +118,22 @@ components of the dataset.</p>
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataset</code></dt>
-<dd><p>(<code>data.frame</code> or <code>MultiAssayExperiment</code>)<br>
+<dd><p>(<code>data.frame</code> or <code>MultiAssayExperiment</code>)
 single dataset for which filters are rendered</p></dd>
 
 
 <dt><code>dataname</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
+<dd><p>(<code>character(1)</code>)
 A given name for the dataset it may not contain spaces</p></dd>
 
 
 <dt><code>keys</code></dt>
-<dd><p>optional, (<code>character</code>)<br>
+<dd><p>optional, (<code>character</code>)
 Vector with primary keys</p></dd>
 
 
 <dt><code>label</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
+<dd><p>(<code>character(1)</code>)
 Label to describe the dataset.</p></dd>
 
 
@@ -160,11 +150,11 @@ Label to describe the dataset.</p></dd>
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>show_all</code></dt>
-<dd><p><code>logical(1)</code> passed to <code>format.teal_slice</code></p></dd>
+<dd><p>(<code>logical(1)</code>) passed to <code>format.teal_slice</code></p></dd>
 
 
 <dt><code>trim_lines</code></dt>
-<dd><p><code>logical(1)</code> passed to <code>format.teal_slice</code></p></dd>
+<dd><p>(<code>logical(1)</code>) passed to <code>format.teal_slice</code></p></dd>
 
 
 </dl><p></p></div>
@@ -192,7 +182,7 @@ Label to describe the dataset.</p></dd>
 
 </div><p></p><hr><a id="method-FilteredDataset-clear_filter_states"></a><div class="section">
 <h3 id="method-clear-filter-states-">Method <code><a href="filter_state_api.html">clear_filter_states()</a></code><a class="anchor" aria-label="anchor" href="#method-clear-filter-states-"></a></h3>
-<p>Removes all active filter items applied to this dataset</p><div class="section">
+<p>Removes all active filter items applied to this dataset.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">clear_filter_states</span><span class="op">(</span>force <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -200,7 +190,7 @@ Label to describe the dataset.</p></dd>
 <div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>force</code></dt>
-<dd><p>(<code>logical(1)</code>)<br>
+<dd><p>(<code>logical(1)</code>)
 include locked filter states</p></dd>
 
 
@@ -213,7 +203,7 @@ include locked filter states</p></dd>
 
 </div><p></p><hr><a id="method-FilteredDataset-get_call"></a><div class="section">
 <h3 id="method-get-call-">Method <code>get_call()</code><a class="anchor" aria-label="anchor" href="#method-get-call-"></a></h3>
-<p>Gets a filter expression</p>
+<p>Gets a filter expression.</p>
 <p>This functions returns filter calls equivalent to selected items
 within each of <code>filter_states</code>. Configuration of the calls is constant and
 depends on <code>filter_states</code> type and order which are set during initialization.</p><div class="section">
@@ -224,7 +214,7 @@ depends on <code>filter_states</code> type and order which are set during initia
 <div class="section">
 <h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>sid</code></dt>
-<dd><p>(<code>character</code>)<br>
+<dd><p>(<code>character</code>)
 when specified then method returns code containing filter conditions of
 <code>FilterState</code> objects which <code>"sid"</code> attribute is different than this <code>sid</code> argument.</p></dd>
 
@@ -238,7 +228,7 @@ when specified then method returns code containing filter conditions of
 
 </div><p></p><hr><a id="method-FilteredDataset-get_filter_state"></a><div class="section">
 <h3 id="method-get-filter-state-">Method <code><a href="filter_state_api.html">get_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-get-filter-state-"></a></h3>
-<p>Gets states of all active <code>FilterState</code> objects</p><div class="section">
+<p>Gets states of all active <code>FilterState</code> objects.</p><div class="section">
 <h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -250,7 +240,7 @@ when specified then method returns code containing filter conditions of
 
 </div><p></p><hr><a id="method-FilteredDataset-set_filter_state"></a><div class="section">
 <h3 id="method-set-filter-state-">Method <code><a href="filter_state_api.html">set_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-set-filter-state-"></a></h3>
-<p>Set filter state</p><div class="section">
+<p>Set filter state.</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span><span class="va">state</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -258,7 +248,7 @@ when specified then method returns code containing filter conditions of
 <div class="section">
 <h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>state</code></dt>
-<dd><p>(<code>teal_slice</code>) object</p></dd>
+<dd><p>(<code>teal_slices</code>)</p></dd>
 
 
 </dl><p></p></div>
@@ -282,7 +272,7 @@ when specified then method returns code containing filter conditions of
 
 </div><p></p><hr><a id="method-FilteredDataset-get_dataname"></a><div class="section">
 <h3 id="method-get-dataname-">Method <code>get_dataname()</code><a class="anchor" aria-label="anchor" href="#method-get-dataname-"></a></h3>
-<p>Gets the name of the dataset</p><div class="section">
+<p>Gets the name of the dataset.</p><div class="section">
 <h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_dataname</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -294,7 +284,7 @@ when specified then method returns code containing filter conditions of
 
 </div><p></p><hr><a id="method-FilteredDataset-get_dataset"></a><div class="section">
 <h3 id="method-get-dataset-">Method <code>get_dataset()</code><a class="anchor" aria-label="anchor" href="#method-get-dataset-"></a></h3>
-<p>Gets the dataset object in this <code>FilteredDataset</code></p><div class="section">
+<p>Gets the dataset object in this <code>FilteredDataset</code>.</p><div class="section">
 <h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_dataset</span><span class="op">(</span>filtered <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -302,7 +292,7 @@ when specified then method returns code containing filter conditions of
 <div class="section">
 <h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>filtered</code></dt>
-<dd><p>(<code>logical(1)</code>)<br></p></dd>
+<dd><p>(<code>logical(1)</code>)</p></dd>
 
 
 </dl><p></p></div>
@@ -315,9 +305,9 @@ or as a reactive with current filters applied</p>
 
 </div><p></p><hr><a id="method-FilteredDataset-get_filter_overview"></a><div class="section">
 <h3 id="method-get-filter-overview-">Method <code>get_filter_overview()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-overview-"></a></h3>
-<p>Get filter overview rows of a dataset
+<p>Get filter overview rows of a dataset.
 The output shows the comparison between <code>filtered_dataset</code>
-function parameter and the dataset inside self</p><div class="section">
+function parameter and the dataset inside self.</p><div class="section">
 <h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_filter_overview</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -339,33 +329,31 @@ is used.</p></dd>
 
 </div><p></p><hr><a id="method-FilteredDataset-get_keys"></a><div class="section">
 <h3 id="method-get-keys-">Method <code>get_keys()</code><a class="anchor" aria-label="anchor" href="#method-get-keys-"></a></h3>
-<p>Gets the keys for the dataset of this <code>FilteredDataset</code></p><div class="section">
+<p>Gets the keys for the dataset of this <code>FilteredDataset</code>.</p><div class="section">
 <h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_keys</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="returns-9">Returns<a class="anchor" aria-label="anchor" href="#returns-9"></a></h4>
-<p>(<code>character</code>) the keys of dataset</p>
+<p><code>character</code> the keys of dataset</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredDataset-get_dataset_label"></a><div class="section">
 <h3 id="method-get-dataset-label-">Method <code>get_dataset_label()</code><a class="anchor" aria-label="anchor" href="#method-get-dataset-label-"></a></h3>
-<p>Gets the dataset label</p><div class="section">
+<p>Gets the dataset label.</p><div class="section">
 <h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_dataset_label</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="returns-10">Returns<a class="anchor" aria-label="anchor" href="#returns-10"></a></h4>
-<p>(<code>character</code>) the dataset label</p>
+<p><code>character</code> the dataset label</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredDataset-ui_active"></a><div class="section">
 <h3 id="method-ui-active-">Method <code>ui_active()</code><a class="anchor" aria-label="anchor" href="#method-ui-active-"></a></h3>
-<p>UI module for dataset active filters</p>
-<p>UI module containing dataset active filters along with
-title and remove button.</p><div class="section">
+<p>UI module for dataset active filters.</p><div class="section">
 <h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">ui_active</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -373,21 +361,26 @@ title and remove button.</p><div class="section">
 <div class="section">
 <h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
+<dd><p>(<code>character(1)</code>)
 identifier of the element - preferably containing dataset name</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
+<h4 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h4>
+<p>UI module containing dataset active filters along with
+title and remove button.</p>
+</div>
+
+<div class="section">
 <h4 id="returns-11">Returns<a class="anchor" aria-label="anchor" href="#returns-11"></a></h4>
-<p>function - shiny UI module</p>
+<p>function - <code>shiny</code> UI module</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredDataset-srv_active"></a><div class="section">
 <h3 id="method-srv-active-">Method <code>srv_active()</code><a class="anchor" aria-label="anchor" href="#method-srv-active-"></a></h3>
-<p>Server module for a dataset active filters</p>
-<p>Server module managing a  active filters.</p><div class="section">
+<p>Server module for a dataset active filters.</p><div class="section">
 <h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">srv_active</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -395,8 +388,8 @@ identifier of the element - preferably containing dataset name</p></dd>
 <div class="section">
 <h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
+<dd><p>(<code>character(1)</code>)
+an id string that corresponds with the id used to call the module's <code>ui_active</code> function.</p></dd>
 
 
 </dl><p></p></div>
@@ -408,8 +401,7 @@ an ID string that corresponds with the ID used to call the module's UI function.
 
 </div><p></p><hr><a id="method-FilteredDataset-ui_add"></a><div class="section">
 <h3 id="method-ui-add-">Method <code>ui_add()</code><a class="anchor" aria-label="anchor" href="#method-ui-add-"></a></h3>
-<p>UI module to add filter variable for this dataset</p>
-<p>UI module to add filter variable for this dataset</p><div class="section">
+<p>UI module to add filter variable for this dataset.</p><div class="section">
 <h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">ui_add</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -417,7 +409,7 @@ an ID string that corresponds with the ID used to call the module's UI function.
 <div class="section">
 <h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
+<dd><p>(<code>character(1)</code>)
 identifier of the element - preferably containing dataset name</p></dd>
 
 
@@ -425,12 +417,11 @@ identifier of the element - preferably containing dataset name</p></dd>
 </div>
 <div class="section">
 <h4 id="returns-13">Returns<a class="anchor" aria-label="anchor" href="#returns-13"></a></h4>
-<p>function - shiny UI module</p>
+<p>function - <code>shiny</code> UI module</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredDataset-srv_add"></a><div class="section">
 <h3 id="method-srv-add-">Method <code>srv_add()</code><a class="anchor" aria-label="anchor" href="#method-srv-add-"></a></h3>
-<p>Server module to add filter variable for this dataset</p>
 <p>Server module to add filter variable for this dataset.
 For this class <code>srv_add</code> calls multiple modules
 of the same name from <code>FilterStates</code> as <code>MAEFilteredDataset</code>
@@ -443,8 +434,9 @@ experiment.</p><div class="section">
 <div class="section">
 <h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
+<dd><p>(<code>character(1)</code>)
+an id string that corresponds with the id used to call the module's
+<code>ui_add</code> function.</p></dd>
 
 
 </dl><p></p></div>

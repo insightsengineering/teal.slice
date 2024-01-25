@@ -30,7 +30,7 @@ SummarizedExperiment, and MultiAssayExperiment."><!-- mathjax --><script src="ht
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9033</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9034</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,16 +54,6 @@ SummarizedExperiment, and MultiAssayExperiment."><!-- mathjax --><script src="ht
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -87,7 +77,7 @@ SummarizedExperiment, and MultiAssayExperiment."><!-- mathjax --><script src="ht
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1><code>FilterStates</code> R6 class</h1>
+      <img src="" class="logo" alt=""><h1><code>FilterStates</code> <code>R6</code> class</h1>
       <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.slice/blob/HEAD/R/FilterStates.R" class="external-link"><code>R/FilterStates.R</code></a></small>
       <div class="d-none name"><code>FilterStates.Rd</code></div>
     </div>
@@ -97,7 +87,7 @@ SummarizedExperiment, and MultiAssayExperiment."><!-- mathjax --><script src="ht
 and builds a <em>subset expression</em>.</p>
 <p>A <code>FilterStates</code> object tracks all subsetting expressions
 (logical predicates that limit observations) associated with a given dataset
-and composes them into a single reproducible R expression
+and composes them into a single reproducible <code>R</code> expression
 that will assign a subset of the original data to a new variable.
 This expression is hereafter referred to as <em>subset expression</em>.</p>
 <p>The <em>subset expression</em> is constructed differently for different
@@ -127,8 +117,7 @@ Currently implemented for <code>data.frame</code>, <code>matrix</code>,
 <li><p><a href="#method-FilterStates-srv_add"><code>FilterStates$srv_add()</code></a></p></li>
 <li><p><a href="#method-FilterStates-clone"><code>FilterStates$clone()</code></a></p></li>
 </ul></div><p></p><hr><a id="method-FilterStates-new"></a><div class="section">
-<h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
-<p>Initializes <code>FilterStates</code> object.</p>
+<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Initializes <code>FilterStates</code> object by setting
 <code>dataname</code>, and <code>datalabel</code>.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
@@ -143,12 +132,12 @@ Currently implemented for <code>data.frame</code>, <code>matrix</code>,
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>data</code></dt>
-<dd><p>(<code>data.frame</code>, <code>MultiAssayExperiment</code>, <code>SummarizedExperiment</code>, <code>matrix</code>)<br>
-the R object which <code>subset</code> function is applied on.</p></dd>
+<dd><p>(<code>data.frame</code> or <code>MultiAssayExperiment</code> or <code>SummarizedExperiment</code> or <code>matrix</code>)
+the <code>R</code> object which <code>subset</code> function is applied on.</p></dd>
 
 
 <dt><code>data_reactive</code></dt>
-<dd><p>(<code>function(sid)</code>)<br>
+<dd><p>(<code>function(sid)</code>)
 should return an object of the same type as <code>data</code> object or <code>NULL</code>.
 This object is needed for the <code>FilterState</code> counts being updated
 on a change in filters. If function returns <code>NULL</code> then filtered counts are not shown.
@@ -156,13 +145,13 @@ Function has to have <code>sid</code> argument being a character.</p></dd>
 
 
 <dt><code>dataname</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
+<dd><p>(<code>character(1)</code>)
 name of the data used in the expression
 specified to the function argument attached to this <code>FilterStates</code></p></dd>
 
 
 <dt><code>datalabel</code></dt>
-<dd><p>(<code>NULL</code> or <code>character(1)</code>)<br>
+<dd><p>(<code>NULL</code> or <code>character(1)</code>)
 text label value</p></dd>
 
 
@@ -183,11 +172,11 @@ text label value</p></dd>
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>show_all</code></dt>
-<dd><p><code>logical(1)</code> passed to <code>format.teal_slices</code></p></dd>
+<dd><p>(<code>logical(1)</code>) passed to <code>format.teal_slices</code></p></dd>
 
 
 <dt><code>trim_lines</code></dt>
-<dd><p><code>logical(1)</code> passed to <code>format.teal_slices</code></p></dd>
+<dd><p>(<code>logical(1)</code>) passed to <code>format.teal_slices</code></p></dd>
 
 
 </dl><p></p></div>
@@ -233,7 +222,7 @@ Possible call outputs depending on a custom fields/options:</p></li>
 <div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>sid</code></dt>
-<dd><p>(<code>character</code>)<br>
+<dd><p>(<code>character</code>)
 when specified then method returns code containing filter conditions of
 <code>FilterState</code> objects which <code>"sid"</code> attribute is different than this <code>sid</code> argument.</p></dd>
 
@@ -271,7 +260,7 @@ when specified then method returns code containing filter conditions of
 <div class="section">
 <h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>state</code></dt>
-<dd><p>(<code>teal_slices</code>)<br>
+<dd><p>(<code>teal_slices</code>)
 specifying <code>FilterState</code> objects to remove;
 <code>teal_slice</code>s may contain only <code>dataname</code> and <code>varname</code>, other elements are ignored</p></dd>
 
@@ -307,14 +296,11 @@ The output is a list compatible with input to <code>self$set_filter_state</code>
 <div class="section">
 <h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>state</code></dt>
-<dd><p>(<code>named list</code>)<br>
-should contain values which are initial selection in the <code>FilterState</code>.
-Names of the <code>list</code> element should correspond to the name of the
-column in <code>data</code>.</p></dd>
+<dd><p>(<code>teal_slices</code>)</p></dd>
 
 
 <dt><code>data</code></dt>
-<dd><p>(<code>data.frame</code>)<br>
+<dd><p>(<code>data.frame</code>)
 data which are supposed to be filtered</p></dd>
 
 
@@ -335,7 +321,7 @@ data which are supposed to be filtered</p></dd>
 <div class="section">
 <h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>force</code></dt>
-<dd><p>(<code>logical(1)</code>)<br>
+<dd><p>(<code>logical(1)</code>)
 include locked filter states</p></dd>
 
 
@@ -348,8 +334,7 @@ include locked filter states</p></dd>
 
 </div><p></p><hr><a id="method-FilterStates-ui_active"></a><div class="section">
 <h3 id="method-ui-active-">Method <code>ui_active()</code><a class="anchor" aria-label="anchor" href="#method-ui-active-"></a></h3>
-<p>Shiny module UI</p>
-<p>Shiny UI element that stores <code>FilterState</code> UI elements.
+<p><code>shiny</code> UI definition that stores <code>FilterState</code> UI elements.
 Populated with elements created with <code>renderUI</code> in the module server.</p><div class="section">
 <h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">ui_active</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
@@ -358,8 +343,8 @@ Populated with elements created with <code>renderUI</code> in the module server.
 <div class="section">
 <h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-shiny element (module instance) id</p></dd>
+<dd><p>(<code>character(1)</code>)
+<code>shiny</code> element (module instance) id</p></dd>
 
 
 </dl><p></p></div>
@@ -371,7 +356,7 @@ shiny element (module instance) id</p></dd>
 
 </div><p></p><hr><a id="method-FilterStates-srv_active"></a><div class="section">
 <h3 id="method-srv-active-">Method <code>srv_active()</code><a class="anchor" aria-label="anchor" href="#method-srv-active-"></a></h3>
-<p>Shiny server module.</p><div class="section">
+<p><code>shiny</code> server module.</p><div class="section">
 <h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">srv_active</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -379,8 +364,8 @@ shiny element (module instance) id</p></dd>
 <div class="section">
 <h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-shiny module instance id</p></dd>
+<dd><p>(<code>character(1)</code>)
+<code>shiny</code> module instance id</p></dd>
 
 
 </dl><p></p></div>
@@ -392,7 +377,7 @@ shiny module instance id</p></dd>
 
 </div><p></p><hr><a id="method-FilterStates-ui_add"></a><div class="section">
 <h3 id="method-ui-add-">Method <code>ui_add()</code><a class="anchor" aria-label="anchor" href="#method-ui-add-"></a></h3>
-<p>Shiny UI module to add filter variable.</p><div class="section">
+<p><code>shiny</code> UI module to add filter variable.</p><div class="section">
 <h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">ui_add</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -400,8 +385,8 @@ shiny module instance id</p></dd>
 <div class="section">
 <h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-shiny element (module instance) id</p></dd>
+<dd><p>(<code>character(1)</code>)
+<code>shiny</code> element (module instance) id</p></dd>
 
 
 </dl><p></p></div>
@@ -413,7 +398,7 @@ shiny element (module instance) id</p></dd>
 
 </div><p></p><hr><a id="method-FilterStates-srv_add"></a><div class="section">
 <h3 id="method-srv-add-">Method <code>srv_add()</code><a class="anchor" aria-label="anchor" href="#method-srv-add-"></a></h3>
-<p>Shiny server module to add filter variable.</p>
+<p><code>shiny</code> server module to add filter variable.</p>
 <p>This module controls available choices to select as a filter variable.
 Once selected, a variable is removed from available choices.
 Removing a filter variable adds it back to available choices.</p><div class="section">
@@ -424,8 +409,8 @@ Removing a filter variable adds it back to available choices.</p><div class="sec
 <div class="section">
 <h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
+<dd><p>(<code>character(1)</code>)
+an id string that corresponds with the id used to call the module's <code>ui_add</code> function.</p></dd>
 
 
 </dl><p></p></div>

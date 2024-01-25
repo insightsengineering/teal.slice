@@ -127,6 +127,9 @@
     <loc>https://insightsengineering.github.io/teal.slice/reference/filter_state_api.html</loc>
   </url>
   <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/format_time.html</loc>
+  </url>
+  <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/get_default_slice_id.html</loc>
   </url>
   <url>
@@ -134,9 +137,6 @@
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/get_supported_filter_varnames.html</loc>
-  </url>
-  <url>
-    <loc>https://insightsengineering.github.io/teal.slice/reference/get_teal_bs_theme.html</loc>
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/include_css_files.html</loc>
