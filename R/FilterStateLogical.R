@@ -1,35 +1,42 @@
+# LogicalFilterState ------
+
 #' @name LogicalFilterState
-#' @title `FilterState` object for logical variable
-#' @description Manages choosing a logical state
 #' @docType class
-#' @keywords internal
 #'
+#' @title `FilterState` object for logical variable
+#'
+#' @description Manages choosing a logical state.
 #'
 #' @examples
-#' filter_state <- teal.slice:::LogicalFilterState$new(
+#' # use non-exported function from teal.slice
+#' include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' LogicalFilterState <- getFromNamespace("LogicalFilterState", "teal.slice")
+#'
+#'
+#' filter_state <- LogicalFilterState$new(
 #'   x = sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
 #'   slice = teal_slice(varname = "x", dataname = "data")
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #' filter_state$set_state(
 #'   teal_slice(dataname = "data", varname = "x", selected = TRUE, keep_na = TRUE)
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #'
 #' # working filter in an app
-#' library(shiny)
 #' library(shinyjs)
 #'
 #' data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
-#' fs <- teal.slice:::LogicalFilterState$new(
+#' fs <- LogicalFilterState$new(
 #'   x = data_logical,
 #'   slice = teal_slice(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
 #' )
 #'
 #' ui <- fluidPage(
 #'   useShinyjs(),
-#'   teal.slice:::include_css_files(pattern = "filter-panel"),
-#'   teal.slice:::include_js_files(pattern = "count-bar-labels"),
+#'   include_css_files(pattern = "filter-panel"),
+#'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("LogicalFilterState"),
 #'     fs$ui("fs")
@@ -82,6 +89,8 @@
 #'   shinyApp(ui, server)
 #' }
 #'
+#' @keywords internal
+#'
 LogicalFilterState <- R6::R6Class( # nolint
   "LogicalFilterState",
   inherit = FilterState,
@@ -90,28 +99,27 @@ LogicalFilterState <- R6::R6Class( # nolint
   public = list(
 
     #' @description
-    #' Initialize a `FilterState` object
+    #' Initialize a `FilterState` object.
     #'
-    #' @param x (`logical`)\cr
+    #' @param x (`logical`)
     #'   values of the variable used in filter
-    #' @param x_reactive (`reactive`)\cr
+    #' @param x_reactive (`reactive`)
     #'   returning vector of the same type as `x`. Is used to update
     #'   counts following the change in values of the filtered dataset.
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
-    #' @param slice (`teal_slice`)\cr
+    #' @param slice (`teal_slice`)
     #'   object created using [teal_slice()]. `teal_slice` is stored
     #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
     #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
     #'   is a `reactiveValues` which means that changes in particular object are automatically
     #'   reflected in all places which refer to the same `teal_slice`.
-    #' @param extract_type (`character(0)`, `character(1)`)\cr
+    #' @param extract_type (`character`)
     #' whether condition calls should be prefixed by `dataname`. Possible values:
-    #' \itemize{
-    #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-    #' }
+    #' - `character(0)` (default) `varname` in the condition call will not be prefixed
+    #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
+    #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
+    #'
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,
@@ -143,7 +151,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' For `LogicalFilterState` it's a `!<varname>` or `<varname>` and optionally
     #' `is.na(<varname>)`
     #' @param dataname name of data set; defaults to `private$get_dataname()`
-    #' @return (`call`)
+    #' @return `call`
     #'
     get_call = function(dataname) {
       if (isFALSE(private$is_any_filtered())) {
@@ -210,8 +218,10 @@ LogicalFilterState <- R6::R6Class( # nolint
         TRUE
       } else if (all(private$choices_counts > 0)) {
         TRUE
-      } else if (setequal(private$get_selected(), private$get_choices()) &&
-        !anyNA(private$get_selected(), private$get_choices())) {
+      } else if (
+        setequal(private$get_selected(), private$get_choices()) &&
+          !anyNA(private$get_selected(), private$get_choices())
+      ) {
         TRUE
       } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
         TRUE
@@ -226,7 +236,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     # UI Module for `EmptyFilterState`.
     # This UI element contains available choices selection and
     # checkbox whether to keep or not keep the `NA` values.
-    # @param id (`character(1)`)\cr
+    # @param id (`character(1)`)
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
@@ -277,7 +287,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     # @description
     # Server module
     #
-    # @param id (`character(1)`)\cr
+    # @param id (`character(1)`)
     #   an ID string that corresponds with the ID used to call the module's UI function.
     # @return `moduleServer` function which returns `NULL`
     server_inputs = function(id) {

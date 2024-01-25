@@ -1,13 +1,14 @@
 #' Initialize `FilteredData`
 #'
-#' Initialize `FilteredData`
+#' Function creates a `FilteredData` object.
+#'
 #' @param x (named `list`) of datasets.
-#' @param join_keys (`join_keys`) see [teal.data::join_keys()].
-#' @param code (deprecated)
-#' @param check (deprecated)
+#' @param join_keys (`join_keys`) see [`teal.data::join_keys()`].
+#' @param code `r lifecycle::badge("deprecated")`
+#' @param check `r lifecycle::badge("deprecated")`
 #' @examples
-#' library(shiny)
-#' datasets <- teal.slice::init_filtered_data(list(iris = iris, mtcars = mtcars))
+#' datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
+#' datasets
 #' @export
 init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, check) { # nolint
   checkmate::assert_list(x, any.missing = FALSE, names = "unique")
@@ -29,12 +30,13 @@ init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, chec
 
 #' Evaluate expression with meaningful message
 #'
-#' Method created for the `FilteredData` to execute filter call with
+#' Method created for the `FilteredData` object to execute filter call with
 #' meaningful message. After evaluation used environment should contain
 #' all necessary bindings.
+#'
 #' @param expr (`language`)
 #' @param env (`environment`) where expression is evaluated.
-#' @return invisible `NULL`.
+#' @return `NULL` invisibly.
 #' @keywords internal
 eval_expr_with_msg <- function(expr, env) {
   lapply(
@@ -69,21 +71,21 @@ eval_expr_with_msg <- function(expr, env) {
 #' `removeClass` and `addClass` methods (when `one_way = TRUE`) to change icons.
 #' `toggle_title` calls the `attr` method to modify the `Title` attribute of the button.
 #'
-#' @param input_id `character(1)` (name-spaced) id of the button
-#' @param icons,titles `character(2)` vector specifying values between which to toggle
-#' @param one_way `logical(1)` flag specifying whether to keep toggling;
+#' @param input_id (`character(1)`) (name-spaced) id of the button
+#' @param icons,titles (`character(2)`) vector specifying values between which to toggle
+#' @param one_way (`logical(1)`) flag specifying whether to keep toggling;
 #'                if TRUE, the target will be changed
 #'                from the first element of `icons`/`titles` to the second
 #'
-#' @return Invisible NULL.
-#'
-#' @name toggle_button
-#'
+#' @return `NULL` invisibly
 #' @examples
-#' library(shiny)
+#' # use non-exported function from teal.slice
+#' toggle_icon <- getFromNamespace("toggle_icon", "teal.slice")
+#'
+#' library(shinyjs)
 #'
 #' ui <- fluidPage(
-#'   shinyjs::useShinyjs(),
+#'   useShinyjs(),
 #'   actionButton("hide_content", label = "hide", icon = icon("xmark")),
 #'   actionButton("show_content", label = "show", icon = icon("check")),
 #'   actionButton("toggle_content", label = "toggle", icon = icon("angle-down")),
@@ -97,7 +99,7 @@ eval_expr_with_msg <- function(expr, env) {
 #' server <- function(input, output, session) {
 #'   observeEvent(input$hide_content,
 #'     {
-#'       shinyjs::hide("content")
+#'       hide("content")
 #'       toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
 #'     },
 #'     ignoreInit = TRUE
@@ -105,7 +107,7 @@ eval_expr_with_msg <- function(expr, env) {
 #'
 #'   observeEvent(input$show_content,
 #'     {
-#'       shinyjs::show("content")
+#'       show("content")
 #'       toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
 #'     },
 #'     ignoreInit = TRUE
@@ -113,7 +115,7 @@ eval_expr_with_msg <- function(expr, env) {
 #'
 #'   observeEvent(input$toggle_content,
 #'     {
-#'       shinyjs::toggle("content")
+#'       toggle("content")
 #'       toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
 #'     },
 #'     ignoreInit = TRUE
@@ -126,7 +128,7 @@ eval_expr_with_msg <- function(expr, env) {
 #' if (interactive()) {
 #'   shinyApp(ui, server)
 #' }
-#'
+#' @name toggle_button
 #' @rdname toggle_button
 #' @keywords internal
 toggle_icon <- function(input_id, icons, one_way = FALSE) {
@@ -180,63 +182,15 @@ toggle_title <- function(input_id, titles, one_way = FALSE) {
   invisible(NULL)
 }
 
-#' Topological graph sort
-#'
-#' Graph is a list which for each node contains a vector of child nodes
-#' in the returned list, parents appear before their children.
-#'
-#' Implementation of `Kahn` algorithm with a modification to maintain the order of input elements.
-#'
-#' @param graph (named `list`) list with node vector elements
-#' @keywords internal
-#'
+#' @inherit teal.data::topological_sort description details params title
 #' @examples
-#' teal.slice:::topological_sort(list(A = c(), B = c("A"), C = c("B"), D = c("A")))
-#' teal.slice:::topological_sort(list(D = c("A"), A = c(), B = c("A"), C = c("B")))
-#' teal.slice:::topological_sort(list(D = c("A"), B = c("A"), C = c("B"), A = c()))
+#' # use non-exported function from teal.slice
+#' topological_sort <- getFromNamespace("topological_sort", "teal.slice")
+#'
+#' topological_sort(list(A = c(), B = c("A"), C = c("B"), D = c("A")))
+#' topological_sort(list(D = c("A"), A = c(), B = c("A"), C = c("B")))
+#' topological_sort(list(D = c("A"), B = c("A"), C = c("B"), A = c()))
+#' @keywords internal
 topological_sort <- function(graph) {
-  # compute in-degrees
-  in_degrees <- list()
-  for (node in names(graph)) {
-    in_degrees[[node]] <- 0
-    for (to_edge in graph[[node]]) {
-      in_degrees[[to_edge]] <- 0
-    }
-  }
-
-  for (node in graph) {
-    for (to_edge in node) {
-      in_degrees[[to_edge]] <- in_degrees[[to_edge]] + 1
-    }
-  }
-
-  # sort
-  visited <- 0
-  sorted <- list()
-  zero_in <- list()
-  for (node in names(in_degrees)) {
-    if (in_degrees[[node]] == 0) zero_in <- append(zero_in, node)
-  }
-  zero_in <- rev(zero_in)
-
-  while (length(zero_in) != 0) {
-    visited <- visited + 1
-    sorted <- c(zero_in[[1]], sorted)
-    for (edge_to in graph[[zero_in[[1]]]]) {
-      in_degrees[[edge_to]] <- in_degrees[[edge_to]] - 1
-      if (in_degrees[[edge_to]] == 0) {
-        zero_in <- append(zero_in, edge_to, 1)
-      }
-    }
-    zero_in[[1]] <- NULL
-  }
-
-  if (visited != length(in_degrees)) {
-    stop(
-      "Graph is not a directed acyclic graph. Cycles involving nodes: ",
-      paste0(setdiff(names(in_degrees), sorted), collapse = " ")
-    )
-  } else {
-    return(sorted)
-  }
+  utils::getFromNamespace("topological_sort", ns = "teal.data")(graph)
 }

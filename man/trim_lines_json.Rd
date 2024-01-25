@@ -2,12 +2,12 @@
 % Please edit documentation in R/teal_slice.R
 \name{trim_lines_json}
 \alias{trim_lines_json}
-\title{Trim Lines in \code{JSON} String}
+\title{Trim lines in \code{JSON} string}
 \usage{
 trim_lines_json(x)
 }
 \arguments{
-\item{x}{A character string.}
+\item{x}{(\code{character})}
 }
 \value{
 A character string trimmed after a certain hard-coded number of characters in the value portion.

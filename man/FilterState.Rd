@@ -3,13 +3,13 @@
 \docType{class}
 \name{FilterState}
 \alias{FilterState}
-\title{\code{FilterState} Abstract Class}
+\title{\code{FilterState} abstract Class}
 \description{
-Abstract class to encapsulate single filter state
+Abstract class to encapsulate single filter state.
 }
 \details{
 This class is responsible for managing single filter item within
-\code{FilteredData} class. Filter states depend on the variable type:
+\code{FilteredData} class object. Filter states depend on the variable type:
 (\code{logical}, \code{integer}, \code{numeric}, \code{factor}, \code{character}, \code{Date}, \code{POSIXct}, \code{POSIXlt})
 and returns \code{FilterState} object with class corresponding to input variable.
 Class controls single filter entry in \code{module_single_filter_item} and returns
@@ -22,16 +22,14 @@ code relevant to selected values.
 \item \code{POSIXct}, \code{POSIXlt}: \code{class = DatetimeFilterState}
 \item all \code{NA} entries: \code{class: FilterState}, cannot be filtered
 \item default: \code{FilterState}, cannot be filtered
-\cr
+}
+
 Each variable's filter state is an \code{R6} object which contains \code{choices},
 \code{selected}, \code{varname}, \code{dataname}, \code{labels}, \code{na_count}, \code{keep_na} and other
 variable type specific fields (\code{keep_inf}, \code{inf_count}, \code{timezone}).
-Object contains also shiny module (\code{ui} and \code{server}) which manages
+Object also contains a \code{shiny} module (UI and server) which manages the
 state of the filter through reactive values \code{selected}, \code{keep_na}, \code{keep_inf}
-which trigger \code{get_call()} and every R function call up in reactive chain.
-\cr
-\cr
-}
+which trigger \code{get_call()} and every \code{R} function call up in reactive chain.
 }
 \section{Modifying state}{
 
@@ -66,7 +64,7 @@ to the \code{set_state} method, or using
 \if{html}{\out{<a id="method-FilterState-new"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{FilterState} object
+Initialize a \code{FilterState} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$new(
   x,
@@ -79,24 +77,24 @@ Initialize a \code{FilterState} object
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{x}}{(\code{vector})\cr
+\item{\code{x}}{(\code{vector})
 values of the variable used in filter}
 
-\item{\code{x_reactive}}{(\code{reactive})\cr
+\item{\code{x_reactive}}{(\code{reactive})
 returning vector of the same type as \code{x}. Is used to update
 counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
-\item{\code{slice}}{(\code{teal_slice})\cr
+\item{\code{slice}}{(\code{teal_slice})
 object created by \code{\link[=teal_slice]{teal_slice()}}}
 
-\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
+\item{\code{extract_type}}{(\code{character})
 specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
-\item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
+\item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
+\item \code{"list"} \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}
+\item \code{"matrix"} \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}
 }}
 
 \item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
@@ -104,7 +102,7 @@ specifying whether condition calls should be prefixed by \code{dataname}. Possib
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-self invisibly
+\code{self} invisibly
 }
 }
 \if{html}{\out{<hr>}}
@@ -119,9 +117,9 @@ Returns a formatted string representing this \code{FilterState} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{show_all}}{\code{logical(1)} passed to \code{format.teal_slice}}
+\item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
 
-\item{\code{trim_lines}}{\code{logical(1)} passed to \code{format.teal_slice}}
+\item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
 }
 \if{html}{\out{</div>}}
 }
@@ -162,7 +160,7 @@ Sets filtering state.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{a \code{teal_slice} object}
+\item{\code{state}}{(\code{teal_slice})}
 }
 \if{html}{\out{</div>}}
 }
@@ -200,7 +198,7 @@ and must be executed in reactive or isolated context.
 \if{html}{\out{<a id="method-FilterState-server"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-server}{}}}
 \subsection{Method \code{server()}}{
-Shiny module server.
+\code{shiny} module server.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$server(id)}\if{html}{\out{</div>}}
 }
@@ -208,8 +206,8 @@ Shiny module server.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
-shiny module instance id}
+\item{\code{id}}{(\code{character(1)})
+\code{shiny} module instance id}
 }
 \if{html}{\out{</div>}}
 }
@@ -222,7 +220,7 @@ signaling that remove button has been clicked
 \if{html}{\out{<a id="method-FilterState-ui"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-ui}{}}}
 \subsection{Method \code{ui()}}{
-Shiny module UI.
+\code{shiny} UI module.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id, parent_id = "cards")}\if{html}{\out{</div>}}
 }
@@ -230,8 +228,8 @@ Shiny module UI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
-shiny element (module instance) id;
+\item{\code{id}}{(\code{character(1)})
+\code{shiny} element (module instance) id;
 the UI for this class contains simple message stating that it is not supported}
 
 \item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}
@@ -249,7 +247,7 @@ Destroy observers stored in \code{private$observers}.
 }
 
 \subsection{Returns}{
-NULL invisibly
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}

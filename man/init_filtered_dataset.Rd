@@ -15,28 +15,28 @@ init_filtered_dataset(
 )
 }
 \arguments{
-\item{dataset}{(\code{data.frame} or \code{MultiAssayExperiment})\cr}
+\item{dataset}{(\code{data.frame} or \code{MultiAssayExperiment})}
 
-\item{dataname}{(\code{character})\cr
+\item{dataname}{(\code{character})
 A given name for the dataset it may not contain spaces}
 
-\item{keys}{optional, (\code{character})\cr
+\item{keys}{optional, (\code{character})
 Vector with primary keys}
 
-\item{parent_name}{(\code{character(1)})\cr
+\item{parent_name}{(\code{character(1)})
 Name of the parent dataset}
 
-\item{parent}{(\code{reactive})\cr
+\item{parent}{(\code{reactive})
 object returned by this reactive is a filtered \code{data.frame} from other \code{FilteredDataset}
 named \code{parent_name}. Consequence of passing \code{parent} is a \code{reactive} link which causes
 causing re-filtering of this \code{dataset} based on the changes in \code{parent}.}
 
-\item{join_keys}{(\code{character})\cr
+\item{join_keys}{(\code{character})
 Name of the columns in this dataset to join with \code{parent}
 dataset. If the column names are different if both datasets
 then the names of the vector define the \code{parent} columns.}
 
-\item{label}{(\code{character})\cr
+\item{label}{(\code{character})
 Label to describe the dataset}
 }
 \description{
@@ -48,52 +48,50 @@ at which point any code which relies on this exported function will need to be c
 }
 \examples{
 # DataframeFilteredDataset example
-iris_fd <- teal.slice:::init_filtered_dataset(iris, dataname = "iris")
-app <- shinyApp(
-  ui = fluidPage(
-    iris_fd$ui_add(id = "add"),
-    iris_fd$ui_active("dataset"),
-    verbatimTextOutput("call")
-  ),
-  server = function(input, output, session) {
-    iris_fd$srv_add(id = "add")
-    iris_fd$srv_active(id = "dataset")
-
-    output$call <- renderText({
-      paste(
-        vapply(iris_fd$get_call(), deparse1, character(1), collapse = "\n"),
-        collapse = "\n"
-      )
-    })
-  }
+iris_fd <- init_filtered_dataset(iris, dataname = "iris")
+ui <- fluidPage(
+  iris_fd$ui_add(id = "add"),
+  iris_fd$ui_active("dataset"),
+  verbatimTextOutput("call")
 )
+server <- function(input, output, session) {
+  iris_fd$srv_add(id = "add")
+  iris_fd$srv_active(id = "dataset")
+
+  output$call <- renderText({
+    paste(
+      vapply(iris_fd$get_call(), deparse1, character(1), collapse = "\n"),
+      collapse = "\n"
+    )
+  })
+}
 if (interactive()) {
-  shinyApp(app$ui, app$server)
+  shinyApp(ui, server)
 }
 
+\dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # MAEFilteredDataset example
 library(MultiAssayExperiment)
-data(miniACC)
-MAE_fd <- teal.slice:::init_filtered_dataset(miniACC, "MAE")
-app <- shinyApp(
-  ui = fluidPage(
-    MAE_fd$ui_add(id = "add"),
-    MAE_fd$ui_active("dataset"),
-    verbatimTextOutput("call")
-  ),
-  server = function(input, output, session) {
-    MAE_fd$srv_add(id = "add")
-    MAE_fd$srv_active(id = "dataset")
-    output$call <- renderText({
-      paste(
-        vapply(MAE_fd$get_call(), deparse1, character(1), collapse = "\n"),
-        collapse = "\n"
-      )
-    })
-  }
+data(miniACC, package = "MultiAssayExperiment")
+MAE_fd <- init_filtered_dataset(miniACC, "MAE")
+ui <- fluidPage(
+  MAE_fd$ui_add(id = "add"),
+  MAE_fd$ui_active("dataset"),
+  verbatimTextOutput("call")
 )
-if (interactive()) {
-  shinyApp(app$ui, app$server)
+server <- function(input, output, session) {
+  MAE_fd$srv_add(id = "add")
+  MAE_fd$srv_active(id = "dataset")
+  output$call <- renderText({
+    paste(
+      vapply(MAE_fd$get_call(), deparse1, character(1), collapse = "\n"),
+      collapse = "\n"
+    )
+  })
 }
+if (interactive()) {
+  shinyApp(ui, server)
+}
+\dontshow{\}) # examplesIf}
 }
 \keyword{internal}

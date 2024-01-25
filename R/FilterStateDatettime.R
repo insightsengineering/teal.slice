@@ -1,17 +1,24 @@
+# DatetimeFilterState ------
+
 #' @rdname DatetimeFilterState
-#' @title `FilterState` object for `POSIXct` variable
-#' @description  Manages choosing a range of date-times
 #' @docType class
-#' @keywords internal
 #'
+#' @title `FilterState` object for `POSIXct` variable
+#'
+#' @description  Manages choosing a range of date-times.
 #'
 #' @examples
-#' filter_state <- teal.slice:::DatetimeFilterState$new(
+#' # use non-exported function from teal.slice
+#' include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' DatetimeFilterState <- getFromNamespace("DatetimeFilterState", "teal.slice")
+#'
+#' filter_state <- DatetimeFilterState$new(
 #'   x = c(Sys.time() + seq(0, by = 3600, length.out = 10), NA),
 #'   slice = teal_slice(varname = "x", dataname = "data"),
 #'   extract_type = character(0)
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #' filter_state$set_state(
 #'   teal_slice(
 #'     dataname = "data",
@@ -20,15 +27,14 @@
 #'     keep_na = TRUE
 #'   )
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #'
 #' # working filter in an app
-#' library(shiny)
 #' library(shinyjs)
 #'
 #' datetimes <- as.POSIXct(c("2012-01-01 12:00:00", "2020-01-01 12:00:00"))
 #' data_datetime <- c(seq(from = datetimes[1], to = datetimes[2], length.out = 100), NA)
-#' fs <- teal.slice:::DatetimeFilterState$new(
+#' fs <- DatetimeFilterState$new(
 #'   x = data_datetime,
 #'   slice = teal_slice(
 #'     varname = "x", dataname = "data", selected = data_datetime[c(47, 98)], keep_na = TRUE
@@ -37,8 +43,8 @@
 #'
 #' ui <- fluidPage(
 #'   useShinyjs(),
-#'   teal.slice:::include_css_files(pattern = "filter-panel"),
-#'   teal.slice:::include_js_files(pattern = "count-bar-labels"),
+#'   include_css_files(pattern = "filter-panel"),
+#'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("DatetimeFilterState"),
 #'     fs$ui("fs")
@@ -102,6 +108,8 @@
 #'   shinyApp(ui, server)
 #' }
 #'
+#' @keywords internal
+#'
 DatetimeFilterState <- R6::R6Class( # nolint
   "DatetimeFilterState",
   inherit = FilterState,
@@ -117,26 +125,26 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' timezone of the app user. App user timezone is taken from `session$userData$timezone`
     #' and is set only if object is initialized in `shiny`.
     #'
-    #' @param x (`POSIXct` or `POSIXlt`)\cr
+    #' @param x (`POSIXct` or `POSIXlt`)
     #'   values of the variable used in filter
-    #' @param x_reactive (`reactive`)\cr
+    #' @param x_reactive (`reactive`)
     #'   returning vector of the same type as `x`. Is used to update
     #'   counts following the change in values of the filtered dataset.
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
-    #' @param slice (`teal_slice`)\cr
+    #' @param slice (`teal_slice`)
     #'   object created using [teal_slice()]. `teal_slice` is stored
     #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
     #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
     #'   is a `reactiveValues` which means that changes in particular object are automatically
     #'   reflected in all places which refer to the same `teal_slice`.
-    #' @param extract_type (`character(0)`, `character(1)`)\cr
+    #' @param extract_type (`character`)
     #' whether condition calls should be prefixed by `dataname`. Possible values:
-    #' \itemize{
-    #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-    #' }
+    #'
+    #' - `character(0)` (default) `varname` in the condition call will not be prefixed
+    #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
+    #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
+    #'
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,
@@ -168,7 +176,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' `<varname> >= as.POSIXct(<min>) & <varname> <= <max>)`
     #' with optional `is.na(<varname>)`.
     #' @param dataname name of data set; defaults to `private$get_dataname()`
-    #' @return (`call`)
+    #' @return `call`
     #'
     get_call = function(dataname) {
       if (isFALSE(private$is_any_filtered())) {
@@ -236,8 +244,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
       private$set_is_choice_limited(private$x, choices)
       private$x <- private$x[
-        (as.POSIXct(trunc(private$x, units = "secs")) >= choices[1L] &
-          as.POSIXct(trunc(private$x, units = "secs")) <= choices[2L]) | is.na(private$x)
+        (
+          as.POSIXct(trunc(private$x, units = "secs")) >= choices[1L] &
+            as.POSIXct(trunc(private$x, units = "secs")) <= choices[2L]
+        ) | is.na(private$x)
       ]
       private$teal_slice$choices <- choices
       invisible(NULL)
@@ -303,7 +313,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     # UI Module for `DatetimeFilterState`.
     # This UI element contains two date-time selections for `min` and `max`
     # of the range and a checkbox whether to keep the `NA` values.
-    # @param id (`character(1)`)\cr
+    # @param id (`character(1)`)
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
@@ -369,7 +379,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
     # @description
     # Server module
-    # @param id (`character(1)`)\cr
+    # @param id (`character(1)`)
     #   an ID string that corresponds with the ID used to call the module's UI function.
     # @return `moduleServer` function which returns `NULL`
     server_inputs = function(id) {

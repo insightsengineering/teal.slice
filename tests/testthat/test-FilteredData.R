@@ -1,5 +1,6 @@
 # initialize ----
 testthat::test_that("constructor accepts all types of datasets", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data(miniACC, package = "MultiAssayExperiment")
 
   testthat::expect_no_error(FilteredData$new(list("logical" = c(TRUE, FALSE))))
@@ -465,7 +466,7 @@ testthat::test_that("remove_filter_state removes states specified by `teal_slice
 })
 
 testthat::test_that("remove_filter_state does not remove anchored filters", {
-  datasets <- teal.slice:::FilteredData$new(list(iris = iris, mtcars = mtcars))
+  datasets <- FilteredData$new(list(iris = iris, mtcars = mtcars))
   fs <- teal_slices(
     teal_slice(
       dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
@@ -534,7 +535,7 @@ testthat::test_that("clear_filter_states removes filters of desired dataset only
 })
 
 testthat::test_that("clear_filter_states does not remove anchored filters", {
-  datasets <- teal.slice:::FilteredData$new(list(iris = iris, mtcars = mtcars))
+  datasets <- FilteredData$new(list(iris = iris, mtcars = mtcars))
   fs <- teal_slices(
     teal_slice(
       dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
@@ -718,6 +719,8 @@ testthat::test_that("srv_active - clicking remove_all button clears filters", {
 
 # get_filter_count
 testthat::test_that("get_filter_count properly tallies active filter states", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
+  utils::data(miniACC, package = "MultiAssayExperiment")
   test_class <- R6::R6Class(
     classname = "test_class",
     inherit = FilteredData,
@@ -753,6 +756,8 @@ testthat::test_that("get_filter_count properly tallies active filter states for 
       }
     )
   )
+  testthat::skip_if_not_installed("MultiAssayExperiment")
+  utils::data(miniACC, package = "MultiAssayExperiment")
   datasets <- test_class$new(
     list(
       iris = list(dataset = iris),

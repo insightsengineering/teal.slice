@@ -7,8 +7,7 @@
 get_supported_filter_varnames(data)
 }
 \arguments{
-\item{data}{(\code{object})\cr
-the R object containing elements which class can be checked through \code{vapply} or \code{apply}.}
+\item{data}{the \code{R} object containing elements which class can be checked through \code{vapply} or \code{apply}.}
 }
 \value{
 \code{character} vector of matched element names
@@ -18,6 +17,9 @@ Gets filterable variable names from a given object. The names match variables
 of classes in an vector \code{teal.slice:::.filterable_class}.
 }
 \examples{
+# use non-exported function from teal.slice
+get_supported_filter_varnames <- getFromNamespace("get_supported_filter_varnames", "teal.slice")
+
 df <- data.frame(
   a = letters[1:3],
   b = 1:3,
@@ -25,6 +27,6 @@ df <- data.frame(
   d = Sys.time() + 1:3,
   z = complex(3)
 )
-teal.slice:::get_supported_filter_varnames(df)
+get_supported_filter_varnames(df)
 }
 \keyword{internal}

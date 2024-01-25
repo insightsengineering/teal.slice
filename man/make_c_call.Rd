@@ -2,8 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{make_c_call}
 \alias{make_c_call}
-\title{This function takes a vector of values and returns a \code{c} call. If the vector
-has only one element, the element is returned directly.}
+\title{Build concatenating call}
 \usage{
 make_c_call(choices)
 }
@@ -18,10 +17,10 @@ This function takes a vector of values and returns a \code{c} call. If the vecto
 has only one element, the element is returned directly.
 }
 \examples{
-teal.slice:::make_c_call(1:3)
-# [1] 1 2 3
+# use non-exported function from teal.slice
+make_c_call <- getFromNamespace("make_c_call", "teal.slice")
+make_c_call(1:3)
+make_c_call(1)
 
-teal.slice:::make_c_call(1)
-# [1] 1
 }
 \keyword{internal}

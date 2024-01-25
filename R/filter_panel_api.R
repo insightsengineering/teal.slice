@@ -1,18 +1,20 @@
 #' Managing `FilteredData` states
 #'
 #' @description `r lifecycle::badge("experimental")`
-#' Set, get and remove filter states of `FilteredData` object
+#'
+#' Set, get and remove filter states of `FilteredData` object.
 #'
 #' @name filter_state_api
 #'
-#' @param datasets (`FilteredData`)\cr
-#'   object to store filter state and filtered datasets, shared across modules\cr
+#' @param datasets (`FilteredData`)
+#'   object to store filter state and filtered datasets, shared across modules
+#'
 #'   see [`FilteredData`] for details
 #'
-#' @param filter (`teal_slices`)\cr
+#' @param filter (`teal_slices`)
 #'   specify filters in place on app start-up
 #'
-#' @param force (`logical(1)`)\cr
+#' @param force (`logical(1)`)
 #'   include locked filter states
 #'
 #' @return
@@ -23,17 +25,53 @@
 #' @seealso [`teal_slice`]
 #'
 #' @examples
-#' utils::data(miniACC, package = "MultiAssayExperiment")
-#'
 #' datasets <- init_filtered_data(
 #'   x = list(
 #'     iris = list(dataset = iris),
-#'     mae = list(dataset = miniACC)
+#'     mtcars = list(dataset = mtcars)
 #'   )
 #' )
 #' fs <- teal_slices(
 #'   teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
 #'   teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+#'   teal_slice(dataname = "mtcars", varname = "gear", selected = c(4, 5)),
+#'   teal_slice(dataname = "mtcars", varname = "carb", selected = c(4, 10))
+#' )
+#'
+#' # set initial filter state
+#' set_filter_state(datasets, filter = fs)
+#'
+#' # get filter state
+#' get_filter_state(datasets)
+#'
+#' # modify filter state
+#' set_filter_state(
+#'   datasets,
+#'   teal_slices(
+#'     teal_slice(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
+#'   )
+#' )
+#'
+#' # remove specific filters
+#' remove_filter_state(
+#'   datasets,
+#'   teal_slices(
+#'     teal_slice(dataname = "iris", varname = "Species"),
+#'     teal_slice(dataname = "mtcars", varname = "gear"),
+#'     teal_slice(dataname = "mtcars", varname = "carb")
+#'   )
+#' )
+#'
+#' # remove all states
+#' clear_filter_states(datasets)
+#' @examplesIf requireNamespace("MultiAssayExperiment")
+#'
+#' # Requires MultiAssayExperiment from Bioconductor
+#' library(MultiAssayExperiment)
+#' data(miniACC)
+#'
+#' datasets <- init_filtered_data(x = list(mae = list(dataset = miniACC)))
+#' fs <- teal_slices(
 #'   teal_slice(
 #'     dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
 #'     keep_na = TRUE, keep_inf = FALSE
@@ -62,7 +100,7 @@
 #' set_filter_state(
 #'   datasets,
 #'   teal_slices(
-#'     teal_slice(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
+#'     teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(40, 60))
 #'   )
 #' )
 #'
@@ -70,7 +108,6 @@
 #' remove_filter_state(
 #'   datasets,
 #'   teal_slices(
-#'     teal_slice(dataname = "iris", varname = "Species"),
 #'     teal_slice(dataname = "mae", varname = "years_to_birth"),
 #'     teal_slice(dataname = "mae", varname = "vital_status")
 #'   )
@@ -84,10 +121,7 @@ NULL
 #' @export
 set_filter_state <- function(datasets, filter) {
   checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
-  checkmate::assert(
-    checkmate::check_class(filter, "teal_slices"),
-    checkmate::check_list(filter, min.len = 0, null.ok = TRUE)
-  )
+  checkmate::assert_class(filter, "teal_slices")
   datasets$set_filter_state(filter)
   invisible(NULL)
 }
@@ -107,10 +141,7 @@ get_filter_state <- function(datasets) {
 #' @export
 remove_filter_state <- function(datasets, filter) {
   checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
-  checkmate::assert(
-    checkmate::check_class(filter, "teal_slices"),
-    checkmate::check_list(filter, min.len = 0, null.ok = TRUE)
-  )
+  checkmate::assert_class(filter, "teal_slices")
 
   datasets$remove_filter_state(filter)
   invisible(NULL)
@@ -127,14 +158,14 @@ clear_filter_states <- function(datasets, force = FALSE) {
 #' Gets filter expression for multiple `datanames` taking into account its order.
 #'
 #' @description `r lifecycle::badge("stable")`
-#' To be used in show R code button.
+#'
+#' To be used in `Show R Code` button.
 #'
 #' @param datasets (`FilteredData`)
 #' @param datanames (`character`) vector of dataset names
-#'
+#' @return A `character` string containing all subsetting expressions.
 #' @export
 #'
-#' @return (`expression`)
 get_filter_expr <- function(datasets, datanames = datasets$datanames()) {
   checkmate::assert_character(datanames, min.len = 1, any.missing = FALSE)
   stopifnot(

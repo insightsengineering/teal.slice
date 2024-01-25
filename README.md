@@ -1,6 +1,11 @@
 # teal.slice
 
 <!-- start badges -->
+[![CRAN Version](https://www.r-pkg.org/badges/version/teal.slice?color=green)](https://cran.r-project.org/package=teal.slice)
+[![Total Downloads](http://cranlogs.r-pkg.org/badges/grand-total/teal.slice?color=green)](https://cran.r-project.org/package=teal.slice)
+[![Last Month Downloads](http://cranlogs.r-pkg.org/badges/last-month/teal.slice?color=green)](https://cran.r-project.org/package=teal.slice)
+[![Last Week Downloads](http://cranlogs.r-pkg.org/badges/last-week/teal.slice?color=green)](https://cran.r-project.org/package=teal.slice)
+
 [![Check 🛠](https://github.com/insightsengineering/teal.slice/actions/workflows/check.yaml/badge.svg)](https://insightsengineering.github.io/teal.slice/main/unit-test-report/)
 [![Docs 📚](https://github.com/insightsengineering/teal.slice/actions/workflows/docs.yaml/badge.svg)](https://insightsengineering.github.io/teal.slice/)
 [![Code Coverage 📔](https://raw.githubusercontent.com/insightsengineering/teal.slice/_xml_coverage_reports/data/main/badge.svg)](https://insightsengineering.github.io/teal.slice/main/coverage-report/)
@@ -19,7 +24,7 @@
 [![Open Issues](https://img.shields.io/github/issues-raw/insightsengineering/teal.slice?color=red\&label=open%20issues)](https://github.com/insightsengineering/teal.slice/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 <!-- end badges -->
 
-`teal.slice` is an R library used in the development of `teal` `shiny` modules. It provides:
+`teal.slice` is an `R` library used in the development of `teal` `shiny` modules. It provides:
 
 * a class accepting an array of `data.frames` as an input, then supporting basic `dplyr` operations on the data,
 * a method returning the code needed to slice the data in the desired way,
@@ -29,7 +34,7 @@
 
 ```r
 # stable versions
-install.packages('teal.slice', repos = c('https://insightsengineering.r-universe.dev', getOption('repos')))
+install.packages('teal.slice')
 
 # install.packages("pak")
 pak::pak("insightsengineering/teal.slice@*release")
@@ -53,7 +58,7 @@ To understand how to use this package, please refer to the [Introduction to teal
 
 ## Getting help
 
-If you encounter a bug or you have a feature request - please file an issue. For questions, discussions and staying up to date, please use the "teal" channel in the [`pharmaverse` slack workspace](https://pharmaverse.slack.com).
+If you encounter a bug or have a feature request, please file an issue. For questions, discussions, and updates, use the `teal` channel in the [`pharmaverse` slack workspace](https://pharmaverse.slack.com).
 
 ## Stargazers and Forkers
 
