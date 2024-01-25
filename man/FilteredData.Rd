@@ -82,7 +82,7 @@ fs <- teal_slices(
   teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
   teal_slice(
     dataname = "mae", varname = "ARRAY_TYPE",
-    selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset"
+    selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset"
   )
 )
 datasets$set_filter_state(state = fs)
