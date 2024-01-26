@@ -8,7 +8,7 @@
 #'   If function returns `NULL` then filtered counts are not shown.
 #'   Function has to have `sid` argument being a character which is related to `sid` argument in the `get_call` method.
 #' @param dataname (`character(1)`)
-#'   name of the data used in the filtering expression,
+#'   name of the data used in the subsetting expression,
 #'   passed to the function argument attached to this `FilterStates`.
 #' @param datalabel (`character(1)`)
 #'   optional text label.

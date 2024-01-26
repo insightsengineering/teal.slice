@@ -8,8 +8,9 @@
 Sister class to \code{FilterState} that handles arbitrary filter expressions.
 }
 \details{
-Creates a filter state around a predefined filtering predicate.
-The filtering call is independent of the data and the filter card allows no interaction (the filter is always fixed).
+Creates a filter state around a predefined subsetting predicate.
+The subsetting call is independent of the data
+and the filter card allows no interaction (the filter is always fixed).
 }
 \examples{
 # use non-exported function from teal.slice
@@ -139,7 +140,7 @@ Prints this \code{FilterStateExpr} object.
 \if{html}{\out{<a id="method-FilterStateExpr-get_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-get_state}{}}}
 \subsection{Method \code{get_state()}}{
-Returns filtering state.
+Returns a complete description of this filter state.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$get_state()}\if{html}{\out{</div>}}
 }
@@ -152,7 +153,7 @@ A \code{teal_slice} object.
 \if{html}{\out{<a id="method-FilterStateExpr-set_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-set_state}{}}}
 \subsection{Method \code{set_state()}}{
-Sets filtering state.
+Does nothing. Exists for compatibility.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$set_state(state)}\if{html}{\out{</div>}}
 }

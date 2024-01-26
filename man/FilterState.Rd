@@ -9,7 +9,7 @@ Abstract class to encapsulate single filter state.
 }
 \details{
 This class is responsible for managing a single filter item within a \code{FilteredData} object
-and outputs a logical predicate for filtering one variable.
+and outputs a logical predicate for subsetting one variable.
 Filter states depend on the variable type:
 (\code{logical}, \code{integer}, \code{numeric}, \code{factor}, \code{character}, \code{Date}, \code{POSIXct}, \code{POSIXlt})
 and \code{FilterState} subclasses exist that correspond to those types.
@@ -146,7 +146,7 @@ Prints this \code{FilterState} object.
 \if{html}{\out{<a id="method-FilterState-set_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-set_state}{}}}
 \subsection{Method \code{set_state()}}{
-Sets filtering state.
+Sets mutable parameters of the filter state.
 \itemize{
 \item \code{fixed} state is prevented from changing state
 \item \code{anchored} state is prevented from removing state
@@ -170,7 +170,7 @@ Sets filtering state.
 \if{html}{\out{<a id="method-FilterState-get_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-get_state}{}}}
 \subsection{Method \code{get_state()}}{
-Returns filtering state.
+Returns a complete description of the filter state.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$get_state()}\if{html}{\out{</div>}}
 }

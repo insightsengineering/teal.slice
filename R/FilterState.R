@@ -9,7 +9,7 @@
 #'
 #' @details
 #' This class is responsible for managing a single filter item within a `FilteredData` object
-#' and outputs a logical predicate for filtering one variable.
+#' and outputs a logical predicate for subsetting one variable.
 #' Filter states depend on the variable type:
 #' (`logical`, `integer`, `numeric`, `factor`, `character`, `Date`, `POSIXct`, `POSIXlt`)
 #' and `FilterState` subclasses exist that correspond to those types.
@@ -136,7 +136,7 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Sets filtering state.
+    #' Sets mutable parameters of the filter state.
     #' - `fixed` state is prevented from changing state
     #' - `anchored` state is prevented from removing state
     #'
@@ -174,7 +174,7 @@ FilterState <- R6::R6Class( # nolint
 
 
     #' @description
-    #' Returns filtering state.
+    #' Returns a complete description of the filter state.
     #'
     #' @return A `teal_slice` object.
     #'

@@ -8,8 +8,9 @@
 #' @description Sister class to `FilterState` that handles arbitrary filter expressions.
 #'
 #' @details
-#' Creates a filter state around a predefined filtering predicate.
-#' The filtering call is independent of the data and the filter card allows no interaction (the filter is always fixed).
+#' Creates a filter state around a predefined subsetting predicate.
+#' The subsetting call is independent of the data
+#' and the filter card allows no interaction (the filter is always fixed).
 #'
 #' @examples
 #' # use non-exported function from teal.slice
@@ -101,7 +102,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns filtering state.
+    #' Returns a complete description of this filter state.
     #'
     #' @return A `teal_slice` object.
     #'
@@ -110,7 +111,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Sets filtering state.
+    #' Does nothing. Exists for compatibility.
     #'
     #' @param state (`teal_slice`)
     #'
