@@ -88,55 +88,31 @@
   margin-bottom: 10px;
 }
 
-#teal_filter_panel_whole > div.well div.form-group label {
-  width: 100%;
-}
 
-#teal_filter_active_vars p {
-  margin-bottom: 0;
-}
-
-.filter-panel-active-header {
+.filter-panel-active > .filter-panel-section-header {
   display: flex;
   justify-content: flex-end;
   gap: 0.25em;
 }
 
-.filter-panel-active-header span:first-child {
+.filter-panel-active > .filter-panel-section-header >  span:first-child {
   margin-right: auto;
 }
 
-a.remove {
+a.control-button {
   font-weight: normal;
   float: right;
   border: 0;
   background-color: transparent;
   color: rgba(0, 0, 0, 0.3);
   font-weight: 100;
-  font-size: 0.9em;
+  font-size: 1em;
   padding: 2px 4px;
   margin-top: 0;
 }
 
-a.remove:hover {
+a.control-button:hover {
   color: #337ab7;
-}
-
-a.remove_all {
-  font-weight: normal;
-  float: right;
-  border: 0;
-  background-color: transparent;
-  color: rgb(136, 0, 0, 0.72);
-  font-weight: 100;
-  font-size: 0.9em;
-  padding: 2px 4px;
-  margin-top: 0;
-  opacity: 50%;
-}
-
-a.remove_all:hover {
-  color: #d40000;
 }
 
 .choices_state label {
@@ -237,7 +213,7 @@ a.remove_all:hover {
   font-weight: bold;
 }
 
-.teal_active_summary_filter_panel {
+.filter-panel-overview-table {
   overflow-x: auto;
 }
 
@@ -297,14 +273,18 @@ a.remove_all:hover {
 
   color: var(--bs-gray-500, var(--gray, darkgray));
 }
+
 .filter-card-controls {
   flex: 0 0 auto;
   justify-self: flex-end;
-
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   gap: 0.75em;
+}
+
+.filter-card-controls .control-button {
+  padding: 0 0;
 }
 
 .filter-card-summary {
@@ -341,8 +321,8 @@ a.remove_all:hover {
   color: var(--bs-danger, var(--danger, #a94442))
 }
 
-.filter-card-remove,
-.filter-card-remove:hover {
+.filter-card-control-remove,
+.filter-card-control-remove:hover {
   color: var(--bs-body-color, var(--dark, #333333));
 }
 
@@ -397,8 +377,6 @@ a.remove_all:hover {
   margin-top: 0.1em;
 }
 
-
-
 .choices_state {
   margin-bottom: .45rem;
 }
@@ -417,19 +395,4 @@ a.remove_all:hover {
 
 .menu-content {
   min-width: 15em;
-}
-
-.snapshot_table_row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.snapshot_table_row *:first-child {
-  flex: 1 1 80%;
-}
-
-.snapshot_table_row * + * {
-  flex: 1 0 50px;
-  padding: 0em 1em;
 }

@@ -245,13 +245,13 @@ FilteredDataset <- R6::R6Class( # nolint
                   ns("remove_filters"),
                   label = "",
                   icon = icon("circle-xmark", lib = "font-awesome"),
-                  class = "remove pull-right"
+                  class = "control-button pull-right"
                 ),
                 actionLink(
                   ns("collapse"),
                   label = "",
                   icon = icon("angle-down", lib = "font-awesome"),
-                  class = "remove pull-right"
+                  class = "control-button pull-right"
                 )
               )
             )

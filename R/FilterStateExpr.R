@@ -208,7 +208,7 @@ FilterStateExpr <- R6::R6Class( # nolint
                     inputId = ns("remove"),
                     label = icon("circle-xmark", lib = "font-awesome"),
                     title = "Remove filter",
-                    class = "filter-card-remove"
+                    class = "control-button"
                   )
                 }
               )

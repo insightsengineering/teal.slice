@@ -502,6 +502,8 @@ FilteredData <- R6::R6Class( # nolint
       ns <- NS(id)
       div(
         id = ns(NULL), # used for hiding / showing
+        class = "filter-panel",
+        shinyjs::useShinyjs(),
         include_css_files(pattern = "filter-panel"),
         self$ui_overview(ns("overview")),
         self$ui_active(ns("active")),
@@ -556,24 +558,26 @@ FilteredData <- R6::R6Class( # nolint
       ns <- NS(id)
       div(
         id = id, # not used, can be used to customize CSS behavior
-        class = "well",
+        class = "filter-panel-active well",
         tags$div(
-          class = "filter-panel-active-header",
-          tags$span("Active Filter Variables", class = "text-primary mb-4"),
+          class = "filter-panel-section-header",
+          tags$span(
+            tags$label("Active Filter Variables", class = "text-primary mb-4")
+          ),
           private$ui_available_filters(ns("available_filters")),
           actionLink(
             inputId = ns("minimise_filter_active"),
+            class = "control-button pull-right",
             label = NULL,
             icon = icon("angle-down", lib = "font-awesome"),
-            title = "Minimise panel",
-            class = "remove_all pull-right"
+            title = "Minimise panel"
           ),
           actionLink(
             inputId = ns("remove_all_filters"),
+            class = "control-button pull-right",
             label = "",
             icon("circle-xmark", lib = "font-awesome"),
-            title = "Remove active filters",
-            class = "remove_all pull-right"
+            title = "Remove active filters"
           )
         ),
         div(
@@ -676,9 +680,9 @@ FilteredData <- R6::R6Class( # nolint
       ns <- NS(id)
       div(
         id = id, # not used, can be used to customize CSS behavior
-        class = "well",
+        class = "filter-panel-add well",
         tags$div(
-          class = "row",
+          class = "filter-panel-section-header row",
           tags$div(
             class = "col-sm-9",
             tags$label("Add Filter Variables", class = "text-primary mb-4")
@@ -690,7 +694,7 @@ FilteredData <- R6::R6Class( # nolint
               label = NULL,
               icon = icon("angle-down", lib = "font-awesome"),
               title = "Minimise panel",
-              class = "remove pull-right"
+              class = "control-button pull-right"
             )
           )
         ),
@@ -764,9 +768,9 @@ FilteredData <- R6::R6Class( # nolint
       ns <- NS(id)
       div(
         id = id, # not used, can be used to customize CSS behavior
-        class = "well",
+        class = "filter-panel-overview well",
         tags$div(
-          class = "row",
+          class = "filter-panel-section-header row",
           tags$div(
             class = "col-sm-9",
             tags$label("Active Filter Summary", class = "text-primary mb-4")
@@ -775,17 +779,17 @@ FilteredData <- R6::R6Class( # nolint
             class = "col-sm-3",
             actionLink(
               ns("minimise_filter_overview"),
+              class = "control-button pull-right",
               label = NULL,
               icon = icon("angle-down", lib = "font-awesome"),
-              title = "Minimise panel",
-              class = "remove pull-right"
+              title = "Minimise panel"
             )
           )
         ),
         div(
           id = ns("filters_overview_contents"),
           div(
-            class = "teal_active_summary_filter_panel",
+            class = "filter-panel-overview-table",
             tableOutput(ns("table"))
           )
         )
@@ -963,7 +967,7 @@ FilteredData <- R6::R6Class( # nolint
             label = NULL,
             icon = icon("plus", lib = "font-awesome"),
             title = "Available filters",
-            class = "remove pull-right"
+            class = "control-button pull-right"
           ),
           div(
             class = "menu-content",
