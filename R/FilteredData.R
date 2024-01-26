@@ -1001,6 +1001,7 @@ FilteredData <- R6::R6Class( # nolint
             choices = NULL,
             selected = NULL
           )
+          active_slices_ids <- isolate(active_slices_id())
           active_slices_ids <- active_slices_id()
           duplicated_slice_refs <- duplicated_slice_references()
 
