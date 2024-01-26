@@ -706,7 +706,7 @@ FilterState <- R6::R6Class( # nolint
 
     # @description
     # Module displaying input to keep or remove NA in the `FilterState` call.
-    # Renders a checkbox input only when variable from which `FilterState` has been created contains NAs.
+    # Renders a checkbox input only when variable with which `FilterState` has been created contains NAs.
     # @param id (`character(1)`) `shiny` module instance id
     keep_na_ui = function(id) {
       ns <- NS(id)
