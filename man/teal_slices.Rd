@@ -67,7 +67,7 @@ Please make sure that adding new filters doesn't fail on target platform before 
 \item{trim_lines}{(\code{logical(1)}) whether to trim lines}
 }
 \value{
-\code{teal_slices}, which is an un  named list of \code{teal_slice} objects.
+\code{teal_slices}, which is an unnamed list of \code{teal_slice} objects.
 }
 \description{
 Create \code{teal_slices} object to package multiple filters and additional settings.

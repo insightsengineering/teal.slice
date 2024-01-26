@@ -37,7 +37,7 @@
 #' See [`teal::slices_store`] and [`teal::slices_restore`].
 #'
 #' @return
-#' `teal_slices`, which is an un  named list of `teal_slice` objects.
+#' `teal_slices`, which is an unnamed list of `teal_slice` objects.
 #'
 #' @examples
 #' filter_1 <- teal_slice(
