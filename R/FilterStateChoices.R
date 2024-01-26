@@ -122,7 +122,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' Initialize a `FilterState` object.
     #'
     #' @param x (`character`)
-    #'   vector to filter
+    #'   variable to be filtered
     #' @param x_reactive (`reactive`)
     #'   returning vector of the same type as `x`. Is used to update
     #'   counts following the change in values of the filtered dataset.
