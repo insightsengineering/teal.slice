@@ -8,7 +8,7 @@
 #' Abstract class that manages adding and removing `FilterState` objects
 #' and builds a *subset expression*.
 #'
-#' A `FilterStates` object tracks all subsetting expressions
+#' A `FilterStates` object tracks all condition calls
 #' (logical predicates that limit observations) associated with a given dataset
 #' and composes them into a single reproducible `R` expression
 #' that will assign a subset of the original data to a new variable.
@@ -38,13 +38,13 @@ FilterStates <- R6::R6Class( # nolint
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
     #' @param dataname (`character(1)`)
-    #'   name of the data used in the expression
-    #'   specified to the function argument attached to this `FilterStates`
-    #' @param datalabel (`NULL` or `character(1)`)
-    #'   text label value
+    #'   name of the dataset, used in the subset expression.
+    #'   Passed to the function argument attached to this `FilterStates`.
+    #' @param datalabel (`character(1)`)
+    #'   optional text label.
     #'
     #' @return
-    #' self invisibly
+    #' Object of class `FilterStates`, invisibly.
     #'
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,

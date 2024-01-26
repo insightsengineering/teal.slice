@@ -8,7 +8,7 @@
 Abstract class that manages adding and removing \code{FilterState} objects
 and builds a \emph{subset expression}.
 
-A \code{FilterStates} object tracks all subsetting expressions
+A \code{FilterStates} object tracks all condition calls
 (logical predicates that limit observations) associated with a given dataset
 and composes them into a single reproducible \code{R} expression
 that will assign a subset of the original data to a new variable.
@@ -66,16 +66,16 @@ on a change in filters. If function returns \code{NULL} then filtered counts are
 Function has to have \code{sid} argument being a character.}
 
 \item{\code{dataname}}{(\code{character(1)})
-name of the data used in the expression
-specified to the function argument attached to this \code{FilterStates}}
+name of the dataset, used in the subset expression.
+Passed to the function argument attached to this \code{FilterStates}.}
 
-\item{\code{datalabel}}{(\code{NULL} or \code{character(1)})
-text label value}
+\item{\code{datalabel}}{(\code{character(1)})
+optional text label.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-self invisibly
+Object of class \code{FilterStates}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

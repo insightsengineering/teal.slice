@@ -9,7 +9,7 @@
 #'
 #' @details
 #' This class is responsible for managing a single filter item within a `FilteredData` object
-#' and outputs a logical predicate for subsetting one variable.
+#' and outputs a condition call (logical predicate) for subsetting one variable.
 #' Filter states depend on the variable type:
 #' (`logical`, `integer`, `numeric`, `factor`, `character`, `Date`, `POSIXct`, `POSIXlt`)
 #' and `FilterState` subclasses exist that correspond to those types.

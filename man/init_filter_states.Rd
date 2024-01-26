@@ -23,7 +23,7 @@ If function returns \code{NULL} then filtered counts are not shown.
 Function has to have \code{sid} argument being a character which is related to \code{sid} argument in the \code{get_call} method.}
 
 \item{dataname}{(\code{character(1)})
-name of the data used in the subsetting expression,
+name of the data used in the subset expression,
 passed to the function argument attached to this \code{FilterStates}.}
 
 \item{datalabel}{(\code{character(1)})

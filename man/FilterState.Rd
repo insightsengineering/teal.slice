@@ -9,7 +9,7 @@ Abstract class to encapsulate single filter state.
 }
 \details{
 This class is responsible for managing a single filter item within a \code{FilteredData} object
-and outputs a logical predicate for subsetting one variable.
+and outputs a condition call (logical predicate) for subsetting one variable.
 Filter states depend on the variable type:
 (\code{logical}, \code{integer}, \code{numeric}, \code{factor}, \code{character}, \code{Date}, \code{POSIXct}, \code{POSIXlt})
 and \code{FilterState} subclasses exist that correspond to those types.
