@@ -3,7 +3,9 @@
 #' @name DefaultFilteredDataset
 #' @docType class
 #' @title `DefaultFilteredDataset` `R6` class
+#'
 #' @description Stores any object as inert entity. Filtering is not supported.
+#'
 #' @examples
 #' # use non-exported function from teal.slice
 #' DefaultFilteredDataset <- getFromNamespace("DefaultFilteredDataset", "teal.slice")
@@ -11,7 +13,9 @@
 #' ds <- DefaultFilteredDataset$new(letters, "letters")
 #' isolate(ds$get_filter_state())
 #' isolate(ds$get_call())
+#'
 #' @keywords internal
+#'
 DefaultFilteredDataset <- R6::R6Class( # nolint
   classname = "DefaultFilteredDataset",
   inherit = FilteredDataset,
@@ -23,11 +27,14 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' Initializes this `DefaultFilteredDataset` object.
     #'
     #' @param dataset
-    #'  Any type of object; will not be filtered.
+    #'  any type of object; will not be filtered.
     #' @param dataname (`character(1)`)
-    #'  Name given to the dataset; must not contain spaces.
+    #'  syntactically valid name given to the dataset.
     #' @param label (`character(1)`)
-    #'   Label to describe the dataset.
+    #'   label to describe the dataset.
+    #'
+    #' @return Object of class `DefaultFilteredDataset`, invisibly.
+    #'
     initialize = function(dataset, dataname, label = character(0)) {
       super$initialize(dataset = dataset, dataname = dataname, label = label)
     },
@@ -35,10 +42,10 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Returns a formatted string representing this `DefaultFilteredDataset` object.
     #'
-    #' @param show_all (`logical(1)`) for method consistency, ignored
-    #' @param trim_lines (`logical(1)`) flag specifying whether to trim lines if class names are too long
+    #' @param show_all (`logical(1)`) for method consistency, ignored.
+    #' @param trim_lines (`logical(1)`) flag specifying whether to trim lines if class names are too long.
     #'
-    #' @return `character(1)` the formatted string
+    #' @return The formatted string.
     #'
     format = function(show_all, trim_lines = FALSE) {
       class_string <- toString(class(private$dataset))
@@ -50,16 +57,16 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       sprintf(" - unfiltered dataset:\t\"%s\":   %s", private$dataname, class_string)
     },
 
-    #' @param sid (`character`) for method consistency, ignored
+    #' @param sid (`character(1)`) for method consistency, ignored.
     #' @return `NULL`, invisibly.
     get_call = function(sid) {
       invisible(NULL)
     },
-    #' @return `NULL`, invisibly.
+    #' @return `NULL`, invisibly
     get_filter_state = function() {
       invisible(NULL)
     },
-    #' @param state (`teal_slices`) for method consistency, ignored
+    #' @param state (`teal_slices`) for method consistency, ignored.
     #' @return `NULL`, invisibly.
     set_filter_state = function(state) {
       if (length(state) != 0L) {
@@ -67,7 +74,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       }
       invisible(NULL)
     },
-    #' @param force (`logical`) for method consistency, ignored
+    #' @param force (`logical(1)`) for method consistency, ignored.
     #' @return `NULL`, invisibly.
     clear_filter_states = function(force) {
       invisible(NULL)
@@ -76,7 +83,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Get `data.frame` to use in the filter-panel overview.
     #' Output of this function indicates unsupported dataset class.
-    #' @return `list` containing character `#filtered/#not_filtered`
+    #' @return A `data.frame`.
     get_filter_overview = function() {
       data.frame(dataname = private$dataname, obs = NA, obs_filtered = NA)
     },
@@ -88,8 +95,8 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @details
     #' Blank UI module that would list active filter states for this dataset.
     #' @param id (`character(1)`)
-    #'  `shiny` module id
-    #' @return empty `div`
+    #'   `shiny` module instance id.
+    #' @return An empty `div`.
     ui_active = function(id) {
       ns <- NS(id)
       div()
@@ -100,8 +107,8 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @details
     #' Blank UI module that would list active filter states for this dataset.
     #' @param id (`character(1)`)
-    #'  `shiny` module id
-    #' @return empty `div`
+    #'   `shiny` module instance id.
+    #' @return An empty `div`.
     ui_add = function(id) {
       ns <- NS(id)
       div()
