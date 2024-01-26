@@ -1024,8 +1024,7 @@ FilteredData <- R6::R6Class( # nolint
             selected = NULL
           )
           active_slices_ids <- isolate(active_slices_id())
-          active_slices_ids <- active_slices_id()
-          duplicated_slice_refs <- duplicated_slice_references()
+          duplicated_slice_refs <- isolate(duplicated_slice_references())
 
           checkbox_group_slice <- function(slice) {
             # we need to isolate changes in the fields of the slice (teal_slice)
