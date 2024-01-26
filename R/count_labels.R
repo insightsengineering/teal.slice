@@ -137,7 +137,7 @@ countBar <- function(inputId, label, countmax, countnow = NULL, counttotal = cou
 }
 
 #' @rdname countBars
-updateCountBars <- function(session = getDefaultReactiveDomain(), inputId, choices,  countsmax, countsnow = NULL) { # nolint
+updateCountBars <- function(session = getDefaultReactiveDomain(), inputId, choices, countsmax, countsnow = NULL) { # nolint
   checkmate::assert_string(inputId)
   checkmate::assert_vector(choices)
   checkmate::assert_numeric(countsmax, len = length(choices))
