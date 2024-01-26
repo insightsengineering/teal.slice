@@ -88,7 +88,7 @@ Initializes this \code{DataframeFilteredDataset} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{dataset}}{(\code{data.frame})
-single data.frame for which filters are rendered.}
+single \code{data.frame} for which filters are rendered.}
 
 \item{\code{dataname}}{(\code{character(1)})
 syntactically valid name given to the dataset.}

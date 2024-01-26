@@ -40,7 +40,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #' Initializes this `DataframeFilteredDataset` object.
     #'
     #' @param dataset (`data.frame`)
-    #'  single data.frame for which filters are rendered.
+    #'  single `data.frame` for which filters are rendered.
     #' @param dataname (`character(1)`)
     #'  syntactically valid name given to the dataset.
     #' @param keys (`character`)
