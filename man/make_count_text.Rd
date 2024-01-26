@@ -7,14 +7,14 @@
 make_count_text(label, countmax, countnow = NULL)
 }
 \arguments{
-\item{label}{(\code{character(1)}) Text displayed before counts}
+\item{label}{(\code{character(1)}) text displayed before counts.}
 
-\item{countmax}{(\code{numeric(1)}) unfiltered counts}
+\item{countmax}{(\code{numeric(1)}) unfiltered counts.}
 
-\item{countnow}{(\code{numeric(1)}) filtered counts}
+\item{countnow}{(\code{numeric(1)}) filtered counts.}
 }
 \value{
-\code{character(1)}
+A character string.
 }
 \description{
 Returns a text describing filtered counts. The text is composed in the following way:

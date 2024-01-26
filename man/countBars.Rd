@@ -16,23 +16,21 @@ updateCountBars(
 )
 }
 \arguments{
-\item{inputId}{(\code{character(1)}) \code{shiny} id}
+\item{inputId}{(\code{character(1)}) \code{shiny} id.}
 
 \item{choices}{(\code{vector}) determines label text.}
 
-\item{countsmax}{(\code{numeric}) determining maximal count of each element.
-Length should be the same as \code{choices}.}
+\item{countsmax}{(\code{numeric}) determining maximal count of each element. Length should be the same as \code{choices}.}
 
-\item{countsnow}{(\code{numeric}) actual counts of each element.
-Length should be the same as \code{choices}.}
+\item{countsnow}{(\code{numeric}) actual counts of each element. Length should be the same as \code{choices}.}
 
 \item{session}{(\code{session}) object passed to function given to \code{shinyServer}.}
 }
 \value{
-list of \code{shiny.tag}
+List of \code{shiny.tag}s.
 }
 \description{
-\code{shiny} element showing progress bar counts. Each element can have an
+\code{shiny} element showing progress bar counts. Each element can have a
 unique \code{id} attribute so each can be used independently.
 }
 \details{
@@ -91,5 +89,6 @@ server <- function(input, output, session) {
 if (interactive()) {
   shinyApp(ui, server)
 }
+
 }
 \keyword{internal}

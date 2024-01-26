@@ -86,18 +86,21 @@ Initialize \code{MAEFilteredDataset} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{dataset}}{(\code{MulitiAssayExperiment})
-a single \code{MultiAssayExperiment} for which to define a subset}
+single \code{MulitiAssayExperiment} for which filters are rendered.}
 
-\item{\code{dataname}}{(\code{character})
-a given name for the dataset it may not contain spaces}
+\item{\code{dataname}}{(\code{character(1)})
+syntactically valid name given to the dataset.}
 
-\item{\code{keys}}{optional, (\code{character})
-vector with primary keys}
+\item{\code{keys}}{(\code{character})
+optional vector of primary key column names.}
 
-\item{\code{label}}{(\code{character})
-label to describe the dataset}
+\item{\code{label}}{(\code{character(1)})
+label to describe the dataset.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Object of class \code{MAEFilteredDataset}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -117,7 +120,7 @@ Set filter state.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL} invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -134,12 +137,12 @@ Remove one or more \code{FilterState} of a \code{MAEFilteredDataset}.
 \describe{
 \item{\code{state}}{(\code{teal_slices})
 specifying \code{FilterState} objects to remove;
-\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
+\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL} invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -155,25 +158,26 @@ UI module to add filter variable for this dataset.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-identifier of the element - preferably containing dataset name}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-function - \code{shiny} UI module
+\code{shiny.tag}
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-MAEFilteredDataset-get_filter_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_filter_overview}{}}}
 \subsection{Method \code{get_filter_overview()}}{
-Get filter overview rows of a dataset.
+Get filter overview of a dataset.
+Displays numbers of total and remaining observations.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-(\code{matrix}) matrix of observations and subjects
+A \code{data.frame}.
 }
 }
 \if{html}{\out{<hr>}}

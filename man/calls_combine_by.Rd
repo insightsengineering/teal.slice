@@ -21,7 +21,7 @@ Combines calls with a logical operator.
 }
 \details{
 This function is used to combine logical predicates produced by \code{FilterState} objects
-to build a complete subsetting expression.
+to build a complete subset expression.
 }
 \examples{
 # use non-exported function from teal.slice

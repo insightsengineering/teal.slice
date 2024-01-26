@@ -1,3 +1,4 @@
+# TODO: this whoe file needs work
 #' Set "`<choice>:<label>`" type of names
 #'
 #' @description `r lifecycle::badge("stable")`
@@ -16,7 +17,7 @@
 #'   match its order.
 #' @param types vector containing the types of the columns.
 #'
-#' @return a named character vector
+#' @return A named character vector.
 #'
 #' @keywords internal
 #'

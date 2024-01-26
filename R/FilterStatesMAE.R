@@ -2,7 +2,7 @@
 
 #' @name MAEFilterStates
 #' @docType class
-#' @title `FilterStates` subclass for `MultiAssayExperiments`
+#' @title `FilterStates` subclass for `MultiAssayExperiment`s
 #' @description Handles filter states in a `MultiAssayExperiment`.
 #' @keywords internal
 #'
@@ -22,14 +22,14 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
     #' @param dataname (`character(1)`)
-    #'   name of the data used in the expression
-    #'   specified to the function argument attached to this `FilterStates`.
-    #' @param datalabel (`NULL` or `character(1)`)
-    #'   text label value
+    #'   name of the data used in the subset expression.
+    #'   Passed to the function argument attached to this `FilterStates`.
+    #' @param datalabel (`character(1)`)
+    #'   optional text label.
     #' @param varlabels (`character`)
-    #'   labels of the variables used in this object
+    #'   labels of the variables used in this object.
     #' @param keys (`character`)
-    #'   key columns names
+    #'   key column names.
     #'
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,

@@ -16,7 +16,7 @@ This class is supported by methods to set, get, remove filter states in the
 filter panel API.
 }
 \examples{
-fd <- init_filtered_data(list(iris = list(dataset = iris)))
+fd <- init_filtered_data(list(iris = iris))
 fpa <- FilterPanelAPI$new(fd)
 
 # get the actual filter state --> empty named list

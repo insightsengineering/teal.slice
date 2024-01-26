@@ -1,6 +1,6 @@
 #' Progress bars with labels
 #'
-#' `shiny` element showing progress bar counts. Each element can have an
+#' `shiny` element showing progress bar counts. Each element can have a
 #' unique `id` attribute so each can be used independently.
 #'
 #' Progress bar size is dependent on the ratio:
@@ -12,13 +12,13 @@
 #'  `choices[i] (countsnow[i]/countsmax)`
 #'
 #' @param session (`session`) object passed to function given to `shinyServer`.
-#' @param inputId (`character(1)`) `shiny` id
+#' @param inputId (`character(1)`) `shiny` id.
 #' @param choices (`vector`) determines label text.
-#' @param countsmax (`numeric`) determining maximal count of each element.
-#'  Length should be the same as `choices`.
-#' @param countsnow (`numeric`) actual counts of each element.
-#'  Length should be the same as `choices`.
-#' @return list of `shiny.tag`
+#' @param countsmax (`numeric`) determining maximal count of each element. Length should be the same as `choices`.
+#' @param countsnow (`numeric`) actual counts of each element. Length should be the same as `choices`.
+#'
+#' @return List of `shiny.tag`s.
+#'
 #' @examples
 #' # use non-exported function from teal.slice
 #' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
@@ -66,7 +66,9 @@
 #' if (interactive()) {
 #'   shinyApp(ui, server)
 #' }
+#'
 #' @keywords internal
+#'
 countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
   checkmate::assert_string(inputId)
   checkmate::assert_vector(choices)
@@ -94,15 +96,17 @@ countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
 #' Progress bar with label
 #'
 #' @param session (`session`) object passed to function given to `shinyServer`.
-#' @param inputId (`character(1)`) `shiny` id
-#' @param label (`character(1)`) Text to display followed by counts
-#' @param countmax (`numeric(1)`) maximal possible count for a single item.
+#' @param inputId (`character(1)`) `shiny` id.
+#' @param label (`character(1)`) Text to display followed by counts.
+#' @param countmax (`numeric(1)`) maximum possible count for a single item.
 #' @param countnow (`numeric(1)`) current count of a single item.
-#' @param counttotal (`numeric(1)`) total count to make whole progress bar
-#'  taking part of the container. Ratio between `countmax / counttotal`
-#'  determines `<style="width: <countmax / counttotal>%">`.
+#' @param counttotal (`numeric(1)`) total count to make whole progress bar taking part of the container. # TODO clarify
+#'  Ratio between `countmax / counttotal` determines `<style="width: <countmax / counttotal>%">`.
+#'
 #' @return `shiny.tag` object with a progress bar and a label.
+#'
 #' @keywords internal
+#'
 countBar <- function(inputId, label, countmax, countnow = NULL, counttotal = countmax) { # nolint
   checkmate::assert_string(inputId)
   checkmate::assert_string(label)
@@ -133,8 +137,7 @@ countBar <- function(inputId, label, countmax, countnow = NULL, counttotal = cou
 }
 
 #' @rdname countBars
-updateCountBars <- function(session = getDefaultReactiveDomain(), inputId, choices, # nolint
-                            countsmax, countsnow = NULL) {
+updateCountBars <- function(session = getDefaultReactiveDomain(), inputId, choices,  countsmax, countsnow = NULL) { # nolint
   checkmate::assert_string(inputId)
   checkmate::assert_vector(choices)
   checkmate::assert_numeric(countsmax, len = length(choices))
@@ -155,8 +158,7 @@ updateCountBars <- function(session = getDefaultReactiveDomain(), inputId, choic
 }
 
 #' @rdname countBar
-updateCountBar <- function(session = getDefaultReactiveDomain(), inputId, label, # nolint
-                           countmax, countnow = NULL, counttotal) {
+updateCountBar <- function(session = getDefaultReactiveDomain(), inputId, label, countmax, countnow = NULL, counttotal) { # nolint
   checkmate::assert_string(inputId)
   checkmate::assert_string(label)
   checkmate::assert_number(countmax)
@@ -201,11 +203,14 @@ updateCountText <- function(session = getDefaultReactiveDomain(), inputId, label
 #' - when `countnow` is not `NULL`: `<label> (<countnow>/<countmax>)`
 #' - when `countnow` is `NULL`: `<label> (<countmax>)`
 #'
-#' @param label (`character(1)`) Text displayed before counts
-#' @param countnow (`numeric(1)`) filtered counts
-#' @param countmax (`numeric(1)`) unfiltered counts
-#' @return `character(1)`
+#' @param label (`character(1)`) text displayed before counts.
+#' @param countnow (`numeric(1)`) filtered counts.
+#' @param countmax (`numeric(1)`) unfiltered counts.
+#'
+#' @return A character string.
+#'
 #' @keywords internal
+#'
 make_count_text <- function(label, countmax, countnow = NULL) {
   checkmate::assert_string(label)
   checkmate::assert_number(countmax)
