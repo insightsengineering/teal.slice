@@ -26,17 +26,16 @@ updateCountText(
 )
 }
 \arguments{
-\item{inputId}{(\code{character(1)}) \code{shiny} id}
+\item{inputId}{(\code{character(1)}) \code{shiny} id.}
 
-\item{label}{(\code{character(1)}) Text to display followed by counts}
+\item{label}{(\code{character(1)}) Text to display followed by counts.}
 
-\item{countmax}{(\code{numeric(1)}) maximal possible count for a single item.}
+\item{countmax}{(\code{numeric(1)}) maximum possible count for a single item.}
 
 \item{countnow}{(\code{numeric(1)}) current count of a single item.}
 
-\item{counttotal}{(\code{numeric(1)}) total count to make whole progress bar
-taking part of the container. Ratio between \code{countmax / counttotal}
-determines \verb{<style="width: <countmax / counttotal>\%">}.}
+\item{counttotal}{(\code{numeric(1)}) total count to make whole progress bar taking part of the container. # TODO clarify
+Ratio between \code{countmax / counttotal} determines \verb{<style="width: <countmax / counttotal>\%">}.}
 
 \item{session}{(\code{session}) object passed to function given to \code{shinyServer}.}
 }

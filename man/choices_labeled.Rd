@@ -19,7 +19,7 @@ match its order.}
 \item{types}{vector containing the types of the columns.}
 }
 \value{
-a named character vector
+A named character vector.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

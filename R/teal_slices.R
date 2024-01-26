@@ -14,7 +14,7 @@
 #'
 #' @param ... any number of `teal_slice` objects. For `print` and `format`,
 #'  additional arguments passed to other functions.
-#' @param include_varnames,exclude_varnames (named `list`s of `character`) where list names
+#' @param include_varnames,exclude_varnames (`named list`s of `character`) where list names
 #'  match names of data sets and vector elements match variable names in respective data sets;
 #'  specify which variables are allowed to be filtered; see `Details`
 #' @param count_type `r lifecycle::badge("experimental")`
@@ -37,7 +37,7 @@
 #' See [`teal::slices_store`] and [`teal::slices_restore`].
 #'
 #' @return
-#' `teal_slices`, which is an unnamed list of `teal_slice` objects.
+#' `teal_slices`, which is an un  named list of `teal_slice` objects.
 #'
 #' @examples
 #' filter_1 <- teal_slice(
@@ -265,7 +265,7 @@ setdiff_teal_slices <- function(x, y) {
 #'
 #' This function is used internally in `c.teal_slices` to manage `teal_slices` attributes.
 #'
-#' @param x (`list`), either of atomic vectors or of named `list`s
+#' @param x (`list`), either of atomic vectors or of named lists
 #' @return
 #' Either an atomic vector of length 1 or a (potentially nested) list.
 #'
