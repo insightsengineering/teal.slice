@@ -281,10 +281,9 @@ FilterState <- R6::R6Class( # nolint
 
     #' @description
     #' `shiny` UI module.
-    #'
+    #'  The UI for this class contains simple message stating that it is not supported.
     #' @param id (`character(1)`)
-    #'  `shiny` element (module instance) id;
-    #'  the UI for this class contains simple message stating that it is not supported
+    #  `shiny` module instance id
     #' @param parent_id (`character(1)`) id of the `FilterStates` card container
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)

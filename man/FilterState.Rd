@@ -218,6 +218,7 @@ and must be executed in reactive or isolated context.
 \if{latex}{\out{\hypertarget{method-FilterState-ui}{}}}
 \subsection{Method \code{ui()}}{
 \code{shiny} UI module.
+The UI for this class contains simple message stating that it is not supported.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id, parent_id = "cards")}\if{html}{\out{</div>}}
 }
@@ -225,9 +226,7 @@ and must be executed in reactive or isolated context.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})
-\code{shiny} element (module instance) id;
-the UI for this class contains simple message stating that it is not supported}
+\item{\code{id}}{(\code{character(1)})}
 
 \item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}
 }
