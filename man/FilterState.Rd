@@ -100,7 +100,7 @@ specifying whether condition calls should be prefixed by \code{dataname}. Possib
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Returns \code{self}, invisibly.
+Object of class \code{RangeFilterState}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

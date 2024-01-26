@@ -146,6 +146,8 @@ RangeFilterState <- R6::R6Class( # nolint
     #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
     #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
     #'
+    #' @return Returns `self`, invisibly.
+    #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
                           extract_type = character(0),

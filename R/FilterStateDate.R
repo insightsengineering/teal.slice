@@ -3,7 +3,7 @@
 #' @name DateFilterState
 #' @docType class
 #'
-#' @title `FilterState` object for `Date` variable
+#' @title `FilterState` object for `Date` data
 #'
 #' @description Manages choosing a range of `Date`s.
 #'
@@ -133,7 +133,8 @@ DateFilterState <- R6::R6Class( # nolint
     #' - `character(0)` (default) `varname` in the condition call will not be prefixed
     #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
     #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
-
+    #'
+    #' @return Object of class `DateFilterState`, invisibly.
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),

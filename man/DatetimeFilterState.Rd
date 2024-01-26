@@ -3,7 +3,7 @@
 \docType{class}
 \name{DatetimeFilterState}
 \alias{DatetimeFilterState}
-\title{\code{FilterState} object for \code{POSIXct} variable}
+\title{\code{FilterState} object for date time data}
 \description{
 Manages choosing a range of date-times.
 }
@@ -180,6 +180,9 @@ Note that \code{teal_slice} is a \code{reactiveValues}, which means it has refer
 changes made to an object are automatically reflected in all places that refer to the same \code{teal_slice}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Object of class \code{DatetimeFilterState}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

@@ -68,7 +68,8 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @description
     #' Initialize a `FilterStateExpr` object.
     #' @param slice (`teal_slice_expr`)
-    #' @return `FilterStateExpr`
+    #' @return Object of class `FilterStateExpr`, invisibly.
+    #'
     initialize = function(slice) {
       checkmate::assert_class(slice, "teal_slice_expr")
       private$teal_slice <- slice

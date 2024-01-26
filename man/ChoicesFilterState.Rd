@@ -3,7 +3,7 @@
 \docType{class}
 \name{ChoicesFilterState}
 \alias{ChoicesFilterState}
-\title{\code{FilterState} object for factor or character variable}
+\title{\code{FilterState} object for categorical data}
 \description{
 Manages choosing elements from a set.
 }
@@ -176,6 +176,9 @@ specifying whether condition calls should be prefixed by \code{dataname}. Possib
 }}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Object of class \code{ChoicesFilterState}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

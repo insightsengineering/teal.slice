@@ -3,7 +3,7 @@
 #' @name ChoicesFilterState
 #' @docType class
 #'
-#' @title `FilterState` object for factor or character variable
+#' @title `FilterState` object for categorical data
 #'
 #' @description Manages choosing elements from a set.
 #'
@@ -139,6 +139,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' - `character(0)` (default) `varname` in the condition call will not be prefixed
     #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
     #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
+    #'
+    #' @return Object of class `ChoicesFilterState`, invisibly.
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),

@@ -44,6 +44,7 @@ FilterState <- R6::R6Class( # nolint
 
     #' @description
     #' Initialize a `FilterState` object.
+    #'
     #' @param x (`vector`)
     #'   variable to be filtered
     #' @param x_reactive (`reactive`)
@@ -63,7 +64,7 @@ FilterState <- R6::R6Class( # nolint
     #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
     #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
     #'
-    #' @return Returns `self`, invisibly.
+    #' @return Object of class `RangeFilterState`, invisibly.
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),

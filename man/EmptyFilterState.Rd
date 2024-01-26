@@ -3,7 +3,7 @@
 \docType{class}
 \name{EmptyFilterState}
 \alias{EmptyFilterState}
-\title{\code{FilterState} object for empty variable}
+\title{\code{FilterState} object for empty variables}
 \description{
 \code{FilterState} subclass representing an empty variable.
 }
@@ -89,6 +89,9 @@ Note that \code{teal_slice} is a \code{reactiveValues}, which means it has refer
 changes made to an object are automatically reflected in all places that refer to the same \code{teal_slice}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Object of class \code{EmptyFilterState}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

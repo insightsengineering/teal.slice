@@ -3,7 +3,7 @@
 \docType{class}
 \name{LogicalFilterState}
 \alias{LogicalFilterState}
-\title{\code{FilterState} object for logical variable}
+\title{\code{FilterState} object for logical data}
 \description{
 Manages choosing a logical state.
 }
@@ -157,6 +157,9 @@ Note that \code{teal_slice} is a \code{reactiveValues}, which means it has refer
 changes made to an object are automatically reflected in all places that refer to the same \code{teal_slice}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Object of class \code{LogicalFilterState}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

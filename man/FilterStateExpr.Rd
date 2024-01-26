@@ -93,7 +93,7 @@ Initialize a \code{FilterStateExpr} object.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{FilterStateExpr}
+Object of class \code{FilterStateExpr}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

@@ -3,7 +3,7 @@
 \docType{class}
 \name{DateFilterState}
 \alias{DateFilterState}
-\title{\code{FilterState} object for \code{Date} variable}
+\title{\code{FilterState} object for \code{Date} data}
 \description{
 Manages choosing a range of \code{Date}s.
 }
@@ -170,6 +170,9 @@ specifying whether condition calls should be prefixed by \code{dataname}. Possib
 }}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Object of class \code{DateFilterState}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

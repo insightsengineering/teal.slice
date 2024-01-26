@@ -3,7 +3,7 @@
 #' @name LogicalFilterState
 #' @docType class
 #'
-#' @title `FilterState` object for logical variable
+#' @title `FilterState` object for logical data
 #'
 #' @description Manages choosing a logical state.
 #'
@@ -119,6 +119,8 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' - `character(0)` (default) `varname` in the condition call will not be prefixed
     #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
     #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
+    #'
+    #' @return Object of class `LogicalFilterState`, invisibly.
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
