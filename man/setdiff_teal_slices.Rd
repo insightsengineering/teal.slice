@@ -7,7 +7,7 @@
 setdiff_teal_slices(x, y)
 }
 \arguments{
-\item{x, y}{\code{teal_slices} objects}
+\item{x, y}{(\code{teal_slices})}
 }
 \value{
 \code{teal_slices}

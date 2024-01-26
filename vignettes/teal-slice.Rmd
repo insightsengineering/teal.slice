@@ -45,13 +45,13 @@ The filter panel also supports filtering `MultiAssayExperiment` objects, where f
 
 ## Information for R developers using the filter panel
 
-The example app below shows how to embed the filter panel inside a shiny application.
+The example app below shows how to embed the filter panel inside a `shiny` application.
 
 The filter panel is entirely contained within a `FilteredData` object. 
 `FilteredData` is an `R6` class that stores data sets, tracks filter states, constructs and applies filter calls, and can output filtered data. 
 It also contains `shiny` modules (both UI and server functions) that make up the panel itself.
 
-In a `teal` application the `FilteredData` object (`datasets`) is created automatically by `teal`'s `init` function and filter panel components are automatically placed on the right hand side of the page.
+In a `teal` application the `FilteredData` object (`datasets`) is created automatically by `teal`'s `init` function and filter panel components are automatically placed on the right-hand side of the page.
 
 Note that this example uses `shiny::dataTableOutput` and `shiny::renderDataTable`. 
 This can lead to issues with Bootstrap, especially version 4.
@@ -63,7 +63,6 @@ For details please see the *Filter panel for developers* vignette.
 
 ```{r}
 library(teal.slice)
-library(shiny)
 
 # create a FilteredData object
 datasets <- init_filtered_data(
@@ -87,34 +86,34 @@ set_filter_state(
   )
 )
 
-app <- shinyApp(
-  ui = fluidPage(
-    fluidRow(
-      column(
-        width = 9,
-        tabsetPanel(
-          tabPanel(title = "iris", dataTableOutput("iris_table")),
-          tabPanel(title = "mtcars", dataTableOutput("mtcars_table"))
-        )
-      ),
-      # ui for the filter panel
-      column(width = 3, datasets$ui_filter_panel("filter_panel"))
-    )
-  ),
-  server = function(input, output, session) {
-    # this is the shiny server function for the filter panel and the datasets
-    # object can now be used inside the application
-    datasets$srv_filter_panel("filter_panel")
-
-    # get the filtered datasets and put them inside reactives for analysis
-    iris_filtered_data <- reactive(datasets$get_data(dataname = "iris", filtered = TRUE))
-    mtcars_filtered_data <- reactive(datasets$get_data(dataname = "mtcars", filtered = TRUE))
-
-    output$iris_table <- renderDataTable(iris_filtered_data())
-    output$mtcars_table <- renderDataTable(mtcars_filtered_data())
-  }
+ui <- fluidPage(
+  fluidRow(
+    column(
+      width = 9,
+      tabsetPanel(
+        tabPanel(title = "iris", dataTableOutput("iris_table")),
+        tabPanel(title = "mtcars", dataTableOutput("mtcars_table"))
+      )
+    ),
+    # ui for the filter panel
+    column(width = 3, datasets$ui_filter_panel("filter_panel"))
+  )
 )
+
+server <- function(input, output, session) {
+  # this is the shiny server function for the filter panel and the datasets
+  # object can now be used inside the application
+  datasets$srv_filter_panel("filter_panel")
+
+  # get the filtered datasets and put them inside reactives for analysis
+  iris_filtered_data <- reactive(datasets$get_data(dataname = "iris", filtered = TRUE))
+  mtcars_filtered_data <- reactive(datasets$get_data(dataname = "mtcars", filtered = TRUE))
+
+  output$iris_table <- renderDataTable(iris_filtered_data())
+  output$mtcars_table <- renderDataTable(mtcars_filtered_data())
+}
+
 if (interactive()) {
-  shinyApp(app$ui, app$server)
+  shinyApp(ui, server)
 }
 ```

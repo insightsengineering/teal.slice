@@ -36,7 +36,7 @@ updateCountText(
 
 \item{counttotal}{(\code{numeric(1)}) total count to make whole progress bar
 taking part of the container. Ratio between \code{countmax / counttotal}
-determines \verb{<style="width: <countmax / counttotal>\%""}.}
+determines \verb{<style="width: <countmax / counttotal>\%">}.}
 
 \item{session}{(\code{session}) object passed to function given to \code{shinyServer}.}
 }

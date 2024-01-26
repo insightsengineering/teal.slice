@@ -6,6 +6,7 @@ testthat::test_that("init_filtered_dataset returns a DataframeFilteredDataset wh
 })
 
 testthat::test_that("init_filtered_dataset returns an MAEFilteredDataset when passed an MAE", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data("miniACC", package = "MultiAssayExperiment")
 
   testthat::expect_no_error(filtered_dataset <- init_filtered_dataset(

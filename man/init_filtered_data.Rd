@@ -11,14 +11,14 @@ init_filtered_data(x, join_keys = teal.data::join_keys(), code, check)
 
 \item{join_keys}{(\code{join_keys}) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
 
-\item{code}{(deprecated)}
+\item{code}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 
-\item{check}{(deprecated)}
+\item{check}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 }
 \description{
-Initialize \code{FilteredData}
+Function creates a \code{FilteredData} object.
 }
 \examples{
-library(shiny)
-datasets <- teal.slice::init_filtered_data(list(iris = iris, mtcars = mtcars))
+datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
+datasets
 }

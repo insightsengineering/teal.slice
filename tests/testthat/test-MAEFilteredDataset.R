@@ -1,5 +1,6 @@
 # initialize ----
 testthat::test_that("constructor accepts a MultiAssayExperiment object", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data(miniACC, package = "MultiAssayExperiment")
   testthat::expect_no_error(MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC"))
   testthat::expect_error(
@@ -13,6 +14,7 @@ testthat::test_that("constructor accepts a MultiAssayExperiment object", {
 })
 
 testthat::test_that("filter_states list is initialized with names of experiments", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   testfd <- R6::R6Class(
     "testfd",
     inherit = MAEFilteredDataset,
@@ -30,6 +32,7 @@ testthat::test_that("filter_states list is initialized with names of experiments
 
 # format ---
 testthat::test_that("format returns properly formatted string", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
   fs <- teal_slices(
@@ -59,6 +62,7 @@ testthat::test_that("format returns properly formatted string", {
 
 # print ---
 testthat::test_that("print returns properly formatted string", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
   fs <- teal_slices(
@@ -88,6 +92,7 @@ testthat::test_that("print returns properly formatted string", {
 
 # get_call ----
 testthat::test_that("get_call returns NULL when no filter applied", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   get_call_output <- shiny::isolate(filtered_dataset$get_call())
@@ -95,6 +100,7 @@ testthat::test_that("get_call returns NULL when no filter applied", {
 })
 
 testthat::test_that("get_call returns a call with applying filter", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
   fs <- teal_slices(
@@ -131,6 +137,7 @@ testthat::test_that("get_call returns a call with applying filter", {
 
 # get_filter_overview ----
 testthat::test_that("get_filter_overview_info returns overview matrix for MAEFilteredDataset without filtering", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   testthat::expect_equal(
@@ -146,6 +153,7 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
 })
 
 testthat::test_that("get_filter_overview_info returns overview matrix for MAEFilteredDataset with filtering", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
   fs <- teal_slices(
@@ -177,6 +185,7 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
 testthat::test_that(
   "MAEFilteredDataset$set_filter_state sets filters in `FilterStates` specified by `teal_slices",
   code = {
+    testthat::skip_if_not_installed("MultiAssayExperiment")
     utils::data(miniACC, package = "MultiAssayExperiment")
     dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
     fs <- teal_slices(
@@ -217,6 +226,7 @@ testthat::test_that(
 testthat::test_that(
   "MAEFilteredDataset$set_filter_state only acceps `teal_slices",
   code = {
+    testthat::skip_if_not_installed("MultiAssayExperiment")
     utils::data(miniACC, package = "MultiAssayExperiment")
     dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
     fs <- list(
@@ -236,6 +246,7 @@ testthat::test_that(
 testthat::test_that(
   "MAEFilteredDataset$get_filter_state returns list identical to input",
   code = {
+    testthat::skip_if_not_installed("MultiAssayExperiment")
     utils::data(miniACC, package = "MultiAssayExperiment")
     dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
     fs <- teal_slices(
@@ -268,6 +279,7 @@ testthat::test_that(
 testthat::test_that(
   "MAEFilteredDataset$remove_filter_state removes desired filter",
   code = {
+    testthat::skip_if_not_installed("MultiAssayExperiment")
     utils::data(miniACC, package = "MultiAssayExperiment")
     dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
     fs <- teal_slices(
@@ -297,6 +309,7 @@ testthat::test_that(
 testthat::test_that(
   "MAEFilteredDataset$remove_filter_state only accepts `teal_slices",
   code = {
+    testthat::skip_if_not_installed("MultiAssayExperiment")
     utils::data(miniACC, package = "MultiAssayExperiment")
     dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
     fs <- teal_slices(
@@ -318,6 +331,7 @@ testthat::test_that(
 
 # UI actions ----
 testthat::test_that("remove_filters button removes all filters", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
   fs <- teal_slices(

@@ -1,20 +1,23 @@
+# FilterPanelAPI ------
+
 #' @name FilterPanelAPI
 #' @docType class
 #'
 #' @title Class to encapsulate the API of the filter panel of a teal app
 #'
+#' @description
+#' An API class for managing filter states in a teal application's filter panel.
+#'
 #' @details
-#'   The purpose of this class is to encapsulate the API of the filter panel in a new class `FilterPanelAPI` so
-#'   that it can be passed and used in the `server` call of any module instead of passing the whole `FilteredData`
-#'   object.
+#' The purpose of this class is to encapsulate the API of the filter panel in a
+#' new class `FilterPanelAPI` so that it can be passed and used in the server
+#' call of any module instead of passing the whole `FilteredData` object.
 #'
-#'   This class is supported by methods to set, get, remove filter states in the filter panel API.
-#'
-#' @export
+#' This class is supported by methods to set, get, remove filter states in the
+#' filter panel API.
 #'
 #' @examples
-#' library(teal.slice)
-#' fd <- teal.slice::init_filtered_data(list(iris = list(dataset = iris)))
+#' fd <- init_filtered_data(list(iris = list(dataset = iris)))
 #' fpa <- FilterPanelAPI$new(fd)
 #'
 #' # get the actual filter state --> empty named list
@@ -37,13 +40,15 @@
 #' # get the actual filter state --> empty named list
 #' isolate(fpa$get_filter_state())
 #'
+#' @export
+#'
 FilterPanelAPI <- R6::R6Class( # nolint
   "FilterPanelAPI",
-  ## __Public Methods ====
+  # public methods ----
   public = list(
     #' @description
-    #' Initialize a `FilterPanelAPI` object
-    #' @param datasets (`FilteredData`) object.
+    #' Initialize a `FilterPanelAPI` object.
+    #' @param datasets (`FilteredData`)
     #'
     initialize = function(datasets) {
       checkmate::assert_class(datasets, "FilteredData")
@@ -76,7 +81,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #' @description
     #' Remove one or more `FilterState` of a `FilteredDataset` in the `FilteredData` object.
     #'
-    #' @param filter (`teal_slices`)\cr
+    #' @param filter (`teal_slices`)
     #'   specifying `FilterState` objects to remove;
     #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
@@ -87,9 +92,10 @@ FilterPanelAPI <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    #' @description Remove all `FilterStates` of the `FilteredData` object.
+    #' @description
+    #' Remove all `FilterStates` of the `FilteredData` object.
     #'
-    #' @param datanames (`character`)\cr
+    #' @param datanames (`character`)
     #'  `datanames` to remove their `FilterStates`;
     #'  omit to remove all `FilterStates` in the `FilteredData` object
     #'
@@ -101,7 +107,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
       invisible(NULL)
     }
   ),
-  ## __Private Methods ====
+  # private methods ----
   private = list(
     filtered_data = NULL
   )

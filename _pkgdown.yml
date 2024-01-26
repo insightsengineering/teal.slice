@@ -21,8 +21,8 @@ navbar:
       href: https://github.com/insightsengineering/teal.slice
 
 reference:
-  - title: Teal filter-panel API
-    desc: Functions used initialize filter-panel and to modify its states.
+  - title: "`teal` filter-panel API"
+    desc: "Functions used initialize filter-panel and to modify its states."
     contents:
       - init_filtered_data
       - set_filter_state
@@ -32,9 +32,9 @@ reference:
       - clear_filter_states
       - teal_slice
       - teal_slices
-  - title: For Developers
-    subtitle: R6 Classes
-    desc: Abstract and concrete classes used to build teal functionality.
+  - title: "For developers"
+    subtitle: "R6 Classes"
+    desc: "Abstract and concrete classes used to build teal functionality."
     contents:
       - FilteredData
       - FilteredDataset

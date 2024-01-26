@@ -5,33 +5,38 @@
 \alias{LogicalFilterState}
 \title{\code{FilterState} object for logical variable}
 \description{
-Manages choosing a logical state
+Manages choosing a logical state.
 }
 \examples{
-filter_state <- teal.slice:::LogicalFilterState$new(
+# use non-exported function from teal.slice
+include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+LogicalFilterState <- getFromNamespace("LogicalFilterState", "teal.slice")
+
+
+filter_state <- LogicalFilterState$new(
   x = sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
   slice = teal_slice(varname = "x", dataname = "data")
 )
-shiny::isolate(filter_state$get_call())
+isolate(filter_state$get_call())
 filter_state$set_state(
   teal_slice(dataname = "data", varname = "x", selected = TRUE, keep_na = TRUE)
 )
-shiny::isolate(filter_state$get_call())
+isolate(filter_state$get_call())
 
 # working filter in an app
-library(shiny)
 library(shinyjs)
 
 data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
-fs <- teal.slice:::LogicalFilterState$new(
+fs <- LogicalFilterState$new(
   x = data_logical,
   slice = teal_slice(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
 )
 
 ui <- fluidPage(
   useShinyjs(),
-  teal.slice:::include_css_files(pattern = "filter-panel"),
-  teal.slice:::include_js_files(pattern = "count-bar-labels"),
+  include_css_files(pattern = "filter-panel"),
+  include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("LogicalFilterState"),
     fs$ui("fs")
@@ -114,7 +119,7 @@ if (interactive()) {
 \if{html}{\out{<a id="method-LogicalFilterState-new"></a>}}
 \if{latex}{\out{\hypertarget{method-LogicalFilterState-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{FilterState} object
+Initialize a \code{FilterState} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{LogicalFilterState$new(
   x,
@@ -127,24 +132,24 @@ Initialize a \code{FilterState} object
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{x}}{(\code{logical})\cr
+\item{\code{x}}{(\code{logical})
 values of the variable used in filter}
 
-\item{\code{x_reactive}}{(\code{reactive})\cr
+\item{\code{x_reactive}}{(\code{reactive})
 returning vector of the same type as \code{x}. Is used to update
 counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
-\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
+\item{\code{extract_type}}{(\code{character})
 whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
-\item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
+\item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
+\item \code{"list"} \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}
+\item \code{"matrix"} \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}
 }}
 
-\item{\code{slice}}{(\code{teal_slice})\cr
+\item{\code{slice}}{(\code{teal_slice})
 object created using \code{\link[=teal_slice]{teal_slice()}}. \code{teal_slice} is stored
 in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
 returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
@@ -175,7 +180,7 @@ For \code{LogicalFilterState} it's a \verb{!<varname>} or \verb{<varname>} and o
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(\code{call})
+\code{call}
 }
 }
 \if{html}{\out{<hr>}}

@@ -1,17 +1,20 @@
-#' Set "`<choice>:<label>`" type of Names
+#' Set "`<choice>:<label>`" type of names
 #'
 #' @description `r lifecycle::badge("stable")`
+#'
 #' This is often useful for as it marks up the drop-down boxes for [shiny::selectInput()].
 #'
-#' @param choices a character / numeric / logical vector
-#' @param labels character vector containing labels to be applied to `choices`. If `NA` then
+#' @details
+#' If either `choices` or `labels` are factors, they are coerced to character.
+#' Duplicated elements from `choices` get removed.
+#'
+#' @param choices (`character` or `numeric` or `logical`) vector
+#' @param labels (`character`) vector containing labels to be applied to `choices`. If `NA` then
 #' "Label Missing" will be used.
 #' @param subset a vector that is a subset of `choices`. This is useful if
 #'   only a few variables need to be named. If this argument is used, the returned vector will
 #'   match its order.
 #' @param types vector containing the types of the columns.
-#' @details If either `choices` or `labels` are factors, they are coerced to character.
-#' Duplicated elements from `choices` get removed.
 #'
 #' @return a named character vector
 #'

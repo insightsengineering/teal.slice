@@ -7,7 +7,7 @@
 fetch_bs_color(color, alpha = NULL)
 }
 \arguments{
-\item{color}{\code{character(1)} naming one of the available theme colors}
+\item{color}{(\code{character(1)}) naming one of the available theme colors}
 
 \item{alpha}{either a \code{numeric(1)} or \code{character(1)} specifying transparency
 in the range of \code{0-1} or a hexadecimal value \code{00-ff}, respectively;
@@ -18,11 +18,5 @@ Named \code{character(1)} containing a hexadecimal color representation.
 }
 \description{
 Determines the color specification for the currently active Bootstrap color theme and returns one queried color.
-}
-\examples{
-teal.slice:::fetch_bs_color("primary")
-teal.slice:::fetch_bs_color("danger", 0.35)
-teal.slice:::fetch_bs_color("danger", "80")
-
 }
 \keyword{internal}

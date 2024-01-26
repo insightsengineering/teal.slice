@@ -1,75 +1,74 @@
 #' Initializes `FilteredDataset`
 #'
-#' @keywords internal
-#' @examples
-#' # DataframeFilteredDataset example
-#' iris_fd <- teal.slice:::init_filtered_dataset(iris, dataname = "iris")
-#' app <- shinyApp(
-#'   ui = fluidPage(
-#'     iris_fd$ui_add(id = "add"),
-#'     iris_fd$ui_active("dataset"),
-#'     verbatimTextOutput("call")
-#'   ),
-#'   server = function(input, output, session) {
-#'     iris_fd$srv_add(id = "add")
-#'     iris_fd$srv_active(id = "dataset")
-#'
-#'     output$call <- renderText({
-#'       paste(
-#'         vapply(iris_fd$get_call(), deparse1, character(1), collapse = "\n"),
-#'         collapse = "\n"
-#'       )
-#'     })
-#'   }
-#' )
-#' if (interactive()) {
-#'   shinyApp(app$ui, app$server)
-#' }
-#'
-#' # MAEFilteredDataset example
-#' library(MultiAssayExperiment)
-#' data(miniACC)
-#' MAE_fd <- teal.slice:::init_filtered_dataset(miniACC, "MAE")
-#' app <- shinyApp(
-#'   ui = fluidPage(
-#'     MAE_fd$ui_add(id = "add"),
-#'     MAE_fd$ui_active("dataset"),
-#'     verbatimTextOutput("call")
-#'   ),
-#'   server = function(input, output, session) {
-#'     MAE_fd$srv_add(id = "add")
-#'     MAE_fd$srv_active(id = "dataset")
-#'     output$call <- renderText({
-#'       paste(
-#'         vapply(MAE_fd$get_call(), deparse1, character(1), collapse = "\n"),
-#'         collapse = "\n"
-#'       )
-#'     })
-#'   }
-#' )
-#' if (interactive()) {
-#'   shinyApp(app$ui, app$server)
-#' }
-#' @param dataset (`data.frame` or `MultiAssayExperiment`)\cr
-#' @param dataname (`character`)\cr
+#' @param dataset (`data.frame` or `MultiAssayExperiment`)
+#' @param dataname (`character`)
 #'  A given name for the dataset it may not contain spaces
-#' @param keys optional, (`character`)\cr
+#' @param keys optional, (`character`)
 #'   Vector with primary keys
-#' @param parent_name (`character(1)`)\cr
+#' @param parent_name (`character(1)`)
 #'   Name of the parent dataset
-#' @param parent (`reactive`)\cr
+#' @param parent (`reactive`)
 #'   object returned by this reactive is a filtered `data.frame` from other `FilteredDataset`
 #'   named `parent_name`. Consequence of passing `parent` is a `reactive` link which causes
 #'   causing re-filtering of this `dataset` based on the changes in `parent`.
-#' @param join_keys (`character`)\cr
+#' @param join_keys (`character`)
 #'   Name of the columns in this dataset to join with `parent`
 #'   dataset. If the column names are different if both datasets
 #'   then the names of the vector define the `parent` columns.
-#' @param label (`character`)\cr
+#' @param label (`character`)
 #'   Label to describe the dataset
+#' @examples
+#' # DataframeFilteredDataset example
+#' iris_fd <- init_filtered_dataset(iris, dataname = "iris")
+#' ui <- fluidPage(
+#'   iris_fd$ui_add(id = "add"),
+#'   iris_fd$ui_active("dataset"),
+#'   verbatimTextOutput("call")
+#' )
+#' server <- function(input, output, session) {
+#'   iris_fd$srv_add(id = "add")
+#'   iris_fd$srv_active(id = "dataset")
+#'
+#'   output$call <- renderText({
+#'     paste(
+#'       vapply(iris_fd$get_call(), deparse1, character(1), collapse = "\n"),
+#'       collapse = "\n"
+#'     )
+#'   })
+#' }
+#' if (interactive()) {
+#'   shinyApp(ui, server)
+#' }
+#'
+#' @examplesIf requireNamespace("MultiAssayExperiment")
+#' # MAEFilteredDataset example
+#' library(MultiAssayExperiment)
+#' data(miniACC, package = "MultiAssayExperiment")
+#' MAE_fd <- init_filtered_dataset(miniACC, "MAE")
+#' ui <- fluidPage(
+#'   MAE_fd$ui_add(id = "add"),
+#'   MAE_fd$ui_active("dataset"),
+#'   verbatimTextOutput("call")
+#' )
+#' server <- function(input, output, session) {
+#'   MAE_fd$srv_add(id = "add")
+#'   MAE_fd$srv_active(id = "dataset")
+#'   output$call <- renderText({
+#'     paste(
+#'       vapply(MAE_fd$get_call(), deparse1, character(1), collapse = "\n"),
+#'       collapse = "\n"
+#'     )
+#'   })
+#' }
+#' if (interactive()) {
+#'   shinyApp(ui, server)
+#' }
+#'
+#' @keywords internal
 #' @export
 #' @note Although this function is exported for use in other packages, it may be changed or removed in a future release
 #'   at which point any code which relies on this exported function will need to be changed.
+#'
 init_filtered_dataset <- function(dataset, # nolint
                                   dataname,
                                   keys = character(0),

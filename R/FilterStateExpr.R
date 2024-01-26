@@ -1,19 +1,22 @@
+# FilterStateExpr ------
+
 #' @name FilterStateExpr
 #' @docType class
 #'
-#'
-#' @title `FilterStateExpr` Class
+#' @title `FilterStateExpr` `R6` class
 #'
 #' @description Class to handle filter expression.
 #'
-#'
 #' @details
-#' This class is responsible for displaying filter card and returning filter expression
-#'
-#' @keywords internal
+#' This class is responsible for displaying filter card and returning filter expression.
 #'
 #' @examples
-#' filter_state <- teal.slice:::FilterStateExpr$new(
+#' # use non-exported function from teal.slice
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+#' FilterStateExpr <- getFromNamespace("FilterStateExpr", "teal.slice")
+#'
+#' filter_state <- FilterStateExpr$new(
 #'   slice = teal_slice(
 #'     dataname = "x",
 #'     id = "FA",
@@ -24,13 +27,12 @@
 #' filter_state$get_call()
 #'
 #' # working filter in an app
-#' library(shiny)
 #' library(shinyjs)
 #'
 #' ui <- fluidPage(
 #'   useShinyjs(),
-#'   teal.slice:::include_css_files(pattern = "filter-panel"),
-#'   teal.slice:::include_js_files(pattern = "count-bar-labels"),
+#'   include_css_files(pattern = "filter-panel"),
+#'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("ChoicesFilterState"),
 #'     filter_state$ui("fs")
@@ -55,13 +57,16 @@
 #' if (interactive()) {
 #'   shinyApp(ui, server)
 #' }
+#'
+#' @keywords internal
+#'
 FilterStateExpr <- R6::R6Class( # nolint
   classname = "FilterStateExpr",
   # public methods ----
   public = list(
     #' @description
-    #' Initialize a `FilterStateExpr` object
-    #' @param slice (`teal_slice_expr`)\cr
+    #' Initialize a `FilterStateExpr` object.
+    #' @param slice (`teal_slice_expr`)
     #'   object created by [teal_slice()]
     #' @return `FilterStateExpr`
     initialize = function(slice) {
@@ -73,8 +78,8 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @description
     #' Returns a formatted string representing this `FilterStateExpr` object.
     #'
-    #' @param show_all `logical(1)` passed to `format.teal_slice`
-    #' @param trim_lines `logical(1)` passed to `format.teal_slice`
+    #' @param show_all (`logical(1)`) passed to `format.teal_slice`
+    #' @param trim_lines (`logical(1)`) passed to `format.teal_slice`
     #'
     #' @return `character(1)` the formatted string
     #'
@@ -106,7 +111,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @description
     #' Sets filtering state.
     #'
-    #' @param state a `teal_slice` object
+    #' @param state (`teal_slice`)
     #'
     #' @return `self` invisibly
     #'
@@ -116,7 +121,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Get reproducible call
+    #' Get reproducible call.
     #'
     #' @param dataname (`ignored`) for a consistency with `FilterState`
     #'
@@ -132,7 +137,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @description
     #' Destroy observers stored in `private$observers`.
     #'
-    #' @return NULL invisibly
+    #' @return `NULL` invisibly
     #'
     destroy_observers = function() {
       lapply(private$observers, function(x) x$destroy())
@@ -146,10 +151,10 @@ FilterStateExpr <- R6::R6Class( # nolint
     # public shiny modules ----
 
     #' @description
-    #' Shiny module server.
+    #' `shiny` module server.
     #'
-    #' @param id (`character(1)`)\cr
-    #'   shiny module instance id
+    #' @param id (`character(1)`)
+    #'   `shiny` module instance id
     #'
     #' @return `moduleServer` function which returns reactive value
     #'   signaling that remove button has been clicked
@@ -172,10 +177,10 @@ FilterStateExpr <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny module UI.
+    #' `shiny` module UI.
     #'
-    #' @param id (`character(1)`)\cr
-    #'  shiny element (module instance) id;
+    #' @param id (`character(1)`)
+    #'  `shiny` element (module instance) id;
     #'  the UI for this class contains simple message stating that it is not supported
     #' @param parent_id (`character(1)`) id of the `FilterStates` card container
     ui = function(id, parent_id = "cards") {
