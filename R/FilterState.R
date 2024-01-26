@@ -329,7 +329,8 @@ FilterState <- R6::R6Class( # nolint
                   label = NULL,
                   icon = icon("circle-left", lib = "font-awesome"),
                   title = "Rewind state",
-                  class = "control-button"
+                  class = "control-button",
+                  style = "display: none"
                 )
               },
               if (isFALSE(private$is_fixed())) {
@@ -338,7 +339,8 @@ FilterState <- R6::R6Class( # nolint
                   label = NULL,
                   icon = icon("circle-up", lib = "font-awesome"),
                   title = "Restore original state",
-                  class = "control-button"
+                  class = "control-button",
+                  style = "display: none"
                 )
               },
               if (isFALSE(private$is_anchored())) {
