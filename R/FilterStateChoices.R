@@ -15,13 +15,13 @@
 #'
 #' filter_state <- ChoicesFilterState$new(
 #'   x = c(LETTERS, NA),
-#'   slice = teal_slice(varname = "x", dataname = "data")
+#'   slice = teal_slice(varname = "var", dataname = "data")
 #' )
 #' isolate(filter_state$get_call())
 #' filter_state$set_state(
 #'   teal_slice(
 #'     dataname = "data",
-#'     varname = "x",
+#'     varname = "var",
 #'     selected = "A",
 #'     keep_na = TRUE
 #'   )
@@ -119,28 +119,26 @@ ChoicesFilterState <- R6::R6Class( # nolint
   public = list(
 
     #' @description
-    #' Initialize a `InteractiveFilterState` object.
+    #' Initialize a `FilterState` object.
     #'
-    #' @param x (`vector`)
-    #'   values of the variable used in filter
+    #' @param x (`character`)
+    #'   vector to filter
     #' @param x_reactive (`reactive`)
     #'   returning vector of the same type as `x`. Is used to update
     #'   counts following the change in values of the filtered dataset.
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
     #' @param slice (`teal_slice`)
-    #'   object created using [teal_slice()]. `teal_slice` is stored
-    #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
-    #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
-    #'   is a `reactiveValues` which means that changes in particular object are automatically
-    #'   reflected in all places which refer to the same `teal_slice`.
+    #'   specification of this filter state.
+    #'   `teal_slice` is stored in the object and `set_state` directly manipulates values within `teal_slice`.
+    #'   `get_state` returns `teal_slice` object which can be reused in other places.
+    #'   Note that `teal_slice` is a `reactiveValues`, which means it has reference semantics, i.e.
+    #'   changes made to an object are automatically reflected in all places that refer to the same `teal_slice`.
     #' @param extract_type (`character`)
-    #' whether condition calls should be prefixed by `dataname`. Possible values:
+    #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
     #' - `character(0)` (default) `varname` in the condition call will not be prefixed
     #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
     #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
-    #'
-    #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
@@ -195,9 +193,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' @description
     #' Returns reproducible condition call for current selection.
     #' For this class returned call looks like
-    #' `<varname> %in%  c(<values selected>)` with
-    #' optional `is.na(<varname>)`.
-    #' @param dataname name of data set; defaults to `private$get_dataname()`
+    #' `<varname> %in%  c(<values selected>)` with optional `is.na(<varname>)`.
+    #' @param dataname (`character(1)`) name of data set; defaults to `private$get_dataname()`
     #' @return `call` or `NULL`
     #'
     get_call = function(dataname) {
@@ -355,8 +352,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     # UI Module for `ChoicesFilterState`.
     # This UI element contains available choices selection and
     # checkbox whether to keep or not keep the `NA` values.
-    # @param id (`character(1)`)
-    #  id of shiny element
+    # @param id (`character(1)`) `shiny` module instance id
     ui_inputs = function(id) {
       ns <- NS(id)
 
@@ -428,9 +424,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
     # @description
     # Server module
-    # @param id (`character(1)`)
-    #   an ID string that corresponds with the ID used to call the module's UI function.
-    # @return `moduleServer` function which returns `NULL`
+    # @param id (`character(1)`) `shiny` module instance id
+    # @return `shiny` module server function that returns `NULL`
     server_inputs = function(id) {
       moduleServer(
         id = id,
