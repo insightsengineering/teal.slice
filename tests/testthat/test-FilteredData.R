@@ -370,7 +370,7 @@ testthat::test_that("format lists unfiltered datasets at the end of the output",
 
 # remove_filter_state ----
 testthat::test_that("remove_filter_state removes states specified by `teal_slices", {
-  datasets <- FilteredData$new(list(iris = iris,mtcars = mtcars))
+  datasets <- FilteredData$new(list(iris = iris, mtcars = mtcars))
   fs <- teal_slices(
     teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
     teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
