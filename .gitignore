@@ -28,3 +28,5 @@ tmp.*
 vignettes/*.R
 vignettes/*.html
 vignettes/*.md
+tests/node_modules
+tests/cypress/videos
