@@ -5,10 +5,11 @@
 #'
 #' @title `FilterStateExpr` `R6` class
 #'
-#' @description Class to handle filter expression.
+#' @description Sister class to `FilterState` that handles arbitrary filter expressions.
 #'
 #' @details
-#' This class is responsible for displaying filter card and returning filter expression.
+#' Creates a filter state around a predefined filtering predicate.
+#' The filtering call is independent of the data and the filter card allows no interaction (the filter is always fixed).
 #'
 #' @examples
 #' # use non-exported function from teal.slice
@@ -67,7 +68,6 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @description
     #' Initialize a `FilterStateExpr` object.
     #' @param slice (`teal_slice_expr`)
-    #'   object created by [teal_slice()]
     #' @return `FilterStateExpr`
     initialize = function(slice) {
       checkmate::assert_class(slice, "teal_slice_expr")
@@ -94,7 +94,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @description
     #' Prints this `FilterStateExpr` object.
     #'
-    #' @param ... additional arguments
+    #' @param ... arguments passed to the `format` method
     print = function(...) {
       cat(shiny::isolate(self$format(...)))
     },
@@ -113,7 +113,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'
     #' @param state (`teal_slice`)
     #'
-    #' @return `self` invisibly
+    #' @return Returns `self`, invisibly.
     #'
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice_expr")
@@ -129,7 +129,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' for selected variable type.
     #' Method is using internal reactive values which makes it reactive
     #' and must be executed in reactive or isolated context.
-    #' @return `language`
+    #' @return `call` or `NULL`
     get_call = function(dataname) {
       shiny::isolate(str2lang(private$teal_slice$expr))
     },
@@ -137,7 +137,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @description
     #' Destroy observers stored in `private$observers`.
     #'
-    #' @return `NULL` invisibly
+    #' @return `NULL`, invisibly
     #'
     destroy_observers = function() {
       lapply(private$observers, function(x) x$destroy())
@@ -178,10 +178,9 @@ FilterStateExpr <- R6::R6Class( # nolint
 
     #' @description
     #' `shiny` module UI.
-    #'
+    #'  The UI for this class contains simple message stating that it is not supported.
     #' @param id (`character(1)`)
-    #'  `shiny` element (module instance) id;
-    #'  the UI for this class contains simple message stating that it is not supported
+    #'   `shiny` module instance id
     #' @param parent_id (`character(1)`) id of the `FilterStates` card container
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)

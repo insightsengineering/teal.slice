@@ -5,10 +5,11 @@
 \alias{FilterStateExpr}
 \title{\code{FilterStateExpr} \code{R6} class}
 \description{
-Class to handle filter expression.
+Sister class to \code{FilterState} that handles arbitrary filter expressions.
 }
 \details{
-This class is responsible for displaying filter card and returning filter expression.
+Creates a filter state around a predefined filtering predicate.
+The filtering call is independent of the data and the filter card allows no interaction (the filter is always fixed).
 }
 \examples{
 # use non-exported function from teal.slice
@@ -87,8 +88,7 @@ Initialize a \code{FilterStateExpr} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{slice}}{(\code{teal_slice_expr})
-object created by \code{\link[=teal_slice]{teal_slice()}}}
+\item{\code{slice}}{(\code{teal_slice_expr})}
 }
 \if{html}{\out{</div>}}
 }
@@ -130,7 +130,7 @@ Prints this \code{FilterStateExpr} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{additional arguments}
+\item{\code{...}}{arguments passed to the \code{format} method}
 }
 \if{html}{\out{</div>}}
 }
@@ -165,7 +165,7 @@ Sets filtering state.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{self} invisibly
+Returns \code{self}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -190,7 +190,7 @@ and must be executed in reactive or isolated context.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{language}
+\code{call} or \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}
@@ -203,7 +203,7 @@ Destroy observers stored in \code{private$observers}.
 }
 
 \subsection{Returns}{
-\code{NULL} invisibly
+\code{NULL}, invisibly
 }
 }
 \if{html}{\out{<hr>}}
@@ -233,6 +233,7 @@ signaling that remove button has been clicked
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-ui}{}}}
 \subsection{Method \code{ui()}}{
 \code{shiny} module UI.
+The UI for this class contains simple message stating that it is not supported.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$ui(id, parent_id = "cards")}\if{html}{\out{</div>}}
 }
@@ -241,8 +242,7 @@ signaling that remove button has been clicked
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-\code{shiny} element (module instance) id;
-the UI for this class contains simple message stating that it is not supported}
+\code{shiny} module instance id}
 
 \item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}
 }
