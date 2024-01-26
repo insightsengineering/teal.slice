@@ -19,7 +19,7 @@ Authors@R: c(
     person("Junlue", "Zhao", role = "aut"),
     person("F. Hoffmann-La Roche AG", role = c("cph", "fnd"))
   )
-Description: Module containing filter panel for 'teal' applications.
+Description: Data filtering module for 'teal' applications.
     Allows for interactive filtering of data stored in 'data.frame' and
     'MultiAssayExperiment' objects. Also displays filtered and unfiltered
     observation counts.
