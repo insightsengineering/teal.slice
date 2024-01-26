@@ -25,12 +25,7 @@
 #' @seealso [`teal_slice`]
 #'
 #' @examples
-#' datasets <- init_filtered_data(
-#'   x = list(
-#'     iris = list(dataset = iris),
-#'     mtcars = list(dataset = mtcars)
-#'   )
-#' )
+#' datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
 #' fs <- teal_slices(
 #'   teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
 #'   teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
@@ -70,7 +65,7 @@
 #' library(MultiAssayExperiment)
 #' data(miniACC)
 #'
-#' datasets <- init_filtered_data(x = list(mae = list(dataset = miniACC)))
+#' datasets <- init_filtered_data(list(mae = miniACC))
 #' fs <- teal_slices(
 #'   teal_slice(
 #'     dataname = "mae", varname = "years_to_birth", selected = c(30, 50),

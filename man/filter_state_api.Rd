@@ -41,12 +41,7 @@ containing a \code{teal_slice} for every existing \code{FilterState}
 Set, get and remove filter states of \code{FilteredData} object.
 }
 \examples{
-datasets <- init_filtered_data(
-  x = list(
-    iris = list(dataset = iris),
-    mtcars = list(dataset = mtcars)
-  )
-)
+datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
 fs <- teal_slices(
   teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
   teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
@@ -86,7 +81,7 @@ clear_filter_states(datasets)
 library(MultiAssayExperiment)
 data(miniACC)
 
-datasets <- init_filtered_data(x = list(mae = list(dataset = miniACC)))
+datasets <- init_filtered_data(list(mae = miniACC))
 fs <- teal_slices(
   teal_slice(
     dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
