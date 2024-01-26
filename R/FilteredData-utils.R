@@ -198,5 +198,5 @@ toggle_title <- function(input_id, titles, one_way = FALSE) {
 #' topological_sort(list(D = c("A"), B = c("A"), C = c("B"), A = c()))
 #' @keywords internal
 topological_sort <- function(graph) {
-  utils::getFromNamespace("topological_sort", ns = "teal.data")
+  utils::getFromNamespace("topological_sort", ns = "teal.data")(graph)
 }
