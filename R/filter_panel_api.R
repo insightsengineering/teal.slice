@@ -15,7 +15,7 @@
 #'   specify filters in place on app start-up
 #'
 #' @param force (`logical(1)`)
-#'   include locked filter states
+#'   flag specifying whether to include locked filter states
 #'
 #' @return
 #' - `set_*`, `remove_*` and `clear_filter_state` return `NULL` invisibly
@@ -59,6 +59,7 @@
 #'
 #' # remove all states
 #' clear_filter_states(datasets)
+#'
 #' @examplesIf requireNamespace("MultiAssayExperiment")
 #'
 #' # Requires MultiAssayExperiment from Bioconductor
@@ -158,7 +159,9 @@ clear_filter_states <- function(datasets, force = FALSE) {
 #'
 #' @param datasets (`FilteredData`)
 #' @param datanames (`character`) vector of dataset names
-#' @return A `character` string containing all subset expressions.
+#'
+#' @return A character string containing all subset expressions.
+#'
 #' @export
 #'
 get_filter_expr <- function(datasets, datanames = datasets$datanames()) {

@@ -26,7 +26,7 @@ see \code{\link{FilteredData}} for details}
 specify filters in place on app start-up}
 
 \item{force}{(\code{logical(1)})
-include locked filter states}
+flag specifying whether to include locked filter states}
 }
 \value{
 \itemize{
@@ -75,6 +75,7 @@ remove_filter_state(
 
 # remove all states
 clear_filter_states(datasets)
+
 \dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 
 # Requires MultiAssayExperiment from Bioconductor
