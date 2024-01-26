@@ -146,7 +146,7 @@ Initialize a \code{FilterState} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{x}}{(\code{Date})
-values of the variable used in filter}
+variable to be filtered}
 
 \item{\code{x_reactive}}{(\code{reactive})
 returning vector of the same type as \code{x}. Is used to update
@@ -155,21 +155,19 @@ If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
 \item{\code{slice}}{(\code{teal_slice})
-object created using \code{\link[=teal_slice]{teal_slice()}}. \code{teal_slice} is stored
-in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
-returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
-is a \code{reactiveValues} which means that changes in particular object are automatically
-reflected in all places which refer to the same \code{teal_slice}.}
+specification of this filter state.
+\code{teal_slice} is stored in the object and \code{set_state} directly manipulates values within \code{teal_slice}.
+\code{get_state} returns \code{teal_slice} object which can be reused in other places.
+Note that \code{teal_slice} is a \code{reactiveValues}, which means it has reference semantics, i.e.
+changes made to an object are automatically reflected in all places that refer to the same \code{teal_slice}.}
 
 \item{\code{extract_type}}{(\code{character})
-whether condition calls should be prefixed by \code{dataname}. Possible values:
+specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
 \item \code{"list"} \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}
 \item \code{"matrix"} \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}
 }}
-
-\item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
 }
 \if{html}{\out{</div>}}
 }
@@ -180,8 +178,7 @@ whether condition calls should be prefixed by \code{dataname}. Possible values:
 \subsection{Method \code{get_call()}}{
 Returns reproducible condition call for current selection.
 For this class returned call looks like
-\verb{<varname> >= <min value> & <varname> <= <max value>} with
-optional \verb{is.na(<varname>)}.
+\verb{<varname> >= <min value> & <varname> <= <max value>} with optional \verb{is.na(<varname>)}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DateFilterState$get_call(dataname)}\if{html}{\out{</div>}}
 }
@@ -194,7 +191,7 @@ optional \verb{is.na(<varname>)}.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{call}
+\code{call} or \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}
