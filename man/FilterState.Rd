@@ -210,7 +210,7 @@ and must be executed in reactive or isolated context.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{shiny} module server function that returns a reactive value signaling that remove button has been clicked.
+Reactive value signaling that remove button has been clicked.
 }
 }
 \if{html}{\out{<hr>}}

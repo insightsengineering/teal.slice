@@ -138,7 +138,7 @@ sets of filter variables - one for \code{colData} and another for
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{shiny} module server function that returns \code{NULL}.
+\code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

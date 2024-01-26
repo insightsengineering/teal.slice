@@ -199,7 +199,7 @@ FilterState <- R6::R6Class( # nolint
     #'   `shiny` module instance id
     #'
     #' @return
-    #' `shiny` module server function that returns a reactive value signaling that remove button has been clicked.
+    #' Reactive value signaling that remove button has been clicked.
     #'
     server = function(id) {
       moduleServer(

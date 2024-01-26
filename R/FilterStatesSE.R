@@ -149,7 +149,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)
     #'   `shiny` module instance id
-    #' @return `shiny` module server function that returns `NULL`.
+    #' @return `NULL`
     srv_add = function(id) {
       data <- private$data
       data_reactive <- private$data_reactive

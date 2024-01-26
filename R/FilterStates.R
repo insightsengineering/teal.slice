@@ -329,7 +329,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id
     #'
-    #' @return `shiny` module server function that returns `NULL`.
+    #' @return `NULL`
     #'
     srv_active = function(id) {
       moduleServer(
@@ -425,7 +425,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id
     #'
-    #' @return `shiny` module server function that returns `NULL`.
+    #' @return `NULL`
     srv_add = function(id) {
       moduleServer(
         id = id,
