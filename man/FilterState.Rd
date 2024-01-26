@@ -3,17 +3,16 @@
 \docType{class}
 \name{FilterState}
 \alias{FilterState}
-\title{\code{FilterState} abstract Class}
+\title{\code{FilterState} abstract class}
 \description{
 Abstract class to encapsulate single filter state.
 }
 \details{
-This class is responsible for managing single filter item within
-\code{FilteredData} class object. Filter states depend on the variable type:
+This class is responsible for managing a single filter item within a \code{FilteredData} object
+and outputs a logical predicate for filtering one variable.
+Filter states depend on the variable type:
 (\code{logical}, \code{integer}, \code{numeric}, \code{factor}, \code{character}, \code{Date}, \code{POSIXct}, \code{POSIXlt})
-and returns \code{FilterState} object with class corresponding to input variable.
-Class controls single filter entry in \code{module_single_filter_item} and returns
-code relevant to selected values.
+and \code{FilterState} subclasses exist that correspond to those types.
 \itemize{
 \item \code{factor}, \code{character}: \code{class = ChoicesFilterState}
 \item \code{numeric}: \code{class = RangeFilterState}
@@ -24,22 +23,19 @@ code relevant to selected values.
 \item default: \code{FilterState}, cannot be filtered
 }
 
-Each variable's filter state is an \code{R6} object which contains \code{choices},
-\code{selected}, \code{varname}, \code{dataname}, \code{labels}, \code{na_count}, \code{keep_na} and other
-variable type specific fields (\code{keep_inf}, \code{inf_count}, \code{timezone}).
-Object also contains a \code{shiny} module (UI and server) which manages the
-state of the filter through reactive values \code{selected}, \code{keep_na}, \code{keep_inf}
-which trigger \code{get_call()} and every \code{R} function call up in reactive chain.
+Each variable's filter state is an \code{R6} object keeps the variable that is filtered,
+a \code{teal_slice} object that describes the filter state, as well as a \code{shiny} module (UI and server)
+that allows the user to alter the filter state.
+Changes to the filter state that cause some observations to be omitted
+trigger the \code{get_call} method and every \code{R} function call up in the reactive chain.
 }
 \section{Modifying state}{
 
 Modifying a \code{FilterState} object is possible in three scenarios:
 \itemize{
-\item In the interactive session by passing an appropriate \code{teal_slice}
-to the \code{set_state} method, or using
-\code{set_selected}, \code{set_keep_na} or \code{set_keep_inf} methods.
-\item In a running application by changing appropriate inputs.
-\item In a running application by using \link{filter_state_api} which directly uses
+\item In an interactive session, by passing an appropriate \code{teal_slice} to the \code{set_state} method.
+\item In a running application, by changing appropriate inputs.
+\item In a running application, by using \link{filter_state_api} which directly uses
 \code{set_state} method of the \code{InteractiveFilterState} object.
 }
 }
@@ -78,7 +74,7 @@ Initialize a \code{FilterState} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{x}}{(\code{vector})
-values of the variable used in filter}
+variable to be filtered}
 
 \item{\code{x_reactive}}{(\code{reactive})
 returning vector of the same type as \code{x}. Is used to update
@@ -87,7 +83,11 @@ If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
 \item{\code{slice}}{(\code{teal_slice})
-object created by \code{\link[=teal_slice]{teal_slice()}}}
+specification of this filter state.
+\code{teal_slice} is stored in the object and \code{set_state} directly manipulates values within \code{teal_slice}.
+\code{get_state} returns \code{teal_slice} object which can be reused in other places.
+Note that \code{teal_slice} is a \code{reactiveValues}, which means it has reference semantics, i.e.
+changes made to an object are automatically reflected in all places that refer to the same \code{teal_slice}.}
 
 \item{\code{extract_type}}{(\code{character})
 specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
@@ -96,13 +96,11 @@ specifying whether condition calls should be prefixed by \code{dataname}. Possib
 \item \code{"list"} \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}
 \item \code{"matrix"} \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}
 }}
-
-\item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{self} invisibly
+Returns \code{self}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -212,8 +210,7 @@ and must be executed in reactive or isolated context.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{moduleServer} function which returns reactive value
-signaling that remove button has been clicked
+\code{shiny} module server function that returns a reactive value signaling that remove button has been clicked.
 }
 }
 \if{html}{\out{<hr>}}
@@ -247,7 +244,7 @@ Destroy observers stored in \code{private$observers}.
 }
 
 \subsection{Returns}{
-\code{NULL} invisibly
+\code{NULL}, invisibly
 }
 }
 \if{html}{\out{<hr>}}
