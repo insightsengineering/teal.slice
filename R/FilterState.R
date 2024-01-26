@@ -589,8 +589,7 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # Adds `is.na(varname)` before existing condition call if `keep_na` is selected.
-    # Otherwise, if missing values are found in the variable `!is.na` will be added only if `private$na_rm = TRUE`.
+    # Adds `is.na(varname)` moiety to the existing condition call, according to `keep_na` status.
     # @param filter_call `call` raw filter call, as defined by selection
     # @param varname `character(1)` name of a variable
     # @return `call`
