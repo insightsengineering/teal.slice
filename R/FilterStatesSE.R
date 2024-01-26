@@ -2,7 +2,7 @@
 
 #' @name SEFilterStates
 #' @docType class
-#' @title `FilterStates` subclass for `SummarizedExperiments`
+#' @title `FilterStates` subclass for `SummarizedExperiment`s
 #' @description Handles filter states in a `SummaryExperiment`.
 #' @keywords internal
 #'
@@ -19,14 +19,14 @@ SEFilterStates <- R6::R6Class( # nolint
     #'   the `R` object which `subset` function is applied on.
     #' @param data_reactive (`function(sid)`)
     #'   should return a `SummarizedExperiment` object or `NULL`.
-    #'   This object is needed for the `FilterState` counts being updated
-    #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
+    #'   This object is needed for the `FilterState` counts being updated on a change in filters.
+    #'   If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
     #' @param dataname (`character(1)`)
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
-    #' @param datalabel (`NULL` or `character(1)`)
-    #'   text label value. Should be a name of experiment
+    #' @param datalabel (`character(1)`)
+    #'   optional text label. Should be the name of experiment.
     #'
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
@@ -49,7 +49,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @param state (`teal_slices`)
     #'    `teal_slice` objects should contain the field `arg %in% c("subset", "select")`
     #'
-    #' @return `NULL` invisibly
+    #' @return `NULL`, invisibly
     #'
     set_filter_state = function(state) {
       shiny::isolate({
@@ -95,7 +95,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @description
     #' `shiny` UI module to add filter variable.
     #' @param id (`character(1)`)
-    #'  id of `shiny` module
+    #'   `shiny` module instance id
     #' @return `shiny.tag`
     ui_add = function(id) {
       data <- private$data
@@ -148,8 +148,8 @@ SEFilterStates <- R6::R6Class( # nolint
     #' `rowData`.
     #'
     #' @param id (`character(1)`)
-    #'   an id string that corresponds with the id used to call the module's `ui_add` function.
-    #' @return `moduleServer` function which returns `NULL`
+    #'   `shiny` module instance id
+    #' @return `shiny` module server function that returns `NULL`.
     srv_add = function(id) {
       data <- private$data
       data_reactive <- private$data_reactive
