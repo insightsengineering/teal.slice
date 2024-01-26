@@ -31,6 +31,7 @@ fs <- teal_slices(
 )
 dataset$set_filter_state(state = fs)
 isolate(dataset$get_filter_state())
+
 }
 \keyword{internal}
 \section{Super class}{
@@ -87,45 +88,46 @@ Initializes this \code{DataframeFilteredDataset} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{dataset}}{(\code{data.frame})
-single data.frame for which filters are rendered}
+single data.frame for which filters are rendered.}
 
-\item{\code{dataname}}{(\code{character})
-A given name for the dataset it may not contain spaces}
+\item{\code{dataname}}{(\code{character(1)})
+syntactically valid name given to the dataset.}
 
-\item{\code{keys}}{optional, (\code{character})
-Vector with primary keys}
+\item{\code{keys}}{(\code{character})
+optional vector of primary key column names.}
 
 \item{\code{parent_name}}{(\code{character(1)})
-Name of the parent dataset}
+name of the parent dataset.}
 
 \item{\code{parent}}{(\code{reactive})
-object returned by this reactive is a filtered \code{data.frame} from other \code{FilteredDataset}
-named \code{parent_name}. Consequence of passing \code{parent} is a \code{reactive} link which causes
-causing re-filtering of this \code{dataset} based on the changes in \code{parent}.}
+that returns a filtered \code{data.frame} from other \code{FilteredDataset} named \code{parent_name}.
+Passing \code{parent} results in a \code{reactive} link that causes re-filtering of this \code{dataset}
+based on the changes in \code{parent}.}
 
 \item{\code{join_keys}}{(\code{character})
-Name of the columns in this dataset to join with \code{parent}
-dataset. If the column names are different if both datasets
-then the names of the vector define the \code{parent} columns.}
+vector of names of columns in this dataset to join with \code{parent} dataset.
+If column names in the parent do not match these, they should be given as the names of this vector.}
 
-\item{\code{label}}{(\code{character})
-Label to describe the dataset}
+\item{\code{label}}{(\code{character(1)})
+label to describe the dataset.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Object of class \code{DataframeFilteredDataset}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DataframeFilteredDataset-get_call"></a>}}
 \if{latex}{\out{\hypertarget{method-DataframeFilteredDataset-get_call}{}}}
 \subsection{Method \code{get_call()}}{
-Gets the filter expression.
+Gets the subset expression.
 
-This functions returns filter calls equivalent to selected items
-within each of \code{filter_states}. Configuration of the calls is constant and
+This function returns subset expressions equivalent to selected items
+within each of \code{filter_states}. Configuration of the expressions is constant and
 depends on \code{filter_states} type and order which are set during initialization.
-This class contains single \code{FilterStates}
-which contains single \code{state_list} and all \code{FilterState} objects
-applies to one argument (\code{...}) in \code{dplyr::filter} call.
+This class contains single \code{FilterStates} which contains single \code{state_list}
+and all \code{FilterState} objects apply to one argument (\code{...}) in a \code{dplyr::filter} call.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataframeFilteredDataset$get_call(sid = "")}\if{html}{\out{</div>}}
 }
@@ -134,8 +136,8 @@ applies to one argument (\code{...}) in \code{dplyr::filter} call.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{sid}}{(\code{character})
-when specified then method returns code containing filter conditions of
-\code{FilterState} objects which \code{"sid"} attribute is different than this \code{sid} argument.}
+when specified, the method returns code containing conditions calls of
+\code{FilterState} objects with \code{sid} different to that of this \code{sid} argument.}
 }
 \if{html}{\out{</div>}}
 }
@@ -160,7 +162,7 @@ Set filter state.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL} invisibly
+\code{NULL}, invisibly
 }
 }
 \if{html}{\out{<hr>}}
@@ -182,7 +184,7 @@ specifying \code{FilterState} objects to remove;
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL} invisibly
+\code{NULL}, invisibly
 }
 }
 \if{html}{\out{<hr>}}
@@ -198,27 +200,26 @@ UI module to add filter variable for this dataset.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-identifier of the element - preferably containing dataset name}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-function - \code{shiny} UI module
+\code{shiny.tag}
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DataframeFilteredDataset-get_filter_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-DataframeFilteredDataset-get_filter_overview}{}}}
 \subsection{Method \code{get_filter_overview()}}{
-Get number of observations based on given keys.
-The output shows the comparison between \code{filtered_dataset}
-function parameter and the dataset inside self
+Get filter overview of a dataset.
+Displays numbers of total and remaining observations.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataframeFilteredDataset$get_filter_overview()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{list} containing character \verb{#filtered/#not_filtered}
+A \code{data.frame}.
 }
 }
 \if{html}{\out{<hr>}}
