@@ -7,18 +7,21 @@
 topological_sort(graph)
 }
 \arguments{
-\item{graph}{(named \code{list}) list with node vector elements}
+\item{graph}{(\verb{named list}) with node vector elements}
 }
 \description{
-Graph is a list which for each node contains a vector of child nodes
+Graph is a \code{list} which for each node contains a vector of child nodes
 in the returned list, parents appear before their children.
 }
 \details{
 Implementation of \code{Kahn} algorithm with a modification to maintain the order of input elements.
 }
 \examples{
-teal.slice:::topological_sort(list(A = c(), B = c("A"), C = c("B"), D = c("A")))
-teal.slice:::topological_sort(list(D = c("A"), A = c(), B = c("A"), C = c("B")))
-teal.slice:::topological_sort(list(D = c("A"), B = c("A"), C = c("B"), A = c()))
+# use non-exported function from teal.slice
+topological_sort <- getFromNamespace("topological_sort", "teal.slice")
+
+topological_sort(list(A = c(), B = c("A"), C = c("B"), D = c("A")))
+topological_sort(list(D = c("A"), A = c(), B = c("A"), C = c("B")))
+topological_sort(list(D = c("A"), B = c("A"), C = c("B"), A = c()))
 }
 \keyword{internal}

@@ -1,17 +1,24 @@
+# DateFilterState ------
+
 #' @name DateFilterState
-#' @title `FilterState` object for Date variable
-#' @description Manages choosing a range of Dates
 #' @docType class
-#' @keywords internal
 #'
+#' @title `FilterState` object for `Date` variable
+#'
+#' @description Manages choosing a range of `Date`s.
 #'
 #' @examples
-#' filter_state <- teal.slice:::DateFilterState$new(
+#' # use non-exported function from teal.slice
+#' include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' DateFilterState <- getFromNamespace("DateFilterState", "teal.slice")
+#'
+#' filter_state <- DateFilterState$new(
 #'   x = c(Sys.Date() + seq(1:10), NA),
 #'   slice = teal_slice(varname = "x", dataname = "data"),
 #'   extract_type = character(0)
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #' filter_state$set_state(
 #'   teal_slice(
 #'     dataname = "data",
@@ -20,15 +27,14 @@
 #'     keep_na = TRUE
 #'   )
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #'
 #' # working filter in an app
-#' library(shiny)
 #' library(shinyjs)
 #'
 #' dates <- c(Sys.Date() - 100, Sys.Date())
 #' data_date <- c(seq(from = dates[1], to = dates[2], length.out = 100), NA)
-#' fs <- teal.slice:::DateFilterState$new(
+#' fs <- DateFilterState$new(
 #'   x = data_date,
 #'   slice = teal_slice(
 #'     dataname = "data", varname = "x", selected = data_date[c(47, 98)], keep_na = TRUE
@@ -37,8 +43,8 @@
 #'
 #' ui <- fluidPage(
 #'   useShinyjs(),
-#'   teal.slice:::include_css_files(pattern = "filter-panel"),
-#'   teal.slice:::include_js_files(pattern = "count-bar-labels"),
+#'   include_css_files(pattern = "filter-panel"),
+#'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("DateFilterState"),
 #'     fs$ui("fs")
@@ -96,6 +102,8 @@
 #'   shinyApp(ui, server)
 #' }
 #'
+#' @keywords internal
+#'
 DateFilterState <- R6::R6Class( # nolint
   "DateFilterState",
   inherit = FilterState,
@@ -105,28 +113,27 @@ DateFilterState <- R6::R6Class( # nolint
   public = list(
 
     #' @description
-    #' Initialize a `FilterState` object
+    #' Initialize a `FilterState` object.
     #'
-    #' @param x (`Date`)\cr
+    #' @param x (`Date`)
     #'   values of the variable used in filter
-    #' @param x_reactive (`reactive`)\cr
+    #' @param x_reactive (`reactive`)
     #'   returning vector of the same type as `x`. Is used to update
     #'   counts following the change in values of the filtered dataset.
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
-    #' @param slice (`teal_slice`)\cr
+    #' @param slice (`teal_slice`)
     #'   object created using [teal_slice()]. `teal_slice` is stored
     #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
     #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
     #'   is a `reactiveValues` which means that changes in particular object are automatically
     #'   reflected in all places which refer to the same `teal_slice`.
-    #' @param extract_type (`character(0)`, `character(1)`)\cr
+    #' @param extract_type (`character`)
     #' whether condition calls should be prefixed by `dataname`. Possible values:
-    #' \itemize{
-    #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-    #' }
+    #' - `character(0)` (default) `varname` in the condition call will not be prefixed
+    #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
+    #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
+    #'
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,
@@ -157,8 +164,8 @@ DateFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
     #' optional `is.na(<varname>)`.
-    #' @param dataname `character(1)` containing possibly prefixed name of data set
-    #' @return (`call`)
+    #' @param dataname (`character(1)`) containing possibly prefixed name of data set
+    #' @return `call`
     #'
     get_call = function(dataname) {
       if (isFALSE(private$is_any_filtered())) {
@@ -266,7 +273,7 @@ DateFilterState <- R6::R6Class( # nolint
     # UI Module for `DateFilterState`.
     # This UI element contains two date selections for `min` and `max`
     # of the range and a checkbox whether to keep the `NA` values.
-    # @param id (`character(1)`)\cr
+    # @param id (`character(1)`)
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
@@ -306,7 +313,7 @@ DateFilterState <- R6::R6Class( # nolint
 
     # @description
     # Server module
-    # @param id (`character(1)`)\cr
+    # @param id (`character(1)`)
     #   an ID string that corresponds with the ID used to call the module's UI function.
     # @return `moduleServer` function which returns `NULL`
     server_inputs = function(id) {

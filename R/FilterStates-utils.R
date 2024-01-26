@@ -1,55 +1,59 @@
 #' Initialize `FilterStates` object
 #'
-#' Initialize `FilterStates` object
-#' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
-#'   the R object which `subset` function is applied on.
-#' @param data_reactive (`function(sid)`)\cr
+#' @param data (`data.frame` or `MultiAssayExperiment` or `SummarizedExperiment` or `matrix`)
+#'   the `R` object which `subset` function is applied on.
+#' @param data_reactive (`function(sid)`)
 #'   should return an object of the same type as `data` or `NULL`.
-#'   This object is needed for the `FilterState` shiny module to update
+#'   This object is needed for the `FilterState` `shiny` module to update
 #'   counts if filtered data changes.
 #'   If function returns `NULL` then filtered counts
 #'   are not shown. Function has to have `sid` argument being a character which
 #'   is related to `sid` argument in the `get_call` method.
-#' @param dataname (`character(1)`)\cr
+#' @param dataname (`character(1)`)
 #'   name of the data used in the expression
 #'   specified to the function argument attached to this `FilterStates`.
-#' @param datalabel (`character(0)` or `character(1)`)\cr
+#' @param datalabel (`NULL` or `character(1)`)
 #'   text label value.
 #' @param ... (optional)
 #'   additional arguments for specific classes: keys.
 #' @keywords internal
-#' @export
 #' @examples
-#' library(shiny)
+#' # use non-exported function from teal.slice
+#' init_filter_states <- getFromNamespace("init_filter_states", "teal.slice")
+#'
 #' df <- data.frame(
 #'   character = letters,
 #'   numeric = seq_along(letters),
 #'   date = seq(Sys.Date(), length.out = length(letters), by = "1 day"),
 #'   datetime = seq(Sys.time(), length.out = length(letters), by = "33.33 hours")
 #' )
-#' rf <- teal.slice:::init_filter_states(
+#' rf <- init_filter_states(
 #'   data = df,
 #'   dataname = "DF"
 #' )
-#' app <- shinyApp(
-#'   ui = fluidPage(
-#'     actionButton("clear", span(icon("xmark"), "Remove all filters")),
-#'     rf$ui_add(id = "add"),
-#'     rf$ui_active("states"),
-#'     verbatimTextOutput("expr"),
-#'   ),
-#'   server = function(input, output, session) {
-#'     rf$srv_add(id = "add")
-#'     rf$srv_active(id = "states")
-#'     output$expr <- renderText({
-#'       deparse1(rf$get_call(), collapse = "\n")
-#'     })
-#'     observeEvent(input$clear, rf$state_list_empty())
-#'   }
+#'
+#' ui <- fluidPage(
+#'   actionButton("clear", span(icon("xmark"), "Remove all filters")),
+#'   rf$ui_add(id = "add"),
+#'   rf$ui_active("states"),
+#'   verbatimTextOutput("expr"),
 #' )
-#' if (interactive()) {
-#'   shinyApp(app$ui, app$server)
+#'
+#' server <- function(input, output, session) {
+#'   rf$srv_add(id = "add")
+#'   rf$srv_active(id = "states")
+#'   output$expr <- renderText({
+#'     deparse1(rf$get_call(), collapse = "\n")
+#'   })
+#'   observeEvent(input$clear, rf$clear_filter_states())
 #' }
+#'
+#' if (interactive()) {
+#'   shinyApp(ui, server)
+#' }
+#'
+#' @export
+#'
 init_filter_states <- function(data,
                                data_reactive = reactive(NULL),
                                dataname,
@@ -132,10 +136,13 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
 #'
 #' Gets filterable variable names from a given object. The names match variables
 #' of classes in an vector `teal.slice:::.filterable_class`.
-#' @param data (`object`)\cr
-#'   the R object containing elements which class can be checked through `vapply` or `apply`.
-#'
+#' @param data
+#'   the `R` object containing elements which class can be checked through `vapply` or `apply`.
+#' @return `character` vector of matched element names
 #' @examples
+#' # use non-exported function from teal.slice
+#' get_supported_filter_varnames <- getFromNamespace("get_supported_filter_varnames", "teal.slice")
+#'
 #' df <- data.frame(
 #'   a = letters[1:3],
 #'   b = 1:3,
@@ -143,8 +150,7 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
 #'   d = Sys.time() + 1:3,
 #'   z = complex(3)
 #' )
-#' teal.slice:::get_supported_filter_varnames(df)
-#' @return `character` vector of matched element names
+#' get_supported_filter_varnames(df)
 #' @keywords internal
 get_supported_filter_varnames <- function(data) {
   UseMethod("get_supported_filter_varnames")
@@ -186,16 +192,16 @@ get_supported_filter_varnames.MultiAssayExperiment <- function(data) { # nolint
   }
 }
 
-#' @title Returns a `choices_labeled` object
+#' Returns a `choices_labeled` object
 #'
-#' @param data (`data.frame`, `DFrame`, `list`)\cr
+#' @param data (`data.frame` or `DFrame` or `list`)
 #'   where labels can be taken from in case when `varlabels` is not specified.
 #'   `data` must be specified if `varlabels` is not specified.
-#' @param choices (`character`)\cr
+#' @param choices (`character`)
 #'  the vector of chosen variables
-#' @param varlabels (`character`)\cr
+#' @param varlabels (`character`)
 #'  the labels of variables in data
-#' @param keys (`character`)\cr
+#' @param keys (`character`)
 #'  the names of the key columns in data
 #' @return `character(0)` if choices are empty; a `choices_labeled` object otherwise
 #' @keywords internal
@@ -216,6 +222,8 @@ data_choices_labeled <- function(data,
   )
 }
 
+#' @noRd
+#' @keywords internal
 get_varlabels <- function(data) {
   if (!is.array(data)) {
     vapply(

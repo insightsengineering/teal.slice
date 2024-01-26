@@ -7,19 +7,22 @@
 variable_types(data, columns = NULL)
 }
 \arguments{
-\item{data}{(\code{data.frame}) data to determine variable types from}
+\item{data}{(\code{matrix} or \code{data.frame}-like) to determine variable types from.}
 
-\item{columns}{(atomic vector of \code{character} or \code{NULL}) column names chosen from \code{data}.
-The value of \code{NULL} will be interpreted to mean all columns.}
+\item{columns}{(\code{character}) vector of columns in \code{data} to get classes from.
+Set to \code{NULL} to get classes of all columns.}
 }
 \value{
-(atomic vector of \code{character}) classes of \code{columns} from provided \code{data}
+Character vector of classes of \code{columns} from provided \code{data}.
 }
 \description{
 Get classes of selected columns from dataset
 }
 \examples{
-teal.slice:::variable_types(
+# use non-exported function from teal.slice
+variable_types <- getFromNamespace("variable_types", "teal.slice")
+
+variable_types(
   data.frame(
     x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
     stringsAsFactors = FALSE
@@ -27,7 +30,7 @@ teal.slice:::variable_types(
   "x"
 )
 
-teal.slice:::variable_types(
+variable_types(
   data.frame(
     x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
     stringsAsFactors = FALSE
@@ -35,7 +38,7 @@ teal.slice:::variable_types(
   c("x", "z")
 )
 
-teal.slice:::variable_types(
+variable_types(
   data.frame(
     x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
     stringsAsFactors = FALSE

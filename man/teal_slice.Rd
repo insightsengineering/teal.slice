@@ -7,7 +7,7 @@
 \alias{as.list.teal_slice}
 \alias{format.teal_slice}
 \alias{print.teal_slice}
-\title{Specify single filter.}
+\title{Specify single filter}
 \usage{
 teal_slice(
   dataname,
@@ -44,7 +44,7 @@ as.teal_slice(x)
 When \code{varname} is specified then \code{id} is set to \code{"{dataname} {varname}"} by default.}
 
 \item{expr}{(\code{character(1)}) string providing a logical expression.
-Must be a valid R expression which can be evaluated in the context of the data set.
+Must be a valid \code{R} expression which can be evaluated in the context of the data set.
 For a \code{data.frame} \code{var == "x"} is sufficient, but \code{MultiAssayExperiment::subsetByColData}
 requires \code{dataname} prefix, \emph{e.g.} \code{data$var == "x"}.}
 
@@ -71,7 +71,7 @@ only applicable to \code{ChoicesFilterState} and \code{LogicalFilterState}}
 \item{...}{in \code{teal_slice} method these are additional arguments which can be handled by extensions
 of \code{teal.slice} classes. In other methods these are further arguments passed to or from other methods.}
 
-\item{x}{(\code{teal.slice}) object.}
+\item{x}{(\code{teal.slice})}
 
 \item{show_all}{(\code{logical(1)}) indicating whether to show all fields. If set to \code{FALSE},
 only non-NULL elements will be printed.}
@@ -92,7 +92,7 @@ modify, and delete a filter state. A \code{teal_slice} contains a number of comm
 \code{dataname} and  either \code{varname} or \code{expr} must be specified, while the others have default
 values.
 
-Setting any of the other values to NULL means that those properties will not be modified
+Setting any of the other values to \code{NULL} means that those properties will not be modified
 (when setting an existing state) or that they will be determined by data (when creating new a new one).
 Entire object is \code{FilterState} class member and can be accessed with \code{FilterState$get_state()}.
 
@@ -100,7 +100,8 @@ A \code{teal_slice} can come in two flavors:
 \enumerate{
 \item \code{teal_slice_var} -
 this describes a typical interactive filter that refers to a single variable, managed by the \code{FilterState} class.
-This class is created when \verb{varname is specified. The object retains all fields specified in the call. }id` can be created by default and need not be specified.
+This class is created when \code{varname} is specified.
+The object retains all fields specified in the call. \code{id} can be created by default and need not be specified.
 \item \code{teal_slice_expr} -
 this describes a filter state that refers to an expression, which can potentially include multiple variables,
 managed by the \code{FilterStateExpr} class.
@@ -133,7 +134,7 @@ or on their experiments, which are stored in the \code{experimentList} slot.
 For filters referring to \code{colData} no extra arguments are needed.
 If a filter state is created for an experiment, that experiment name must be specified in the \code{experiment} argument.
 Furthermore, to specify filter for an \code{SummarizedExperiment} one must also set \code{arg}
-(\code{"subset"}  or \verb{"select}, arguments in the \code{\link[=subset]{subset()}} function for \code{SummarizedExperiment})
+(\code{"subset"}  or \code{"select"}, arguments in the \code{\link[=subset]{subset()}} function for \code{SummarizedExperiment})
 in order to determine whether the filter refers to the \code{SE}'s \code{rowData} or \code{colData}.
 }
 

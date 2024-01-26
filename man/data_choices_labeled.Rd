@@ -12,17 +12,17 @@ data_choices_labeled(
 )
 }
 \arguments{
-\item{data}{(\code{data.frame}, \code{DFrame}, \code{list})\cr
+\item{data}{(\code{data.frame} or \code{DFrame} or \code{list})
 where labels can be taken from in case when \code{varlabels} is not specified.
 \code{data} must be specified if \code{varlabels} is not specified.}
 
-\item{choices}{(\code{character})\cr
+\item{choices}{(\code{character})
 the vector of chosen variables}
 
-\item{varlabels}{(\code{character})\cr
+\item{varlabels}{(\code{character})
 the labels of variables in data}
 
-\item{keys}{(\code{character})\cr
+\item{keys}{(\code{character})
 the names of the key columns in data}
 }
 \value{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/teal_slice.R
 \name{justify_json}
 \alias{justify_json}
-\title{Justify Colons in \code{JSON} String}
+\title{Justify colons in \code{JSON} string}
 \usage{
 justify_json(json)
 }

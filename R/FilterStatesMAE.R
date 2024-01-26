@@ -1,33 +1,34 @@
+# MAEFilterStates ------
+
+#' @name MAEFilterStates
+#' @docType class
 #' @title `FilterStates` subclass for `MultiAssayExperiments`
-#' @description Handles filter states in a `MultiAssayExperiment`
+#' @description Handles filter states in a `MultiAssayExperiment`.
 #' @keywords internal
-#'
 #'
 MAEFilterStates <- R6::R6Class( # nolint
   classname = "MAEFilterStates",
   inherit = FilterStates,
+  # public methods ----
   public = list(
-    # public methods ----
-
-    #' @description Initializes `MAEFilterStates` object
+    #' @description
+    #' Initialize `MAEFilterStates` object.
     #'
-    #' Initialize `MAEFilterStates` object
-    #'
-    #' @param data (`MultiAssayExperiment`)\cr
-    #'   the R object which `MultiAssayExperiment::subsetByColData` function is applied on.
-    #' @param data_reactive (`function(sid)`)\cr
+    #' @param data (`MultiAssayExperiment`)
+    #'   the `R` object which `MultiAssayExperiment::subsetByColData` function is applied on.
+    #' @param data_reactive (`function(sid)`)
     #'   should return a `MultiAssayExperiment` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
-    #' @param dataname (`character(1)`)\cr
+    #' @param dataname (`character(1)`)
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
-    #' @param datalabel (`NULL` or `character(1)`)\cr
+    #' @param datalabel (`NULL` or `character(1)`)
     #'   text label value
-    #' @param varlabels (`character`)\cr
+    #' @param varlabels (`character`)
     #'   labels of the variables used in this object
-    #' @param keys (`character`)\cr
+    #' @param keys (`character`)
     #'   key columns names
     #'
     initialize = function(data,

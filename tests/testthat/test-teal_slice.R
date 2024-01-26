@@ -223,6 +223,7 @@ testthat::test_that("teal_slice dataname has to be a string when expr is specifi
 testthat::test_that(
   "teal_slice converts factors to characters for 'selected' and 'choices' parameters",
   {
+    testthat::skip_if_not_installed("withr")
     slices_path <- withr::local_file("slices.json")
     tss <- teal_slices(
       teal_slice(

@@ -17,6 +17,7 @@ testthat::test_that("init_filter_states returns a MatrixFilterStates object if p
 })
 
 testthat::test_that("init_filter_states returns an MAEFilterStates object if passed an object of class MAE", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   mock_mae <- structure(list(), class = "MultiAssayExperiment")
   testthat::expect_no_error(
     filter_states <- init_filter_states(mock_mae, dataname = "test")
@@ -25,6 +26,7 @@ testthat::test_that("init_filter_states returns an MAEFilterStates object if pas
 })
 
 testthat::test_that("init_filter_states returns an SEFilterStates object if passed an object of class SE", {
+  testthat::skip_if_not_installed("SummarizedExperiment")
   mock_se <- structure(list(), class = "SummarizedExperiment")
   testthat::expect_no_error(
     filter_states <- init_filter_states(

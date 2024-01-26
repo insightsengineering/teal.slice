@@ -49,37 +49,45 @@ testthat::test_that("init_filter_state returns a DateFilterState object if passe
   )
 })
 
-testthat::test_that("init_filter_state returns a ChoicesFilterState object if passed
-  a POSIXct or POSIXlt of length 1", {
-  dates <- seq(as.Date("1990/01/01"), by = 1, length.out = 1)
-  testthat::expect_s3_class(
-    init_filter_state(as.POSIXct(dates), slice = teal_slice(dataname = "data", varname = "var")), "ChoicesFilterState"
-  )
-  testthat::expect_s3_class(
-    init_filter_state(as.POSIXlt(dates), slice = teal_slice(dataname = "data", varname = "var")), "ChoicesFilterState"
-  )
-})
+testthat::test_that(
+  "init_filter_state returns a ChoicesFilterState object if passed a POSIXct or POSIXlt of length 1",
+  {
+    dates <- seq(as.Date("1990/01/01"), by = 1, length.out = 1)
+    testthat::expect_s3_class(
+      init_filter_state(as.POSIXct(dates), slice = teal_slice(dataname = "data", varname = "var")), "ChoicesFilterState"
+    )
+    testthat::expect_s3_class(
+      init_filter_state(as.POSIXlt(dates), slice = teal_slice(dataname = "data", varname = "var")), "ChoicesFilterState"
+    )
+  }
+)
 
-testthat::test_that("init_filter_state returns a DatetimeFilterState object if passed
-  a longer POSIXct or POSIXlt", {
-  dates <- seq(as.Date("1990/01/01"), by = 1, length.out = getOption("teal.threshold_slider_vs_checkboxgroup") + 1)
-  testthat::expect_s3_class(
-    init_filter_state(as.POSIXct(dates), slice = teal_slice(dataname = "data", varname = "var")), "DatetimeFilterState"
-  )
-  testthat::expect_s3_class(
-    init_filter_state(as.POSIXlt(dates), slice = teal_slice(dataname = "data", varname = "var")), "DatetimeFilterState"
-  )
-})
+testthat::test_that(
+  "init_filter_state returns a DatetimeFilterState object if passed a longer POSIXct or POSIXlt",
+  {
+    dates <- seq(as.Date("1990/01/01"), by = 1, length.out = getOption("teal.threshold_slider_vs_checkboxgroup") + 1)
+    testthat::expect_s3_class(
+      init_filter_state(as.POSIXct(dates), slice = teal_slice(dataname = "data", varname = "var")),
+      "DatetimeFilterState"
+    )
+    testthat::expect_s3_class(
+      init_filter_state(as.POSIXlt(dates), slice = teal_slice(dataname = "data", varname = "var")),
+      "DatetimeFilterState"
+    )
+  }
+)
 
 testthat::test_that("init_filter_state returns a RangeFilterState if passed a numeric vector containing Inf", {
   testthat::expect_s3_class(
-    init_filter_state(c(1, 2, 3, 4, Inf), slice = teal_slice(dataname = "data", varname = "var")), "RangeFilterState"
+    init_filter_state(c(1, 2, 3, 4, Inf), slice = teal_slice(dataname = "data", varname = "var")),
+    "RangeFilterState"
   )
 })
 
 testthat::test_that("init_filter_state returns a ChoicesFilterState if passed fewer than five non-NA elements", {
   testthat::expect_s3_class(
-    init_filter_state(c(1, 2, 3, 4, NA), slice = teal_slice(dataname = "data", varname = "var")), "ChoicesFilterState"
+    init_filter_state(c(1, 2, 3, 4, NA), slice = teal_slice(dataname = "data", varname = "var")),
+    "ChoicesFilterState"
   )
 })
 
