@@ -156,7 +156,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' `shiny` module server.
     #'
     #' @param id (`character(1)`)
-    #'   `shiny` module instance id
+    #'   `shiny` module instance id.
     #'
     #' @return `moduleServer` function which returns reactive value
     #'   signaling that remove button has been clicked
@@ -182,8 +182,9 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' `shiny` module UI.
     #'  The UI for this class contains simple message stating that it is not supported.
     #' @param id (`character(1)`)
-    #'   `shiny` module instance id
-    #' @param parent_id (`character(1)`) id of the `FilterStates` card container
+    #'   `shiny` module instance id.
+    #' @param parent_id (`character(1)`)
+    #'   id of the `FilterStates` card container.
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)
       shiny::isolate({

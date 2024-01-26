@@ -266,7 +266,7 @@ Populated with elements created with \code{renderUI} in the module server.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
@@ -287,7 +287,7 @@ Populated with elements created with \code{renderUI} in the module server.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
@@ -308,7 +308,7 @@ Populated with elements created with \code{renderUI} in the module server.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
@@ -333,7 +333,7 @@ Removing a filter variable adds it back to available choices.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }

@@ -205,7 +205,7 @@ and must be executed in reactive or isolated context.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
@@ -226,7 +226,8 @@ The UI for this class contains simple message stating that it is not supported.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})}
+\item{\code{id}}{(\code{character(1)})
+\code{shiny} module instance id.}
 
 \item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}
 }

@@ -306,7 +306,7 @@ FilterStates <- R6::R6Class( # nolint
     #' Populated with elements created with `renderUI` in the module server.
     #'
     #' @param id (`character(1)`)
-    #'   `shiny` module instance id
+    #'   `shiny` module instance id.
     #'
     #' @return `shiny.tag`
     #'
@@ -327,7 +327,7 @@ FilterStates <- R6::R6Class( # nolint
     #' `shiny` server module.
     #'
     #' @param id (`character(1)`)
-    #'   `shiny` module instance id
+    #'   `shiny` module instance id.
     #'
     #' @return `NULL`
     #'
@@ -396,7 +396,7 @@ FilterStates <- R6::R6Class( # nolint
     #' `shiny` UI module to add filter variable.
     #'
     #' @param id (`character(1)`)
-    #'   `shiny` module instance id
+    #'   `shiny` module instance id.
     #'
     #' @return `shiny.tag`
     #'
@@ -423,7 +423,7 @@ FilterStates <- R6::R6Class( # nolint
     #' Removing a filter variable adds it back to available choices.
     #'
     #' @param id (`character(1)`)
-    #'   `shiny` module instance id
+    #'   `shiny` module instance id.
     #'
     #' @return `NULL`
     srv_add = function(id) {

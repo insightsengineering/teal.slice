@@ -105,7 +105,7 @@ Set filter state.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
@@ -133,7 +133,7 @@ sets of filter variables - one for \code{colData} and another for
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }

@@ -95,7 +95,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @description
     #' `shiny` UI module to add filter variable.
     #' @param id (`character(1)`)
-    #'   `shiny` module instance id
+    #'   `shiny` module instance id.
     #' @return `shiny.tag`
     ui_add = function(id) {
       data <- private$data
@@ -148,7 +148,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #' `rowData`.
     #'
     #' @param id (`character(1)`)
-    #'   `shiny` module instance id
+    #'   `shiny` module instance id.
     #' @return `NULL`
     srv_add = function(id) {
       data <- private$data
