@@ -26,7 +26,7 @@ see \code{\link{FilteredData}} for details}
 specify filters in place on app start-up}
 
 \item{force}{(\code{logical(1)})
-flag specifying whether to include locked filter states}
+flag specifying whether to include anchored filter states}
 }
 \value{
 \itemize{

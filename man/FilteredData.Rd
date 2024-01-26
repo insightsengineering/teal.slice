@@ -510,7 +510,7 @@ names of datasets for which to remove all filter states.
 Defaults to all datasets in this \code{FilteredData} object.}
 
 \item{\code{force}}{(\code{logical(1)})
-flag specifying whether to include locked filter states.}
+flag specifying whether to include anchored filter states.}
 }
 \if{html}{\out{</div>}}
 }

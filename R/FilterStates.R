@@ -627,7 +627,7 @@ FilterStates <- R6::R6Class( # nolint
     # @param state_id (`character`)
     #   names of element in a filter state (which is a `reactiveVal` containing a list)
     # @param force (`logical(1)`)
-    #   flag specifying whether to include locked filter states
+    #   flag specifying whether to include anchored filter states
     #
     # @return `NULL`, invisibly
     #
@@ -666,7 +666,7 @@ FilterStates <- R6::R6Class( # nolint
     # @description
     # Remove all `FilterState` objects from this `FilterStates` object.
     # @param force (`logical(1)`)
-    #   flag specifying whether to include locked filter states
+    #   flag specifying whether to include anchored filter states
     # @return `NULL`, invisibly
     #
     state_list_empty = function(force = FALSE) {

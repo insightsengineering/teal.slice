@@ -461,7 +461,7 @@ FilteredData <- R6::R6Class( # nolint
     #'   names of datasets for which to remove all filter states.
     #'   Defaults to all datasets in this `FilteredData` object.
     #' @param force (`logical(1)`)
-    #'   flag specifying whether to include locked filter states.
+    #'   flag specifying whether to include anchored filter states.
     #'
     #' @return `NULL`, invisibly
     #'
