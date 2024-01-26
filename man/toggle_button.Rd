@@ -20,7 +20,7 @@ if TRUE, the target will be changed
 from the first element of \code{icons}/\code{titles} to the second}
 }
 \value{
-\code{NULL} invisibly
+\code{NULL}, invisibly.
 }
 \description{
 Switch between different icons or titles on a button.
@@ -84,5 +84,6 @@ server <- function(input, output, session) {
 if (interactive()) {
   shinyApp(ui, server)
 }
+
 }
 \keyword{internal}
