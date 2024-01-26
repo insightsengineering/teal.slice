@@ -36,7 +36,7 @@ Modifying a \code{FilterState} object is possible in three scenarios:
 \item In an interactive session, by passing an appropriate \code{teal_slice} to the \code{set_state} method.
 \item In a running application, by changing appropriate inputs.
 \item In a running application, by using \link{filter_state_api} which directly uses
-\code{set_state} method of the \code{InteractiveFilterState} object.
+\code{set_state} method of the \code{FilterState} object.
 }
 }
 

@@ -32,7 +32,7 @@
 #' - In an interactive session, by passing an appropriate `teal_slice` to the `set_state` method.
 #' - In a running application, by changing appropriate inputs.
 #' - In a running application, by using [filter_state_api] which directly uses
-#' `set_state` method of the `InteractiveFilterState` object.
+#' `set_state` method of the `FilterState` object.
 #'
 #' @keywords internal
 #'
