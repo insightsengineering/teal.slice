@@ -273,7 +273,7 @@ FilterStates <- R6::R6Class( # nolint
         excluded_varnames <- setdiff(varnames, private$get_filterable_varnames())
         if (length(excluded_varnames)) {
           state <- Filter(function(x) !isTRUE(x$varname %in% excluded_varnames), state)
-          logger::log_warn("filters for columns: { toString(excluded_varnames) } excluded from { private$dataname }")
+          warning(sprintf("filters for columns: %s excluded from %s", toString(excluded_varnames), private$dataname))
         }
 
         if (length(state) > 0) {

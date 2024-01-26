@@ -43,10 +43,10 @@ testthat::test_that("set_filter_state sets count_type", {
 
 testthat::test_that("set_filter_state ignores teal_slice for inexisting variables with log warning", {
   filter_states <- FilterStates$new(data = data.frame(a = 1), dataname = "test")
-  res <- utils::capture.output(
-    filter_states$set_filter_state(teal_slices(teal_slice(dataname = "test", varname = "inexisting")))
+  testthat::expect_warning(
+    filter_states$set_filter_state(teal_slices(teal_slice(dataname = "test", varname = "inexisting"))),
+    "inexisting excluded from test"
   )
-  testthat::expect_true(grepl("\\[WARN\\].+inexisting excluded from test", res))
 })
 
 testthat::test_that("set_filter_state and get_filter_state, sets and returns the same fully specified teal_slices", {
@@ -123,7 +123,10 @@ testthat::test_that("set_filter_state doesn't set slices listed in exclude_varna
     teal_slice(dataname = "mtcars", expr = "disp < 120", id = "low displacememt", title = "LD"),
     exclude_varnames = list("mtcars" = c("cyl", "disp"))
   )
-  filter_states$set_filter_state(tss)
+  expect_warning(
+    filter_states$set_filter_state(tss),
+    "filters for columns.*excluded from.*"
+  )
 
   expected <- tss[-1]
   attributes(expected) <- attributes(shiny::isolate(filter_states$get_filter_state()))
@@ -139,7 +142,10 @@ testthat::test_that("set_filter_state set only slices listed in include_varnames
     teal_slice(dataname = "mtcars", expr = "disp < 120", id = "low displacememt", title = "LD"),
     include_varnames = list("mtcars" = c("cyl", "disp"))
   )
-  filter_states$set_filter_state(tss)
+  expect_warning(
+    filter_states$set_filter_state(tss),
+    "filters for columns.*excluded from.*"
+  )
 
   expected <- tss[-2]
   attributes(expected) <- attributes(shiny::isolate(filter_states$get_filter_state()))
