@@ -198,7 +198,7 @@ FilterStates <- R6::R6Class( # nolint
     #'   specifying `FilterState` objects to remove;
     #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL`, invisibly
+    #' @return `NULL`, invisibly.
     #'
     remove_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
@@ -292,7 +292,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @param force (`logical(1)`)
     #'   flag specifying whether to include anchored filter states
     #'
-    #' @return `NULL`, invisibly
+    #' @return `NULL`, invisibly.
     #'
     clear_filter_states = function(force = FALSE) {
       private$state_list_empty(force)
@@ -629,7 +629,7 @@ FilterStates <- R6::R6Class( # nolint
     # @param force (`logical(1)`)
     #   flag specifying whether to include anchored filter states
     #
-    # @return `NULL`, invisibly
+    # @return `NULL`, invisibly.
     #
     state_list_remove = function(state_id, force = FALSE) {
       checkmate::assert_character(state_id)
@@ -667,7 +667,7 @@ FilterStates <- R6::R6Class( # nolint
     # Remove all `FilterState` objects from this `FilterStates` object.
     # @param force (`logical(1)`)
     #   flag specifying whether to include anchored filter states
-    # @return `NULL`, invisibly
+    # @return `NULL`, invisibly.
     #
     state_list_empty = function(force = FALSE) {
       shiny::isolate({
@@ -695,7 +695,7 @@ FilterStates <- R6::R6Class( # nolint
     # @param data_reactive (`function`)
     #  function having `sid` as argument
     #
-    # @return `NULL`, invisibly
+    # @return `NULL`, invisibly.
     #
     set_filter_state_impl = function(state,
                                      data,

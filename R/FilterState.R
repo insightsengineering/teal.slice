@@ -64,7 +64,7 @@ FilterState <- R6::R6Class( # nolint
     #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
     #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
     #'
-    #' @return Object of class `RangeFilterState`, invisibly.
+    #' @return Object of class `FilterState`, invisibly.
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
@@ -198,8 +198,7 @@ FilterState <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
     #'
-    #' @return
-    #' Reactive value signaling that remove button has been clicked.
+    #' @return Reactive expression signaling that remove button has been clicked.
     #'
     server = function(id) {
       moduleServer(
@@ -375,7 +374,7 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Destroy observers stored in `private$observers`.
     #'
-    #' @return `NULL`, invisibly
+    #' @return `NULL`, invisibly.
     #'
     destroy_observers = function() {
       if (!is.null(private$destroy_shiny)) {
@@ -525,6 +524,7 @@ FilterState <- R6::R6Class( # nolint
 
     # @description
     # Get selected values from `FilterState`.
+    # @return
     # Vector describing the current selection. Return type depends on the `FilterState` subclass.
     get_selected = function() {
       private$teal_slice$selected
@@ -667,6 +667,7 @@ FilterState <- R6::R6Class( # nolint
     # @description
     # UI module to display filter summary
     # @param id (`character(1)`) `shiny` module instance id
+    # @return Nothing. Renders the UI.
     server_summary = function(id) {
       moduleServer(
         id = id,
@@ -741,6 +742,7 @@ FilterState <- R6::R6Class( # nolint
     # Sets `private$slice$keep_na` according to the selection
     # and updates the relevant UI element if `private$slice$keep_na` has been changed by the api.
     # @param id (`character(1)`) `shiny` module instance id
+    # @return `NULL`, invisibly.
     keep_na_srv = function(id) {
       moduleServer(id, function(input, output, session) {
         # 1. renderUI is used here as an observer which triggers only if output is visible

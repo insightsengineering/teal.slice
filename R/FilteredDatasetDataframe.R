@@ -184,7 +184,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #' Set filter state.
     #'
     #' @param state (`teal_slices`)
-    #' @return `NULL`, invisibly
+    #' @return `NULL`, invisibly.
     #'
     set_filter_state = function(state) {
       shiny::isolate({
@@ -205,7 +205,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #'   specifying `FilterState` objects to remove;
     #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL`, invisibly
+    #' @return `NULL`, invisibly.
     #'
     remove_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")

@@ -125,7 +125,7 @@ The formatted string.
 }
 
 \subsection{Returns}{
-\code{NULL}, invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

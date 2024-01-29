@@ -335,7 +335,7 @@ UI module to add filter variable for this dataset.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{shiny.tag}
+Virtual method, returns nothing and raises error.
 }
 }
 \if{html}{\out{<hr>}}

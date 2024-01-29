@@ -135,6 +135,9 @@ Prints this \code{FilterStateExpr} object.
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+\code{NULL}, invisibly.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStateExpr-get_state"></a>}}
@@ -166,7 +169,7 @@ Does nothing. Exists for compatibility.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Returns \code{self}, invisibly.
+\code{self}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -204,7 +207,7 @@ Destroy observers stored in \code{private$observers}.
 }
 
 \subsection{Returns}{
-\code{NULL}, invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -225,8 +228,7 @@ Destroy observers stored in \code{private$observers}.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{moduleServer} function which returns reactive value
-signaling that remove button has been clicked
+Reactive expression signaling that the remove button has been clicked.
 }
 }
 \if{html}{\out{<hr>}}

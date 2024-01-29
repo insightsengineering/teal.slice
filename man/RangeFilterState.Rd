@@ -187,7 +187,7 @@ changes made to an object are automatically reflected in all places that refer t
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Returns \code{self}, invisibly.
+Object of class \code{RangeFilterState}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

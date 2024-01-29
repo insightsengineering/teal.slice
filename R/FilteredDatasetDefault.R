@@ -62,7 +62,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     get_call = function(sid) {
       invisible(NULL)
     },
-    #' @return `NULL`, invisibly
+    #' @return `NULL`, invisibly.
     get_filter_state = function() {
       invisible(NULL)
     },

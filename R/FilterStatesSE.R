@@ -49,7 +49,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @param state (`teal_slices`)
     #'    `teal_slice` objects should contain the field `arg %in% c("subset", "select")`
     #'
-    #' @return `NULL`, invisibly
+    #' @return `NULL`, invisibly.
     #'
     set_filter_state = function(state) {
       shiny::isolate({

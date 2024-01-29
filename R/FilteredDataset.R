@@ -342,7 +342,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
     #'
-    #' @return `shiny.tag`
+    #' @return Virtual method, returns nothing and raises error.
     ui_add = function(id) {
       stop("Pure virtual method")
     },

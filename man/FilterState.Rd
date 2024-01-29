@@ -100,7 +100,7 @@ specifying whether condition calls should be prefixed by \code{dataname}. Possib
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Object of class \code{RangeFilterState}, invisibly.
+Object of class \code{FilterState}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -210,7 +210,7 @@ and must be executed in reactive or isolated context.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Reactive value signaling that remove button has been clicked.
+Reactive expression signaling that remove button has been clicked.
 }
 }
 \if{html}{\out{<hr>}}
@@ -244,7 +244,7 @@ Destroy observers stored in \code{private$observers}.
 }
 
 \subsection{Returns}{
-\code{NULL}, invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

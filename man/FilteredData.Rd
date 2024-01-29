@@ -376,7 +376,7 @@ then created \code{FilteredDataset} (child) gets linked with other \code{Filtere
 }
 
 \subsection{Returns}{
-\code{self}, invisibly
+\code{self}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -396,7 +396,7 @@ Set the \code{join_keys}.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{self}, invisibly
+\code{self}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -468,7 +468,7 @@ Sets active filter states.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}, invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -490,7 +490,7 @@ specifying \code{FilterState} objects to remove;
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}, invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -515,7 +515,7 @@ flag specifying whether to include anchored filter states.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}, invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

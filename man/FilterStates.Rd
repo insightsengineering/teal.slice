@@ -192,7 +192,7 @@ specifying \code{FilterState} objects to remove;
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}, invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -249,7 +249,7 @@ flag specifying whether to include anchored filter states}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}, invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

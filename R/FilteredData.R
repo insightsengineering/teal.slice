@@ -300,7 +300,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @param dataname (`character(1)`)
     #'   the name of the `dataset` to be added to this object.
     #'
-    #' @return `self`, invisibly
+    #' @return `self`, invisibly.
     #'
     set_dataset = function(data, dataname) {
       checkmate::assert_string(dataname)
@@ -340,7 +340,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @param join_keys (`join_keys`), see [`teal.data::join_keys()`].
     #'
-    #' @return `self`, invisibly
+    #' @return `self`, invisibly.
     #'
     set_join_keys = function(join_keys) {
       checkmate::assert_class(join_keys, "join_keys")
@@ -401,7 +401,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @param state (`teal_slices`)
     #'
-    #' @return `NULL`, invisibly
+    #' @return `NULL`, invisibly.
     set_filter_state = function(state) {
       shiny::isolate({
         logger::log_trace("{ class(self)[1] }$set_filter_state initializing")
@@ -429,7 +429,7 @@ FilteredData <- R6::R6Class( # nolint
     #'   specifying `FilterState` objects to remove;
     #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored.
     #'
-    #' @return `NULL`, invisibly
+    #' @return `NULL`, invisibly.
     #'
     remove_filter_state = function(state) {
       shiny::isolate({
@@ -463,7 +463,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @param force (`logical(1)`)
     #'   flag specifying whether to include anchored filter states.
     #'
-    #' @return `NULL`, invisibly
+    #' @return `NULL`, invisibly.
     #'
     clear_filter_states = function(datanames = self$datanames(), force = FALSE) {
       logger::log_trace(

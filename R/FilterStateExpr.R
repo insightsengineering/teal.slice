@@ -95,8 +95,9 @@ FilterStateExpr <- R6::R6Class( # nolint
 
     #' @description
     #' Prints this `FilterStateExpr` object.
-    #'
     #' @param ... arguments passed to the `format` method
+    #' @return `NULL`, invisibly.
+    #'
     print = function(...) {
       cat(shiny::isolate(self$format(...)))
     },
@@ -115,7 +116,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'
     #' @param state (`teal_slice`)
     #'
-    #' @return Returns `self`, invisibly.
+    #' @return `self`, invisibly.
     #'
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice_expr")
@@ -131,7 +132,9 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' for selected variable type.
     #' Method is using internal reactive values which makes it reactive
     #' and must be executed in reactive or isolated context.
+    #'
     #' @return `call` or `NULL`
+    #'
     get_call = function(dataname) {
       shiny::isolate(str2lang(private$teal_slice$expr))
     },
@@ -139,7 +142,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @description
     #' Destroy observers stored in `private$observers`.
     #'
-    #' @return `NULL`, invisibly
+    #' @return `NULL`, invisibly.
     #'
     destroy_observers = function() {
       lapply(private$observers, function(x) x$destroy())
@@ -158,8 +161,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
     #'
-    #' @return `moduleServer` function which returns reactive value
-    #'   signaling that remove button has been clicked
+    #' @return Reactive expression signaling that the remove button has been clicked.
     #'
     server = function(id) {
       moduleServer(
