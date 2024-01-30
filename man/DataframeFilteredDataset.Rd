@@ -212,8 +212,8 @@ UI module to add filter variable for this dataset.
 \if{html}{\out{<a id="method-DataframeFilteredDataset-get_filter_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-DataframeFilteredDataset-get_filter_overview}{}}}
 \subsection{Method \code{get_filter_overview()}}{
-Get filter overview of a dataset.
-Displays numbers of total and remaining observations.
+Creates row for filter overview in the form of \cr
+\code{dataname -- observations (remaining/total)} - data.frame
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataframeFilteredDataset$get_filter_overview()}\if{html}{\out{</div>}}
 }

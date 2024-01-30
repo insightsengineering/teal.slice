@@ -187,16 +187,9 @@ FilteredDataset <- R6::R6Class( # nolint
 
     #' @description
     #' Get filter overview of a dataset.
-    #' Displays numbers of total and remaining observations.
-    #' @return A `data.frame`.
+    #' @return Virtual method, returns nothing and raises an error.
     get_filter_overview = function() {
-      dataset <- self$get_dataset()
-      data_filtered <- self$get_dataset(TRUE)
-      data.frame(
-        dataname = private$dataname,
-        obs = nrow(dataset),
-        obs_filtered = nrow(data_filtered)
-      )
+      stop("get_filter_overview is an abstract class method")
     },
 
     #' @description

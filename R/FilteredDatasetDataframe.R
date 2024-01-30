@@ -237,8 +237,8 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Get filter overview of a dataset.
-    #' Displays numbers of total and remaining observations.
+    #' Creates row for filter overview in the form of \cr
+    #' `dataname -- observations (remaining/total)` - data.frame
     #' @return A `data.frame`.
     get_filter_overview = function() {
       logger::log_trace("FilteredDataset$srv_filter_overview initialized")

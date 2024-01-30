@@ -81,8 +81,8 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Get `data.frame` to use in the filter-panel overview.
-    #' Output of this function indicates unsupported dataset class.
+    #' Creates row for filter overview in the form of \cr
+    #' `dataname` - unsupported data class
     #' @return A `data.frame`.
     get_filter_overview = function() {
       data.frame(dataname = private$dataname, obs = NA, obs_filtered = NA)

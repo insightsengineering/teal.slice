@@ -308,10 +308,9 @@ Get join keys between two datasets.
 \if{html}{\out{<a id="method-FilteredData-get_filter_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_filter_overview}{}}}
 \subsection{Method \code{get_filter_overview()}}{
-Get filter overview table in form of \code{X (filtered) / Y (non-filtered)}.
-
-This is intended to be presented in the application.
-The content for each of the data names is defined in \code{get_filter_overview_info} method.
+Creates filter overview table to be displayed in the application.
+One row is created per dataset, according to the \code{get_filter_overview} methods
+of the contained \code{FilteredDataset} objects.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_overview(datanames)}\if{html}{\out{</div>}}
 }
@@ -324,7 +323,7 @@ The content for each of the data names is defined in \code{get_filter_overview_i
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{matrix} of observations and subjects of all datasets.
+A \code{data.frame} listing the numbers of observations in all datasets.
 }
 }
 \if{html}{\out{<hr>}}

@@ -253,14 +253,13 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Get filter overview table in form of `X (filtered) / Y (non-filtered)`.
-    #'
-    #' This is intended to be presented in the application.
-    #' The content for each of the data names is defined in `get_filter_overview_info` method.
+    #' Creates filter overview table to be displayed in the application.
+    #' One row is created per dataset, according to the `get_filter_overview` methods
+    #' of the contained `FilteredDataset` objects.
     #'
     #' @param datanames (`character`) vector of dataset names.
     #'
-    #' @return `matrix` of observations and subjects of all datasets.
+    #' @return A `data.frame` listing the numbers of observations in all datasets.
     #'
     get_filter_overview = function(datanames) {
       rows <- lapply(

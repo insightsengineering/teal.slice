@@ -170,8 +170,8 @@ The formatted string.
 \if{html}{\out{<a id="method-DefaultFilteredDataset-get_filter_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-get_filter_overview}{}}}
 \subsection{Method \code{get_filter_overview()}}{
-Get \code{data.frame} to use in the filter-panel overview.
-Output of this function indicates unsupported dataset class.
+Creates row for filter overview in the form of \cr
+\code{dataname} - unsupported data class
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_filter_overview()}\if{html}{\out{</div>}}
 }

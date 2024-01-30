@@ -240,13 +240,12 @@ either raw or as a reactive with current filters applied (depending on \code{fil
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_overview}{}}}
 \subsection{Method \code{get_filter_overview()}}{
 Get filter overview of a dataset.
-Displays numbers of total and remaining observations.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_overview()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-A \code{data.frame}.
+Virtual method, returns nothing and raises an error.
 }
 }
 \if{html}{\out{<hr>}}
