@@ -44,10 +44,13 @@ Object of class \code{FilteredDataset}.
 \description{
 Initializes a \code{FilteredDataset} object corresponding to the class of the filtered dataset.
 }
-\note{
-Although this function is exported for use in other packages, it may be changed or removed in a future release,
-at which point any code which relies on this exported function will need to be changed.
+\section{Warning}{
+
+This function is exported to allow other packages to extend \code{teal.slice} but it is treated as internal.
+Breaking changes may occur without warning.
+We recommend consulting the package maintainer before using it.
 }
+
 \examples{
 # DataframeFilteredDataset example
 iris_fd <- init_filtered_dataset(iris, dataname = "iris")

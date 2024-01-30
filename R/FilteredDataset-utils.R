@@ -21,9 +21,10 @@
 #'
 #' @return Object of class `FilteredDataset`.
 #'
-#' @note
-#' Although this function is exported for use in other packages, it may be changed or removed in a future release,
-#' at which point any code which relies on this exported function will need to be changed.
+#' @section Warning:
+#' This function is exported to allow other packages to extend `teal.slice` but it is treated as internal.
+#' Breaking changes may occur without warning.
+#' We recommend consulting the package maintainer before using it.
 #'
 #' @examples
 #' # DataframeFilteredDataset example
