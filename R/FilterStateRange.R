@@ -656,7 +656,7 @@ RangeFilterState <- R6::R6Class( # nolint
     # @description
     # Module displaying input to keep or remove NA in the `FilterState` call.
     # Renders a checkbox input only when variable with which the `FilterState` has been created contains Infs.
-    # @param id (`character(1)`) `shiny` module instance id
+    # @param id (`character(1)`) `shiny` module instance id.
     keep_inf_ui = function(id) {
       ns <- NS(id)
 
