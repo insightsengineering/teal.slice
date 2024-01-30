@@ -145,7 +145,7 @@ omit to remove all \code{FilterStates} in the \code{FilteredData} object}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}< invisibly.
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
