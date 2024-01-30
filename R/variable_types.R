@@ -1,10 +1,11 @@
 #' Get classes of selected columns from dataset
 #'
-#' @param data (`matrix` or `data.frame`-like) to determine variable types from.
-#' @param columns (`character`) vector of columns in `data` to get classes from.
-#'   Set to `NULL` to get classes of all columns.
+#' @param data (`data.frame` or `DataFrame` or `matrix`) Object in which to determine variable types.
+#' @param columns (`character`) Vector of columns in `data` for which to get types.
+#'   Set to `NULL` to get types of all columns.
 #'
 #' @return Character vector of classes of `columns` from provided `data`.
+#'
 #' @examples
 #' # use non-exported function from teal.slice
 #' variable_types <- getFromNamespace("variable_types", "teal.slice")
@@ -31,6 +32,7 @@
 #'     stringsAsFactors = FALSE
 #'   )
 #' )
+#'
 #' @keywords internal
 #'
 variable_types <- function(data, columns = NULL) {
