@@ -187,7 +187,7 @@ Object of class \code{ChoicesFilterState}, invisibly.
 \subsection{Method \code{get_call()}}{
 Returns reproducible condition call for current selection.
 For this class returned call looks like
-\verb{<varname> \%in\%  c(<values selected>)} with optional \verb{is.na(<varname>)}.
+\verb{<varname> \%in\% c(<values selected>)} with optional \verb{is.na(<varname>)}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$get_call(dataname)}\if{html}{\out{</div>}}
 }
