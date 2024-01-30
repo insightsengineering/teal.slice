@@ -17,15 +17,16 @@ remove_filter_state(datasets, filter)
 clear_filter_states(datasets, force = FALSE)
 }
 \arguments{
-\item{datasets}{(\code{FilteredData})\cr
-object to store filter state and filtered datasets, shared across modules\cr
+\item{datasets}{(\code{FilteredData})
+object to store filter state and filtered datasets, shared across modules
+
 see \code{\link{FilteredData}} for details}
 
-\item{filter}{(\code{teal_slices})\cr
+\item{filter}{(\code{teal_slices})
 specify filters in place on app start-up}
 
-\item{force}{(\code{logical(1)})\cr
-include locked filter states}
+\item{force}{(\code{logical(1)})
+flag specifying whether to include anchored filter states.}
 }
 \value{
 \itemize{
@@ -36,20 +37,53 @@ containing a \code{teal_slice} for every existing \code{FilterState}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-Set, get and remove filter states of \code{FilteredData} object
+
+Set, get and remove filter states of \code{FilteredData} object.
 }
 \examples{
-utils::data(miniACC, package = "MultiAssayExperiment")
-
-datasets <- init_filtered_data(
-  x = list(
-    iris = list(dataset = iris),
-    mae = list(dataset = miniACC)
-  )
-)
+datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
 fs <- teal_slices(
   teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
   teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+  teal_slice(dataname = "mtcars", varname = "gear", selected = c(4, 5)),
+  teal_slice(dataname = "mtcars", varname = "carb", selected = c(4, 10))
+)
+
+# set initial filter state
+set_filter_state(datasets, filter = fs)
+
+# get filter state
+get_filter_state(datasets)
+
+# modify filter state
+set_filter_state(
+  datasets,
+  teal_slices(
+    teal_slice(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
+  )
+)
+
+# remove specific filters
+remove_filter_state(
+  datasets,
+  teal_slices(
+    teal_slice(dataname = "iris", varname = "Species"),
+    teal_slice(dataname = "mtcars", varname = "gear"),
+    teal_slice(dataname = "mtcars", varname = "carb")
+  )
+)
+
+# remove all states
+clear_filter_states(datasets)
+
+\dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+
+# Requires MultiAssayExperiment from Bioconductor
+library(MultiAssayExperiment)
+data(miniACC)
+
+datasets <- init_filtered_data(list(mae = miniACC))
+fs <- teal_slices(
   teal_slice(
     dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
     keep_na = TRUE, keep_inf = FALSE
@@ -78,7 +112,7 @@ get_filter_state(datasets)
 set_filter_state(
   datasets,
   teal_slices(
-    teal_slice(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
+    teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(40, 60))
   )
 )
 
@@ -86,7 +120,6 @@ set_filter_state(
 remove_filter_state(
   datasets,
   teal_slices(
-    teal_slice(dataname = "iris", varname = "Species"),
     teal_slice(dataname = "mae", varname = "years_to_birth"),
     teal_slice(dataname = "mae", varname = "vital_status")
   )
@@ -94,6 +127,7 @@ remove_filter_state(
 
 # remove all states
 clear_filter_states(datasets)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link{teal_slice}}

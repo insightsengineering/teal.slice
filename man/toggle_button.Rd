@@ -11,16 +11,16 @@ toggle_icon(input_id, icons, one_way = FALSE)
 toggle_title(input_id, titles, one_way = FALSE)
 }
 \arguments{
-\item{input_id}{\code{character(1)} (name-spaced) id of the button}
+\item{input_id}{(\code{character(1)}) (name-spaced) id of the button}
 
-\item{icons, titles}{\code{character(2)} vector specifying values between which to toggle}
+\item{icons, titles}{(\code{character(2)}) vector specifying values between which to toggle}
 
-\item{one_way}{\code{logical(1)} flag specifying whether to keep toggling;
+\item{one_way}{(\code{logical(1)}) flag specifying whether to keep toggling;
 if TRUE, the target will be changed
 from the first element of \code{icons}/\code{titles} to the second}
 }
 \value{
-Invisible NULL.
+\code{NULL}, invisibly.
 }
 \description{
 Switch between different icons or titles on a button.
@@ -35,10 +35,13 @@ which may contain a child \verb{<i>} tag that specifies an icon to be displayed.
 \code{toggle_title} calls the \code{attr} method to modify the \code{Title} attribute of the button.
 }
 \examples{
-library(shiny)
+# use non-exported function from teal.slice
+toggle_icon <- getFromNamespace("toggle_icon", "teal.slice")
+
+library(shinyjs)
 
 ui <- fluidPage(
-  shinyjs::useShinyjs(),
+  useShinyjs(),
   actionButton("hide_content", label = "hide", icon = icon("xmark")),
   actionButton("show_content", label = "show", icon = icon("check")),
   actionButton("toggle_content", label = "toggle", icon = icon("angle-down")),
@@ -52,7 +55,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   observeEvent(input$hide_content,
     {
-      shinyjs::hide("content")
+      hide("content")
       toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
     },
     ignoreInit = TRUE
@@ -60,7 +63,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$show_content,
     {
-      shinyjs::show("content")
+      show("content")
       toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
     },
     ignoreInit = TRUE
@@ -68,7 +71,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$toggle_content,
     {
-      shinyjs::toggle("content")
+      toggle("content")
       toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
     },
     ignoreInit = TRUE

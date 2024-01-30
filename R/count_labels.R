@@ -1,60 +1,75 @@
 #' Progress bars with labels
 #'
-#' `shiny` element showing progress bar counts. Each element can have an
-#' unique `id` attribute so each can be used independently.
-#' Progress bar size is dependent on the ratio `choicesnow[i] / countsmax[i]`.
-#' Label is `choices[i] (countsnow[i]/countsmax)`
-#' @param session (`session`) object passed to function given to `shinyServer`.
-#' @param inputId (`character(1)`) `shiny` id
-#' @param choices (`vector`) determines label text.
-#' @param countsmax (`numeric`) determining maximal count of each element.
-#'  Length should be the same as `choices`.
-#' @param countsnow (`numeric`) actual counts of each element.
-#'  Length should be the same as `choices`.
-#' @return list of `shiny.tag`
+#' `shiny` element displaying a series of progress bars and observation counts.
+#'
+#' @param inputId (`character(1)`) `shiny` id of the parent element (e.g. a check-box group input).
+#' @param choices (`vector`) Available values. Used to determine label text.
+#' @param countsmax (`numeric`) Maximum counts of each element. Must be the same length `choices`.
+#' @param countsnow (`numeric`) Current counts of each element. Must be the same length `choices`.
+#' @param session (`session`) `shiny` `session` object passed to function given to `shinyServer`.
+#'
+#' @return List of `shiny.tag`s.
+#'
+#' Creates a number of progress bar elements, one for each value of `choices`.
+#' The widths of all progress bars add up to the full width of the container.
+#' Each progress bar has a text label that contains the name of the value and the number of counts.
+#'
+#' If the filter panel is used with `count_type = "all"`, the progress bars will be filled
+#' according to the number of counts remaining in the current selection and the label will show
+#' both the current and the total number of counts.
+#'
+#' Each child element can have a unique `id` attribute to be used independently.
+#'
 #' @examples
+#' # use non-exported function from teal.slice
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+#' countBars <- getFromNamespace("countBars", "teal.slice")
+#' updateCountBars <- getFromNamespace("updateCountBars", "teal.slice")
 #'
 #' choices <- sample(as.factor(c("a", "b", "c")), size = 20, replace = TRUE)
 #' counts <- table(choices)
-#' labels <- teal.slice:::countBars(
+#' labels <- countBars(
 #'   inputId = "counts",
 #'   choices = c("a", "b", "c"),
 #'   countsmax = counts,
 #'   countsnow = unname(counts)
 #' )
 #'
-#' app <- shinyApp(
-#'   ui = fluidPage(
-#'     div(
-#'       class = "choices_state",
-#'       teal.slice:::include_js_files("count-bar-labels.js"),
-#'       teal.slice:::include_css_files(pattern = "filter-panel"),
-#'       checkboxGroupInput(
-#'         inputId = "choices",
-#'         selected = levels(choices),
-#'         choiceNames = labels,
-#'         choiceValues = levels(choices),
-#'         label = NULL
-#'       )
+#'
+#' ui <- fluidPage(
+#'   div(
+#'     class = "choices_state",
+#'     include_js_files("count-bar-labels.js"),
+#'     include_css_files(pattern = "filter-panel"),
+#'     checkboxGroupInput(
+#'       inputId = "choices",
+#'       selected = levels(choices),
+#'       choiceNames = labels,
+#'       choiceValues = levels(choices),
+#'       label = NULL
 #'     )
-#'   ),
-#'   server = function(input, output, session) {
-#'     observeEvent(input$choices, {
-#'       new_counts <- counts
-#'       new_counts[!names(new_counts) %in% input$choices] <- 0
-#'       teal.slice:::updateCountBars(
-#'         inputId = "counts",
-#'         choices = levels(choices),
-#'         countsmax = counts,
-#'         countsnow = unname(new_counts)
-#'       )
-#'     })
-#'   }
+#'   )
 #' )
-#' if (interactive()) {
-#'   shinyApp(app$ui, app$server)
+#' server <- function(input, output, session) {
+#'   observeEvent(input$choices, {
+#'     new_counts <- counts
+#'     new_counts[!names(new_counts) %in% input$choices] <- 0
+#'     updateCountBars(
+#'       inputId = "counts",
+#'       choices = levels(choices),
+#'       countsmax = counts,
+#'       countsnow = unname(new_counts)
+#'     )
+#'   })
 #' }
+#'
+#' if (interactive()) {
+#'   shinyApp(ui, server)
+#' }
+#'
 #' @keywords internal
+#'
 countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
   checkmate::assert_string(inputId)
   checkmate::assert_vector(choices)
@@ -65,7 +80,6 @@ countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
   }
 
   ns <- NS(inputId)
-  counttotal <- sum(countsmax)
 
   mapply(
     countBar,
@@ -82,17 +96,24 @@ countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
 
 #' Progress bar with label
 #'
-#' Progress bar with label
-#' @param session (`session`) object passed to function given to `shinyServer`.
-#' @param inputId (`character(1)`) `shiny` id
-#' @param label (`character(1)`) Text to display followed by counts
-#' @param countmax (`numeric(1)`) maximal possible count for a single item.
-#' @param countnow (`numeric(1)`) current count of a single item.
-#' @param counttotal (`numeric(1)`) total count to make whole progress bar
-#'  taking part of the container. Ratio between `countmax / counttotal`
-#'  determines `<style="width: <countmax / counttotal>%""`.
+#' `shiny` element displaying a progress bar and observation count.
+#'
+#' A progress bar is created to visualize the number of counts in a variable, with filling and a text label.
+#' - progress bar width is derived as a fraction of the container width: `style = "width: <countmax> / <counttotal>%"`,
+#' - progress bar is filled up to the fraction `<countnow> / <countmax>`,
+#' - text label is obtained by `<label> (<countnow> / <countmax>)`.
+#'
+#' @param inputId (`character(1)`) `shiny` id of the parent element (e.g. a check-box group input).
+#' @param label (`character(1)`) Text to display followed by counts.
+#' @param countmax (`numeric(1)`) Maximum count for a single element.
+#' @param countnow (`numeric(1)`) Current count for a single element.
+#' @param counttotal (`numeric(1)`) Sum total of maximum counts of all elements, see `Details`.
+#' @param session (`session`) `shiny` `session` object passed to function given to `shinyServer`.
+#'
 #' @return `shiny.tag` object with a progress bar and a label.
+#'
 #' @keywords internal
+#'
 countBar <- function(inputId, label, countmax, countnow = NULL, counttotal = countmax) { # nolint
   checkmate::assert_string(inputId)
   checkmate::assert_string(label)
@@ -123,8 +144,7 @@ countBar <- function(inputId, label, countmax, countnow = NULL, counttotal = cou
 }
 
 #' @rdname countBars
-updateCountBars <- function(session = getDefaultReactiveDomain(), inputId, choices, # nolint
-                            countsmax, countsnow = NULL) {
+updateCountBars <- function(session = getDefaultReactiveDomain(), inputId, choices, countsmax, countsnow = NULL) { # nolint
   checkmate::assert_string(inputId)
   checkmate::assert_vector(choices)
   checkmate::assert_numeric(countsmax, len = length(choices))
@@ -145,8 +165,7 @@ updateCountBars <- function(session = getDefaultReactiveDomain(), inputId, choic
 }
 
 #' @rdname countBar
-updateCountBar <- function(session = getDefaultReactiveDomain(), inputId, label, # nolint
-                           countmax, countnow = NULL, counttotal) {
+updateCountBar <- function(session = getDefaultReactiveDomain(), inputId, label, countmax, countnow = NULL, counttotal) { # nolint
   checkmate::assert_string(inputId)
   checkmate::assert_string(label)
   checkmate::assert_number(countmax)
@@ -185,16 +204,20 @@ updateCountText <- function(session = getDefaultReactiveDomain(), inputId, label
   )
 }
 
-#' Make a count text
+#' Build count text
 #'
-#' Returns a text describing filtered counts. The text is composed in the following way:
+#' Returns a text label describing filtered counts. The text is composed in the following way:
 #' - when `countnow` is not `NULL`: `<label> (<countnow>/<countmax>)`
 #' - when `countnow` is `NULL`: `<label> (<countmax>)`
-#' @param label (`character(1)`) Text displayed before counts
-#' @param countnow (`numeric(1)`) filtered counts
-#' @param countmax (`numeric(1)`) unfiltered counts
-#' @return `character(1)`
+#'
+#' @param label (`character(1)`) Text displayed before counts.
+#' @param countnow (`numeric(1)`) Number of filtered counts.
+#' @param countmax (`numeric(1)`) Number of unfiltered counts.
+#'
+#' @return A character string.
+#'
 #' @keywords internal
+#'
 make_count_text <- function(label, countmax, countnow = NULL) {
   checkmate::assert_string(label)
   checkmate::assert_number(countmax)

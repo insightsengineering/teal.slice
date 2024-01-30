@@ -1,55 +1,60 @@
-#' Initializes `FilterState`
+#' Initialize `FilterState`
 #'
-#' Initializes `FilterState` depending on a variable class.\cr
-#' @param x (`vector`)\cr
-#'   values of the variable used in filter
-#' @param x_reactive (`reactive`)\cr
+#' Initializes a `FilterState` object corresponding to the class of the filtered variable.
+#'
+#' @param x (`vector`)
+#'   variable to be filtered.
+#' @param x_reactive (`reactive`)
 #'   returning vector of the same type as `x`. Is used to update
 #'   counts following the change in values of the filtered dataset.
 #'   If it is set to `reactive(NULL)` then counts based on filtered
 #'   dataset are not shown.
-#' @param slice (`teal_slice`)\cr
-#'   object created using [teal_slice()].
-#' @param extract_type (`character(0)`, `character(1)`)\cr
+#' @param slice (`teal_slice`)
+#'   specification of this filter state.
+#'   `teal_slice` is stored in the object and `set_state` directly manipulates values within `teal_slice`.
+#'   `get_state` returns `teal_slice` object which can be reused in other places.
+#'   Note that `teal_slice` is a `reactiveValues`, which means it has reference semantics, i.e.
+#'   changes made to an object are automatically reflected in all places that refer to the same `teal_slice`.
+#' @param extract_type (`character`)
 #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
-#' \itemize{
-#' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-#' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-#' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-#' }
-#' @param ... additional arguments to be saved as a list in `private$extras` field
-#'
-#' @keywords internal
+#' - `character(0)` (default) `varname` in the condition call will not be prefixed
+#' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
+#' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
 #'
 #' @examples
-#' filter_state <- teal.slice:::init_filter_state(
+#' # use non-exported function from teal.slice
+#' init_filter_state <- getFromNamespace("init_filter_state", "teal.slice")
+#'
+#' filter_state <- init_filter_state(
 #'   x = c(1:10, NA, Inf),
 #'   x_reactive = reactive(c(1:10, NA, Inf)),
 #'   slice = teal_slice(
-#'     varname = "x",
+#'     varname = "varname",
 #'     dataname = "dataname"
 #'   ),
 #'   extract_type = "matrix"
 #' )
 #'
-#' shiny::isolate(filter_state$get_call())
-#' app <- shinyApp(
-#'   ui = fluidPage(
-#'     filter_state$ui(id = "app"),
-#'     verbatimTextOutput("call")
-#'   ),
-#'   server = function(input, output, session) {
-#'     filter_state$server("app")
+#' isolate(filter_state$get_call())
 #'
-#'     output$call <- renderText(
-#'       deparse1(filter_state$get_call(), collapse = "\n")
-#'     )
-#'   }
+#' ui <- fluidPage(
+#'   filter_state$ui(id = "app"),
+#'   verbatimTextOutput("call")
 #' )
-#' if (interactive()) {
-#'   shinyApp(app$ui, app$server)
+#' server <- function(input, output, session) {
+#'   filter_state$server("app")
+#'
+#'   output$call <- renderText(
+#'     deparse1(filter_state$get_call(), collapse = "\n")
+#'   )
 #' }
+#'
+#' if (interactive()) {
+#'   shinyApp(ui, server)
+#' }
+#'
 #' @return `FilterState` object
+#' @keywords internal
 init_filter_state <- function(x,
                               x_reactive = reactive(NULL),
                               slice,
@@ -214,13 +219,8 @@ init_filter_state.POSIXlt <- function(x,
 
 #' Initialize a `FilterStateExpr` object
 #'
-#' Initialize a `FilterStateExpr` object
-#' @param slice (`teal_slice_expr`)\cr
-#'   object created using [teal_slice()]. `teal_slice` is stored
-#'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
-#'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
-#'   is a `reactiveValues` which means that changes in particular object are automatically
-#'   reflected in all places which refer to the same `teal_slice`.
+#' @param slice (`teal_slice_expr`)
+#'   specifying this filter state.
 #'
 #' @return `FilterStateExpr` object
 #' @keywords internal
@@ -233,7 +233,7 @@ init_filter_state_expr <- function(slice) {
 #'
 #' Determines the color specification for the currently active Bootstrap color theme and returns one queried color.
 #'
-#' @param color `character(1)` naming one of the available theme colors
+#' @param color (`character(1)`) naming one of the available theme colors
 #' @param alpha either a `numeric(1)` or `character(1)` specifying transparency
 #'              in the range of `0-1` or a hexadecimal value `00-ff`, respectively;
 #'              set to NULL to omit adding the alpha channel
@@ -241,9 +241,10 @@ init_filter_state_expr <- function(slice) {
 #' @return Named `character(1)` containing a hexadecimal color representation.
 #'
 #' @examples
-#' teal.slice:::fetch_bs_color("primary")
-#' teal.slice:::fetch_bs_color("danger", 0.35)
-#' teal.slice:::fetch_bs_color("danger", "80")
+#' fetch_bs_color <- getFromNamespace("fetch_bs_color", "teal.slice")
+#' fetch_bs_color("primary")
+#' fetch_bs_color("danger", 0.35)
+#' fetch_bs_color("danger", "80")
 #'
 #' @keywords internal
 #'
@@ -255,7 +256,6 @@ fetch_bs_color <- function(color, alpha = NULL) {
   )
 
   # locate file that describes the current theme
-  ## TODO this is not ideal
   sass_file <- if (utils::packageVersion("bslib") < as.package_version("0.5.1.9000")) {
     bslib::bs_theme()[["layers"]][[2]][["defaults"]][[1]]
   } else {

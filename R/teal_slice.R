@@ -1,22 +1,21 @@
-#' Specify single filter.
+#' Specify single filter
 #'
 #' Create a `teal_slice` object that holds complete information on filtering one variable.
 #'
-#' @details
 #' `teal_slice` object fully describes filter state and can be used to create,
 #' modify, and delete a filter state. A `teal_slice` contains a number of common fields
 #' (all named arguments of `teal_slice`), some of which are mandatory, but only
 #' `dataname` and  either `varname` or `expr` must be specified, while the others have default
 #' values.
 #'
-#' Setting any of the other values to NULL means that those properties will not be modified
+#' Setting any of the other values to `NULL` means that those properties will not be modified
 #' (when setting an existing state) or that they will be determined by data (when creating new a new one).
 #' Entire object is `FilterState` class member and can be accessed with `FilterState$get_state()`.
 #'
 #' A `teal_slice` can come in two flavors:
 #' 1. `teal_slice_var` -
 #' this describes a typical interactive filter that refers to a single variable, managed by the `FilterState` class.
-#' This class is created when `varname is specified.
+#' This class is created when `varname` is specified.
 #' The object retains all fields specified in the call. `id` can be created by default and need not be specified.
 #' 2. `teal_slice_expr` -
 #' this describes a filter state that refers to an expression, which can potentially include multiple variables,
@@ -45,7 +44,7 @@
 #' For filters referring to `colData` no extra arguments are needed.
 #' If a filter state is created for an experiment, that experiment name must be specified in the `experiment` argument.
 #' Furthermore, to specify filter for an `SummarizedExperiment` one must also set `arg`
-#' (`"subset"`  or `"select`, arguments in the [subset()] function for `SummarizedExperiment`)
+#' (`"subset"`  or `"select"`, arguments in the [subset()] function for `SummarizedExperiment`)
 #' in order to determine whether the filter refers to the `SE`'s `rowData` or `colData`.
 #'
 #' @param dataname (`character(1)`) name of data set
@@ -53,7 +52,7 @@
 #' @param id (`character(1)`) identifier of the filter. Must be specified when `expr` is set.
 #'  When `varname` is specified then `id` is set to `"{dataname} {varname}"` by default.
 #' @param expr (`character(1)`) string providing a logical expression.
-#'  Must be a valid R expression which can be evaluated in the context of the data set.
+#'  Must be a valid `R` expression which can be evaluated in the context of the data set.
 #'  For a `data.frame` `var == "x"` is sufficient, but `MultiAssayExperiment::subsetByColData`
 #'  requires `dataname` prefix, *e.g.* `data$var == "x"`.
 #' @param choices (optional `vector`) specifying allowed choices;
@@ -70,7 +69,7 @@
 #' @param title (optional `character(1)`) title of the filter. Ignored when `varname` is set.
 #' @param ... in `teal_slice` method these are additional arguments which can be handled by extensions
 #'  of `teal.slice` classes. In other methods these are further arguments passed to or from other methods.
-#' @param x (`teal.slice`) object.
+#' @param x (`teal.slice`)
 #' @param show_all (`logical(1)`) indicating whether to show all fields. If set to `FALSE`,
 #'  only non-NULL elements will be printed.
 #' @param trim_lines (`logical(1)`) indicating whether to trim lines when printing.
@@ -260,9 +259,8 @@ jsonify <- function(x, trim_lines) {
 #' Converts a list representation of `teal_slice` or `teal_slices` into a `JSON` string.
 #' Ensures proper unboxing of list elements.
 #' This function is used by the `format` methods for `teal_slice` and `teal_slices`.
-#' @param x `list`, possibly recursive, obtained from `teal_slice` or `teal_slices`.
+#' @param x (`list`) possibly recursive, obtained from `teal_slice` or `teal_slices`.
 #' @return A `JSON` string.
-#' @keywords internal
 #
 #' @param x (`list`) representation of `teal_slices` object.
 #' @keywords internal
@@ -283,6 +281,18 @@ to_json <- function(x) {
   jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
 }
 
+#' Format `POSIXt` for storage
+#'
+#' Convert `POSIXt` date time object to character representation in UTC time zone.
+#'
+#' Date times are stored as string representations expressed in the UTC time zone.
+#' The storage format is `YYYY-MM-DD HH:MM:SS`.
+#'
+#' @param x (`POSIXt`) vector of date time values or anything else
+#'
+#' @return If `x` is of class `POSIXt`, a character vector, otherwise `x` itself.
+#'
+#' @keywords internal
 format_time <- function(x) {
   if ("POSIXt" %in% class(x)) {
     format(x, format = "%Y-%m-%d %H:%M:%S", usetz = TRUE, tz = "UTC")
@@ -291,7 +301,7 @@ format_time <- function(x) {
   }
 }
 
-#' Justify Colons in `JSON` String
+#' Justify colons in `JSON` string
 #'
 #' This function takes a `JSON` string as input, splits it into lines, and pads element names
 #' with spaces so that colons are justified between lines.
@@ -317,12 +327,12 @@ justify_json <- function(json) {
   vapply(json_lines_split, function(x) paste0(format_name(x[1], name_width), stats::na.omit(x[2])), character(1))
 }
 
-#' Trim Lines in `JSON` String
+#' Trim lines in `JSON` string
 #'
 #' This function takes a `JSON` string as input and returns a modified version of the
 #' input where the values portion of each line is trimmed for a less messy console output.
 #'
-#' @param x A character string.
+#' @param x (`character`)
 #'
 #' @return A character string trimmed after a certain hard-coded number of characters in the value portion.
 #'
@@ -338,6 +348,8 @@ trim_lines_json <- function(x) {
 
 #' Default `teal_slice` id
 #'
+#' Create a slice id if none provided.
+#'
 #' Function returns a default `id` for a `teal_slice` object which needs
 #' to be distinct from other `teal_slice` objects created for any
 #' `FilterStates` object. Returned `id` can be treated as a location of
@@ -348,10 +360,11 @@ trim_lines_json <- function(x) {
 #' which exists in multiple `SummarizedExperiment`s or exists in both `colData`
 #' and `rowData` of given experiment.
 #' For such a vector `teal.slice` doesn't allow to activate more than one filters.
-#'
 #' In case of `teal_slice_expr` `id` is mandatory and must be unique.
+#'
 #' @param x (`teal_slice` or `list`)
 #' @return (`character(1)`) `id` for a `teal_slice` object.
+#'
 #' @keywords internal
 get_default_slice_id <- function(x) {
   checkmate::assert_multi_class(x, c("teal_slice", "list"))

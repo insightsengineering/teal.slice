@@ -13,60 +13,65 @@ init_filter_states(
 )
 }
 \arguments{
-\item{data}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
-the R object which \code{subset} function is applied on.}
+\item{data}{(\code{data.frame} or \code{MultiAssayExperiment} or \code{SummarizedExperiment} or \code{matrix})
+object to subset.}
 
-\item{data_reactive}{(\verb{function(sid)})\cr
+\item{data_reactive}{(\verb{function(sid)})
 should return an object of the same type as \code{data} or \code{NULL}.
-This object is needed for the \code{FilterState} shiny module to update
-counts if filtered data changes.
-If function returns \code{NULL} then filtered counts
-are not shown. Function has to have \code{sid} argument being a character which
-is related to \code{sid} argument in the \code{get_call} method.}
+This function is needed for the \code{FilterState} \code{shiny} module to update counts if filtered data changes.
+If function returns \code{NULL} then filtered counts are not shown.
+Function has to have \code{sid} argument being a character which is related to \code{sid} argument in the \code{get_call} method.}
 
-\item{dataname}{(\code{character(1)})\cr
-name of the data used in the expression
-specified to the function argument attached to this \code{FilterStates}.}
+\item{dataname}{(\code{character(1)})
+name of the data used in the subset expression,
+passed to the function argument attached to this \code{FilterStates}.}
 
-\item{datalabel}{(\code{character(0)} or \code{character(1)})\cr
-text label value.}
+\item{datalabel}{(\code{character(1)})
+optional text label.}
 
 \item{...}{(optional)
 additional arguments for specific classes: keys.}
+}
+\value{
+Object of class \code{FilterStates}.
 }
 \description{
 Initialize \code{FilterStates} object
 }
 \examples{
-library(shiny)
+# use non-exported function from teal.slice
+init_filter_states <- getFromNamespace("init_filter_states", "teal.slice")
+
 df <- data.frame(
   character = letters,
   numeric = seq_along(letters),
   date = seq(Sys.Date(), length.out = length(letters), by = "1 day"),
   datetime = seq(Sys.time(), length.out = length(letters), by = "33.33 hours")
 )
-rf <- teal.slice:::init_filter_states(
+rf <- init_filter_states(
   data = df,
   dataname = "DF"
 )
-app <- shinyApp(
-  ui = fluidPage(
-    actionButton("clear", span(icon("xmark"), "Remove all filters")),
-    rf$ui_add(id = "add"),
-    rf$ui_active("states"),
-    verbatimTextOutput("expr"),
-  ),
-  server = function(input, output, session) {
-    rf$srv_add(id = "add")
-    rf$srv_active(id = "states")
-    output$expr <- renderText({
-      deparse1(rf$get_call(), collapse = "\n")
-    })
-    observeEvent(input$clear, rf$state_list_empty())
-  }
+
+ui <- fluidPage(
+  actionButton("clear", span(icon("xmark"), "Remove all filters")),
+  rf$ui_add(id = "add"),
+  rf$ui_active("states"),
+  verbatimTextOutput("expr"),
 )
-if (interactive()) {
-  shinyApp(app$ui, app$server)
+
+server <- function(input, output, session) {
+  rf$srv_add(id = "add")
+  rf$srv_active(id = "states")
+  output$expr <- renderText({
+    deparse1(rf$get_call(), collapse = "\n")
+  })
+  observeEvent(input$clear, rf$clear_filter_states())
 }
+
+if (interactive()) {
+  shinyApp(ui, server)
+}
+
 }
 \keyword{internal}

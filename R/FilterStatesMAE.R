@@ -1,34 +1,35 @@
-#' @title `FilterStates` subclass for `MultiAssayExperiments`
-#' @description Handles filter states in a `MultiAssayExperiment`
+# MAEFilterStates ------
+
+#' @name MAEFilterStates
+#' @docType class
+#' @title `FilterStates` subclass for `MultiAssayExperiment`s
+#' @description Handles filter states in a `MultiAssayExperiment`.
 #' @keywords internal
-#'
 #'
 MAEFilterStates <- R6::R6Class( # nolint
   classname = "MAEFilterStates",
   inherit = FilterStates,
+  # public methods ----
   public = list(
-    # public methods ----
-
-    #' @description Initializes `MAEFilterStates` object
+    #' @description
+    #' Initialize `MAEFilterStates` object.
     #'
-    #' Initialize `MAEFilterStates` object
-    #'
-    #' @param data (`MultiAssayExperiment`)\cr
-    #'   the R object which `MultiAssayExperiment::subsetByColData` function is applied on.
-    #' @param data_reactive (`function(sid)`)\cr
+    #' @param data (`MultiAssayExperiment`)
+    #'   the `R` object which `MultiAssayExperiment::subsetByColData` function is applied on.
+    #' @param data_reactive (`function(sid)`)
     #'   should return a `MultiAssayExperiment` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
-    #' @param dataname (`character(1)`)\cr
-    #'   name of the data used in the expression
-    #'   specified to the function argument attached to this `FilterStates`.
-    #' @param datalabel (`NULL` or `character(1)`)\cr
-    #'   text label value
-    #' @param varlabels (`character`)\cr
-    #'   labels of the variables used in this object
-    #' @param keys (`character`)\cr
-    #'   key columns names
+    #' @param dataname (`character(1)`)
+    #'   name of the data used in the subset expression.
+    #'   Passed to the function argument attached to this `FilterStates`.
+    #' @param datalabel (`character(1)`)
+    #'   optional text label.
+    #' @param varlabels (`character`)
+    #'   labels of the variables used in this object.
+    #' @param keys (`character`)
+    #'   key column names.
     #'
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,

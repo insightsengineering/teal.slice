@@ -2,14 +2,14 @@
 % Please edit documentation in R/choices_labeled.R
 \name{choices_labeled}
 \alias{choices_labeled}
-\title{Set "\verb{<choice>:<label>}" type of Names}
+\title{Set "\verb{<choice>:<label>}" type of names}
 \usage{
 choices_labeled(choices, labels, subset = NULL, types = NULL)
 }
 \arguments{
-\item{choices}{a character / numeric / logical vector}
+\item{choices}{(\code{character} or \code{numeric} or \code{logical}) vector}
 
-\item{labels}{character vector containing labels to be applied to \code{choices}. If \code{NA} then
+\item{labels}{(\code{character}) vector containing labels to be applied to \code{choices}. If \code{NA} then
 "Label Missing" will be used.}
 
 \item{subset}{a vector that is a subset of \code{choices}. This is useful if
@@ -19,10 +19,11 @@ match its order.}
 \item{types}{vector containing the types of the columns.}
 }
 \value{
-a named character vector
+A named character vector.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 This is often useful for as it marks up the drop-down boxes for \code{\link[shiny:selectInput]{shiny::selectInput()}}.
 }
 \details{

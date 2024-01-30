@@ -1,8 +1,7 @@
-#' Complete filter specification.
+#' Complete filter specification
 #'
 #' Create `teal_slices` object to package multiple filters and additional settings.
 #'
-#' @details
 #' `teal_slices()` collates multiple `teal_slice` objects into a `teal_slices` object,
 #' a complete filter specification. This is used by all classes above `FilterState`
 #' as well as `filter_panel_api` wrapper functions.
@@ -17,8 +16,11 @@
 #'  additional arguments passed to other functions.
 #' @param include_varnames,exclude_varnames (`named list`s of `character`) where list names
 #'  match names of data sets and vector elements match variable names in respective data sets;
-#'  specify which variables are allowed to be filtered; see `Details`
-#' @param count_type `r lifecycle::badge("experimental")` _This is a new feature. Do kindly share your opinions.\cr_
+#'  specify which variables are allowed to be filtered; see `Details`.
+#' @param count_type `r lifecycle::badge("experimental")`
+#' _This is a new feature. Do kindly share your opinions on
+#' [`teal.slice`'s GitHub repository](https://github.com/insightsengineering/teal.slice/)._
+#'
 #'  (`character(1)`) string specifying how observations are tallied by these filter states.
 #'  Possible options:
 #'  - `"none"` (default) to have counts of single `FilterState` to show unfiltered number only.
@@ -240,7 +242,7 @@ print.teal_slices <- function(x, ...) {
 #' `setdiff` method for `teal_slices`
 #'
 #' Compare two teal slices objects and return `teal_slices` containing slices present in `x` but not in `y`.
-#' @param x,y `teal_slices` objects
+#' @param x,y (`teal_slices`)
 #' @return `teal_slices`
 #' @keywords internal
 #'
@@ -263,7 +265,7 @@ setdiff_teal_slices <- function(x, y) {
 #'
 #' This function is used internally in `c.teal_slices` to manage `teal_slices` attributes.
 #'
-#' @param x `list`, either of atomic vectors or of `named list`s
+#' @param x (`list`), either of atomic vectors or of named lists
 #' @return
 #' Either an atomic vector of length 1 or a (potentially nested) list.
 #'

@@ -1,9 +1,14 @@
 # DataframeFilteredDataset ------
-#' @title The `DataframeFilteredDataset` R6 class
-#' @keywords internal
+
+#' @name DataframeFilteredDataset
+#' @docType class
+#' @title The `DataframeFilteredDataset` `R6` class
+#'
 #' @examples
-#' library(shiny)
-#' ds <- teal.slice:::DataframeFilteredDataset$new(iris, "iris")
+#' # use non-exported function from teal.slice
+#' DataframeFilteredDataset <- getFromNamespace("DataframeFilteredDataset", "teal.slice")
+#'
+#' ds <- DataframeFilteredDataset$new(iris, "iris")
 #' ds$set_filter_state(
 #'   teal_slices(
 #'     teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
@@ -12,35 +17,48 @@
 #' )
 #' isolate(ds$get_filter_state())
 #' isolate(ds$get_call())
+#'
+#' ## set_filter_state
+#' dataset <- DataframeFilteredDataset$new(iris, "iris")
+#' fs <- teal_slices(
+#'   teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
+#'   teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
+#' )
+#' dataset$set_filter_state(state = fs)
+#' isolate(dataset$get_filter_state())
+#'
+#' @keywords internal
+#'
 DataframeFilteredDataset <- R6::R6Class( # nolint
   classname = "DataframeFilteredDataset",
   inherit = FilteredDataset,
 
-  ## Public Fields ----
+  # public fields ----
   public = list(
 
     #' @description
-    #' Initializes this `DataframeFilteredDataset` object
+    #' Initializes this `DataframeFilteredDataset` object.
     #'
-    #' @param dataset (`data.frame`)\cr
-    #'  single data.frame for which filters are rendered
-    #' @param dataname (`character`)\cr
-    #'  A given name for the dataset it may not contain spaces
-    #' @param keys optional, (`character`)\cr
-    #'   Vector with primary keys
-    #' @param parent_name (`character(1)`)\cr
-    #'   Name of the parent dataset
-    #' @param parent (`reactive`)\cr
-    #'   object returned by this reactive is a filtered `data.frame` from other `FilteredDataset`
-    #'   named `parent_name`. Consequence of passing `parent` is a `reactive` link which causes
-    #'   causing re-filtering of this `dataset` based on the changes in `parent`.
-    #' @param join_keys (`character`)\cr
-    #'   Name of the columns in this dataset to join with `parent`
-    #'   dataset. If the column names are different if both datasets
-    #'   then the names of the vector define the `parent` columns.
+    #' @param dataset (`data.frame`)
+    #'  single `data.frame` for which filters are rendered.
+    #' @param dataname (`character(1)`)
+    #'  syntactically valid name given to the dataset.
+    #' @param keys (`character`)
+    #'   optional vector of primary key column names.
+    #' @param parent_name (`character(1)`)
+    #'   name of the parent dataset.
+    #' @param parent (`reactive`)
+    #'   that returns a filtered `data.frame` from other `FilteredDataset` named `parent_name`.
+    #'   Passing `parent` results in a `reactive` link that causes re-filtering of this `dataset`
+    #'   based on the changes in `parent`.
+    #' @param join_keys (`character`)
+    #'   vector of names of columns in this dataset to join with `parent` dataset.
+    #'   If column names in the parent do not match these, they should be given as the names of this vector.
+    #' @param label (`character(1)`)
+    #'   label to describe the dataset.
     #'
-    #' @param label (`character`)\cr
-    #'   Label to describe the dataset
+    #' @return Object of class `DataframeFilteredDataset`, invisibly.
+    #'
     initialize = function(dataset,
                           dataname,
                           keys = character(0),
@@ -100,20 +118,19 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets the filter expression
+    #' Gets the subset expression.
     #'
-    #' This functions returns filter calls equivalent to selected items
-    #' within each of `filter_states`. Configuration of the calls is constant and
+    #' This function returns subset expressions equivalent to selected items
+    #' within each of `filter_states`. Configuration of the expressions is constant and
     #' depends on `filter_states` type and order which are set during initialization.
-    #' This class contains single `FilterStates`
-    #' which contains single `state_list` and all `FilterState` objects
-    #' applies to one argument (`...`) in `dplyr::filter` call.
+    #' This class contains single `FilterStates` which contains single `state_list`
+    #' and all `FilterState` objects apply to one argument (`...`) in a `dplyr::filter` call.
     #'
-    #' @param sid (`character`)\cr
-    #'  when specified then method returns code containing filter conditions of
-    #'  `FilterState` objects which `"sid"` attribute is different than this `sid` argument.
+    #' @param sid (`character`)
+    #'  when specified, the method returns code containing conditions calls of
+    #'  `FilterState` objects with `sid` different to that of this `sid` argument.
     #'
-    #' @return filter `call` or `list` of filter calls
+    #' @return Either a `list` of length 1 containing a filter `call`, or `NULL`.
     get_call = function(sid = "") {
       logger::log_trace("DataframeFilteredDataset$get_call initializing for dataname: { private$dataname }")
       filter_call <- super$get_call(sid)
@@ -163,20 +180,10 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set filter state
+    #' Set filter state.
     #'
-    #' @param state (`teal_slice`) object
-    #'
-    #' @examples
-    #' dataset <- teal.slice:::DataframeFilteredDataset$new(iris, "iris")
-    #' fs <- teal_slices(
-    #'   teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
-    #'   teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
-    #' )
-    #' dataset$set_filter_state(state = fs)
-    #' shiny::isolate(dataset$get_filter_state())
-    #'
-    #' @return `NULL` invisibly
+    #' @param state (`teal_slices`)
+    #' @return `NULL`, invisibly.
     #'
     set_filter_state = function(state) {
       shiny::isolate({
@@ -191,13 +198,13 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Remove one or more `FilterState` form a `FilteredDataset`
+    #' Remove one or more `FilterState` form a `FilteredDataset`.
     #'
-    #' @param state (`teal_slices`)\cr
+    #' @param state (`teal_slices`)
     #'   specifying `FilterState` objects to remove;
     #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL` invisibly
+    #' @return `NULL`, invisibly.
     #'
     remove_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
@@ -215,13 +222,12 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' UI module to add filter variable for this dataset
+    #' UI module to add filter variable for this dataset.
     #'
-    #' UI module to add filter variable for this dataset
-    #' @param id (`character(1)`)\cr
-    #'  identifier of the element - preferably containing dataset name
+    #' @param id (`character(1)`)
+    #'   `shiny` module instance id.
     #'
-    #' @return function - shiny UI module
+    #' @return `shiny.tag`
     ui_add = function(id) {
       ns <- NS(id)
       tagList(
@@ -231,10 +237,9 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Get number of observations based on given keys
-    #' The output shows the comparison between `filtered_dataset`
-    #' function parameter and the dataset inside self
-    #' @return `list` containing character `#filtered/#not_filtered`
+    #' Creates row for filter overview in the form of \cr
+    #' `dataname -- observations (remaining/total)` - data.frame
+    #' @return A `data.frame`.
     get_filter_overview = function() {
       logger::log_trace("FilteredDataset$srv_filter_overview initialized")
       # Gets filter overview subjects number and returns a list
@@ -264,7 +269,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     }
   ),
 
-  ## Private Fields ----
+  # private fields ----
   private = list(
     parent_name = character(0),
     join_keys = character(0)

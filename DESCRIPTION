@@ -1,8 +1,8 @@
 Type: Package
 Package: teal.slice
 Title: Filter Module for 'teal' Applications
-Version: 0.4.0.9034
-Date: 2024-01-09
+Version: 0.4.0.9035
+Date: 2024-01-25
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre")),
     person("Pawel", "Rucki", , "pawel.rucki@roche.com", role = "aut"),
@@ -19,7 +19,7 @@ Authors@R: c(
     person("Junlue", "Zhao", role = "aut"),
     person("F. Hoffmann-La Roche AG", role = c("cph", "fnd"))
   )
-Description: Module containing filter panel for 'teal' applications.
+Description: Data filtering module for 'teal' applications.
     Allows for interactive filtering of data stored in 'data.frame' and
     'MultiAssayExperiment' objects. Also displays filtered and unfiltered
     observation counts.
@@ -71,4 +71,4 @@ Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1

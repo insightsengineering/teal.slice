@@ -1,44 +1,43 @@
+# FilterState ------
+
 #' @name FilterState
 #' @docType class
 #'
+#' @title `FilterState` abstract class
 #'
-#' @title `FilterState` Abstract Class
-#'
-#' @description Abstract class to encapsulate single filter state
+#' @description Abstract class to encapsulate single filter state.
 #'
 #' @details
-#' This class is responsible for managing single filter item within
-#' `FilteredData` class. Filter states depend on the variable type:
-#' (`logical`, `integer`, `numeric`, `factor`, `character`, `Date`, `POSIXct`, `POSIXlt`)
-#' and returns `FilterState` object with class corresponding to input variable.
-#' Class controls single filter entry in `module_single_filter_item` and returns
-#' code relevant to selected values.
-#' - `factor`, `character`: `class = ChoicesFilterState`
-#' - `numeric`: `class = RangeFilterState`
+#' This class is responsible for managing a single filter item within a `FilteredData` object
+#' and outputs a condition call (logical predicate) for subsetting one variable.
+#' Filter states depend on the variable type:
+#' (`logical`, `integer`, `numeric`, `character`, `factor`, `Date`, `POSIXct`, `POSIXlt`)
+#' and `FilterState` subclasses exist that correspond to those types.
 #' - `logical`: `class = LogicalFilterState`
+#' - `integer`: `class = RangeFilterState`
+#' - `numeric`: `class = RangeFilterState`
+#' - `character`: `class = ChoicesFilterState`
+#' - `factor`: `class = ChoicesFilterState`
 #' - `Date`: `class = DateFilterState`
 #' - `POSIXct`, `POSIXlt`: `class = DatetimeFilterState`
 #' - all `NA` entries: `class: FilterState`, cannot be filtered
 #' - default: `FilterState`, cannot be filtered
-#' \cr
-#' Each variable's filter state is an `R6` object which contains `choices`,
-#' `selected`, `varname`, `dataname`, `labels`, `na_count`, `keep_na` and other
-#' variable type specific fields (`keep_inf`, `inf_count`, `timezone`).
-#' Object contains also shiny module (`ui` and `server`) which manages
-#' state of the filter through reactive values `selected`, `keep_na`, `keep_inf`
-#' which trigger `get_call()` and every R function call up in reactive chain.
-#' \cr
-#' \cr
+#'
+#' Each variable's filter state is an `R6` object keeps the variable that is filtered,
+#' a `teal_slice` object that describes the filter state, as well as a `shiny` module (UI and server)
+#' that allows the user to alter the filter state.
+#' Changes to the filter state that cause some observations to be omitted
+#' trigger the `get_call` method and every `R` function call up in the reactive chain.
+#'
 #' @section Modifying state:
 #' Modifying a `FilterState` object is possible in three scenarios:
-#' * In the interactive session by passing an appropriate `teal_slice`
-#'   to the `set_state` method, or using
-#'   `set_selected`, `set_keep_na` or `set_keep_inf` methods.
-#' * In a running application by changing appropriate inputs.
-#' * In a running application by using [filter_state_api] which directly uses
-#' `set_state` method of the `InteractiveFilterState` object.
+#' - In an interactive session, by passing an appropriate `teal_slice` to the `set_state` method.
+#' - In a running application, by changing appropriate inputs.
+#' - In a running application, by using [filter_state_api] which directly uses
+#' `set_state` method of the `FilterState` object.
 #'
 #' @keywords internal
+#'
 FilterState <- R6::R6Class( # nolint
   "FilterState",
 
@@ -46,26 +45,28 @@ FilterState <- R6::R6Class( # nolint
   public = list(
 
     #' @description
-    #' Initialize a `FilterState` object
-    #' @param x (`vector`)\cr
-    #'   values of the variable used in filter
-    #' @param x_reactive (`reactive`)\cr
+    #' Initialize a `FilterState` object.
+    #'
+    #' @param x (`vector`)
+    #'   variable to be filtered.
+    #' @param x_reactive (`reactive`)
     #'   returning vector of the same type as `x`. Is used to update
     #'   counts following the change in values of the filtered dataset.
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
-    #' @param slice (`teal_slice`)\cr
-    #'   object created by [teal_slice()]
-    #' @param extract_type (`character(0)`, `character(1)`)\cr
+    #' @param slice (`teal_slice`)
+    #'   specification of this filter state.
+    #'   `teal_slice` is stored in the object and `set_state` directly manipulates values within `teal_slice`.
+    #'   `get_state` returns `teal_slice` object which can be reused in other places.
+    #'   Note that `teal_slice` is a `reactiveValues`, which means it has reference semantics, i.e.
+    #'   changes made to an object are automatically reflected in all places that refer to the same `teal_slice`.
+    #' @param extract_type (`character`)
     #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
-    #' \itemize{
-    #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-    #' }
-    #' @param ... additional arguments to be saved as a list in `private$extras` field
+    #' - `character(0)` (default) `varname` in the condition call will not be prefixed
+    #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
+    #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
     #'
-    #' @return self invisibly
+    #' @return Object of class `FilterState`, invisibly.
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
@@ -114,8 +115,8 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Returns a formatted string representing this `FilterState` object.
     #'
-    #' @param show_all `logical(1)` passed to `format.teal_slice`
-    #' @param trim_lines `logical(1)` passed to `format.teal_slice`
+    #' @param show_all (`logical(1)`) passed to `format.teal_slice`
+    #' @param trim_lines (`logical(1)`) passed to `format.teal_slice`
     #'
     #' @return `character(1)` the formatted string
     #'
@@ -137,11 +138,11 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Sets filtering state.
+    #' Sets mutable parameters of the filter state.
     #' - `fixed` state is prevented from changing state
     #' - `anchored` state is prevented from removing state
     #'
-    #' @param state a `teal_slice` object
+    #' @param state (`teal_slice`)
     #'
     #' @return `self` invisibly
     #'
@@ -175,7 +176,7 @@ FilterState <- R6::R6Class( # nolint
 
 
     #' @description
-    #' Returns filtering state.
+    #' Returns a complete description of the filter state.
     #'
     #' @return A `teal_slice` object.
     #'
@@ -194,13 +195,12 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny module server.
+    #' `shiny` module server.
     #'
-    #' @param id (`character(1)`)\cr
-    #'   shiny module instance id
+    #' @param id (`character(1)`)
+    #'   `shiny` module instance id.
     #'
-    #' @return `moduleServer` function which returns reactive value
-    #'   signaling that remove button has been clicked
+    #' @return Reactive expression signaling that remove button has been clicked.
     #'
     server = function(id) {
       moduleServer(
@@ -282,11 +282,10 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny module UI.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'  shiny element (module instance) id;
-    #'  the UI for this class contains simple message stating that it is not supported
+    #' `shiny` UI module.
+    #'  The UI for this class contains simple message stating that it is not supported.
+    #' @param id (`character(1)`)
+    #'  `shiny` module instance id.
     #' @param parent_id (`character(1)`) id of the `FilterStates` card container
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)
@@ -377,7 +376,7 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Destroy observers stored in `private$observers`.
     #'
-    #' @return NULL invisibly
+    #' @return `NULL`, invisibly.
     #'
     destroy_observers = function() {
       if (!is.null(private$destroy_shiny)) {
@@ -404,7 +403,7 @@ FilterState <- R6::R6Class( # nolint
 
     # private methods ----
 
-    ## setters for state features ----
+    # setters for state features ----
 
     # @description
     # Set values that can be selected from.
@@ -415,13 +414,13 @@ FilterState <- R6::R6Class( # nolint
     # @description
     # Set selection.
     #
-    # @param value (`vector`)\cr
+    # @param value (`vector`)
     #   value(s) that come from filter selection; values are set in the
     #   module server after a selection is made in the app interface;
     #   values are stored in `teal_slice$selected` which is reactive;
     #   value types have to be the same as `private$get_choices()`
     #
-    # @return NULL invisibly
+    # @return `NULL`, invisibly.
     set_selected = function(value) {
       logger::log_trace(
         sprintf(
@@ -448,14 +447,12 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # Set whether to keep NAs.
+    # Sets `value` in `private$teal_slice$keep_na`.
     #
-    # @param value `logical(1)`\cr
-    #   value(s) which come from the filter selection. Value is set in `server`
-    #   modules after selecting check-box-input in the shiny interface. Values are set to
-    #   `private$teal_slice$keep_na`
+    # @param value (`logical(1)`)
+    #   corresponding to the state of a checkbox input in the `shiny` interface.
     #
-    # @return NULL invisibly
+    # @return `NULL`, invisibly.
     #
     set_keep_na = function(value) {
       checkmate::assert_flag(value)
@@ -472,12 +469,12 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # Set whether to keep Infs
+    # Sets `value` in `private$teal_slice$keep_inf`.
     #
-    # @param value (`logical(1)`)\cr
-    #  Value(s) which come from the filter selection. Value is set in `server`
-    #  modules after selecting check-box-input in the shiny interface. Values are set to
-    #  `private$teal_slice$keep_inf`
+    # @param value (`logical(1)`)
+    #   corresponding to the state of a checkbox input in the `shiny` interface.
+    #
+    # @return `NULL`, invisibly.
     #
     set_keep_inf = function(value) {
       checkmate::assert_flag(value)
@@ -494,7 +491,7 @@ FilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    ## getters for state features ----
+    # getters for state features ----
 
     # @description
     # Returns dataname.
@@ -519,14 +516,16 @@ FilterState <- R6::R6Class( # nolint
 
     # @description
     # Get allowed values from `FilterState`.
-    # @return class of the returned object depends of class of the `FilterState`
+    # @return
+    # Vector describing the available choices. Return type depends on the `FilterState` subclass.
     get_choices = function() {
       shiny::isolate(private$teal_slice$choices)
     },
 
     # @description
     # Get selected values from `FilterState`.
-    # @return class of the returned object depends of class of the `FilterState`
+    # @return
+    # Vector describing the current selection. Return type depends on the `FilterState` subclass.
     get_selected = function() {
       private$teal_slice$selected
     },
@@ -563,7 +562,7 @@ FilterState <- R6::R6Class( # nolint
       shiny::isolate(isTRUE(private$teal_slice$multiple))
     },
 
-    ## other ----
+    # other ----
 
     # @description
     # Returns variable label.
@@ -573,10 +572,8 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # Return variable name prefixed by `dataname` to be evaluated as extracted object,
-    # for example `data$var`
-    # @return a character string representation of a subset call
-    #         that extracts the variable from the dataset
+    # Return variable name prefixed by `dataname` to be evaluated as extracted object, for example `data$var`
+    # @return Call that extracts the variable from the dataset.
     get_varname_prefixed = function(dataname) {
       varname <- private$get_varname()
       varname_backticked <- sprintf("`%s`", varname)
@@ -592,12 +589,10 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.
-    # Otherwise, if missing values are found in the variable `!is.na` will be added
-    # only if `private$na_rm = TRUE`
+    # Adds `is.na(varname)` moiety to the existing condition call, according to `keep_na` status.
     # @param filter_call `call` raw filter call, as defined by selection
     # @param varname `character(1)` name of a variable
-    # @return a `call`
+    # @return `call`
     add_keep_na_call = function(filter_call, varname) {
       # No need to deal with NAs.
       if (private$na_count == 0L) {
@@ -645,7 +640,7 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # Answers the question of whether the current settings and values selected actually filters out any values.
+    # Checks whether the current settings actually cause any values to be omitted.
     # @return logical scalar
     is_any_filtered = function() {
       if (private$is_choice_limited) {
@@ -659,11 +654,11 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    ## shiny modules -----
+    # shiny modules -----
 
     # @description
     # Server module to display filter summary
-    # @param id `shiny` id parameter
+    # @param id (`character(1)`) `shiny` module instance id.
     ui_summary = function(id) {
       ns <- NS(id)
       uiOutput(ns("summary"), class = "filter-card-summary")
@@ -671,8 +666,8 @@ FilterState <- R6::R6Class( # nolint
 
     # @description
     # UI module to display filter summary
-    # @param shiny `id` parameter passed to `moduleServer`
-    #  renders text describing current state
+    # @param id (`character(1)`) `shiny` module instance id.
+    # @return Nothing. Renders the UI.
     server_summary = function(id) {
       moduleServer(
         id = id,
@@ -692,10 +687,9 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # module displaying inputs in a fixed filter state
-    # there are no input widgets, only selection visualizations
-    # @param id
-    #   character string specifying this `shiny` module instance
+    # Module displaying inputs in a fixed filter state.
+    # There are no input widgets, only selection visualizations.
+    # @param id (`character(1)`) `shiny` module instance id.
     ui_inputs_fixed = function(id) {
       ns <- NS(id)
       div(
@@ -705,18 +699,16 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # module creating the display of a fixed filter state
-    # @param id
-    #   character string specifying this `shiny` module instance
+    # Module creating the display of a fixed filter state.
+    # @param id (`character(1)`) `shiny` module instance id.
     server_inputs_fixed = function(id) {
       stop("abstract class")
     },
 
     # @description
-    # module displaying input to keep or remove NA in the FilterState call
-    # @param id `shiny` id parameter
-    #  renders checkbox input only when variable from which FilterState has
-    #  been created has some NA values.
+    # Module UI function displaying input to keep or remove NA in the `FilterState` call.
+    # Renders a checkbox input only when variable with which `FilterState` has been created contains NAs.
+    # @param id (`character(1)`) `shiny` module instance id.
     keep_na_ui = function(id) {
       ns <- NS(id)
       if (private$na_count > 0) {
@@ -746,11 +738,11 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # module to handle NA values in the FilterState
-    # @param shiny `id` parameter passed to moduleServer
-    #  module sets `private$keep_na` according to the selection.
-    #  Module also updates a UI element if the `private$keep_na` has been
-    #  changed through the api
+    # Module server function to handle NA values in the `FilterState`.
+    # Sets `private$slice$keep_na` according to the selection
+    # and updates the relevant UI element if `private$slice$keep_na` has been changed by the api.
+    # @param id (`character(1)`) `shiny` module instance id.
+    # @return `NULL`, invisibly.
     keep_na_srv = function(id) {
       moduleServer(id, function(input, output, session) {
         # 1. renderUI is used here as an observer which triggers only if output is visible
