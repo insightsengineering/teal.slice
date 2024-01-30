@@ -16,31 +16,31 @@ updateCountBars(
 )
 }
 \arguments{
-\item{inputId}{(\code{character(1)}) \code{shiny} id.}
+\item{inputId}{(\code{character(1)}) \code{shiny} id of the parent element (e.g. a check-box group input).}
 
-\item{choices}{(\code{vector}) determines label text.}
+\item{choices}{(\code{vector}) Available values. Used to determine label text.}
 
-\item{countsmax}{(\code{numeric}) determining maximal count of each element. Length should be the same as \code{choices}.}
+\item{countsmax}{(\code{numeric}) Maximum counts of each element. Must be the same length \code{choices}.}
 
-\item{countsnow}{(\code{numeric}) actual counts of each element. Length should be the same as \code{choices}.}
+\item{countsnow}{(\code{numeric}) Current counts of each element. Must be the same length \code{choices}.}
 
-\item{session}{(\code{session}) object passed to function given to \code{shinyServer}.}
+\item{session}{(\code{session}) \code{shiny} \code{session} object passed to function given to \code{shinyServer}.}
 }
 \value{
 List of \code{shiny.tag}s.
+
+Creates a number of progress bar elements, one for each value of \code{choices}.
+The widths of all progress bars add up to the full width of the container.
+Each progress bar has a text label that contains the name of the value and the number of counts.
+
+If the filter panel is used with \code{count_type = "all"}, the progress bars will be filled
+according to the number of counts remaining in the current selection and the label will show
+both the current and the total number of counts.
+
+Each child element can have a unique \code{id} attribute to be used independently.
 }
 \description{
-\code{shiny} element showing progress bar counts. Each element can have a
-unique \code{id} attribute so each can be used independently.
-}
-\details{
-Progress bar size is dependent on the ratio:
-
-\code{choicesnow[i] / countsmax[i]}.
-
-Label is:
-
-\code{choices[i] (countsnow[i]/countsmax)}
+\code{shiny} element displaying a series of progress bars and observation counts.
 }
 \examples{
 # use non-exported function from teal.slice
