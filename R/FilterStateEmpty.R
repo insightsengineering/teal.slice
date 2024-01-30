@@ -34,7 +34,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' Initialize `EmptyFilterState` object.
     #'
     #' @param x (`vector`)
-    #'   variable to be filtered
+    #'   variable to be filtered,
     #' @param x_reactive (`reactive`)
     #'   returning vector of the same type as `x`. Is used to update
     #'   counts following the change in values of the filtered dataset.
@@ -121,7 +121,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     # @description
     # UI Module for `EmptyFilterState`.
     # This UI element contains a checkbox input to filter or keep missing values.
-    # @param id (`character(1)`) `shiny` module instance id
+    # @param id (`character(1)`) `shiny` module instance id.
     #
     ui_inputs = function(id) {
       ns <- NS(id)
@@ -136,7 +136,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     # @description
     # Controls state of the `keep_na` checkbox input.
     #
-    # @param id (`character(1)`) `shiny` module instance id
+    # @param id (`character(1)`) `shiny` module instance id.
     #
     # @return `NULL`
     #

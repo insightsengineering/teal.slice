@@ -3,7 +3,7 @@
 #' Initializes a `FilterState` object corresponding to the class of the filtered variable.
 #'
 #' @param x (`vector`)
-#'   variable to be filtered
+#'   variable to be filtered.
 #' @param x_reactive (`reactive`)
 #'   returning vector of the same type as `x`. Is used to update
 #'   counts following the change in values of the filtered dataset.

@@ -102,7 +102,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' Initialize a `FilterState` object.
     #'
     #' @param x (`logical`)
-    #'   variable to be filtered
+    #'   variable to be filtered.
     #' @param x_reactive (`reactive`)
     #'   returning vector of the same type as `x`. Is used to update
     #'   counts following the change in values of the filtered dataset.
@@ -235,7 +235,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     # UI Module for `EmptyFilterState`.
     # This UI element contains available choices selection and
     # checkbox whether to keep or not keep the `NA` values.
-    # @param id (`character(1)`) `shiny` module instance id
+    # @param id (`character(1)`) `shiny` module instance id.
     ui_inputs = function(id) {
       ns <- NS(id)
       shiny::isolate({
@@ -284,7 +284,7 @@ LogicalFilterState <- R6::R6Class( # nolint
 
     # @description
     # Server module
-    # @param id (`character(1)`) `shiny` module instance id
+    # @param id (`character(1)`) `shiny` module instance id.
     # @return `NULL`
     server_inputs = function(id) {
       moduleServer(

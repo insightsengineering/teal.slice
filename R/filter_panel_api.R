@@ -15,7 +15,7 @@
 #'   specify filters in place on app start-up
 #'
 #' @param force (`logical(1)`)
-#'   flag specifying whether to include anchored filter states
+#'   flag specifying whether to include anchored filter states.
 #'
 #' @return
 #' - `set_*`, `remove_*` and `clear_filter_state` return `NULL` invisibly

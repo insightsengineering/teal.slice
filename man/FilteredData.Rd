@@ -136,7 +136,7 @@ Initialize a \code{FilteredData} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data_objects}}{(\verb{named list})
-of data objects.
+List of data objects.
 Names of the list will be used as \code{dataname} for respective datasets.}
 
 \item{\code{join_keys}}{(\code{join_keys}) optional joining keys, see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}

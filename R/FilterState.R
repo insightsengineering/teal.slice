@@ -46,7 +46,7 @@ FilterState <- R6::R6Class( # nolint
     #' Initialize a `FilterState` object.
     #'
     #' @param x (`vector`)
-    #'   variable to be filtered
+    #'   variable to be filtered.
     #' @param x_reactive (`reactive`)
     #'   returning vector of the same type as `x`. Is used to update
     #'   counts following the change in values of the filtered dataset.
@@ -658,7 +658,7 @@ FilterState <- R6::R6Class( # nolint
 
     # @description
     # Server module to display filter summary
-    # @param id (`character(1)`) `shiny` module instance id
+    # @param id (`character(1)`) `shiny` module instance id.
     ui_summary = function(id) {
       ns <- NS(id)
       uiOutput(ns("summary"), class = "filter-card-summary")
@@ -666,7 +666,7 @@ FilterState <- R6::R6Class( # nolint
 
     # @description
     # UI module to display filter summary
-    # @param id (`character(1)`) `shiny` module instance id
+    # @param id (`character(1)`) `shiny` module instance id.
     # @return Nothing. Renders the UI.
     server_summary = function(id) {
       moduleServer(
@@ -689,7 +689,7 @@ FilterState <- R6::R6Class( # nolint
     # @description
     # Module displaying inputs in a fixed filter state.
     # There are no input widgets, only selection visualizations.
-    # @param id (`character(1)`) `shiny` module instance id
+    # @param id (`character(1)`) `shiny` module instance id.
     ui_inputs_fixed = function(id) {
       ns <- NS(id)
       div(
@@ -700,15 +700,15 @@ FilterState <- R6::R6Class( # nolint
 
     # @description
     # Module creating the display of a fixed filter state.
-    # @param id (`character(1)`) `shiny` module instance id
+    # @param id (`character(1)`) `shiny` module instance id.
     server_inputs_fixed = function(id) {
       stop("abstract class")
     },
 
     # @description
-    # Module displaying input to keep or remove NA in the `FilterState` call.
+    # Module UI function displaying input to keep or remove NA in the `FilterState` call.
     # Renders a checkbox input only when variable with which `FilterState` has been created contains NAs.
-    # @param id (`character(1)`) `shiny` module instance id
+    # @param id (`character(1)`) `shiny` module instance id.
     keep_na_ui = function(id) {
       ns <- NS(id)
       if (private$na_count > 0) {
@@ -738,10 +738,10 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # Module to handle NA values in the `FilterState`.
+    # Module server function to handle NA values in the `FilterState`.
     # Sets `private$slice$keep_na` according to the selection
     # and updates the relevant UI element if `private$slice$keep_na` has been changed by the api.
-    # @param id (`character(1)`) `shiny` module instance id
+    # @param id (`character(1)`) `shiny` module instance id.
     # @return `NULL`, invisibly.
     keep_na_srv = function(id) {
       moduleServer(id, function(input, output, session) {

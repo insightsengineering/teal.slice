@@ -168,7 +168,7 @@ Prints this \code{FilterStates} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{additional arguments passed to \code{format}}
+\item{\code{...}}{additional arguments passed to \code{format}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -244,7 +244,7 @@ Remove all \code{FilterState} objects from this \code{FilterStates} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{force}}{(\code{logical(1)})
-flag specifying whether to include anchored filter states}
+flag specifying whether to include anchored filter states.}
 }
 \if{html}{\out{</div>}}
 }

@@ -156,7 +156,7 @@ and is set only if object is initialized in \code{shiny}.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{x}}{(\code{POSIXct} or \code{POSIXlt})
-variable to be filtered}
+variable to be filtered.}
 
 \item{\code{x_reactive}}{(\code{reactive})
 returning vector of the same type as \code{x}. Is used to update

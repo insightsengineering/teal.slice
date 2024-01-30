@@ -128,7 +128,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' @description
     #' Initialize a `FilterState` object for range selection.
     #' @param x (`numeric`)
-    #'   variable to be filtered
+    #'   variable to be filtered.
     #' @param x_reactive (`reactive`)
     #'   returning vector of the same type as `x`. Is used to update
     #'   counts following the change in values of the filtered dataset.
@@ -403,7 +403,7 @@ RangeFilterState <- R6::R6Class( # nolint
     # UI Module for `RangeFilterState`.
     # This UI element contains two values for `min` and `max`
     # of the range and two checkboxes whether to keep the `NA` or `Inf`  values.
-    # @param id (`character(1)`) `shiny` module instance id
+    # @param id (`character(1)`) `shiny` module instance id.
     ui_inputs = function(id) {
       ns <- NS(id)
       shiny::isolate({
@@ -474,8 +474,8 @@ RangeFilterState <- R6::R6Class( # nolint
 
     # @description
     # Server module
-    # @param id (`character(1)`) `shiny` module instance id
-    # return `shiny` server function that returns `NULL`.
+    # @param id (`character(1)`) `shiny` module instance id.
+    # return `NULL`.
     server_inputs = function(id) {
       moduleServer(
         id = id,
@@ -685,10 +685,11 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # module to handle Inf values in the FilterState
+    # Module to handle Inf values in the FilterState
     # Sets `private$slice$keep_inf` according to the selection
     # and updates the relevant UI element if `private$slice$keep_inf` has been changed by the api.
-    # @param id (`character(1)`) `shiny` module instance id
+    # @param id (`character(1)`) `shiny` module instance id.
+    # @return `NULL`
     keep_inf_srv = function(id) {
       moduleServer(id, function(input, output, session) {
         # 1. renderUI is used here as an observer which triggers only if output is visible

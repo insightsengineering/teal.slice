@@ -65,7 +65,7 @@ Initialize \code{EmptyFilterState} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{x}}{(\code{vector})
-variable to be filtered}
+variable to be filtered,}
 
 \item{\code{x_reactive}}{(\code{reactive})
 returning vector of the same type as \code{x}. Is used to update

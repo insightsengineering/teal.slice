@@ -95,7 +95,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Initialize a `FilteredData` object.
     #' @param data_objects (`named list`)
-    #'   of data objects.
+    #'   List of data objects.
     #'   Names of the list will be used as `dataname` for respective datasets.
     #' @param join_keys (`join_keys`) optional joining keys, see [`teal.data::join_keys()`].
     #'
