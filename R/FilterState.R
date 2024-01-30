@@ -11,11 +11,13 @@
 #' This class is responsible for managing a single filter item within a `FilteredData` object
 #' and outputs a condition call (logical predicate) for subsetting one variable.
 #' Filter states depend on the variable type:
-#' (`logical`, `integer`, `numeric`, `factor`, `character`, `Date`, `POSIXct`, `POSIXlt`)
+#' (`logical`, `integer`, `numeric`, `character`, `factor`, `Date`, `POSIXct`, `POSIXlt`)
 #' and `FilterState` subclasses exist that correspond to those types.
-#' - `factor`, `character`: `class = ChoicesFilterState`
-#' - `numeric`: `class = RangeFilterState`
 #' - `logical`: `class = LogicalFilterState`
+#' - `integer`: `class = RangeFilterState`
+#' - `numeric`: `class = RangeFilterState`
+#' - `character`: `class = ChoicesFilterState`
+#' - `factor`: `class = ChoicesFilterState`
 #' - `Date`: `class = DateFilterState`
 #' - `POSIXct`, `POSIXlt`: `class = DatetimeFilterState`
 #' - all `NA` entries: `class: FilterState`, cannot be filtered

@@ -11,12 +11,14 @@ Abstract class to encapsulate single filter state.
 This class is responsible for managing a single filter item within a \code{FilteredData} object
 and outputs a condition call (logical predicate) for subsetting one variable.
 Filter states depend on the variable type:
-(\code{logical}, \code{integer}, \code{numeric}, \code{factor}, \code{character}, \code{Date}, \code{POSIXct}, \code{POSIXlt})
+(\code{logical}, \code{integer}, \code{numeric}, \code{character}, \code{factor}, \code{Date}, \code{POSIXct}, \code{POSIXlt})
 and \code{FilterState} subclasses exist that correspond to those types.
 \itemize{
-\item \code{factor}, \code{character}: \code{class = ChoicesFilterState}
-\item \code{numeric}: \code{class = RangeFilterState}
 \item \code{logical}: \code{class = LogicalFilterState}
+\item \code{integer}: \code{class = RangeFilterState}
+\item \code{numeric}: \code{class = RangeFilterState}
+\item \code{character}: \code{class = ChoicesFilterState}
+\item \code{factor}: \code{class = ChoicesFilterState}
 \item \code{Date}: \code{class = DateFilterState}
 \item \code{POSIXct}, \code{POSIXlt}: \code{class = DatetimeFilterState}
 \item all \code{NA} entries: \code{class: FilterState}, cannot be filtered
