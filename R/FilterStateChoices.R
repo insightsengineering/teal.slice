@@ -354,7 +354,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     # UI Module for `ChoicesFilterState`.
     # This UI element contains available choices selection and
     # checkbox whether to keep or not keep the `NA` values.
-    # @param id (`character(1)`) `shiny` module instance id,
+    # @param id (`character(1)`) `shiny` module instance id.
     ui_inputs = function(id) {
       ns <- NS(id)
 
