@@ -111,7 +111,6 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Gets a filter expression.
     #'
-    # TODO - explain this better
     #' This function returns filter calls equivalent to selected items
     #' within each of `filter_states`. Configuration of the calls is constant and
     #' depends on `filter_states` type and order which are set during initialization.
