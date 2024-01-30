@@ -136,7 +136,7 @@ testthat::test_that("get_call returns a call with applying filter", {
 })
 
 # get_filter_overview ----
-testthat::test_that("get_filter_overview_info returns overview matrix for MAEFilteredDataset without filtering", {
+testthat::test_that("get_filter_overview returns overview matrix for MAEFilteredDataset without filtering", {
   testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
@@ -152,7 +152,7 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
   )
 })
 
-testthat::test_that("get_filter_overview_info returns overview matrix for MAEFilteredDataset with filtering", {
+testthat::test_that("get_filter_overview returns overview matrix for MAEFilteredDataset with filtering", {
   testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
