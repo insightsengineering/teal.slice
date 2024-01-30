@@ -52,19 +52,21 @@ Initializes this \code{FilteredDataset} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataset}}{(\code{data.frame} or \code{MultiAssayExperiment})
-single dataset for which filters are rendered}
+\item{\code{dataset}}{any object}
 
 \item{\code{dataname}}{(\code{character(1)})
-A given name for the dataset it may not contain spaces}
+syntactically valid name given to the dataset.}
 
-\item{\code{keys}}{optional, (\code{character})
-Vector with primary keys}
+\item{\code{keys}}{(\code{character})
+optional vector of primary key column names.}
 
 \item{\code{label}}{(\code{character(1)})
-Label to describe the dataset.}
+label to describe the dataset.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Object of class \code{FilteredDataset}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -79,14 +81,14 @@ Returns a formatted string representing this \code{FilteredDataset} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
+\item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slice}.}
 
-\item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
+\item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slice}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{character(1)} the formatted string
+The formatted character string.
 }
 }
 \if{html}{\out{<hr>}}
@@ -101,7 +103,7 @@ Prints this \code{FilteredDataset} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{additional arguments}
+\item{\code{...}}{additional arguments passed to \code{format}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -110,7 +112,7 @@ Prints this \code{FilteredDataset} object.
 \if{html}{\out{<a id="method-FilteredDataset-clear_filter_states"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-clear_filter_states}{}}}
 \subsection{Method \code{clear_filter_states()}}{
-Removes all active filter items applied to this dataset.
+Removes all filter items applied to this dataset.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$clear_filter_states(force = FALSE)}\if{html}{\out{</div>}}
 }
@@ -119,12 +121,12 @@ Removes all active filter items applied to this dataset.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{force}}{(\code{logical(1)})
-include locked filter states}
+flag specifying whether to include anchored filter states.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-NULL
+\code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -133,7 +135,7 @@ NULL
 \subsection{Method \code{get_call()}}{
 Gets a filter expression.
 
-This functions returns filter calls equivalent to selected items
+This function returns filter calls equivalent to selected items
 within each of \code{filter_states}. Configuration of the calls is constant and
 depends on \code{filter_states} type and order which are set during initialization.
 \subsection{Usage}{
@@ -144,20 +146,20 @@ depends on \code{filter_states} type and order which are set during initializati
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{sid}}{(\code{character})
-when specified then method returns code containing filter conditions of
-\code{FilterState} objects which \code{"sid"} attribute is different than this \code{sid} argument.}
+when specified, the method returns code containing conditions calls of
+\code{FilterState} objects with \code{sid} different to this \code{sid} argument.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-filter \code{call} or \code{list} of filter calls
+Either a \code{list} of filter \code{call}s, or \code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
-Gets states of all active \code{FilterState} objects.
+Gets states of all contained \code{FilterState} objects.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_state()}\if{html}{\out{</div>}}
 }
@@ -183,14 +185,14 @@ Set filter state.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL} invisibly
+Virtual method, returns nothing and raises error.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_filter_count"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_count}{}}}
 \subsection{Method \code{get_filter_count()}}{
-Gets the number of active \code{FilterState} objects in all \code{FilterStates} in this \code{FilteredDataset}.
+Gets the number of \code{FilterState} objects in all \code{FilterStates} in this \code{FilteredDataset}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_count()}\if{html}{\out{</div>}}
 }
@@ -209,7 +211,7 @@ Gets the name of the dataset.
 }
 
 \subsection{Returns}{
-\code{character(1)} as a name of this dataset
+A character string.
 }
 }
 \if{html}{\out{<hr>}}
@@ -229,45 +231,34 @@ Gets the dataset object in this \code{FilteredDataset}.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.frame} or \code{MultiAssayExperiment}, either raw
-or as a reactive with current filters applied
+The stored dataset. If \code{data.frame} or \code{MultiAssayExperiment},
+either raw or as a reactive with current filters applied (depending on \code{filtered}).
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_filter_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_overview}{}}}
 \subsection{Method \code{get_filter_overview()}}{
-Get filter overview rows of a dataset.
-The output shows the comparison between \code{filtered_dataset}
-function parameter and the dataset inside self.
+Get filter overview of a dataset.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_overview()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{filtered_dataset}}{comparison object, of the same class
-as \code{self$get_dataset()}, if \code{NULL} then \code{self$get_dataset()}
-is used.}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
-(\code{data.frame}) matrix of observations and subjects
+Virtual method, returns nothing and raises an error.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_keys"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_keys}{}}}
 \subsection{Method \code{get_keys()}}{
-Gets the keys for the dataset of this \code{FilteredDataset}.
+Gets the key columns for this dataset.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_keys()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{character} the keys of dataset
+Character vector of variable names
 }
 }
 \if{html}{\out{<hr>}}
@@ -280,14 +271,14 @@ Gets the dataset label.
 }
 
 \subsection{Returns}{
-\code{character} the dataset label
+Character string.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-ui_active"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-ui_active}{}}}
 \subsection{Method \code{ui_active()}}{
-UI module for dataset active filters.
+\code{shiny} module containing active filters for a dataset, along with a title and a remove button.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$ui_active(id)}\if{html}{\out{</div>}}
 }
@@ -296,17 +287,12 @@ UI module for dataset active filters.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-identifier of the element - preferably containing dataset name}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Details}{
-UI module containing dataset active filters along with
-title and remove button.
-}
-
 \subsection{Returns}{
-function - \code{shiny} UI module
+\code{shiny.tag}
 }
 }
 \if{html}{\out{<hr>}}
@@ -322,12 +308,12 @@ Server module for a dataset active filters.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-an id string that corresponds with the id used to call the module's \code{ui_active} function.}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
+\code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -343,12 +329,12 @@ UI module to add filter variable for this dataset.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-identifier of the element - preferably containing dataset name}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-function - \code{shiny} UI module
+Virtual method, returns nothing and raises error.
 }
 }
 \if{html}{\out{<hr>}}
@@ -358,8 +344,7 @@ function - \code{shiny} UI module
 Server module to add filter variable for this dataset.
 For this class \code{srv_add} calls multiple modules
 of the same name from \code{FilterStates} as \code{MAEFilteredDataset}
-contains one \code{FilterStates} object for \code{colData} and one for each
-experiment.
+contains one \code{FilterStates} object for \code{colData} and one for each experiment.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$srv_add(id)}\if{html}{\out{</div>}}
 }
@@ -368,13 +353,12 @@ experiment.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-an id string that corresponds with the id used to call the module's
-\code{ui_add} function.}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
+\code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/FilterState-utils.R
 \name{init_filter_state}
 \alias{init_filter_state}
-\title{Initializes \code{FilterState}}
+\title{Initialize \code{FilterState}}
 \usage{
 init_filter_state(
   x,
@@ -13,7 +13,7 @@ init_filter_state(
 }
 \arguments{
 \item{x}{(\code{vector})
-values of the variable used in filter}
+variable to be filtered.}
 
 \item{x_reactive}{(\code{reactive})
 returning vector of the same type as \code{x}. Is used to update
@@ -22,7 +22,11 @@ If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
 \item{slice}{(\code{teal_slice})
-object created using \code{\link[=teal_slice]{teal_slice()}}.}
+specification of this filter state.
+\code{teal_slice} is stored in the object and \code{set_state} directly manipulates values within \code{teal_slice}.
+\code{get_state} returns \code{teal_slice} object which can be reused in other places.
+Note that \code{teal_slice} is a \code{reactiveValues}, which means it has reference semantics, i.e.
+changes made to an object are automatically reflected in all places that refer to the same \code{teal_slice}.}
 
 \item{extract_type}{(\code{character})
 specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
@@ -31,25 +35,22 @@ specifying whether condition calls should be prefixed by \code{dataname}. Possib
 \item \code{"list"} \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}
 \item \code{"matrix"} \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}
 }}
-
-\item{...}{additional arguments to be saved as a list in \code{private$extras} field}
 }
 \value{
 \code{FilterState} object
 }
 \description{
-Initializes \code{FilterState} depending on a variable class.
+Initializes a \code{FilterState} object corresponding to the class of the filtered variable.
 }
 \examples{
 # use non-exported function from teal.slice
-include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 init_filter_state <- getFromNamespace("init_filter_state", "teal.slice")
 
 filter_state <- init_filter_state(
   x = c(1:10, NA, Inf),
   x_reactive = reactive(c(1:10, NA, Inf)),
   slice = teal_slice(
-    varname = "x",
+    varname = "varname",
     dataname = "dataname"
   ),
   extract_type = "matrix"

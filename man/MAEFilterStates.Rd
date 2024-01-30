@@ -3,7 +3,7 @@
 \docType{class}
 \name{MAEFilterStates}
 \alias{MAEFilterStates}
-\title{\code{FilterStates} subclass for \code{MultiAssayExperiments}}
+\title{\code{FilterStates} subclass for \code{MultiAssayExperiment}s}
 \description{
 Handles filter states in a \code{MultiAssayExperiment}.
 }
@@ -63,17 +63,17 @@ on a change in filters. If function returns \code{NULL} then filtered counts are
 Function has to have \code{sid} argument being a character.}
 
 \item{\code{dataname}}{(\code{character(1)})
-name of the data used in the expression
-specified to the function argument attached to this \code{FilterStates}.}
+name of the data used in the subset expression.
+Passed to the function argument attached to this \code{FilterStates}.}
 
-\item{\code{datalabel}}{(\code{NULL} or \code{character(1)})
-text label value}
+\item{\code{datalabel}}{(\code{character(1)})
+optional text label.}
 
 \item{\code{keys}}{(\code{character})
-key columns names}
+key column names.}
 
 \item{\code{varlabels}}{(\code{character})
-labels of the variables used in this object}
+labels of the variables used in this object.}
 }
 \if{html}{\out{</div>}}
 }

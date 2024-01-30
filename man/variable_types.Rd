@@ -7,10 +7,10 @@
 variable_types(data, columns = NULL)
 }
 \arguments{
-\item{data}{(\code{matrix} or \code{data.frame}-like) to determine variable types from.}
+\item{data}{(\code{data.frame} or \code{DataFrame} or \code{matrix}) Object in which to determine variable types.}
 
-\item{columns}{(\code{character}) vector of columns in \code{data} to get classes from.
-Set to \code{NULL} to get classes of all columns.}
+\item{columns}{(\code{character}) Vector of columns in \code{data} for which to get types.
+Set to \code{NULL} to get types of all columns.}
 }
 \value{
 Character vector of classes of \code{columns} from provided \code{data}.
@@ -44,5 +44,6 @@ variable_types(
     stringsAsFactors = FALSE
   )
 )
+
 }
 \keyword{internal}

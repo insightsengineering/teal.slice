@@ -3,7 +3,7 @@
 #' @name MAEFilteredDataset
 #' @docType class
 #' @title `MAEFilteredDataset` `R6` class
-#' @keywords internal
+#'
 #' @examplesIf requireNamespace("MultiAssayExperiment")
 #' # use non-exported function from teal.slice
 #' MAEFilteredDataset <- getFromNamespace("MAEFilteredDataset", "teal.slice")
@@ -27,6 +27,8 @@
 #' dataset$set_filter_state(state = fs)
 #' isolate(dataset$get_filter_state())
 #'
+#' @keywords internal
+#'
 MAEFilteredDataset <- R6::R6Class( # nolint
   classname = "MAEFilteredDataset",
   inherit = FilteredDataset,
@@ -37,13 +39,16 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' Initialize `MAEFilteredDataset` object.
     #'
     #' @param dataset (`MulitiAssayExperiment`)
-    #'  a single `MultiAssayExperiment` for which to define a subset
-    #' @param dataname (`character`)
-    #'  a given name for the dataset it may not contain spaces
-    #' @param keys optional, (`character`)
-    #'   vector with primary keys
-    #' @param label (`character`)
-    #'   label to describe the dataset
+    #'  single `MulitiAssayExperiment` for which filters are rendered.
+    #' @param dataname (`character(1)`)
+    #'  syntactically valid name given to the dataset.
+    #' @param keys (`character`)
+    #'   optional vector of primary key column names.
+    #' @param label (`character(1)`)
+    #'   label to describe the dataset.
+    #'
+    #' @return Object of class `MAEFilteredDataset`, invisibly.
+    #'
     initialize = function(dataset, dataname, keys = character(0), label = character(0)) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
         stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
@@ -87,7 +92,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' Set filter state.
     #'
     #' @param state (`teal_slices`)
-    #' @return `NULL` invisibly
+    #' @return `NULL`, invisibly.
     #'
     set_filter_state = function(state) {
       shiny::isolate({
@@ -132,9 +137,9 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'
     #' @param state (`teal_slices`)
     #'   specifying `FilterState` objects to remove;
-    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored.
     #'
-    #' @return `NULL` invisibly
+    #' @return `NULL`, invisibly.
     #'
     remove_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
@@ -174,9 +179,9 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' UI module to add filter variable for this dataset.
     #' @param id (`character(1)`)
-    #'  identifier of the element - preferably containing dataset name
+    #'   `shiny` module instance id.
     #'
-    #' @return function - `shiny` UI module
+    #' @return `shiny.tag`
     #'
     ui_add = function(id) {
       ns <- NS(id)
@@ -205,8 +210,9 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Get filter overview rows of a dataset.
-    #' @return (`matrix`) matrix of observations and subjects
+    #' Creates row for filter overview in the form of \cr
+    #' `dataname -- observations (remaining/total) -- subjects (remaining/total)` - MAE
+    #' @return A `data.frame`.
     get_filter_overview = function() {
       data <- self$get_dataset()
       data_filtered <- self$get_dataset(TRUE)
