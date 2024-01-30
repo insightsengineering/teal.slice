@@ -99,7 +99,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #'  `datanames` to remove their `FilterStates`;
     #'  omit to remove all `FilterStates` in the `FilteredData` object
     #'
-    #' @return `NULL`< invisibly.
+    #' @return `NULL`, invisibly.
     #'
     clear_filter_states = function(datanames) {
       datanames_to_remove <- if (missing(datanames)) private$filtered_data$datanames() else datanames
