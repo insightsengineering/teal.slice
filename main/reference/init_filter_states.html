@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9034</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9035</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,16 +34,6 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -91,28 +81,26 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>data</dt>
 <dd><p>(<code>data.frame</code> or <code>MultiAssayExperiment</code> or <code>SummarizedExperiment</code> or <code>matrix</code>)
-the <code>R</code> object which <code>subset</code> function is applied on.</p></dd>
+object to subset.</p></dd>
 
 
 <dt>data_reactive</dt>
 <dd><p>(<code>function(sid)</code>)
 should return an object of the same type as <code>data</code> or <code>NULL</code>.
-This object is needed for the <code>FilterState</code> <code>shiny</code> module to update
-counts if filtered data changes.
-If function returns <code>NULL</code> then filtered counts
-are not shown. Function has to have <code>sid</code> argument being a character which
-is related to <code>sid</code> argument in the <code>get_call</code> method.</p></dd>
+This function is needed for the <code>FilterState</code> <code>shiny</code> module to update counts if filtered data changes.
+If function returns <code>NULL</code> then filtered counts are not shown.
+Function has to have <code>sid</code> argument being a character which is related to <code>sid</code> argument in the <code>get_call</code> method.</p></dd>
 
 
 <dt>dataname</dt>
 <dd><p>(<code>character(1)</code>)
-name of the data used in the expression
-specified to the function argument attached to this <code>FilterStates</code>.</p></dd>
+name of the data used in the subset expression,
+passed to the function argument attached to this <code>FilterStates</code>.</p></dd>
 
 
 <dt>datalabel</dt>
-<dd><p>(<code>NULL</code> or <code>character(1)</code>)
-text label value.</p></dd>
+<dd><p>(<code>character(1)</code>)
+optional text label.</p></dd>
 
 
 <dt>...</dt>
@@ -120,6 +108,12 @@ text label value.</p></dd>
 additional arguments for specific classes: keys.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>Object of class <code>FilterStates</code>.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

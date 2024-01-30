@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9034</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9035</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,16 +34,6 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -67,7 +57,7 @@
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1><code>FilterStates</code> subclass for <code>SummarizedExperiments</code></h1>
+      <img src="" class="logo" alt=""><h1><code>FilterStates</code> subclass for <code>SummarizedExperiment</code>s</h1>
       <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.slice/blob/HEAD/R/FilterStatesSE.R" class="external-link"><code>R/FilterStatesSE.R</code></a></small>
       <div class="d-none name"><code>SEFilterStates.Rd</code></div>
     </div>
@@ -122,8 +112,8 @@ the <code>R</code> object which <code>subset</code> function is applied on.</p><
 <dt><code>data_reactive</code></dt>
 <dd><p>(<code>function(sid)</code>)
 should return a <code>SummarizedExperiment</code> object or <code>NULL</code>.
-This object is needed for the <code>FilterState</code> counts being updated
-on a change in filters. If function returns <code>NULL</code> then filtered counts are not shown.
+This object is needed for the <code>FilterState</code> counts being updated on a change in filters.
+If function returns <code>NULL</code> then filtered counts are not shown.
 Function has to have <code>sid</code> argument being a character.</p></dd>
 
 
@@ -134,8 +124,8 @@ specified to the function argument attached to this <code>FilterStates</code>.</
 
 
 <dt><code>datalabel</code></dt>
-<dd><p>(<code>NULL</code> or <code>character(1)</code>)
-text label value. Should be a name of experiment</p></dd>
+<dd><p>(<code>character(1)</code>)
+optional text label. Should be the name of experiment.</p></dd>
 
 
 </dl><p></p></div>
@@ -159,7 +149,7 @@ text label value. Should be a name of experiment</p></dd>
 </div>
 <div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
-<p><code>NULL</code> invisibly</p>
+<p><code>NULL</code>, invisibly.</p>
 </div>
 
 </div><p></p><hr><a id="method-SEFilterStates-ui_add"></a><div class="section">
@@ -173,7 +163,7 @@ text label value. Should be a name of experiment</p></dd>
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)
-id of <code>shiny</code> module</p></dd>
+<code>shiny</code> module instance id.</p></dd>
 
 
 </dl><p></p></div>
@@ -200,14 +190,14 @@ sets of filter variables - one for <code>colData</code> and another for
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)
-an id string that corresponds with the id used to call the module's <code>ui_add</code> function.</p></dd>
+<code>shiny</code> module instance id.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
 <h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
-<p><code>moduleServer</code> function which returns <code>NULL</code></p>
+<p><code>NULL</code></p>
 </div>
 
 </div><p></p><hr><a id="method-SEFilterStates-clone"></a><div class="section">

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9034</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9035</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,16 +34,6 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -115,20 +105,24 @@
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataset</code></dt>
-<dd><p>Any type of object; will not be filtered.</p></dd>
+<dd><p>any type of object; will not be filtered.</p></dd>
 
 
 <dt><code>dataname</code></dt>
 <dd><p>(<code>character(1)</code>)
-Name given to the dataset; must not contain spaces.</p></dd>
+syntactically valid name given to the dataset.</p></dd>
 
 
 <dt><code>label</code></dt>
 <dd><p>(<code>character(1)</code>)
-Label to describe the dataset.</p></dd>
+label to describe the dataset.</p></dd>
 
 
 </dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
+<p>Object of class <code>DefaultFilteredDataset</code>, invisibly.</p>
 </div>
 
 </div><p></p><hr><a id="method-DefaultFilteredDataset-format"></a><div class="section">
@@ -141,18 +135,18 @@ Label to describe the dataset.</p></dd>
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>show_all</code></dt>
-<dd><p>(<code>logical(1)</code>) for method consistency, ignored</p></dd>
+<dd><p>(<code>logical(1)</code>) for method consistency, ignored.</p></dd>
 
 
 <dt><code>trim_lines</code></dt>
-<dd><p>(<code>logical(1)</code>) flag specifying whether to trim lines if class names are too long</p></dd>
+<dd><p>(<code>logical(1)</code>) flag specifying whether to trim lines if class names are too long.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
-<p><code>character(1)</code> the formatted string</p>
+<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
+<p>The formatted string.</p>
 </div>
 
 </div><p></p><hr><a id="method-DefaultFilteredDataset-get_call"></a><div class="section">
@@ -166,13 +160,13 @@ Label to describe the dataset.</p></dd>
 <div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>sid</code></dt>
-<dd><p>(<code>character</code>) for method consistency, ignored</p></dd>
+<dd><p>(<code>character(1)</code>) for method consistency, ignored.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
+<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
 <p><code>NULL</code>, invisibly.</p>
 </div>
 
@@ -185,7 +179,7 @@ Label to describe the dataset.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
+<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
 <p><code>NULL</code>, invisibly.</p>
 </div>
 
@@ -200,13 +194,13 @@ Label to describe the dataset.</p></dd>
 <div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>state</code></dt>
-<dd><p>(<code>teal_slices</code>) for method consistency, ignored</p></dd>
+<dd><p>(<code>teal_slices</code>) for method consistency, ignored.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
+<h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
 <p><code>NULL</code>, invisibly.</p>
 </div>
 
@@ -221,27 +215,26 @@ Label to describe the dataset.</p></dd>
 <div class="section">
 <h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>force</code></dt>
-<dd><p>(<code>logical</code>) for method consistency, ignored</p></dd>
+<dd><p>(<code>logical(1)</code>) for method consistency, ignored.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
+<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
 <p><code>NULL</code>, invisibly.</p>
 </div>
 
 </div><p></p><hr><a id="method-DefaultFilteredDataset-get_filter_overview"></a><div class="section">
 <h3 id="method-get-filter-overview-">Method <code>get_filter_overview()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-overview-"></a></h3>
-<p>Get <code>data.frame</code> to use in the filter-panel overview.
-Output of this function indicates unsupported dataset class.</p><div class="section">
+<p>Creates row for filter overview in the form of <br><code>dataname</code> - unsupported data class</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DefaultFilteredDataset</span><span class="op">$</span><span class="fu">get_filter_overview</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
-<p><code>list</code> containing character <code>#filtered/#not_filtered</code></p>
+<h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
+<p>A <code>data.frame</code>.</p>
 </div>
 
 </div><p></p><hr><a id="method-DefaultFilteredDataset-ui_active"></a><div class="section">
@@ -255,7 +248,7 @@ Output of this function indicates unsupported dataset class.</p><div class="sect
 <h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)
-<code>shiny</code> module id</p></dd>
+<code>shiny</code> module instance id.</p></dd>
 
 
 </dl><p></p></div>
@@ -266,8 +259,8 @@ Output of this function indicates unsupported dataset class.</p><div class="sect
 </div>
 
 <div class="section">
-<h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
-<p>empty <code>div</code></p>
+<h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
+<p>An empty <code>div</code>.</p>
 </div>
 
 </div><p></p><hr><a id="method-DefaultFilteredDataset-ui_add"></a><div class="section">
@@ -281,7 +274,7 @@ Output of this function indicates unsupported dataset class.</p><div class="sect
 <h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)
-<code>shiny</code> module id</p></dd>
+<code>shiny</code> module instance id.</p></dd>
 
 
 </dl><p></p></div>
@@ -292,8 +285,8 @@ Output of this function indicates unsupported dataset class.</p><div class="sect
 </div>
 
 <div class="section">
-<h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
-<p>empty <code>div</code></p>
+<h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
+<p>An empty <code>div</code>.</p>
 </div>
 
 </div><p></p><hr><a id="method-DefaultFilteredDataset-clone"></a><div class="section">
@@ -324,6 +317,7 @@ Output of this function indicates unsupported dataset class.</p><div class="sect
 <span class="r-in"><span><span class="va">ds</span> <span class="op">&lt;-</span> <span class="va">DefaultFilteredDataset</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">letters</span>, <span class="st">"letters"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">isolate</span><span class="op">(</span><span class="va">ds</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">isolate</span><span class="op">(</span><span class="va">ds</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

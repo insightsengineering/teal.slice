@@ -12,7 +12,7 @@ The DataframeFilteredDataset R6 class"><!-- mathjax --><script src="https://cdnj
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9034</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9035</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,16 +36,6 @@ The DataframeFilteredDataset R6 class"><!-- mathjax --><script src="https://cdnj
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -128,55 +118,57 @@ The DataframeFilteredDataset R6 class"><!-- mathjax --><script src="https://cdnj
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataset</code></dt>
 <dd><p>(<code>data.frame</code>)
-single data.frame for which filters are rendered</p></dd>
+single <code>data.frame</code> for which filters are rendered.</p></dd>
 
 
 <dt><code>dataname</code></dt>
-<dd><p>(<code>character</code>)
-A given name for the dataset it may not contain spaces</p></dd>
+<dd><p>(<code>character(1)</code>)
+syntactically valid name given to the dataset.</p></dd>
 
 
 <dt><code>keys</code></dt>
-<dd><p>optional, (<code>character</code>)
-Vector with primary keys</p></dd>
+<dd><p>(<code>character</code>)
+optional vector of primary key column names.</p></dd>
 
 
 <dt><code>parent_name</code></dt>
 <dd><p>(<code>character(1)</code>)
-Name of the parent dataset</p></dd>
+name of the parent dataset.</p></dd>
 
 
 <dt><code>parent</code></dt>
 <dd><p>(<code>reactive</code>)
-object returned by this reactive is a filtered <code>data.frame</code> from other <code>FilteredDataset</code>
-named <code>parent_name</code>. Consequence of passing <code>parent</code> is a <code>reactive</code> link which causes
-causing re-filtering of this <code>dataset</code> based on the changes in <code>parent</code>.</p></dd>
+that returns a filtered <code>data.frame</code> from other <code>FilteredDataset</code> named <code>parent_name</code>.
+Passing <code>parent</code> results in a <code>reactive</code> link that causes re-filtering of this <code>dataset</code>
+based on the changes in <code>parent</code>.</p></dd>
 
 
 <dt><code>join_keys</code></dt>
 <dd><p>(<code>character</code>)
-Name of the columns in this dataset to join with <code>parent</code>
-dataset. If the column names are different if both datasets
-then the names of the vector define the <code>parent</code> columns.</p></dd>
+vector of names of columns in this dataset to join with <code>parent</code> dataset.
+If column names in the parent do not match these, they should be given as the names of this vector.</p></dd>
 
 
 <dt><code>label</code></dt>
-<dd><p>(<code>character</code>)
-Label to describe the dataset</p></dd>
+<dd><p>(<code>character(1)</code>)
+label to describe the dataset.</p></dd>
 
 
 </dl><p></p></div>
 </div>
+<div class="section">
+<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
+<p>Object of class <code>DataframeFilteredDataset</code>, invisibly.</p>
+</div>
 
 </div><p></p><hr><a id="method-DataframeFilteredDataset-get_call"></a><div class="section">
 <h3 id="method-get-call-">Method <code>get_call()</code><a class="anchor" aria-label="anchor" href="#method-get-call-"></a></h3>
-<p>Gets the filter expression.</p>
-<p>This functions returns filter calls equivalent to selected items
-within each of <code>filter_states</code>. Configuration of the calls is constant and
+<p>Gets the subset expression.</p>
+<p>This function returns subset expressions equivalent to selected items
+within each of <code>filter_states</code>. Configuration of the expressions is constant and
 depends on <code>filter_states</code> type and order which are set during initialization.
-This class contains single <code>FilterStates</code>
-which contains single <code>state_list</code> and all <code>FilterState</code> objects
-applies to one argument (<code>...</code>) in <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code> call.</p><div class="section">
+This class contains single <code>FilterStates</code> which contains single <code>state_list</code>
+and all <code>FilterState</code> objects apply to one argument (<code>...</code>) in a <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code> call.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DataframeFilteredDataset</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span>sid <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -185,15 +177,15 @@ applies to one argument (<code>...</code>) in <code><a href="https://dplyr.tidyv
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>sid</code></dt>
 <dd><p>(<code>character</code>)
-when specified then method returns code containing filter conditions of
-<code>FilterState</code> objects which <code>"sid"</code> attribute is different than this <code>sid</code> argument.</p></dd>
+when specified, the method returns code containing conditions calls of
+<code>FilterState</code> objects with <code>sid</code> different to that of this <code>sid</code> argument.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
-<p>filter <code>call</code> or <code>list</code> of filter calls</p>
+<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
+<p>Either a <code>list</code> of length 1 containing a filter <code>call</code>, or <code>NULL</code>.</p>
 </div>
 
 </div><p></p><hr><a id="method-DataframeFilteredDataset-set_filter_state"></a><div class="section">
@@ -212,8 +204,8 @@ when specified then method returns code containing filter conditions of
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
-<p><code>NULL</code> invisibly</p>
+<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
+<p><code>NULL</code>, invisibly.</p>
 </div>
 
 </div><p></p><hr><a id="method-DataframeFilteredDataset-remove_filter_state"></a><div class="section">
@@ -234,8 +226,8 @@ specifying <code>FilterState</code> objects to remove;
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
-<p><code>NULL</code> invisibly</p>
+<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
+<p><code>NULL</code>, invisibly.</p>
 </div>
 
 </div><p></p><hr><a id="method-DataframeFilteredDataset-ui_add"></a><div class="section">
@@ -249,28 +241,26 @@ specifying <code>FilterState</code> objects to remove;
 <h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)
-identifier of the element - preferably containing dataset name</p></dd>
+<code>shiny</code> module instance id.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
-<p>function - <code>shiny</code> UI module</p>
+<h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
+<p><code>shiny.tag</code></p>
 </div>
 
 </div><p></p><hr><a id="method-DataframeFilteredDataset-get_filter_overview"></a><div class="section">
 <h3 id="method-get-filter-overview-">Method <code>get_filter_overview()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-overview-"></a></h3>
-<p>Get number of observations based on given keys.
-The output shows the comparison between <code>filtered_dataset</code>
-function parameter and the dataset inside self</p><div class="section">
+<p>Creates row for filter overview in the form of <br><code>dataname -- observations (remaining/total)</code> - data.frame</p><div class="section">
 <h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DataframeFilteredDataset</span><span class="op">$</span><span class="fu">get_filter_overview</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
-<p><code>list</code> containing character <code>#filtered/#not_filtered</code></p>
+<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
+<p>A <code>data.frame</code>.</p>
 </div>
 
 </div><p></p><hr><a id="method-DataframeFilteredDataset-clone"></a><div class="section">
@@ -382,6 +372,7 @@ function parameter and the dataset inside self</p><div class="section">
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "allow_add"        : true</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> } </span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
