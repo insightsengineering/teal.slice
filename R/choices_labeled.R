@@ -1,4 +1,3 @@
-# TODO: this whole file needs work
 #' Set "`<choice>:<label>`" type of names
 #'
 #' @description `r lifecycle::badge("stable")`
