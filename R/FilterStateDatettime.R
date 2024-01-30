@@ -377,7 +377,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     # @description
     # Server module
     # @param id (`character(1)`) `shiny` module instance id.
-    # @return `NULL`
+    # @return `NULL`.
     server_inputs = function(id) {
       moduleServer(
         id = id,

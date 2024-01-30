@@ -418,7 +418,7 @@ FilterState <- R6::R6Class( # nolint
     #   values are stored in `teal_slice$selected` which is reactive;
     #   value types have to be the same as `private$get_choices()`
     #
-    # @return NULL invisibly
+    # @return `NULL`, invisibly.
     set_selected = function(value) {
       logger::log_trace(
         sprintf(

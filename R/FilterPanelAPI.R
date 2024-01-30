@@ -71,7 +71,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #' Sets active filter states.
     #' @param filter (`teal_slices`)
     #'
-    #' @return `NULL` invisibly
+    #' @return `NULL`, invisibly.
     #'
     set_filter_state = function(filter) {
       private$filtered_data$set_filter_state(filter)
@@ -85,7 +85,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #'   specifying `FilterState` objects to remove;
     #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL` invisibly
+    #' @return `NULL`, invisibly.
     #'
     remove_filter_state = function(filter) {
       private$filtered_data$remove_filter_state(filter)
@@ -99,7 +99,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #'  `datanames` to remove their `FilterStates`;
     #'  omit to remove all `FilterStates` in the `FilteredData` object
     #'
-    #' @return `NULL` invisibly
+    #' @return `NULL`< invisibly.
     #'
     clear_filter_states = function(datanames) {
       datanames_to_remove <- if (missing(datanames)) private$filtered_data$datanames() else datanames

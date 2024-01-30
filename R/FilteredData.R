@@ -518,7 +518,7 @@ FilteredData <- R6::R6Class( # nolint
     #'   Must be a subset of the `datanames` in this `FilteredData`.
     #'   If the function returns `NULL` (as opposed to `character(0)`),
     #'   the filter panel will be hidden.
-    #' @return `NULL`
+    #' @return `NULL`.
     srv_filter_panel = function(id, active_datanames = self$datanames) {
       checkmate::assert_function(active_datanames)
       moduleServer(
@@ -599,7 +599,7 @@ FilteredData <- R6::R6Class( # nolint
     #'   `shiny` module instance id.
     #' @param active_datanames (`reactive`)
     #'   defining subset of `self$datanames()` to be displayed.
-    #' @return `NULL`
+    #' @return `NULL`.
     srv_active = function(id, active_datanames = self$datanames) {
       checkmate::assert_function(active_datanames)
       shiny::moduleServer(id, function(input, output, session) {
@@ -710,7 +710,7 @@ FilteredData <- R6::R6Class( # nolint
     #'   `shiny` module instance id.
     #' @param active_datanames (`reactive`)
     #'   defining subset of `self$datanames()` to be displayed.
-    #' @return `NULL`
+    #' @return `NULL`.
     srv_add = function(id, active_datanames = reactive(self$datanames())) {
       checkmate::assert_class(active_datanames, "reactive")
       moduleServer(id, function(input, output, session) {
@@ -799,7 +799,7 @@ FilteredData <- R6::R6Class( # nolint
     #'   must be a subset of the `datanames` argument provided to `ui_filter_panel`;
     #'   if the function returns `NULL` (as opposed to `character(0)`), the filter
     #'   panel will be hidden.
-    #' @return `NULL`
+    #' @return `NULL`.
     srv_overview = function(id, active_datanames = self$datanames) {
       checkmate::assert_class(active_datanames, "reactive")
       moduleServer(

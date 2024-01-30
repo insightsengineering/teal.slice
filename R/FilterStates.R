@@ -329,7 +329,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
     #'
-    #' @return `NULL`
+    #' @return `NULL`.
     #'
     srv_active = function(id) {
       moduleServer(
@@ -425,7 +425,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
     #'
-    #' @return `NULL`
+    #' @return `NULL`.
     srv_add = function(id) {
       moduleServer(
         id = id,
@@ -531,7 +531,7 @@ FilterStates <- R6::R6Class( # nolint
     # is called `include_varnames` is cleared - same otherwise.
     # are included.
     #
-    # @return NULL invisibly
+    # @return `NULL`, invisibly.
     set_filterable_varnames = function(include_varnames = character(0), exclude_varnames = character(0)) {
       if ((length(include_varnames) + length(exclude_varnames)) == 0L) {
         return(invisible(NULL))
@@ -601,7 +601,7 @@ FilterStates <- R6::R6Class( # nolint
     # @param state_id (`character(1)`)
     #   name of element in a filter state (which is a `reactiveVal` containing a list)
     #
-    # @return NULL
+    # @return `NULL`.
     #
     state_list_push = function(x, state_id) {
       logger::log_trace("{ class(self)[1] } pushing into state_list, dataname: { private$dataname }")

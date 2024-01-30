@@ -126,7 +126,7 @@ flag specifying whether to include anchored filter states.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -314,7 +314,7 @@ Server module for a dataset active filters.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -359,7 +359,7 @@ contains one \code{FilterStates} object for \code{colData} and one for each expe
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}

@@ -101,7 +101,7 @@ Sets active filter states.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL} invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -123,7 +123,7 @@ specifying \code{FilterState} objects to remove;
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL} invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -145,7 +145,7 @@ omit to remove all \code{FilterStates} in the \code{FilteredData} object}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL} invisibly
+\code{NULL}< invisibly.
 }
 }
 \if{html}{\out{<hr>}}

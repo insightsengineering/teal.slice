@@ -292,7 +292,7 @@ Populated with elements created with \code{renderUI} in the module server.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -338,7 +338,7 @@ Removing a filter variable adds it back to available choices.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}

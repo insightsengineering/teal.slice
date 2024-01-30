@@ -94,7 +94,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @param force (`logical(1)`)
     #'   flag specifying whether to include anchored filter states.
     #'
-    #' @return `NULL`
+    #' @return `NULL`.
     clear_filter_states = function(force = FALSE) {
       logger::log_trace("Removing filters from FilteredDataset: { deparse1(self$get_dataname()) }")
       lapply(
@@ -287,7 +287,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
-    #' @return `NULL`
+    #' @return `NULL`.
     srv_active = function(id) {
       moduleServer(
         id = id,
@@ -356,7 +356,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
     #'
-    #' @return `NULL`
+    #' @return `NULL`.
     srv_add = function(id) {
       moduleServer(
         id = id,

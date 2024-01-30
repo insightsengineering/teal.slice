@@ -564,7 +564,7 @@ the filter panel will be hidden.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -609,7 +609,7 @@ defining subset of \code{self$datanames()} to be displayed.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -654,7 +654,7 @@ defining subset of \code{self$datanames()} to be displayed.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -705,7 +705,7 @@ panel will be hidden.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}

@@ -689,7 +689,7 @@ RangeFilterState <- R6::R6Class( # nolint
     # Sets `private$slice$keep_inf` according to the selection
     # and updates the relevant UI element if `private$slice$keep_inf` has been changed by the api.
     # @param id (`character(1)`) `shiny` module instance id.
-    # @return `NULL`
+    # @return `NULL`.
     keep_inf_srv = function(id) {
       moduleServer(id, function(input, output, session) {
         # 1. renderUI is used here as an observer which triggers only if output is visible
