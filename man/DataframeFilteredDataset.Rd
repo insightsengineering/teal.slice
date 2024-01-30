@@ -142,7 +142,7 @@ when specified, the method returns code containing conditions calls of
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-filter \code{call} or \code{list} of filter calls
+Either a \code{list} of length 1 containing a filter \code{call}, or \code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}

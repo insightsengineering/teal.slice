@@ -120,8 +120,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #'  when specified, the method returns code containing conditions calls of
     #'  `FilterState` objects with `sid` different to this `sid` argument.
     #'
-    # TODO - verify this
-    #' @return filter `call` or `list` of filter calls
+    #' @return Either a `list` of filter `call`s, or `NULL`.
     get_call = function(sid = "") {
       filter_call <- Filter(
         f = Negate(is.null),

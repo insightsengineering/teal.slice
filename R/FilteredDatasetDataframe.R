@@ -130,8 +130,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #'  when specified, the method returns code containing conditions calls of
     #'  `FilterState` objects with `sid` different to that of this `sid` argument.
     #'
-    # TODO verify
-    #' @return filter `call` or `list` of filter calls
+    #' @return Either a `list` of length 1 containing a filter `call`, or `NULL`.
     get_call = function(sid = "") {
       logger::log_trace("DataframeFilteredDataset$get_call initializing for dataname: { private$dataname }")
       filter_call <- super$get_call(sid)
