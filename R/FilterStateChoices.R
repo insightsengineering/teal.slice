@@ -195,7 +195,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' @description
     #' Returns reproducible condition call for current selection.
     #' For this class returned call looks like
-    #' `<varname> %in%  c(<values selected>)` with optional `is.na(<varname>)`.
+    #' `<varname> %in% c(<values selected>)` with optional `is.na(<varname>)`.
     #' @param dataname (`character(1)`) name of data set; defaults to `private$get_dataname()`
     #' @return `call` or `NULL`
     #'
