@@ -447,13 +447,12 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # Set whether to keep NAs.
+    # Sets `value` in `private$teal_slice$keep_na`.
     #
     # @param value (`logical(1)`)
     #   corresponding to the state of a checkbox input in the `shiny` interface.
     #
-    # @return
-    # Sets `value` in `private$teal_slice$keep_na` and returns `NULL`, invisibly.
+    # @return `NULL`, invisibly.
     #
     set_keep_na = function(value) {
       checkmate::assert_flag(value)
@@ -470,13 +469,12 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # Set whether to keep Infs
+    # Sets `value` in `private$teal_slice$keep_inf`.
     #
     # @param value (`logical(1)`)
     #   corresponding to the state of a checkbox input in the `shiny` interface.
     #
-    # @return
-    # Sets `value` in `private$teal_slice$keep_inf` and returns `NULL`, invisibly.
+    # @return `NULL`, invisibly.
     #
     set_keep_inf = function(value) {
       checkmate::assert_flag(value)
