@@ -37,9 +37,9 @@ as.teal_slices(x)
 \item{...}{any number of \code{teal_slice} objects. For \code{print} and \code{format},
 additional arguments passed to other functions.}
 
-\item{include_varnames, exclude_varnames}{(named \code{list}s of \code{character}) where list names
+\item{include_varnames, exclude_varnames}{(\verb{named list}s of \code{character}) where list names
 match names of data sets and vector elements match variable names in respective data sets;
-specify which variables are allowed to be filtered; see \code{Details}}
+specify which variables are allowed to be filtered; see \code{Details}.}
 
 \item{count_type}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 \emph{This is a new feature. Do kindly share your opinions on
@@ -82,10 +82,6 @@ as well as \code{filter_panel_api} wrapper functions.
 The former enumerates allowed variables, the latter enumerates forbidden values.
 Since these could be mutually exclusive, it is impossible to set both allowed and forbidden
 variables for one data set in one \code{teal_slices}.
-}
-\note{
-The \code{teal} package contains robust utilities for saving and loading \code{teal_slices} in \code{JSON} format.
-See \code{\link[teal:slices_store]{teal::slices_store}} and \code{\link[teal:slices_restore]{teal::slices_restore}}.
 }
 \examples{
 filter_1 <- teal_slice(
@@ -136,6 +132,9 @@ print(all_filters, trim_lines = FALSE)
 
 }
 \seealso{
-\code{\link{teal_slice}}
+\itemize{
+\item \code{\link{teal_slice}} for creating constituent elements of \code{teal_slices}
+\item \code{\link[teal:slices_store]{teal::slices_store}} for robust utilities for saving and loading \code{teal_slices} in \code{JSON} format
+}
 }
 \keyword{internal}

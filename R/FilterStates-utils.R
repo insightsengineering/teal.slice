@@ -1,21 +1,22 @@
 #' Initialize `FilterStates` object
 #'
 #' @param data (`data.frame` or `MultiAssayExperiment` or `SummarizedExperiment` or `matrix`)
-#'   the `R` object which `subset` function is applied on.
+#'   object to subset.
 #' @param data_reactive (`function(sid)`)
 #'   should return an object of the same type as `data` or `NULL`.
-#'   This object is needed for the `FilterState` `shiny` module to update
-#'   counts if filtered data changes.
-#'   If function returns `NULL` then filtered counts
-#'   are not shown. Function has to have `sid` argument being a character which
-#'   is related to `sid` argument in the `get_call` method.
+#'   This function is needed for the `FilterState` `shiny` module to update counts if filtered data changes.
+#'   If function returns `NULL` then filtered counts are not shown.
+#'   Function has to have `sid` argument being a character which is related to `sid` argument in the `get_call` method.
 #' @param dataname (`character(1)`)
-#'   name of the data used in the expression
-#'   specified to the function argument attached to this `FilterStates`.
-#' @param datalabel (`NULL` or `character(1)`)
-#'   text label value.
+#'   name of the data used in the subset expression,
+#'   passed to the function argument attached to this `FilterStates`.
+#' @param datalabel (`character(1)`)
+#'   optional text label.
 #' @param ... (optional)
 #'   additional arguments for specific classes: keys.
+#'
+#' @return Object of class `FilterStates`.
+#'
 #' @keywords internal
 #' @examples
 #' # use non-exported function from teal.slice
@@ -32,6 +33,7 @@
 #'   dataname = "DF"
 #' )
 #'
+#' library(shiny)
 #' ui <- fluidPage(
 #'   actionButton("clear", span(icon("xmark"), "Remove all filters")),
 #'   rf$ui_add(id = "add"),
@@ -138,7 +140,7 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
 #' of classes in an vector `teal.slice:::.filterable_class`.
 #' @param data
 #'   the `R` object containing elements which class can be checked through `vapply` or `apply`.
-#' @return `character` vector of matched element names
+#' @return `character` vector of variable names.
 #' @examples
 #' # use non-exported function from teal.slice
 #' get_supported_filter_varnames <- getFromNamespace("get_supported_filter_varnames", "teal.slice")
@@ -152,6 +154,7 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
 #' )
 #' get_supported_filter_varnames(df)
 #' @keywords internal
+#' @export
 get_supported_filter_varnames <- function(data) {
   UseMethod("get_supported_filter_varnames")
 }
@@ -212,7 +215,7 @@ data_choices_labeled <- function(data,
   if (length(choices) == 0) {
     return(character(0))
   }
-  choice_types <- stats::setNames(variable_types(data = data, columns = choices), choices)
+  choice_types <- variable_types(data = data, columns = choices)
   choice_types[keys] <- "primary_key"
 
   choices_labeled(

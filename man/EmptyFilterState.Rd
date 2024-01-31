@@ -3,7 +3,7 @@
 \docType{class}
 \name{EmptyFilterState}
 \alias{EmptyFilterState}
-\title{\code{FilterState} object for empty variable}
+\title{\code{FilterState} object for empty variables}
 \description{
 \code{FilterState} subclass representing an empty variable.
 }
@@ -11,6 +11,8 @@
 # use non-exported function from teal.slice
 include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 EmptyFilterState <- getFromNamespace("EmptyFilterState", "teal.slice")
+
+library(shiny)
 
 filter_state <- EmptyFilterState$new(
   x = NA,
@@ -65,7 +67,7 @@ Initialize \code{EmptyFilterState} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{x}}{(\code{vector})
-values of the variable used in filter}
+variable to be filtered,}
 
 \item{\code{x_reactive}}{(\code{reactive})
 returning vector of the same type as \code{x}. Is used to update
@@ -74,7 +76,7 @@ If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
 \item{\code{extract_type}}{(\code{character})
-whether condition calls should be prefixed by \code{dataname}. Possible values:
+specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
 \item \code{"list"} \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}
@@ -82,25 +84,24 @@ whether condition calls should be prefixed by \code{dataname}. Possible values:
 }}
 
 \item{\code{slice}}{(\code{teal_slice})
-object created using \code{\link[=teal_slice]{teal_slice()}}. \code{teal_slice} is stored
-in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
-returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
-is a \code{reactiveValues} which means that changes in particular object are automatically
-reflected in all places which refer to the same \code{teal_slice}.}
-
-\item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
+specification of this filter state.
+\code{teal_slice} is stored in the object and \code{set_state} directly manipulates values within \code{teal_slice}.
+\code{get_state} returns \code{teal_slice} object which can be reused in other places.
+Note that \code{teal_slice} is a \code{reactiveValues}, which means it has reference semantics, i.e.
+changes made to an object are automatically reflected in all places that refer to the same \code{teal_slice}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Object of class \code{EmptyFilterState}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-EmptyFilterState-get_call"></a>}}
 \if{latex}{\out{\hypertarget{method-EmptyFilterState-get_call}{}}}
 \subsection{Method \code{get_call()}}{
-Returns reproducible condition call for current selection relevant
-for selected variable type.
-Uses internal reactive values, hence must be called
-in reactive or isolated context.
+Returns reproducible condition call for current selection relevant for selected variable type.
+Uses internal reactive values, hence must be called in reactive or isolated context.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$get_call(dataname)}\if{html}{\out{</div>}}
 }

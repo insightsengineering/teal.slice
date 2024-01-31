@@ -6,7 +6,6 @@
 #' @description Handles filter states in a `matrix`.
 #' @keywords internal
 #'
-#'
 MatrixFilterStates <- R6::R6Class( # nolint
   classname = "MatrixFilterStates",
   inherit = FilterStates,
@@ -20,14 +19,14 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'   the `R` object which `subset` function is applied on.
     #' @param data_reactive (`function(sid)`)
     #'   should return a `matrix` object or `NULL`.
-    #'   This object is needed for the `FilterState` counts being updated
-    #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
+    #'   This object is needed for the `FilterState` counts being updated on a change in filters.
+    #'   If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
     #' @param dataname (`character(1)`)
-    #'   name of the data used in the expression
-    #'   specified to the function argument attached to this `FilterStates`.
-    #' @param datalabel (`NULL` or `character(1)`)
-    #'   text label value. Should be a name of experiment.
+    #'   name of the data used in the subset expression.
+    #'   Passed to the function argument attached to this `FilterStates`.
+    #' @param datalabel (`character(1)`)
+    #'   Optional text label. Should be a name of experiment.
     #'
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,

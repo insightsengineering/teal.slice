@@ -1,8 +1,8 @@
 Type: Package
 Package: teal.slice
 Title: Filter Module for 'teal' Applications
-Version: 0.4.0.9035
-Date: 2024-01-25
+Version: 0.4.0.9039
+Date: 2024-01-31
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre")),
     person("Pawel", "Rucki", , "pawel.rucki@roche.com", role = "aut"),
@@ -19,8 +19,8 @@ Authors@R: c(
     person("Junlue", "Zhao", role = "aut"),
     person("F. Hoffmann-La Roche AG", role = c("cph", "fnd"))
   )
-Description: Module containing filter panel for 'teal' applications.
-    Allows for interactive filtering of data stored in 'data.frame' and
+Description: Data filtering module for 'teal' applications.  Allows for
+    interactive filtering of data stored in 'data.frame' and
     'MultiAssayExperiment' objects. Also displays filtered and unfiltered
     observation counts.
 License: Apache License 2.0
@@ -28,8 +28,7 @@ URL: https://insightsengineering.github.io/teal.slice/,
     https://github.com/insightsengineering/teal.slice/
 BugReports: https://github.com/insightsengineering/teal.slice/issues
 Depends:
-    R (>= 4.0),
-    shiny (>= 1.6.0)
+    R (>= 4.0)
 Imports:
     bslib (>= 0.4.0),
     checkmate (>= 2.1.0),
@@ -42,6 +41,7 @@ Imports:
     methods,
     plotly (>= 4.9.2.2),
     R6 (>= 2.2.0),
+    shiny (>= 1.6.0),
     shinycssloaders (>= 1.0.0),
     shinyjs,
     shinyWidgets (>= 0.6.2),

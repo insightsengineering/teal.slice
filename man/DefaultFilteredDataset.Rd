@@ -11,9 +11,12 @@ Stores any object as inert entity. Filtering is not supported.
 # use non-exported function from teal.slice
 DefaultFilteredDataset <- getFromNamespace("DefaultFilteredDataset", "teal.slice")
 
+library(shiny)
+
 ds <- DefaultFilteredDataset$new(letters, "letters")
 isolate(ds$get_filter_state())
 isolate(ds$get_call())
+
 }
 \keyword{internal}
 \section{Super class}{
@@ -60,15 +63,18 @@ Initializes this \code{DefaultFilteredDataset} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataset}}{Any type of object; will not be filtered.}
+\item{\code{dataset}}{any type of object; will not be filtered.}
 
 \item{\code{dataname}}{(\code{character(1)})
-Name given to the dataset; must not contain spaces.}
+syntactically valid name given to the dataset.}
 
 \item{\code{label}}{(\code{character(1)})
-Label to describe the dataset.}
+label to describe the dataset.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Object of class \code{DefaultFilteredDataset}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -83,14 +89,14 @@ Returns a formatted string representing this \code{DefaultFilteredDataset} objec
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{show_all}}{(\code{logical(1)}) for method consistency, ignored}
+\item{\code{show_all}}{(\code{logical(1)}) for method consistency, ignored.}
 
-\item{\code{trim_lines}}{(\code{logical(1)}) flag specifying whether to trim lines if class names are too long}
+\item{\code{trim_lines}}{(\code{logical(1)}) flag specifying whether to trim lines if class names are too long.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{character(1)} the formatted string
+The formatted string.
 }
 }
 \if{html}{\out{<hr>}}
@@ -104,7 +110,7 @@ Returns a formatted string representing this \code{DefaultFilteredDataset} objec
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{sid}}{(\code{character}) for method consistency, ignored}
+\item{\code{sid}}{(\code{character(1)}) for method consistency, ignored.}
 }
 \if{html}{\out{</div>}}
 }
@@ -135,7 +141,7 @@ Returns a formatted string representing this \code{DefaultFilteredDataset} objec
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\code{teal_slices}) for method consistency, ignored}
+\item{\code{state}}{(\code{teal_slices}) for method consistency, ignored.}
 }
 \if{html}{\out{</div>}}
 }
@@ -154,7 +160,7 @@ Returns a formatted string representing this \code{DefaultFilteredDataset} objec
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{force}}{(\code{logical}) for method consistency, ignored}
+\item{\code{force}}{(\code{logical(1)}) for method consistency, ignored.}
 }
 \if{html}{\out{</div>}}
 }
@@ -166,14 +172,14 @@ Returns a formatted string representing this \code{DefaultFilteredDataset} objec
 \if{html}{\out{<a id="method-DefaultFilteredDataset-get_filter_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-get_filter_overview}{}}}
 \subsection{Method \code{get_filter_overview()}}{
-Get \code{data.frame} to use in the filter-panel overview.
-Output of this function indicates unsupported dataset class.
+Creates row for filter overview in the form of \cr
+\code{dataname} - unsupported data class
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_filter_overview()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{list} containing character \verb{#filtered/#not_filtered}
+A \code{data.frame}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -189,7 +195,7 @@ Overwrites parent method.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-\code{shiny} module id}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
@@ -198,7 +204,7 @@ Blank UI module that would list active filter states for this dataset.
 }
 
 \subsection{Returns}{
-empty \code{div}
+An empty \code{div}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -214,7 +220,7 @@ Overwrites parent method.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-\code{shiny} module id}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
@@ -223,7 +229,7 @@ Blank UI module that would list active filter states for this dataset.
 }
 
 \subsection{Returns}{
-empty \code{div}
+An empty \code{div}.
 }
 }
 \if{html}{\out{<hr>}}

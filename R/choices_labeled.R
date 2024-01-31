@@ -16,7 +16,7 @@
 #'   match its order.
 #' @param types vector containing the types of the columns.
 #'
-#' @return a named character vector
+#' @return A named character vector.
 #'
 #' @keywords internal
 #'
@@ -84,5 +84,5 @@ choices_labeled <- function(choices, labels, subset = NULL, types = NULL) {
     types = types
   )
 
-  return(choices)
+  choices
 }

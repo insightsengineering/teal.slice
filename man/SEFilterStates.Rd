@@ -3,7 +3,7 @@
 \docType{class}
 \name{SEFilterStates}
 \alias{SEFilterStates}
-\title{\code{FilterStates} subclass for \code{SummarizedExperiments}}
+\title{\code{FilterStates} subclass for \code{SummarizedExperiment}s}
 \description{
 Handles filter states in a \code{SummaryExperiment}.
 }
@@ -57,16 +57,16 @@ the \code{R} object which \code{subset} function is applied on.}
 
 \item{\code{data_reactive}}{(\verb{function(sid)})
 should return a \code{SummarizedExperiment} object or \code{NULL}.
-This object is needed for the \code{FilterState} counts being updated
-on a change in filters. If function returns \code{NULL} then filtered counts are not shown.
+This object is needed for the \code{FilterState} counts being updated on a change in filters.
+If function returns \code{NULL} then filtered counts are not shown.
 Function has to have \code{sid} argument being a character.}
 
 \item{\code{dataname}}{(\code{character(1)})
 name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
 
-\item{\code{datalabel}}{(\code{NULL} or \code{character(1)})
-text label value. Should be a name of experiment}
+\item{\code{datalabel}}{(\code{character(1)})
+optional text label. Should be the name of experiment.}
 }
 \if{html}{\out{</div>}}
 }
@@ -89,7 +89,7 @@ Set filter state.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL} invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -105,7 +105,7 @@ Set filter state.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-id of \code{shiny} module}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
@@ -133,12 +133,12 @@ sets of filter variables - one for \code{colData} and another for
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-an id string that corresponds with the id used to call the module's \code{ui_add} function.}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
+\code{NULL}
 }
 }
 \if{html}{\out{<hr>}}
