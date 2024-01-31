@@ -4,7 +4,7 @@
 #' @noRd
 #' @keywords internal
 compare_slices <- function(ts1, ts2, fields) {
-  shiny::isolate(
+  isolate(
     all(vapply(fields, function(x) identical(ts1[[x]], ts2[[x]]), logical(1L)))
   )
 }
@@ -14,7 +14,7 @@ compare_slices <- function(ts1, ts2, fields) {
 #' @noRd
 #' @keywords internal
 expect_identical_slice <- function(x, y) {
-  shiny::isolate({
+  isolate({
     testthat::expect_true(
       setequal(
         reactiveValuesToList(x),
@@ -28,7 +28,7 @@ expect_identical_slice <- function(x, y) {
 #' @noRd
 #' @keywords internal
 expect_identical_slices <- function(x, y) {
-  shiny::isolate({
+  isolate({
     mapply(
       function(x, y) {
         expect_identical_slice(x, y)

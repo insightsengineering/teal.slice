@@ -97,7 +97,7 @@ teal_slices <- function(...,
                         allow_add = TRUE) {
   slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
-  slices_id <- shiny::isolate(vapply(slices, `[[`, character(1L), "id"))
+  slices_id <- isolate(vapply(slices, `[[`, character(1L), "id"))
   if (any(duplicated(slices_id))) {
     stop(
       "Some teal_slice objects have the same id:\n",

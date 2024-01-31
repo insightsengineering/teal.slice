@@ -60,7 +60,7 @@ EmptyFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           extract_type = character(0),
                           slice) {
-      shiny::isolate({
+      isolate({
         super$initialize(
           x = x,
           x_reactive = x_reactive,
@@ -127,7 +127,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     #
     ui_inputs = function(id) {
       ns <- NS(id)
-      shiny::isolate({
+      isolate({
         div(
           tags$span("Variable contains missing values only"),
           private$keep_na_ui(ns("keep_na"))

@@ -127,7 +127,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           extract_type = character(0),
                           slice) {
-      shiny::isolate({
+      isolate({
         checkmate::assert_logical(x)
         checkmate::assert_logical(slice$selected, null.ok = TRUE)
         super$initialize(x = x, x_reactive = x_reactive, slice = slice, extract_type = extract_type)
@@ -206,7 +206,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           sprintf("Selection: %s is not a vector of length one. ", toString(values, width = 360)),
           "Maintaining previous selection."
         )
-        values <- shiny::isolate(private$get_selected())
+        values <- isolate(private$get_selected())
       }
       values
     },
@@ -239,7 +239,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     # @param id (`character(1)`) `shiny` module instance id.
     ui_inputs = function(id) {
       ns <- NS(id)
-      shiny::isolate({
+      isolate({
         countsmax <- private$choices_counts
         countsnow <- if (!is.null(private$x_reactive())) {
           unname(table(factor(private$x_reactive(), levels = private$get_choices())))
@@ -257,7 +257,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           checkboxGroupInput(
             inputId = ns("selection"),
             label = NULL,
-            selected = shiny::isolate(as.character(private$get_selected())),
+            selected = isolate(as.character(private$get_selected())),
             choiceNames = labels,
             choiceValues = factor(as.character(private$get_choices()), levels = c("TRUE", "FALSE")),
             width = "100%"
@@ -266,7 +266,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           radioButtons(
             inputId = ns("selection"),
             label = NULL,
-            selected = shiny::isolate(as.character(private$get_selected())),
+            selected = isolate(as.character(private$get_selected())),
             choiceNames = labels,
             choiceValues = factor(as.character(private$get_choices()), levels = c("TRUE", "FALSE")),
             width = "100%"

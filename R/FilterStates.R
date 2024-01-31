@@ -188,7 +188,7 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @param ... additional arguments passed to `format`.
     print = function(...) {
-      cat(shiny::isolate(self$format(...)), "\n")
+      cat(isolate(self$format(...)), "\n")
     },
 
     #' @description
@@ -202,7 +202,7 @@ FilterStates <- R6::R6Class( # nolint
     #'
     remove_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
-      shiny::isolate({
+      isolate({
         state_ids <- vapply(state, `[[`, character(1), "id")
         logger::log_trace("{ class(self)[1] }$remove_filter_state removing filters, state_id: { toString(state_ids) }")
         private$state_list_remove(state_ids)
@@ -246,7 +246,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @param state (`teal_slices`)
     #' @return Function that raises an error.
     set_filter_state = function(state) {
-      shiny::isolate({
+      isolate({
         logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
         checkmate::assert_class(state, "teal_slices")
         lapply(state, function(x) {
@@ -357,11 +357,11 @@ FilterStates <- R6::R6Class( # nolint
             })
           })
 
-          output[["cards"]] <- shiny::renderUI({
+          output[["cards"]] <- renderUI({
             lapply(
               current_state(), # observes only if added/removed
               function(state) {
-                shiny::isolate( # isolates when existing state changes
+                isolate( # isolates when existing state changes
                   state$ui(id = session$ns(fs_to_shiny_ns(state)), parent_id = session$ns("cards"))
                 )
               }
@@ -609,10 +609,10 @@ FilterStates <- R6::R6Class( # nolint
       checkmate::assert_multi_class(x, c("FilterState", "FilterStateExpr"))
       state <- stats::setNames(list(x), state_id)
       new_state_list <- c(
-        shiny::isolate(private$state_list()),
+        isolate(private$state_list()),
         state
       )
-      shiny::isolate(private$state_list(new_state_list))
+      isolate(private$state_list(new_state_list))
 
       logger::log_trace("{ class(self)[1] } pushed into queue, dataname: { private$dataname }")
       invisible(NULL)
@@ -635,7 +635,7 @@ FilterStates <- R6::R6Class( # nolint
       checkmate::assert_character(state_id)
       logger::log_trace("{ class(self)[1] } removing a filter, state_id: { toString(state_id) }")
 
-      shiny::isolate({
+      isolate({
         current_state_ids <- vapply(private$state_list(), function(x) x$get_state()$id, character(1))
         to_remove <- state_id %in% current_state_ids
         if (any(to_remove)) {
@@ -670,7 +670,7 @@ FilterStates <- R6::R6Class( # nolint
     # @return `NULL`, invisibly.
     #
     state_list_empty = function(force = FALSE) {
-      shiny::isolate({
+      isolate({
         logger::log_trace(
           "{ class(self)[1] }$state_list_empty removing all non-anchored filters for dataname: { private$dataname }"
         )
@@ -715,7 +715,7 @@ FilterStates <- R6::R6Class( # nolint
         )
       }
 
-      state_list <- shiny::isolate(private$state_list_get())
+      state_list <- isolate(private$state_list_get())
       lapply(state, function(slice) {
         state_id <- slice$id
         if (state_id %in% names(state_list)) {

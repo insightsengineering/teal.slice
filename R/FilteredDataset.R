@@ -85,7 +85,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @param ... additional arguments passed to `format`.
     #'
     print = function(...) {
-      cat(shiny::isolate(self$format(...)), "\n")
+      cat(isolate(self$format(...)), "\n")
     },
 
     #' @description
@@ -301,14 +301,14 @@ FilteredDataset <- R6::R6Class( # nolint
             }
           )
 
-          shiny::observeEvent(self$get_filter_state(), {
+          observeEvent(self$get_filter_state(), {
             shinyjs::hide("filter_count_ui")
             shinyjs::show("filters")
             shinyjs::toggle("remove_filters", condition = length(self$get_filter_state()) != 0)
             shinyjs::toggle("collapse", condition = length(self$get_filter_state()) != 0)
           })
 
-          shiny::observeEvent(input$collapse, {
+          observeEvent(input$collapse, {
             shinyjs::toggle("filter_count_ui")
             shinyjs::toggle("filters")
             toggle_icon(session$ns("collapse"), c("fa-angle-right", "fa-angle-down"))

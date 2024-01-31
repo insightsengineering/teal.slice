@@ -142,7 +142,7 @@ DateFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           slice,
                           extract_type = character(0)) {
-      shiny::isolate({
+      isolate({
         checkmate::assert_date(x)
         checkmate::assert_class(x_reactive, "reactive")
 
@@ -277,7 +277,7 @@ DateFilterState <- R6::R6Class( # nolint
     # @param id (`character(1)`) `shiny` module instance id.
     ui_inputs = function(id) {
       ns <- NS(id)
-      shiny::isolate({
+      isolate({
         div(
           div(
             class = "flex",
@@ -425,7 +425,7 @@ DateFilterState <- R6::R6Class( # nolint
       tagList(
         tags$span(
           class = "filter-card-summary-value",
-          shiny::HTML(min, "&ndash;", max)
+          HTML(min, "&ndash;", max)
         ),
         tags$span(
           class = "filter-card-summary-controls",

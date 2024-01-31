@@ -395,7 +395,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @param ... additional arguments passed to `format`.
     #'
     print = function(...) {
-      cat(shiny::isolate(self$format(...)), "\n")
+      cat(isolate(self$format(...)), "\n")
     },
 
     #' @description
@@ -405,7 +405,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @return `NULL`, invisibly.
     set_filter_state = function(state) {
-      shiny::isolate({
+      isolate({
         logger::log_trace("{ class(self)[1] }$set_filter_state initializing")
         checkmate::assert_class(state, "teal_slices")
         allow_add <- attr(state, "allow_add")
@@ -434,7 +434,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `NULL`, invisibly.
     #'
     remove_filter_state = function(state) {
-      shiny::isolate({
+      isolate({
         checkmate::assert_class(state, "teal_slices")
         datanames <- unique(vapply(state, "[[", character(1L), "dataname"))
         checkmate::assert_subset(datanames, self$datanames())
@@ -604,7 +604,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `NULL`.
     srv_active = function(id, active_datanames = self$datanames) {
       checkmate::assert_function(active_datanames)
-      shiny::moduleServer(id, function(input, output, session) {
+      moduleServer(id, function(input, output, session) {
         logger::log_trace("FilteredData$srv_active initializing")
 
         private$srv_available_filters("available_filters")
@@ -644,9 +644,9 @@ FilteredData <- R6::R6Class( # nolint
           }
         )
 
-        output$teal_filters_count <- shiny::renderText({
+        output$teal_filters_count <- renderText({
           n_filters_active <- private$get_filter_count()
-          shiny::req(n_filters_active > 0L)
+          req(n_filters_active > 0L)
           sprintf(
             "%s filter%s applied across datasets",
             n_filters_active,
@@ -717,7 +717,7 @@ FilteredData <- R6::R6Class( # nolint
       checkmate::assert_class(active_datanames, "reactive")
       moduleServer(id, function(input, output, session) {
         logger::log_trace("FilteredData$srv_add initializing")
-        shiny::observeEvent(input$minimise_filter_add_vars, {
+        observeEvent(input$minimise_filter_add_vars, {
           shinyjs::toggle("filter_add_vars_contents")
           toggle_icon(session$ns("minimise_filter_add_vars"), c("fa-angle-right", "fa-angle-down"))
           toggle_title(session$ns("minimise_filter_add_vars"), c("Restore panel", "Minimise Panel"))
@@ -809,7 +809,7 @@ FilteredData <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("FilteredData$srv_filter_overview initializing")
 
-          shiny::observeEvent(input$minimise_filter_overview, {
+          observeEvent(input$minimise_filter_overview, {
             shinyjs::toggle("filters_overview_contents")
             toggle_icon(session$ns("minimise_filter_overview"), c("fa-angle-right", "fa-angle-down"))
             toggle_title(session$ns("minimise_filter_overview"), c("Restore panel", "Minimise Panel"))
@@ -951,7 +951,7 @@ FilteredData <- R6::R6Class( # nolint
     ui_available_filters = function(id) {
       ns <- NS(id)
 
-      active_slices_id <- shiny::isolate(vapply(self$get_filter_state(), `[[`, character(1), "id"))
+      active_slices_id <- isolate(vapply(self$get_filter_state(), `[[`, character(1), "id"))
       div(
         id = ns("available_menu"),
         shinyWidgets::dropMenu(
@@ -1025,7 +1025,7 @@ FilteredData <- R6::R6Class( # nolint
 
           checkbox_group_slice <- function(slice) {
             # we need to isolate changes in the fields of the slice (teal_slice)
-            shiny::isolate({
+            isolate({
               checkbox_group_element(
                 name = session$ns("available_slices_id"),
                 value = slice$id,

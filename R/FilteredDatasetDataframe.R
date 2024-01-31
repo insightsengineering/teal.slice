@@ -188,7 +188,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #' @return `NULL`, invisibly.
     #'
     set_filter_state = function(state) {
-      shiny::isolate({
+      isolate({
         logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
         checkmate::assert_class(state, "teal_slices")
         lapply(state, function(slice) {
@@ -211,7 +211,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     remove_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
 
-      shiny::isolate({
+      isolate({
         logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
 
         varnames <- unique(unlist(lapply(state, "[[", "varname")))

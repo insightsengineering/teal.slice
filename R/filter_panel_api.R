@@ -125,10 +125,10 @@ set_filter_state <- function(datasets, filter) {
 #' @export
 get_filter_state <- function(datasets) {
   checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
-  if (shiny::isRunning()) {
+  if (isRunning()) {
     datasets$get_filter_state()
   } else {
-    shiny::isolate(datasets$get_filter_state())
+    isolate(datasets$get_filter_state())
   }
 }
 
