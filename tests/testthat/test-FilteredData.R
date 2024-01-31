@@ -672,8 +672,8 @@ fs <- teal_slices(
   teal_slice(dataname = "iris", varname = "Petal.Width", id = "duplicated"),
   teal_slice(dataname = "iris", title = "test", id = "test", expr = "!is.na(Species)")
 )
-fs_rv <- reactiveVal(fs)
-datasets$set_available_teal_slices(reactive(fs_rv()))
+fs_rv <- shiny::reactiveVal(fs)
+datasets$set_available_teal_slices(shiny::reactive(fs_rv()))
 datasets$set_filter_state(fs[1:2])
 shiny::testServer(
   datasets$srv_available_filters,

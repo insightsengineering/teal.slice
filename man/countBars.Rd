@@ -49,6 +49,8 @@ include_css_files <- getFromNamespace("include_css_files", "teal.slice")
 countBars <- getFromNamespace("countBars", "teal.slice")
 updateCountBars <- getFromNamespace("updateCountBars", "teal.slice")
 
+library(shiny)
+
 choices <- sample(as.factor(c("a", "b", "c")), size = 20, replace = TRUE)
 counts <- table(choices)
 labels <- countBars(
@@ -57,7 +59,6 @@ labels <- countBars(
   countsmax = counts,
   countsnow = unname(counts)
 )
-
 
 ui <- fluidPage(
   div(

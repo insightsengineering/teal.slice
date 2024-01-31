@@ -29,6 +29,7 @@
 #' filter_state$get_call()
 #'
 #' # working filter in an app
+#' library(shiny)
 #' library(shinyjs)
 #'
 #' ui <- fluidPage(
@@ -99,7 +100,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @return `NULL`, invisibly.
     #'
     print = function(...) {
-      cat(shiny::isolate(self$format(...)))
+      cat(isolate(self$format(...)))
     },
 
     #' @description
@@ -136,7 +137,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @return `call` or `NULL`
     #'
     get_call = function(dataname) {
-      shiny::isolate(str2lang(private$teal_slice$expr))
+      isolate(str2lang(private$teal_slice$expr))
     },
 
     #' @description
@@ -189,7 +190,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'   id of the `FilterStates` card container.
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)
-      shiny::isolate({
+      isolate({
         tags$div(
           id = id,
           class = "panel filter-card",
@@ -238,13 +239,13 @@ FilterStateExpr <- R6::R6Class( # nolint
     # Get id of the teal_slice.
     # @return `character(1)`
     get_id = function() {
-      shiny::isolate(private$teal_slice$id)
+      isolate(private$teal_slice$id)
     },
 
     # Check whether this filter is anchored (cannot be removed).
     # @return `logical(1)`
     is_anchored = function() {
-      shiny::isolate(isTRUE(private$teal_slice$anchored))
+      isolate(isTRUE(private$teal_slice$anchored))
     },
 
     # @description
@@ -268,7 +269,7 @@ FilterStateExpr <- R6::R6Class( # nolint
       )
     },
     content_summary = function() {
-      shiny::isolate(private$teal_slice$expr)
+      isolate(private$teal_slice$expr)
     }
   )
 )

@@ -16,6 +16,8 @@ This class is supported by methods to set, get, remove filter states in the
 filter panel API.
 }
 \examples{
+library(shiny)
+
 fd <- init_filtered_data(list(iris = iris))
 fpa <- FilterPanelAPI$new(fd)
 

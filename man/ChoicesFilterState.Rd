@@ -13,6 +13,8 @@ include_css_files <- getFromNamespace("include_css_files", "teal.slice")
 include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 ChoicesFilterState <- getFromNamespace("ChoicesFilterState", "teal.slice")
 
+library(shiny)
+
 filter_state <- ChoicesFilterState$new(
   x = c(LETTERS, NA),
   slice = teal_slice(varname = "var", dataname = "data")

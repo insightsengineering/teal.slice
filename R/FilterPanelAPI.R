@@ -17,6 +17,8 @@
 #' filter panel API.
 #'
 #' @examples
+#' library(shiny)
+#'
 #' fd <- init_filtered_data(list(iris = iris))
 #' fpa <- FilterPanelAPI$new(fd)
 #'

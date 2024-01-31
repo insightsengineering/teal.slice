@@ -29,6 +29,7 @@ filter_state <- FilterStateExpr$new(
 filter_state$get_call()
 
 # working filter in an app
+library(shiny)
 library(shinyjs)
 
 ui <- fluidPage(

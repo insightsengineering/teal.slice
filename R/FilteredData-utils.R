@@ -87,6 +87,7 @@ eval_expr_with_msg <- function(expr, env) {
 #' # use non-exported function from teal.slice
 #' toggle_icon <- getFromNamespace("toggle_icon", "teal.slice")
 #'
+#' library(shiny)
 #' library(shinyjs)
 #'
 #' ui <- fluidPage(

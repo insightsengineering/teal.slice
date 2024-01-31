@@ -13,6 +13,7 @@ include_css_files <- getFromNamespace("include_css_files", "teal.slice")
 include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 init_filter_states <- getFromNamespace("init_filter_states", "teal.slice")
 
+library(shiny)
 library(shinyjs)
 
 # create data frame to filter

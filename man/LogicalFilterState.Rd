@@ -13,6 +13,7 @@ include_css_files <- getFromNamespace("include_css_files", "teal.slice")
 include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 LogicalFilterState <- getFromNamespace("LogicalFilterState", "teal.slice")
 
+library(shiny)
 
 filter_state <- LogicalFilterState$new(
   x = sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
