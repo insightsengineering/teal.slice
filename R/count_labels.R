@@ -27,6 +27,8 @@
 #' countBars <- getFromNamespace("countBars", "teal.slice")
 #' updateCountBars <- getFromNamespace("updateCountBars", "teal.slice")
 #'
+#' library(shiny)
+#'
 #' choices <- sample(as.factor(c("a", "b", "c")), size = 20, replace = TRUE)
 #' counts <- table(choices)
 #' labels <- countBars(
@@ -35,8 +37,6 @@
 #'   countsmax = counts,
 #'   countsnow = unname(counts)
 #' )
-#'
-#' library(shiny)
 #'
 #' ui <- fluidPage(
 #'   div(

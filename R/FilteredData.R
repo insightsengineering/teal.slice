@@ -64,7 +64,7 @@
 #' ### set_filter_state
 #' library(shiny)
 #'
-#' utils::data(miniACC, package = "MultiAssayExperiment")
+#' data(miniACC, package = "MultiAssayExperiment")
 #' datasets <- FilteredData$new(list(iris = iris, mae = miniACC))
 #' fs <- teal_slices(
 #'   teal_slice(
