@@ -25,9 +25,11 @@
 #' # use non-exported function from teal.slice
 #' init_filter_state <- getFromNamespace("init_filter_state", "teal.slice")
 #'
+#' library(shiny)
+#'
 #' filter_state <- init_filter_state(
 #'   x = c(1:10, NA, Inf),
-#'   x_reactive = shiny::reactive(c(1:10, NA, Inf)),
+#'   x_reactive = reactive(c(1:10, NA, Inf)),
 #'   slice = teal_slice(
 #'     varname = "varname",
 #'     dataname = "dataname"
@@ -35,25 +37,24 @@
 #'   extract_type = "matrix"
 #' )
 #'
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #'
 #' # working filter in an app
-#' library(shiny)
 #'
 #' ui <- fluidPage(
 #'   filter_state$ui(id = "app"),
-#'   shiny::verbatimTextOutput("call")
+#'   verbatimTextOutput("call")
 #' )
 #' server <- function(input, output, session) {
 #'   filter_state$server("app")
 #'
-#'   output$call <- shiny::renderText(
+#'   output$call <- renderText(
 #'     deparse1(filter_state$get_call(), collapse = "\n")
 #'   )
 #' }
 #'
 #' if (interactive()) {
-#'   shiny::shinyApp(ui, server)
+#'   shinyApp(ui, server)
 #' }
 #'
 #' @return `FilterState` object

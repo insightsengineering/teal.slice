@@ -63,8 +63,7 @@
 #' @examplesIf requireNamespace("MultiAssayExperiment")
 #'
 #' # Requires MultiAssayExperiment from Bioconductor
-#' library(MultiAssayExperiment)
-#' data(miniACC)
+#' data(miniACC, package = "MultiAssayExperiment")
 #'
 #' datasets <- init_filtered_data(list(mae = miniACC))
 #' fs <- teal_slices(

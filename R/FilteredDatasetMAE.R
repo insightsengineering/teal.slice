@@ -8,7 +8,7 @@
 #' # use non-exported function from teal.slice
 #' MAEFilteredDataset <- getFromNamespace("MAEFilteredDataset", "teal.slice")
 #'
-#' utils::data(miniACC, package = "MultiAssayExperiment")
+#' data(miniACC, package = "MultiAssayExperiment")
 #' dataset <- MAEFilteredDataset$new(miniACC, "MAE")
 #' fs <- teal_slices(
 #'   teal_slice(
@@ -25,7 +25,9 @@
 #'   )
 #' )
 #' dataset$set_filter_state(state = fs)
-#' shiny::isolate(dataset$get_filter_state())
+#'
+#' library(shiny)
+#' isolate(dataset$get_filter_state())
 #'
 #' @keywords internal
 #'

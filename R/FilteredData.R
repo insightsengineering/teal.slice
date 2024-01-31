@@ -40,6 +40,8 @@
 #' # use non-exported function from teal.slice
 #' FilteredData <- getFromNamespace("FilteredData", "teal.slice")
 #'
+#' library(shiny)
+#'
 #' datasets <- FilteredData$new(list(iris = iris, mtcars = mtcars))
 #'
 #' # get datanames
@@ -48,18 +50,19 @@
 #' datasets$set_filter_state(
 #'   teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "virginica"))
 #' )
-#' shiny::isolate(datasets$get_call("iris"))
+#' isolate(datasets$get_call("iris"))
 #'
 #' datasets$set_filter_state(
 #'   teal_slices(teal_slice(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
 #' )
 #'
-#' shiny::isolate(datasets$get_filter_state())
-#' shiny::isolate(datasets$get_call("iris"))
-#' shiny::isolate(datasets$get_call("mtcars"))
+#' isolate(datasets$get_filter_state())
+#' isolate(datasets$get_call("iris"))
+#' isolate(datasets$get_call("mtcars"))
 #'
 #' @examplesIf requireNamespace("MultiAssayExperiment")
 #' ### set_filter_state
+#' library(shiny)
 #'
 #' utils::data(miniACC, package = "MultiAssayExperiment")
 #' datasets <- FilteredData$new(list(iris = iris, mae = miniACC))
@@ -84,7 +87,7 @@
 #'   )
 #' )
 #' datasets$set_filter_state(state = fs)
-#' shiny::isolate(datasets$get_filter_state())
+#' isolate(datasets$get_filter_state())
 #'
 #' @keywords internal
 #'

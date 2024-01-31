@@ -53,7 +53,6 @@
 #'
 #' @examplesIf requireNamespace("MultiAssayExperiment")
 #' # MAEFilteredDataset example
-#' library(MultiAssayExperiment)
 #' library(shiny)
 #'
 #' data(miniACC, package = "MultiAssayExperiment")
