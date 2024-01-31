@@ -1,10 +1,11 @@
 #' Get classes of selected columns from dataset
 #'
-#' @param data (`matrix` or `data.frame`-like) to determine variable types from.
-#' @param columns (`character`) vector of columns in `data` to get classes from.
-#'   Set to `NULL` to get classes of all columns.
+#' @param data (`data.frame` or `DataFrame` or `matrix`) Object in which to determine variable types.
+#' @param columns (`character`) Vector of columns in `data` for which to get types.
+#'   Set to `NULL` to get types of all columns.
 #'
 #' @return Character vector of classes of `columns` from provided `data`.
+#'
 #' @examples
 #' # use non-exported function from teal.slice
 #' variable_types <- getFromNamespace("variable_types", "teal.slice")
@@ -31,79 +32,27 @@
 #'     stringsAsFactors = FALSE
 #'   )
 #' )
+#'
 #' @keywords internal
 #'
 variable_types <- function(data, columns = NULL) {
-  UseMethod("variable_types")
-}
+  checkmate::assert_multi_class(data, c("data.frame", "DataFrame", "matrix"))
+  checkmate::assert_character(columns, any.missing = FALSE, null.ok = TRUE)
+  checkmate::assert_subset(columns, colnames(data))
 
-#' @export
-variable_types.default <- function(data, columns = NULL) {
-  checkmate::assert_character(columns, null.ok = TRUE, any.missing = FALSE)
-
-  res <- if (is.null(columns)) {
-    vapply(
-      data,
-      function(x) class(x)[[1]],
-      character(1),
-      USE.NAMES = FALSE
-    )
-  } else if (checkmate::test_character(columns, any.missing = FALSE)) {
-    stopifnot(all(columns %in% names(data) | vapply(columns, identical, logical(1L), "")))
-    vapply(
-      columns,
-      function(x) ifelse(x == "", "", class(data[[x]])[[1]]),
-      character(1),
-      USE.NAMES = FALSE
-    )
+  if (is.matrix(data)) {
+    type <- typeof(data)
+    if (type == "double") type <- "numeric"
+    types <-
+      if (is.null(columns)) {
+        stats::setNames(rep_len(type, ncol(data)), nm = colnames(data))
+      } else {
+        stats::setNames(rep_len(type, length(columns)), nm = columns)
+      }
   } else {
-    character(0)
+    types <- vapply(data, function(x) class(x)[1L], character(1L))
+    if (!is.null(columns)) types <- types[columns]
+    # alternative after R 4.4.0: `types <- types[columns %||% TRUE]`
   }
-
-  return(res)
-}
-
-#' @export
-variable_types.data.frame <- function(data, columns = NULL) { # nolint: object_name_linter.
-  variable_types.default(data, columns)
-}
-
-#' @export
-variable_types.DataTable <- function(data, columns = NULL) {
-  variable_types.default(data, columns)
-}
-
-#' @export
-variable_types.DFrame <- function(data, columns = NULL) {
-  variable_types.default(data, columns)
-}
-
-#' @export
-variable_types.matrix <- function(data, columns = NULL) {
-  checkmate::assert_character(columns, null.ok = TRUE, any.missing = FALSE)
-
-  res <- if (is.null(columns)) {
-    apply(
-      data,
-      2,
-      function(x) class(x)[1]
-    )
-  } else if (checkmate::test_character(columns, any.missing = FALSE)) {
-    stopifnot(
-      all(
-        columns %in% colnames(data) |
-          vapply(columns, identical, logical(1L), "")
-      )
-    )
-    vapply(
-      columns,
-      function(x) ifelse(x == "", "", class(data[, x])[1]),
-      character(1),
-      USE.NAMES = FALSE
-    )
-  } else {
-    character(0)
-  }
-
-  return(res)
+  types
 }

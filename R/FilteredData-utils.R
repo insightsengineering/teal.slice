@@ -2,13 +2,17 @@
 #'
 #' Function creates a `FilteredData` object.
 #'
-#' @param x (named `list`) of datasets.
+#' @param x (`named list`) of datasets.
 #' @param join_keys (`join_keys`) see [`teal.data::join_keys()`].
 #' @param code `r lifecycle::badge("deprecated")`
 #' @param check `r lifecycle::badge("deprecated")`
+#'
+#' @return Object of class `FilteredData`.
+#'
 #' @examples
 #' datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
 #' datasets
+#'
 #' @export
 init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, check) { # nolint
   checkmate::assert_list(x, any.missing = FALSE, names = "unique")
@@ -36,7 +40,7 @@ init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, chec
 #'
 #' @param expr (`language`)
 #' @param env (`environment`) where expression is evaluated.
-#' @return `NULL` invisibly.
+#' @return `NULL`, invisibly.
 #' @keywords internal
 eval_expr_with_msg <- function(expr, env) {
   lapply(
@@ -53,9 +57,9 @@ eval_expr_with_msg <- function(expr, env) {
           )
         }
       )
-      return(invisible(NULL))
     }
   )
+  invisible(NULL)
 }
 
 
@@ -77,11 +81,13 @@ eval_expr_with_msg <- function(expr, env) {
 #'                if TRUE, the target will be changed
 #'                from the first element of `icons`/`titles` to the second
 #'
-#' @return `NULL` invisibly
+#' @return `NULL`, invisibly.
+#'
 #' @examples
 #' # use non-exported function from teal.slice
 #' toggle_icon <- getFromNamespace("toggle_icon", "teal.slice")
 #'
+#' library(shiny)
 #' library(shinyjs)
 #'
 #' ui <- fluidPage(
@@ -128,6 +134,7 @@ eval_expr_with_msg <- function(expr, env) {
 #' if (interactive()) {
 #'   shinyApp(ui, server)
 #' }
+#'
 #' @name toggle_button
 #' @rdname toggle_button
 #' @keywords internal

@@ -8,7 +8,7 @@
 Abstract class that manages adding and removing \code{FilterState} objects
 and builds a \emph{subset expression}.
 
-A \code{FilterStates} object tracks all subsetting expressions
+A \code{FilterStates} object tracks all condition calls
 (logical predicates that limit observations) associated with a given dataset
 and composes them into a single reproducible \code{R} expression
 that will assign a subset of the original data to a new variable.
@@ -66,16 +66,16 @@ on a change in filters. If function returns \code{NULL} then filtered counts are
 Function has to have \code{sid} argument being a character.}
 
 \item{\code{dataname}}{(\code{character(1)})
-name of the data used in the expression
-specified to the function argument attached to this \code{FilterStates}}
+name of the dataset, used in the subset expression.
+Passed to the function argument attached to this \code{FilterStates}.}
 
-\item{\code{datalabel}}{(\code{NULL} or \code{character(1)})
-text label value}
+\item{\code{datalabel}}{(\code{character(1)})
+optional text label.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-self invisibly
+Object of class \code{FilterStates}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -147,7 +147,7 @@ If no filters are applied, \code{NULL} is returned to avoid no-op calls such as 
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{sid}}{(\code{character})
-when specified then method returns code containing filter conditions of
+when specified then method returns code containing condition calls (logical predicates) of
 \code{FilterState} objects which \code{"sid"} attribute is different than this \code{sid} argument.}
 }
 \if{html}{\out{</div>}}
@@ -168,7 +168,7 @@ Prints this \code{FilterStates} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{additional arguments}
+\item{\code{...}}{additional arguments passed to \code{format}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -192,7 +192,7 @@ specifying \code{FilterState} objects to remove;
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL} invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -208,7 +208,7 @@ The output is a list compatible with input to \code{self$set_filter_state}.
 }
 
 \subsection{Returns}{
-\code{list} containing \code{list} per \code{FilterState} in the \code{state_list}
+Object of class \code{teal_slices}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -224,14 +224,11 @@ Sets active \code{FilterState} objects.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{state}}{(\code{teal_slices})}
-
-\item{\code{data}}{(\code{data.frame})
-data which are supposed to be filtered}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-function which throws an error
+Function that raises an error.
 }
 }
 \if{html}{\out{<hr>}}
@@ -247,12 +244,12 @@ Remove all \code{FilterState} objects from this \code{FilterStates} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{force}}{(\code{logical(1)})
-include locked filter states}
+flag specifying whether to include anchored filter states.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}, invisibly
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -269,7 +266,7 @@ Populated with elements created with \code{renderUI} in the module server.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-\code{shiny} element (module instance) id}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
@@ -290,12 +287,12 @@ Populated with elements created with \code{renderUI} in the module server.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
+\code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -311,7 +308,7 @@ Populated with elements created with \code{renderUI} in the module server.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-\code{shiny} element (module instance) id}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
@@ -336,12 +333,12 @@ Removing a filter variable adds it back to available choices.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})
-an id string that corresponds with the id used to call the module's \code{ui_add} function.}
+\code{shiny} module instance id.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
+\code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}

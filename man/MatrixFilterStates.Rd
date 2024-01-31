@@ -57,16 +57,16 @@ the \code{R} object which \code{subset} function is applied on.}
 
 \item{\code{data_reactive}}{(\verb{function(sid)})
 should return a \code{matrix} object or \code{NULL}.
-This object is needed for the \code{FilterState} counts being updated
-on a change in filters. If function returns \code{NULL} then filtered counts are not shown.
+This object is needed for the \code{FilterState} counts being updated on a change in filters.
+If function returns \code{NULL} then filtered counts are not shown.
 Function has to have \code{sid} argument being a character.}
 
 \item{\code{dataname}}{(\code{character(1)})
-name of the data used in the expression
-specified to the function argument attached to this \code{FilterStates}.}
+name of the data used in the subset expression.
+Passed to the function argument attached to this \code{FilterStates}.}
 
-\item{\code{datalabel}}{(\code{NULL} or \code{character(1)})
-text label value. Should be a name of experiment.}
+\item{\code{datalabel}}{(\code{character(1)})
+Optional text label. Should be a name of experiment.}
 }
 \if{html}{\out{</div>}}
 }

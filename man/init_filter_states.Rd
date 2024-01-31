@@ -14,25 +14,26 @@ init_filter_states(
 }
 \arguments{
 \item{data}{(\code{data.frame} or \code{MultiAssayExperiment} or \code{SummarizedExperiment} or \code{matrix})
-the \code{R} object which \code{subset} function is applied on.}
+object to subset.}
 
 \item{data_reactive}{(\verb{function(sid)})
 should return an object of the same type as \code{data} or \code{NULL}.
-This object is needed for the \code{FilterState} \code{shiny} module to update
-counts if filtered data changes.
-If function returns \code{NULL} then filtered counts
-are not shown. Function has to have \code{sid} argument being a character which
-is related to \code{sid} argument in the \code{get_call} method.}
+This function is needed for the \code{FilterState} \code{shiny} module to update counts if filtered data changes.
+If function returns \code{NULL} then filtered counts are not shown.
+Function has to have \code{sid} argument being a character which is related to \code{sid} argument in the \code{get_call} method.}
 
 \item{dataname}{(\code{character(1)})
-name of the data used in the expression
-specified to the function argument attached to this \code{FilterStates}.}
+name of the data used in the subset expression,
+passed to the function argument attached to this \code{FilterStates}.}
 
-\item{datalabel}{(\code{NULL} or \code{character(1)})
-text label value.}
+\item{datalabel}{(\code{character(1)})
+optional text label.}
 
 \item{...}{(optional)
 additional arguments for specific classes: keys.}
+}
+\value{
+Object of class \code{FilterStates}.
 }
 \description{
 Initialize \code{FilterStates} object
@@ -52,6 +53,7 @@ rf <- init_filter_states(
   dataname = "DF"
 )
 
+library(shiny)
 ui <- fluidPage(
   actionButton("clear", span(icon("xmark"), "Remove all filters")),
   rf$ui_add(id = "add"),

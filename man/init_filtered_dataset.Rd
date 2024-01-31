@@ -2,7 +2,7 @@
 % Please edit documentation in R/FilteredDataset-utils.R
 \name{init_filtered_dataset}
 \alias{init_filtered_dataset}
-\title{Initializes \code{FilteredDataset}}
+\title{Initialize \code{FilteredDataset}}
 \usage{
 init_filtered_dataset(
   dataset,
@@ -15,39 +15,46 @@ init_filtered_dataset(
 )
 }
 \arguments{
-\item{dataset}{(\code{data.frame} or \code{MultiAssayExperiment})}
+\item{dataset}{any object}
 
-\item{dataname}{(\code{character})
-A given name for the dataset it may not contain spaces}
+\item{dataname}{(\code{character(1)})
+syntactically valid name given to the dataset.}
 
-\item{keys}{optional, (\code{character})
-Vector with primary keys}
+\item{keys}{(\code{character})
+optional vector of primary key column names.}
 
 \item{parent_name}{(\code{character(1)})
-Name of the parent dataset}
+name of the parent dataset.}
 
 \item{parent}{(\code{reactive})
-object returned by this reactive is a filtered \code{data.frame} from other \code{FilteredDataset}
-named \code{parent_name}. Consequence of passing \code{parent} is a \code{reactive} link which causes
-causing re-filtering of this \code{dataset} based on the changes in \code{parent}.}
+that returns a filtered \code{data.frame} from other \code{FilteredDataset} named \code{parent_name}.
+Passing \code{parent} results in a \code{reactive} link that causes re-filtering of this \code{dataset}
+based on the changes in \code{parent}.}
 
 \item{join_keys}{(\code{character})
-Name of the columns in this dataset to join with \code{parent}
-dataset. If the column names are different if both datasets
-then the names of the vector define the \code{parent} columns.}
+vector of names of columns in this dataset to join with \code{parent} dataset.
+If column names in the parent do not match these, they should be given as the names of this vector.}
 
-\item{label}{(\code{character})
-Label to describe the dataset}
+\item{label}{(\code{character(1)})
+label to describe the dataset.}
+}
+\value{
+Object of class \code{FilteredDataset}.
 }
 \description{
-Initializes \code{FilteredDataset}
+Initializes a \code{FilteredDataset} object corresponding to the class of the filtered dataset.
 }
-\note{
-Although this function is exported for use in other packages, it may be changed or removed in a future release
-at which point any code which relies on this exported function will need to be changed.
+\section{Warning}{
+
+This function is exported to allow other packages to extend \code{teal.slice} but it is treated as internal.
+Breaking changes may occur without warning.
+We recommend consulting the package maintainer before using it.
 }
+
 \examples{
 # DataframeFilteredDataset example
+library(shiny)
+
 iris_fd <- init_filtered_dataset(iris, dataname = "iris")
 ui <- fluidPage(
   iris_fd$ui_add(id = "add"),
@@ -71,8 +78,10 @@ if (interactive()) {
 
 \dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # MAEFilteredDataset example
-library(MultiAssayExperiment)
+library(shiny)
+
 data(miniACC, package = "MultiAssayExperiment")
+
 MAE_fd <- init_filtered_dataset(miniACC, "MAE")
 ui <- fluidPage(
   MAE_fd$ui_add(id = "add"),

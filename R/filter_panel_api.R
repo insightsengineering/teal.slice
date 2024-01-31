@@ -15,7 +15,7 @@
 #'   specify filters in place on app start-up
 #'
 #' @param force (`logical(1)`)
-#'   include locked filter states
+#'   flag specifying whether to include anchored filter states.
 #'
 #' @return
 #' - `set_*`, `remove_*` and `clear_filter_state` return `NULL` invisibly
@@ -25,12 +25,7 @@
 #' @seealso [`teal_slice`]
 #'
 #' @examples
-#' datasets <- init_filtered_data(
-#'   x = list(
-#'     iris = list(dataset = iris),
-#'     mtcars = list(dataset = mtcars)
-#'   )
-#' )
+#' datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
 #' fs <- teal_slices(
 #'   teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
 #'   teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
@@ -64,13 +59,13 @@
 #'
 #' # remove all states
 #' clear_filter_states(datasets)
+#'
 #' @examplesIf requireNamespace("MultiAssayExperiment")
 #'
 #' # Requires MultiAssayExperiment from Bioconductor
-#' library(MultiAssayExperiment)
-#' data(miniACC)
+#' data(miniACC, package = "MultiAssayExperiment")
 #'
-#' datasets <- init_filtered_data(x = list(mae = list(dataset = miniACC)))
+#' datasets <- init_filtered_data(list(mae = miniACC))
 #' fs <- teal_slices(
 #'   teal_slice(
 #'     dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
@@ -130,10 +125,10 @@ set_filter_state <- function(datasets, filter) {
 #' @export
 get_filter_state <- function(datasets) {
   checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
-  if (shiny::isRunning()) {
+  if (isRunning()) {
     datasets$get_filter_state()
   } else {
-    shiny::isolate(datasets$get_filter_state())
+    isolate(datasets$get_filter_state())
   }
 }
 
@@ -163,7 +158,9 @@ clear_filter_states <- function(datasets, force = FALSE) {
 #'
 #' @param datasets (`FilteredData`)
 #' @param datanames (`character`) vector of dataset names
-#' @return A `character` string containing all subsetting expressions.
+#'
+#' @return A character string containing all subset expressions.
+#'
 #' @export
 #'
 get_filter_expr <- function(datasets, datanames = datasets$datanames()) {
