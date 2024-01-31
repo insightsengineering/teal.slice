@@ -363,8 +363,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         countsmax <- private$choices_counts
         countsnow <- if (!is.null(private$x_reactive())) {
           unname(table(factor(private$x_reactive(), levels = private$get_choices())))
-        } else {
-          NULL
         }
 
         ui_input <- if (private$is_checkboxgroup()) {
@@ -443,8 +441,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
             countsnow <- if (!is.null(private$x_reactive())) {
               unname(table(factor(non_missing_values(), levels = private$get_choices())))
-            } else {
-              NULL
             }
 
             # update should be based on a change of counts only
@@ -570,8 +566,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
           output$selection <- renderUI({
             countsnow <- if (!is.null(private$x_reactive())) {
               unname(table(factor(private$x_reactive(), levels = private$get_choices())))
-            } else {
-              NULL
             }
             countsmax <- private$choices_counts
 
