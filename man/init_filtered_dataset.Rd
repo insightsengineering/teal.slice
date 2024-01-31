@@ -53,6 +53,8 @@ We recommend consulting the package maintainer before using it.
 
 \examples{
 # DataframeFilteredDataset example
+library(shiny)
+
 iris_fd <- init_filtered_dataset(iris, dataname = "iris")
 ui <- fluidPage(
   iris_fd$ui_add(id = "add"),
@@ -77,6 +79,8 @@ if (interactive()) {
 \dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # MAEFilteredDataset example
 library(MultiAssayExperiment)
+library(shiny)
+
 data(miniACC, package = "MultiAssayExperiment")
 
 MAE_fd <- init_filtered_dataset(miniACC, "MAE")

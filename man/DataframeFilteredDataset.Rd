@@ -20,8 +20,8 @@ ds$set_filter_state(
     teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
   )
 )
-isolate(ds$get_filter_state())
-isolate(ds$get_call())
+shiny::isolate(ds$get_filter_state())
+shiny::isolate(ds$get_call())
 
 ## set_filter_state
 dataset <- DataframeFilteredDataset$new(iris, "iris")
@@ -30,7 +30,7 @@ fs <- teal_slices(
   teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
 )
 dataset$set_filter_state(state = fs)
-isolate(dataset$get_filter_state())
+shiny::isolate(dataset$get_filter_state())
 
 }
 \keyword{internal}

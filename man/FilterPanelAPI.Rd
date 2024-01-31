@@ -20,7 +20,7 @@ fd <- init_filtered_data(list(iris = iris))
 fpa <- FilterPanelAPI$new(fd)
 
 # get the actual filter state --> empty named list
-isolate(fpa$get_filter_state())
+shiny::isolate(fpa$get_filter_state())
 
 # set a filter state
 set_filter_state(
@@ -31,13 +31,13 @@ set_filter_state(
 )
 
 # get the actual filter state --> named list with filters
-isolate(fpa$get_filter_state())
+shiny::isolate(fpa$get_filter_state())
 
 # remove all_filter_states
 fpa$clear_filter_states()
 
 # get the actual filter state --> empty named list
-isolate(fpa$get_filter_state())
+shiny::isolate(fpa$get_filter_state())
 
 }
 \section{Methods}{

@@ -13,18 +13,18 @@
 #' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 #' LogicalFilterState <- getFromNamespace("LogicalFilterState", "teal.slice")
 #'
-#'
 #' filter_state <- LogicalFilterState$new(
 #'   x = sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
 #'   slice = teal_slice(varname = "x", dataname = "data")
 #' )
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
 #' filter_state$set_state(
 #'   teal_slice(dataname = "data", varname = "x", selected = TRUE, keep_na = TRUE)
 #' )
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
 #'
 #' # working filter in an app
+#' library(shiny)
 #' library(shinyjs)
 #'
 #' data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)

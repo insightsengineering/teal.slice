@@ -28,8 +28,7 @@ URL: https://insightsengineering.github.io/teal.slice/,
     https://github.com/insightsengineering/teal.slice/
 BugReports: https://github.com/insightsengineering/teal.slice/issues
 Depends:
-    R (>= 4.0),
-    shiny (>= 1.6.0)
+    R (>= 4.0)
 Imports:
     bslib (>= 0.4.0),
     checkmate (>= 2.1.0),
@@ -42,6 +41,7 @@ Imports:
     methods,
     plotly (>= 4.9.2.2),
     R6 (>= 2.2.0),
+    shiny (>= 1.6.0),
     shinycssloaders (>= 1.0.0),
     shinyjs,
     shinyWidgets (>= 0.6.2),

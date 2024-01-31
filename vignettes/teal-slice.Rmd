@@ -63,6 +63,7 @@ For details please see the *Filter panel for developers* vignette.
 
 ```{r}
 library(teal.slice)
+library(shiny)
 
 # create a FilteredData object
 datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))

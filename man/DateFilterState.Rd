@@ -18,7 +18,7 @@ filter_state <- DateFilterState$new(
   slice = teal_slice(varname = "x", dataname = "data"),
   extract_type = character(0)
 )
-isolate(filter_state$get_call())
+shiny::isolate(filter_state$get_call())
 filter_state$set_state(
   teal_slice(
     dataname = "data",
@@ -27,9 +27,10 @@ filter_state$set_state(
     keep_na = TRUE
   )
 )
-isolate(filter_state$get_call())
+shiny::isolate(filter_state$get_call())
 
 # working filter in an app
+library(shiny)
 library(shinyjs)
 
 dates <- c(Sys.Date() - 100, Sys.Date())

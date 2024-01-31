@@ -25,7 +25,7 @@
 #'   )
 #' )
 #' dataset$set_filter_state(state = fs)
-#' isolate(dataset$get_filter_state())
+#' shiny::isolate(dataset$get_filter_state())
 #'
 #' @keywords internal
 #'

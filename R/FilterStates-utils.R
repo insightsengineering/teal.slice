@@ -33,6 +33,7 @@
 #'   dataname = "DF"
 #' )
 #'
+#' library(shiny)
 #' ui <- fluidPage(
 #'   actionButton("clear", span(icon("xmark"), "Remove all filters")),
 #'   rf$ui_add(id = "add"),

@@ -48,15 +48,15 @@
 #' datasets$set_filter_state(
 #'   teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "virginica"))
 #' )
-#' isolate(datasets$get_call("iris"))
+#' shiny::isolate(datasets$get_call("iris"))
 #'
 #' datasets$set_filter_state(
 #'   teal_slices(teal_slice(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
 #' )
 #'
-#' isolate(datasets$get_filter_state())
-#' isolate(datasets$get_call("iris"))
-#' isolate(datasets$get_call("mtcars"))
+#' shiny::isolate(datasets$get_filter_state())
+#' shiny::isolate(datasets$get_call("iris"))
+#' shiny::isolate(datasets$get_call("mtcars"))
 #'
 #' @examplesIf requireNamespace("MultiAssayExperiment")
 #' ### set_filter_state
@@ -84,7 +84,7 @@
 #'   )
 #' )
 #' datasets$set_filter_state(state = fs)
-#' isolate(datasets$get_filter_state())
+#' shiny::isolate(datasets$get_filter_state())
 #'
 #' @keywords internal
 #'

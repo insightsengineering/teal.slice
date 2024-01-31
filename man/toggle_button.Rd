@@ -38,6 +38,7 @@ which may contain a child \verb{<i>} tag that specifies an icon to be displayed.
 # use non-exported function from teal.slice
 toggle_icon <- getFromNamespace("toggle_icon", "teal.slice")
 
+library(shiny)
 library(shinyjs)
 
 ui <- fluidPage(

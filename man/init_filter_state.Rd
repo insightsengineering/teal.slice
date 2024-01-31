@@ -48,7 +48,7 @@ init_filter_state <- getFromNamespace("init_filter_state", "teal.slice")
 
 filter_state <- init_filter_state(
   x = c(1:10, NA, Inf),
-  x_reactive = reactive(c(1:10, NA, Inf)),
+  x_reactive = shiny::reactive(c(1:10, NA, Inf)),
   slice = teal_slice(
     varname = "varname",
     dataname = "dataname"
@@ -56,22 +56,25 @@ filter_state <- init_filter_state(
   extract_type = "matrix"
 )
 
-isolate(filter_state$get_call())
+shiny::isolate(filter_state$get_call())
+
+# working filter in an app
+library(shiny)
 
 ui <- fluidPage(
   filter_state$ui(id = "app"),
-  verbatimTextOutput("call")
+  shiny::verbatimTextOutput("call")
 )
 server <- function(input, output, session) {
   filter_state$server("app")
 
-  output$call <- renderText(
+  output$call <- shiny::renderText(
     deparse1(filter_state$get_call(), collapse = "\n")
   )
 }
 
 if (interactive()) {
-  shinyApp(ui, server)
+  shiny::shinyApp(ui, server)
 }
 
 }

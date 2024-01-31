@@ -36,6 +36,7 @@
 #'   countsnow = unname(counts)
 #' )
 #'
+#' library(shiny)
 #'
 #' ui <- fluidPage(
 #'   div(

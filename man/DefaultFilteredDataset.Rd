@@ -12,8 +12,8 @@ Stores any object as inert entity. Filtering is not supported.
 DefaultFilteredDataset <- getFromNamespace("DefaultFilteredDataset", "teal.slice")
 
 ds <- DefaultFilteredDataset$new(letters, "letters")
-isolate(ds$get_filter_state())
-isolate(ds$get_call())
+shiny::isolate(ds$get_filter_state())
+shiny::isolate(ds$get_call())
 
 }
 \keyword{internal}

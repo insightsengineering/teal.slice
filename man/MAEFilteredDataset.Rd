@@ -31,7 +31,7 @@ fs <- teal_slices(
   )
 )
 dataset$set_filter_state(state = fs)
-isolate(dataset$get_filter_state())
+shiny::isolate(dataset$get_filter_state())
 \dontshow{\}) # examplesIf}
 }
 \keyword{internal}

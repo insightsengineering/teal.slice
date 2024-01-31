@@ -17,7 +17,7 @@
 #'   x = c(NA, Inf, seq(1:10)),
 #'   slice = teal_slice(varname = "x", dataname = "data")
 #' )
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
 #' filter_state$set_state(
 #'   teal_slice(
 #'     dataname = "data",
@@ -27,9 +27,10 @@
 #'     keep_inf = TRUE
 #'   )
 #' )
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
 #'
 #' # working filter in an app
+#' library(shiny)
 #' library(shinyjs)
 #'
 #' data_range <- c(runif(100, 0, 1), NA, Inf)

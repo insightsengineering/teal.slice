@@ -17,9 +17,9 @@ filter_state <- EmptyFilterState$new(
   slice = teal_slice(varname = "x", dataname = "data"),
   extract_type = character(0)
 )
-isolate(filter_state$get_call())
+shiny::isolate(filter_state$get_call())
 filter_state$set_state(teal_slice(dataname = "data", varname = "x", keep_na = TRUE))
-isolate(filter_state$get_call())
+shiny::isolate(filter_state$get_call())
 
 }
 \keyword{internal}
