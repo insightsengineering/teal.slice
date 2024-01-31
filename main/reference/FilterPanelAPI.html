@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9035</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9037</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,16 +34,6 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -98,7 +88,7 @@ filter panel API.</p>
 <li><p><a href="#method-FilterPanelAPI-clear_filter_states"><code>FilterPanelAPI$clear_filter_states()</code></a></p></li>
 <li><p><a href="#method-FilterPanelAPI-clone"><code>FilterPanelAPI$clone()</code></a></p></li>
 </ul></div><p></p><hr><a id="method-FilterPanelAPI-new"></a><div class="section">
-<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
+<h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Initialize a <code>FilterPanelAPI</code> object.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/FilterPanelAPI.html">FilterPanelAPI</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">datasets</span><span class="op">)</span></span></code></pre></div><p></p></div>
@@ -213,11 +203,13 @@ omit to remove all <code>FilterStates</code> in the <code>FilteredData</code> ob
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">fd</span> <span class="op">&lt;-</span> <span class="fu"><a href="init_filtered_data.html">init_filtered_data</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>iris <span class="op">=</span> <span class="va">iris</span><span class="op">)</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">fd</span> <span class="op">&lt;-</span> <span class="fu"><a href="init_filtered_data.html">init_filtered_data</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>iris <span class="op">=</span> <span class="va">iris</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fpa</span> <span class="op">&lt;-</span> <span class="va">FilterPanelAPI</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">fd</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get the actual filter state --&gt; empty named list</span></span></span>
-<span class="r-in"><span><span class="fu">isolate</span><span class="op">(</span><span class="va">fpa</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">fpa</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "slices": [],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "attributes": {</span>
@@ -238,7 +230,7 @@ omit to remove all <code>FilterStates</code> in the <code>FilteredData</code> ob
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get the actual filter state --&gt; named list with filters</span></span></span>
-<span class="r-in"><span><span class="fu">isolate</span><span class="op">(</span><span class="va">fpa</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">fpa</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "slices": [</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
@@ -266,7 +258,7 @@ omit to remove all <code>FilterStates</code> in the <code>FilteredData</code> ob
 <span class="r-in"><span><span class="va">fpa</span><span class="op">$</span><span class="fu">clear_filter_states</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get the actual filter state --&gt; empty named list</span></span></span>
-<span class="r-in"><span><span class="fu">isolate</span><span class="op">(</span><span class="va">fpa</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">fpa</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "slices": [],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "attributes": {</span>
