@@ -32,10 +32,6 @@
 #' @param i (`character` or `numeric` or `logical`) indicating which elements to extract
 #' @param recursive (`logical(1)`) flag specifying whether to also convert to list the elements of this `teal_slices`
 #'
-#' @note
-#' The `teal` package contains robust utilities for saving and loading `teal_slices` in `JSON` format.
-#' See [`teal::slices_store`] and [`teal::slices_restore`].
-#'
 #' @return
 #' `teal_slices`, which is an unnamed list of `teal_slice` objects.
 #'
@@ -86,7 +82,9 @@
 #' print(all_filters)
 #' print(all_filters, trim_lines = FALSE)
 #'
-#' @seealso [`teal_slice`]
+#' @seealso [teal_slice()] for creating `teal_slice` objects,
+#' [teal::slices_store()] and [teal::slices_restore()] for saving / loading
+#' `teal_slices` from disk.
 #'
 #' @export
 #'
