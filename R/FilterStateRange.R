@@ -347,9 +347,7 @@ RangeFilterState <- R6::R6Class( # nolint
         return(1L)
       } else {
         n_steps <- length(pretty_range) - 1
-        return(
-          signif(digits = 10, (max(pretty_range) - min(pretty_range)) / n_steps)
-        )
+        return(signif(digits = 10, (max(pretty_range) - min(pretty_range)) / n_steps))
       }
     },
     cast_and_validate = function(values) {

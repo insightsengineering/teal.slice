@@ -83,10 +83,6 @@ The former enumerates allowed variables, the latter enumerates forbidden values.
 Since these could be mutually exclusive, it is impossible to set both allowed and forbidden
 variables for one data set in one \code{teal_slices}.
 }
-\note{
-The \code{teal} package contains robust utilities for saving and loading \code{teal_slices} in \code{JSON} format.
-See \code{\link[teal:slices_store]{teal::slices_store}} and \code{\link[teal:slices_restore]{teal::slices_restore}}.
-}
 \examples{
 filter_1 <- teal_slice(
   dataname = "dataname1",
@@ -136,6 +132,9 @@ print(all_filters, trim_lines = FALSE)
 
 }
 \seealso{
-\code{\link{teal_slice}}
+\itemize{
+\item \code{\link{teal_slice}} for creating constituent elements of \code{teal_slices}
+\item \code{\link[teal:slices_store]{teal::slices_store}} for robust utilities for saving and loading \code{teal_slices} in \code{JSON} format
+}
 }
 \keyword{internal}
