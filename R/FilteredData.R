@@ -252,7 +252,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `join_keys`
     #'
     get_join_keys = function() {
-      return(private$join_keys)
+      private$join_keys
     },
 
     #' @description
