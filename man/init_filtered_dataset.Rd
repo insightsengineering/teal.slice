@@ -78,7 +78,6 @@ if (interactive()) {
 
 \dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # MAEFilteredDataset example
-library(MultiAssayExperiment)
 library(shiny)
 
 data(miniACC, package = "MultiAssayExperiment")

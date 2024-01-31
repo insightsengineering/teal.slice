@@ -79,8 +79,7 @@ clear_filter_states(datasets)
 \dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 
 # Requires MultiAssayExperiment from Bioconductor
-library(MultiAssayExperiment)
-data(miniACC)
+data(miniACC, package = "MultiAssayExperiment")
 
 datasets <- init_filtered_data(list(mae = miniACC))
 fs <- teal_slices(

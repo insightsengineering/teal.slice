@@ -16,11 +16,13 @@ This class is supported by methods to set, get, remove filter states in the
 filter panel API.
 }
 \examples{
+library(shiny)
+
 fd <- init_filtered_data(list(iris = iris))
 fpa <- FilterPanelAPI$new(fd)
 
 # get the actual filter state --> empty named list
-shiny::isolate(fpa$get_filter_state())
+isolate(fpa$get_filter_state())
 
 # set a filter state
 set_filter_state(
@@ -31,13 +33,13 @@ set_filter_state(
 )
 
 # get the actual filter state --> named list with filters
-shiny::isolate(fpa$get_filter_state())
+isolate(fpa$get_filter_state())
 
 # remove all_filter_states
 fpa$clear_filter_states()
 
 # get the actual filter state --> empty named list
-shiny::isolate(fpa$get_filter_state())
+isolate(fpa$get_filter_state())
 
 }
 \section{Methods}{

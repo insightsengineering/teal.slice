@@ -11,9 +11,11 @@ Stores any object as inert entity. Filtering is not supported.
 # use non-exported function from teal.slice
 DefaultFilteredDataset <- getFromNamespace("DefaultFilteredDataset", "teal.slice")
 
+library(shiny)
+
 ds <- DefaultFilteredDataset$new(letters, "letters")
-shiny::isolate(ds$get_filter_state())
-shiny::isolate(ds$get_call())
+isolate(ds$get_filter_state())
+isolate(ds$get_call())
 
 }
 \keyword{internal}

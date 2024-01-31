@@ -13,12 +13,14 @@ include_css_files <- getFromNamespace("include_css_files", "teal.slice")
 include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 DateFilterState <- getFromNamespace("DateFilterState", "teal.slice")
 
+library(shiny)
+
 filter_state <- DateFilterState$new(
   x = c(Sys.Date() + seq(1:10), NA),
   slice = teal_slice(varname = "x", dataname = "data"),
   extract_type = character(0)
 )
-shiny::isolate(filter_state$get_call())
+isolate(filter_state$get_call())
 filter_state$set_state(
   teal_slice(
     dataname = "data",
@@ -27,10 +29,9 @@ filter_state$set_state(
     keep_na = TRUE
   )
 )
-shiny::isolate(filter_state$get_call())
+isolate(filter_state$get_call())
 
 # working filter in an app
-library(shiny)
 library(shinyjs)
 
 dates <- c(Sys.Date() - 100, Sys.Date())
