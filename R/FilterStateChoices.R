@@ -590,13 +590,16 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #  and if NA are included also
     content_summary = function(id) {
       selected <- private$get_selected()
-      selected_length <- nchar(paste0(selected, collapse = ""))
-      if (selected_length <= 40) {
-        selected_text <- paste0(selected, collapse = ", ")
-      } else {
-        n_selected <- length(selected)
-        selected_text <- paste(n_selected, "levels selected")
-      }
+      selected_text <-
+        if (length(selected) == 0L) {
+          "no selection"
+        } else {
+          if (sum(nchar(selected)) <= 40L) {
+            paste(selected, collapse = ", ")
+          } else {
+            paste(length(selected), "levels selected")
+          }
+        }
       tagList(
         tags$span(
           class = "filter-card-summary-value",
