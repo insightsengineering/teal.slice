@@ -13,6 +13,8 @@ include_css_files <- getFromNamespace("include_css_files", "teal.slice")
 include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 RangeFilterState <- getFromNamespace("RangeFilterState", "teal.slice")
 
+library(shiny)
+
 filter_state <- RangeFilterState$new(
   x = c(NA, Inf, seq(1:10)),
   slice = teal_slice(varname = "x", dataname = "data")

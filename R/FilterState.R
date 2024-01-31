@@ -93,7 +93,7 @@ FilterState <- R6::R6Class( # nolint
       private$extract_type <- extract_type
 
       # Set state properties.
-      if (is.null(shiny::isolate(slice$keep_na)) && anyNA(x)) slice$keep_na <- TRUE
+      if (is.null(isolate(slice$keep_na)) && anyNA(x)) slice$keep_na <- TRUE
       private$teal_slice <- slice
       # Obtain variable label.
       varlabel <- attr(x, "label")
@@ -134,7 +134,7 @@ FilterState <- R6::R6Class( # nolint
     #' @param ... additional arguments
     #'
     print = function(...) {
-      cat(shiny::isolate(self$format(...)))
+      cat(isolate(self$format(...)))
     },
 
     #' @description
@@ -152,7 +152,7 @@ FilterState <- R6::R6Class( # nolint
         logger::log_warn("attempt to set state on fixed filter aborted id: { private$get_id() }")
       } else {
         logger::log_trace("{ class(self)[1] }$set_state setting state of filter id: { private$get_id() }")
-        shiny::isolate({
+        isolate({
           if (!is.null(state$selected)) {
             private$set_selected(state$selected)
           }
@@ -429,7 +429,7 @@ FilterState <- R6::R6Class( # nolint
           private$get_id()
         )
       )
-      shiny::isolate({
+      isolate({
         value <- private$cast_and_validate(value)
         value <- private$check_length(value)
         value <- private$remove_out_of_bounds_values(value)
@@ -497,21 +497,21 @@ FilterState <- R6::R6Class( # nolint
     # Returns dataname.
     # @return `character(1)`
     get_dataname = function() {
-      shiny::isolate(private$teal_slice$dataname)
+      isolate(private$teal_slice$dataname)
     },
 
     # @description
     # Get variable name.
     # @return `character(1)`
     get_varname = function() {
-      shiny::isolate(private$teal_slice$varname)
+      isolate(private$teal_slice$varname)
     },
 
     # @description
     # Get id of the teal_slice.
     # @return `character(1)`
     get_id = function() {
-      shiny::isolate(private$teal_slice$id)
+      isolate(private$teal_slice$id)
     },
 
     # @description
@@ -519,7 +519,7 @@ FilterState <- R6::R6Class( # nolint
     # @return
     # Vector describing the available choices. Return type depends on the `FilterState` subclass.
     get_choices = function() {
-      shiny::isolate(private$teal_slice$choices)
+      isolate(private$teal_slice$choices)
     },
 
     # @description
@@ -547,19 +547,19 @@ FilterState <- R6::R6Class( # nolint
     # Check whether this filter is fixed (cannot be changed).
     # @return `logical(1)`
     is_fixed = function() {
-      shiny::isolate(isTRUE(private$teal_slice$fixed))
+      isolate(isTRUE(private$teal_slice$fixed))
     },
 
     # Check whether this filter is anchored (cannot be removed).
     # @return `logical(1)`
     is_anchored = function() {
-      shiny::isolate(isTRUE(private$teal_slice$anchored))
+      isolate(isTRUE(private$teal_slice$anchored))
     },
 
     # Check whether this filter is capable of selecting multiple values.
     # @return `logical(1)`
     is_multiple = function() {
-      shiny::isolate(isTRUE(private$teal_slice$multiple))
+      isolate(isTRUE(private$teal_slice$multiple))
     },
 
     # other ----
@@ -712,7 +712,7 @@ FilterState <- R6::R6Class( # nolint
     keep_na_ui = function(id) {
       ns <- NS(id)
       if (private$na_count > 0) {
-        shiny::isolate({
+        isolate({
           countmax <- private$na_count
           countnow <- private$filtered_na_count()
           ui_input <- checkboxInput(

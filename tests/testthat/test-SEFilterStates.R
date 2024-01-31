@@ -104,18 +104,18 @@ testthat::test_that("ui_add returns a message inside a div when data has no rows
   filter_states <- SEFilterStates$new(data = get_test_data(TRUE)[[1]], dataname = "test")
   testthat::expect_identical(
     filter_states$ui_add("id"),
-    div(
-      div("no sample variables available"),
-      div("no sample variables available")
+    shiny::div(
+      shiny::div("no sample variables available"),
+      shiny::div("no sample variables available")
     )
   )
 
   filter_states <- SEFilterStates$new(data = get_test_data(TRUE)[[2]], dataname = "test")
   testthat::expect_identical(
     filter_states$ui_add("id"),
-    div(
-      div("no samples available"),
-      div("no samples available")
+    shiny::div(
+      shiny::div("no samples available"),
+      shiny::div("no samples available")
     )
   )
 })

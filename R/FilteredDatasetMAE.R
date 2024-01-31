@@ -8,7 +8,7 @@
 #' # use non-exported function from teal.slice
 #' MAEFilteredDataset <- getFromNamespace("MAEFilteredDataset", "teal.slice")
 #'
-#' utils::data(miniACC, package = "MultiAssayExperiment")
+#' data(miniACC, package = "MultiAssayExperiment")
 #' dataset <- MAEFilteredDataset$new(miniACC, "MAE")
 #' fs <- teal_slices(
 #'   teal_slice(
@@ -25,6 +25,8 @@
 #'   )
 #' )
 #' dataset$set_filter_state(state = fs)
+#'
+#' library(shiny)
 #' isolate(dataset$get_filter_state())
 #'
 #' @keywords internal
@@ -95,7 +97,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @return `NULL`, invisibly.
     #'
     set_filter_state = function(state) {
-      shiny::isolate({
+      isolate({
         logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
         checkmate::assert_class(state, "teal_slices")
         lapply(state, function(x) {
@@ -144,7 +146,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     remove_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
 
-      shiny::isolate({
+      isolate({
         logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
         # remove state on subjects
         subject_state <- Filter(function(x) is.null(x$experiment), state)

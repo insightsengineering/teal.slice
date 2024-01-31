@@ -13,6 +13,8 @@
 #' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 #' RangeFilterState <- getFromNamespace("RangeFilterState", "teal.slice")
 #'
+#' library(shiny)
+#'
 #' filter_state <- RangeFilterState$new(
 #'   x = c(NA, Inf, seq(1:10)),
 #'   slice = teal_slice(varname = "x", dataname = "data")
@@ -152,7 +154,7 @@ RangeFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           extract_type = character(0),
                           slice) {
-      shiny::isolate({
+      isolate({
         checkmate::assert_numeric(x, all.missing = FALSE)
         if (!any(is.finite(x))) stop("\"x\" contains no finite values")
         super$initialize(x = x, x_reactive = x_reactive, slice = slice, extract_type = extract_type)
@@ -345,9 +347,7 @@ RangeFilterState <- R6::R6Class( # nolint
         return(1L)
       } else {
         n_steps <- length(pretty_range) - 1
-        return(
-          signif(digits = 10, (max(pretty_range) - min(pretty_range)) / n_steps)
-        )
+        return(signif(digits = 10, (max(pretty_range) - min(pretty_range)) / n_steps))
       }
     },
     cast_and_validate = function(values) {
@@ -406,7 +406,7 @@ RangeFilterState <- R6::R6Class( # nolint
     # @param id (`character(1)`) `shiny` module instance id.
     ui_inputs = function(id) {
       ns <- NS(id)
-      shiny::isolate({
+      isolate({
         ui_input <- shinyWidgets::numericRangeInput(
           inputId = ns("selection_manual"),
           label = NULL,
@@ -640,7 +640,7 @@ RangeFilterState <- R6::R6Class( # nolint
     content_summary = function() {
       selection <- private$get_selected()
       tagList(
-        tags$span(shiny::HTML(selection[1], "&ndash;", selection[2]), class = "filter-card-summary-value"),
+        tags$span(HTML(selection[1], "&ndash;", selection[2]), class = "filter-card-summary-value"),
         tags$span(
           class = "filter-card-summary-controls",
           if (private$na_count > 0) {

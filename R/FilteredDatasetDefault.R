@@ -10,6 +10,8 @@
 #' # use non-exported function from teal.slice
 #' DefaultFilteredDataset <- getFromNamespace("DefaultFilteredDataset", "teal.slice")
 #'
+#' library(shiny)
+#'
 #' ds <- DefaultFilteredDataset$new(letters, "letters")
 #' isolate(ds$get_filter_state())
 #' isolate(ds$get_call())

@@ -84,5 +84,5 @@ choices_labeled <- function(choices, labels, subset = NULL, types = NULL) {
     types = types
   )
 
-  return(choices)
+  choices
 }

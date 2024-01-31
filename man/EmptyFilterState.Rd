@@ -12,6 +12,8 @@
 include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 EmptyFilterState <- getFromNamespace("EmptyFilterState", "teal.slice")
 
+library(shiny)
+
 filter_state <- EmptyFilterState$new(
   x = NA,
   slice = teal_slice(varname = "x", dataname = "data"),

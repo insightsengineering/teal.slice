@@ -63,8 +63,7 @@
 #' @examplesIf requireNamespace("MultiAssayExperiment")
 #'
 #' # Requires MultiAssayExperiment from Bioconductor
-#' library(MultiAssayExperiment)
-#' data(miniACC)
+#' data(miniACC, package = "MultiAssayExperiment")
 #'
 #' datasets <- init_filtered_data(list(mae = miniACC))
 #' fs <- teal_slices(
@@ -126,10 +125,10 @@ set_filter_state <- function(datasets, filter) {
 #' @export
 get_filter_state <- function(datasets) {
   checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
-  if (shiny::isRunning()) {
+  if (isRunning()) {
     datasets$get_filter_state()
   } else {
-    shiny::isolate(datasets$get_filter_state())
+    isolate(datasets$get_filter_state())
   }
 }
 

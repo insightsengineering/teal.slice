@@ -43,6 +43,8 @@ Common arguments are:
 # use non-exported function from teal.slice
 FilteredData <- getFromNamespace("FilteredData", "teal.slice")
 
+library(shiny)
+
 datasets <- FilteredData$new(list(iris = iris, mtcars = mtcars))
 
 # get datanames
@@ -63,8 +65,9 @@ isolate(datasets$get_call("mtcars"))
 
 \dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 ### set_filter_state
+library(shiny)
 
-utils::data(miniACC, package = "MultiAssayExperiment")
+data(miniACC, package = "MultiAssayExperiment")
 datasets <- FilteredData$new(list(iris = iris, mae = miniACC))
 fs <- teal_slices(
   teal_slice(

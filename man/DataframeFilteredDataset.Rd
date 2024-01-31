@@ -13,6 +13,8 @@ The \code{DataframeFilteredDataset} \code{R6} class
 # use non-exported function from teal.slice
 DataframeFilteredDataset <- getFromNamespace("DataframeFilteredDataset", "teal.slice")
 
+library(shiny)
+
 ds <- DataframeFilteredDataset$new(iris, "iris")
 ds$set_filter_state(
   teal_slices(

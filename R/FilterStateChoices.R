@@ -13,6 +13,8 @@
 #' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 #' ChoicesFilterState <- getFromNamespace("ChoicesFilterState", "teal.slice")
 #'
+#' library(shiny)
+#'
 #' filter_state <- ChoicesFilterState$new(
 #'   x = c(LETTERS, NA),
 #'   slice = teal_slice(varname = "var", dataname = "data")
@@ -146,7 +148,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           slice,
                           extract_type = character(0)) {
-      shiny::isolate({
+      isolate({
         checkmate::assert(
           is.character(x),
           is.factor(x),
@@ -333,7 +335,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           sprintf("Selection: %s is not a vector of length one. ", toString(values, width = 360)),
           "Maintaining previous selection."
         )
-        values <- shiny::isolate(private$get_selected())
+        values <- isolate(private$get_selected())
       }
       values
     },
@@ -359,7 +361,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       ns <- NS(id)
 
       # we need to isolate UI to not rettrigger renderUI
-      shiny::isolate({
+      isolate({
         countsmax <- private$choices_counts
         countsnow <- if (!is.null(private$x_reactive())) {
           unname(table(factor(private$x_reactive(), levels = private$get_choices())))
@@ -444,7 +446,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             }
 
             # update should be based on a change of counts only
-            shiny::isolate({
+            isolate({
               if (private$is_checkboxgroup()) {
                 updateCountBars(
                   inputId = "labels",
@@ -569,10 +571,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
             }
             countsmax <- private$choices_counts
 
-            ind <- private$get_choices() %in% shiny::isolate(private$get_selected())
+            ind <- private$get_choices() %in% isolate(private$get_selected())
             countBars(
               inputId = session$ns("labels"),
-              choices = shiny::isolate(private$get_selected()),
+              choices = isolate(private$get_selected()),
               countsnow = countsnow[ind],
               countsmax = countsmax[ind]
             )

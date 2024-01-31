@@ -25,6 +25,8 @@
 #' # use non-exported function from teal.slice
 #' init_filter_state <- getFromNamespace("init_filter_state", "teal.slice")
 #'
+#' library(shiny)
+#'
 #' filter_state <- init_filter_state(
 #'   x = c(1:10, NA, Inf),
 #'   x_reactive = reactive(c(1:10, NA, Inf)),
@@ -36,6 +38,8 @@
 #' )
 #'
 #' isolate(filter_state$get_call())
+#'
+#' # working filter in an app
 #'
 #' ui <- fluidPage(
 #'   filter_state$ui(id = "app"),

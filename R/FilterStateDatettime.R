@@ -13,6 +13,8 @@
 #' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 #' DatetimeFilterState <- getFromNamespace("DatetimeFilterState", "teal.slice")
 #'
+#' library(shiny)
+#'
 #' filter_state <- DatetimeFilterState$new(
 #'   x = c(Sys.time() + seq(0, by = 3600, length.out = 10), NA),
 #'   slice = teal_slice(varname = "x", dataname = "data"),
@@ -150,7 +152,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           extract_type = character(0),
                           slice) {
-      shiny::isolate({
+      isolate({
         checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
         checkmate::assert_class(x_reactive, "reactive")
 
@@ -315,7 +317,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      shiny::isolate({
+      isolate({
         ui_input_1 <- shinyWidgets::airDatepickerInput(
           inputId = ns("selection_start"),
           value = private$get_selected()[1],
@@ -536,7 +538,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       tagList(
         tags$span(
           class = "filter-card-summary-value",
-          shiny::HTML(min, "&ndash;", max)
+          HTML(min, "&ndash;", max)
         ),
         tags$span(
           class = "filter-card-summary-controls",
