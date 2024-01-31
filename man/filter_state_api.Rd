@@ -26,7 +26,7 @@ see \code{\link{FilteredData}} for details}
 specify filters in place on app start-up}
 
 \item{force}{(\code{logical(1)})
-include locked filter states}
+flag specifying whether to include anchored filter states.}
 }
 \value{
 \itemize{
@@ -41,12 +41,7 @@ containing a \code{teal_slice} for every existing \code{FilterState}
 Set, get and remove filter states of \code{FilteredData} object.
 }
 \examples{
-datasets <- init_filtered_data(
-  x = list(
-    iris = list(dataset = iris),
-    mtcars = list(dataset = mtcars)
-  )
-)
+datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
 fs <- teal_slices(
   teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
   teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
@@ -80,13 +75,13 @@ remove_filter_state(
 
 # remove all states
 clear_filter_states(datasets)
+
 \dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 
 # Requires MultiAssayExperiment from Bioconductor
-library(MultiAssayExperiment)
-data(miniACC)
+data(miniACC, package = "MultiAssayExperiment")
 
-datasets <- init_filtered_data(x = list(mae = list(dataset = miniACC)))
+datasets <- init_filtered_data(list(mae = miniACC))
 fs <- teal_slices(
   teal_slice(
     dataname = "mae", varname = "years_to_birth", selected = c(30, 50),

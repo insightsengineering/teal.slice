@@ -3,7 +3,7 @@
 #' Combines calls with a logical operator.
 #'
 #' This function is used to combine logical predicates produced by `FilterState` objects
-#' to build a complete subsetting expression.
+#' to build a complete subset expression.
 #'
 #' @param calls (`list`)
 #'   containing calls (or symbols) to be combined by `operator`

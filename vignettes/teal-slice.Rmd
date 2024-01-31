@@ -62,15 +62,11 @@ The example below uses the `set_filter_state` function to set state and the stat
 For details please see the *Filter panel for developers* vignette.
 
 ```{r}
+library(shiny)
 library(teal.slice)
 
 # create a FilteredData object
-datasets <- init_filtered_data(
-  list(
-    iris = list(dataset = iris),
-    mtcars = list(dataset = mtcars)
-  )
-)
+datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
 
 # setting initial state
 set_filter_state(

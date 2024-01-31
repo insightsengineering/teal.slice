@@ -14,9 +14,9 @@
 #'
 #' @param ... any number of `teal_slice` objects. For `print` and `format`,
 #'  additional arguments passed to other functions.
-#' @param include_varnames,exclude_varnames (named `list`s of `character`) where list names
+#' @param include_varnames,exclude_varnames (`named list`s of `character`) where list names
 #'  match names of data sets and vector elements match variable names in respective data sets;
-#'  specify which variables are allowed to be filtered; see `Details`
+#'  specify which variables are allowed to be filtered; see `Details`.
 #' @param count_type `r lifecycle::badge("experimental")`
 #' _This is a new feature. Do kindly share your opinions on
 #' [`teal.slice`'s GitHub repository](https://github.com/insightsengineering/teal.slice/)._
@@ -31,10 +31,6 @@
 #' @param x object to test for `teal_slices`, object to convert to `teal_slices` or a `teal_slices` object
 #' @param i (`character` or `numeric` or `logical`) indicating which elements to extract
 #' @param recursive (`logical(1)`) flag specifying whether to also convert to list the elements of this `teal_slices`
-#'
-#' @note
-#' The `teal` package contains robust utilities for saving and loading `teal_slices` in `JSON` format.
-#' See [`teal::slices_store`] and [`teal::slices_restore`].
 #'
 #' @return
 #' `teal_slices`, which is an unnamed list of `teal_slice` objects.
@@ -86,7 +82,9 @@
 #' print(all_filters)
 #' print(all_filters, trim_lines = FALSE)
 #'
-#' @seealso [`teal_slice`]
+#' @seealso
+#' - [`teal_slice`] for creating constituent elements of `teal_slices`
+#' - [`teal::slices_store`] for robust utilities for saving and loading `teal_slices` in `JSON` format
 #'
 #' @export
 #'
@@ -97,7 +95,7 @@ teal_slices <- function(...,
                         allow_add = TRUE) {
   slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
-  slices_id <- shiny::isolate(vapply(slices, `[[`, character(1L), "id"))
+  slices_id <- isolate(vapply(slices, `[[`, character(1L), "id"))
   if (any(duplicated(slices_id))) {
     stop(
       "Some teal_slice objects have the same id:\n",
@@ -265,7 +263,7 @@ setdiff_teal_slices <- function(x, y) {
 #'
 #' This function is used internally in `c.teal_slices` to manage `teal_slices` attributes.
 #'
-#' @param x (`list`), either of atomic vectors or of named `list`s
+#' @param x (`list`), either of atomic vectors or of named lists
 #' @return
 #' Either an atomic vector of length 1 or a (potentially nested) list.
 #'

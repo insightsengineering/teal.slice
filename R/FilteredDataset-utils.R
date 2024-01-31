@@ -1,24 +1,35 @@
-#' Initializes `FilteredDataset`
+#' Initialize `FilteredDataset`
 #'
-#' @param dataset (`data.frame` or `MultiAssayExperiment`)
-#' @param dataname (`character`)
-#'  A given name for the dataset it may not contain spaces
-#' @param keys optional, (`character`)
-#'   Vector with primary keys
+#' Initializes a `FilteredDataset` object corresponding to the class of the filtered dataset.
+#'
+#' @param dataset any object
+#' @param dataname (`character(1)`)
+#'  syntactically valid name given to the dataset.
+#' @param keys (`character`)
+#'   optional vector of primary key column names.
 #' @param parent_name (`character(1)`)
-#'   Name of the parent dataset
+#'   name of the parent dataset.
 #' @param parent (`reactive`)
-#'   object returned by this reactive is a filtered `data.frame` from other `FilteredDataset`
-#'   named `parent_name`. Consequence of passing `parent` is a `reactive` link which causes
-#'   causing re-filtering of this `dataset` based on the changes in `parent`.
+#'   that returns a filtered `data.frame` from other `FilteredDataset` named `parent_name`.
+#'   Passing `parent` results in a `reactive` link that causes re-filtering of this `dataset`
+#'   based on the changes in `parent`.
 #' @param join_keys (`character`)
-#'   Name of the columns in this dataset to join with `parent`
-#'   dataset. If the column names are different if both datasets
-#'   then the names of the vector define the `parent` columns.
-#' @param label (`character`)
-#'   Label to describe the dataset
+#'   vector of names of columns in this dataset to join with `parent` dataset.
+#'   If column names in the parent do not match these, they should be given as the names of this vector.
+#' @param label (`character(1)`)
+#'   label to describe the dataset.
+#'
+#' @return Object of class `FilteredDataset`.
+#'
+#' @section Warning:
+#' This function is exported to allow other packages to extend `teal.slice` but it is treated as internal.
+#' Breaking changes may occur without warning.
+#' We recommend consulting the package maintainer before using it.
+#'
 #' @examples
 #' # DataframeFilteredDataset example
+#' library(shiny)
+#'
 #' iris_fd <- init_filtered_dataset(iris, dataname = "iris")
 #' ui <- fluidPage(
 #'   iris_fd$ui_add(id = "add"),
@@ -42,8 +53,10 @@
 #'
 #' @examplesIf requireNamespace("MultiAssayExperiment")
 #' # MAEFilteredDataset example
-#' library(MultiAssayExperiment)
+#' library(shiny)
+#'
 #' data(miniACC, package = "MultiAssayExperiment")
+#'
 #' MAE_fd <- init_filtered_dataset(miniACC, "MAE")
 #' ui <- fluidPage(
 #'   MAE_fd$ui_add(id = "add"),
@@ -66,9 +79,6 @@
 #'
 #' @keywords internal
 #' @export
-#' @note Although this function is exported for use in other packages, it may be changed or removed in a future release
-#'   at which point any code which relies on this exported function will need to be changed.
-#'
 init_filtered_dataset <- function(dataset, # nolint
                                   dataname,
                                   keys = character(0),

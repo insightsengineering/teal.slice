@@ -19,4 +19,11 @@ Named \code{character(1)} containing a hexadecimal color representation.
 \description{
 Determines the color specification for the currently active Bootstrap color theme and returns one queried color.
 }
+\examples{
+fetch_bs_color <- getFromNamespace("fetch_bs_color", "teal.slice")
+fetch_bs_color("primary")
+fetch_bs_color("danger", 0.35)
+fetch_bs_color("danger", "80")
+
+}
 \keyword{internal}

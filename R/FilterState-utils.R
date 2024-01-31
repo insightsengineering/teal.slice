@@ -1,39 +1,45 @@
-#' Initializes `FilterState`
+#' Initialize `FilterState`
 #'
-#' Initializes `FilterState` depending on a variable class.
+#' Initializes a `FilterState` object corresponding to the class of the filtered variable.
 #'
 #' @param x (`vector`)
-#'   values of the variable used in filter
+#'   variable to be filtered.
 #' @param x_reactive (`reactive`)
 #'   returning vector of the same type as `x`. Is used to update
 #'   counts following the change in values of the filtered dataset.
 #'   If it is set to `reactive(NULL)` then counts based on filtered
 #'   dataset are not shown.
 #' @param slice (`teal_slice`)
-#'   object created using [teal_slice()].
+#'   specification of this filter state.
+#'   `teal_slice` is stored in the object and `set_state` directly manipulates values within `teal_slice`.
+#'   `get_state` returns `teal_slice` object which can be reused in other places.
+#'   Note that `teal_slice` is a `reactiveValues`, which means it has reference semantics, i.e.
+#'   changes made to an object are automatically reflected in all places that refer to the same `teal_slice`.
 #' @param extract_type (`character`)
 #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
 #' - `character(0)` (default) `varname` in the condition call will not be prefixed
 #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
 #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
-#' @param ... additional arguments to be saved as a list in `private$extras` field
 #'
 #' @examples
 #' # use non-exported function from teal.slice
-#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 #' init_filter_state <- getFromNamespace("init_filter_state", "teal.slice")
+#'
+#' library(shiny)
 #'
 #' filter_state <- init_filter_state(
 #'   x = c(1:10, NA, Inf),
 #'   x_reactive = reactive(c(1:10, NA, Inf)),
 #'   slice = teal_slice(
-#'     varname = "x",
+#'     varname = "varname",
 #'     dataname = "dataname"
 #'   ),
 #'   extract_type = "matrix"
 #' )
 #'
 #' isolate(filter_state$get_call())
+#'
+#' # working filter in an app
 #'
 #' ui <- fluidPage(
 #'   filter_state$ui(id = "app"),
@@ -218,11 +224,7 @@ init_filter_state.POSIXlt <- function(x,
 #' Initialize a `FilterStateExpr` object
 #'
 #' @param slice (`teal_slice_expr`)
-#'   object created using [teal_slice()]. `teal_slice` is stored
-#'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
-#'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
-#'   is a `reactiveValues` which means that changes in particular object are automatically
-#'   reflected in all places which refer to the same `teal_slice`.
+#'   specifying this filter state.
 #'
 #' @return `FilterStateExpr` object
 #' @keywords internal
@@ -241,6 +243,13 @@ init_filter_state_expr <- function(slice) {
 #'              set to NULL to omit adding the alpha channel
 #'
 #' @return Named `character(1)` containing a hexadecimal color representation.
+#'
+#' @examples
+#' fetch_bs_color <- getFromNamespace("fetch_bs_color", "teal.slice")
+#' fetch_bs_color("primary")
+#' fetch_bs_color("danger", 0.35)
+#' fetch_bs_color("danger", "80")
+#'
 #' @keywords internal
 #'
 fetch_bs_color <- function(color, alpha = NULL) {
@@ -251,7 +260,6 @@ fetch_bs_color <- function(color, alpha = NULL) {
   )
 
   # locate file that describes the current theme
-  ## TODO this is not ideal
   sass_file <- if (utils::packageVersion("bslib") < as.package_version("0.5.1.9000")) {
     bslib::bs_theme()[["layers"]][[2]][["defaults"]][[1]]
   } else {

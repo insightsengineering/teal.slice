@@ -2,22 +2,22 @@
 % Please edit documentation in R/count_labels.R
 \name{make_count_text}
 \alias{make_count_text}
-\title{Make a count text}
+\title{Build count text}
 \usage{
 make_count_text(label, countmax, countnow = NULL)
 }
 \arguments{
-\item{label}{(\code{character(1)}) Text displayed before counts}
+\item{label}{(\code{character(1)}) Text displayed before counts.}
 
-\item{countmax}{(\code{numeric(1)}) unfiltered counts}
+\item{countmax}{(\code{numeric(1)}) Number of unfiltered counts.}
 
-\item{countnow}{(\code{numeric(1)}) filtered counts}
+\item{countnow}{(\code{numeric(1)}) Number of filtered counts.}
 }
 \value{
-\code{character(1)}
+A character string.
 }
 \description{
-Returns a text describing filtered counts. The text is composed in the following way:
+Returns a text label describing filtered counts. The text is composed in the following way:
 \itemize{
 \item when \code{countnow} is not \code{NULL}: \verb{<label> (<countnow>/<countmax>)}
 \item when \code{countnow} is \code{NULL}: \verb{<label> (<countmax>)}

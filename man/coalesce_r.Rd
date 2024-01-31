@@ -7,7 +7,7 @@
 coalesce_r(x)
 }
 \arguments{
-\item{x}{(\code{list}), either of atomic vectors or of named \code{list}s}
+\item{x}{(\code{list}), either of atomic vectors or of named lists}
 }
 \value{
 Either an atomic vector of length 1 or a (potentially nested) list.

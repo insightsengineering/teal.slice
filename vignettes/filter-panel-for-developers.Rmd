@@ -68,12 +68,7 @@ Creating `teal_slices` with slices with duplicated `id`s is forbidden and will r
 ```{r, message=FALSE, warning=FALSE}
 library(teal.slice)
 
-datasets <- init_filtered_data(
-  list(
-    iris = list(dataset = iris),
-    mtcars = list(dataset = mtcars)
-  )
-)
+datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
 
 set_filter_state(
   datasets = datasets,
@@ -168,13 +163,10 @@ to allow the user to add new filters.
 All the instructions herein can be utilized to build a `shiny` app.
 
 ```{r}
+library(shiny)
+
 # initializing FilteredData
-datasets <- init_filtered_data(
-  list(
-    iris = list(dataset = iris),
-    mtcars = list(dataset = mtcars)
-  )
-)
+datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
 
 # setting initial filters
 set_filter_state(
