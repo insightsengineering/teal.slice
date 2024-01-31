@@ -568,7 +568,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
           logger::log_trace("ChoicesFilterState$server_inputs_fixed initializing, id: { private$get_id() }")
 
           output$selection <- renderUI({
-            countsnow <- unname(table(factor(private$x_reactive(), levels = private$get_choices())))
+            countsnow <- if (!is.null(private$x_reactive())) {
+              unname(table(factor(private$x_reactive(), levels = private$get_choices())))
+            } else {
+              NULL
+            }
             countsmax <- private$choices_counts
 
             ind <- private$get_choices() %in% shiny::isolate(private$get_selected())
