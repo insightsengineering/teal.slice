@@ -40,7 +40,7 @@ include_js_files <- function(pattern) {
     pattern = pattern,
     full.names = TRUE
   )
-  return(singleton(lapply(js_files, includeScript)))
+  singleton(lapply(js_files, includeScript))
 }
 
 #' Build concatenating call
