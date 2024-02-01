@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.660961313012896" branch-rate="0" lines-covered="2819" lines-valid="4265" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-02-01 17:16:36.392909">
+<coverage line-rate="0.660961313012896" branch-rate="0" lines-covered="2819" lines-valid="4265" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-02-01 17:56:36.695005">
   <sources>
     <source>/__w/teal.slice/teal.slice/teal.slice</source>
   </sources>
@@ -29734,20 +29734,20 @@
             </method>
             <method name="include_js_files" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
+                <line number="37" hits="12" branch="false"/>
                 <line number="38" hits="12" branch="false"/>
                 <line number="39" hits="12" branch="false"/>
                 <line number="40" hits="12" branch="false"/>
                 <line number="41" hits="12" branch="false"/>
                 <line number="42" hits="12" branch="false"/>
                 <line number="43" hits="12" branch="false"/>
-                <line number="44" hits="12" branch="false"/>
               </lines>
             </method>
             <method name="make_c_call" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="64" hits="53" branch="false"/>
-                <line number="65" hits="26" branch="false"/>
-                <line number="67" hits="27" branch="false"/>
+                <line number="63" hits="53" branch="false"/>
+                <line number="64" hits="26" branch="false"/>
+                <line number="66" hits="27" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -29760,16 +29760,16 @@
             <line number="20" hits="5" branch="false"/>
             <line number="21" hits="5" branch="false"/>
             <line number="22" hits="5" branch="false"/>
+            <line number="37" hits="12" branch="false"/>
             <line number="38" hits="12" branch="false"/>
             <line number="39" hits="12" branch="false"/>
             <line number="40" hits="12" branch="false"/>
             <line number="41" hits="12" branch="false"/>
             <line number="42" hits="12" branch="false"/>
             <line number="43" hits="12" branch="false"/>
-            <line number="44" hits="12" branch="false"/>
-            <line number="64" hits="53" branch="false"/>
-            <line number="65" hits="26" branch="false"/>
-            <line number="67" hits="27" branch="false"/>
+            <line number="63" hits="53" branch="false"/>
+            <line number="64" hits="26" branch="false"/>
+            <line number="66" hits="27" branch="false"/>
           </lines>
         </class>
         <class name="variable_types.R" filename="R/variable_types.R" line-rate="0.466666666666667" branch-rate="0" complexity="0">
