@@ -20,7 +20,7 @@ testthat::test_that("set_filter_state sets include_variables by excluding unsupp
   test$col2 <- as.list(1:150)
   filter_states <- FilterStates$new(data = test, dataname = "test")
   teal_slices <- teal_slices(
-    include_varnames = list(test = c("Species", "Sepal.Length", "inexisting", "col", "col2"))
+    include_varnames = list(test = c("Species", "Sepal.Length", "non-existent", "col", "col2"))
   )
   filter_states$set_filter_state(teal_slices)
   testthat::expect_identical(
@@ -41,11 +41,11 @@ testthat::test_that("set_filter_state sets count_type", {
   )
 })
 
-testthat::test_that("set_filter_state ignores teal_slice for inexisting variables with log warning", {
+testthat::test_that("set_filter_state ignores teal_slice for non-existent variables with log warning", {
   filter_states <- FilterStates$new(data = data.frame(a = 1), dataname = "test")
   testthat::expect_warning(
-    filter_states$set_filter_state(teal_slices(teal_slice(dataname = "test", varname = "inexisting"))),
-    "inexisting excluded from test"
+    filter_states$set_filter_state(teal_slices(teal_slice(dataname = "test", varname = "non-existent"))),
+    "non-existent excluded from test"
   )
 })
 
