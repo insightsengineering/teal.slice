@@ -8,8 +8,6 @@ include_js_files(pattern)
 }
 \arguments{
 \item{pattern}{(\code{character}) pattern of files to be included, passed to \code{system.file}}
-
-\item{except}{(\code{character}) vector of basename filenames to be excluded}
 }
 \value{
 HTML code that includes \code{JS} files
