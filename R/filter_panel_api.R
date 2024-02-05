@@ -60,56 +60,59 @@
 #' # remove all states
 #' clear_filter_states(datasets)
 #'
-#' @examplesIf requireNamespace("MultiAssayExperiment")
+#' @examples
+#' \donttest{
+#' if (requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
+#'   # Requires MultiAssayExperiment from Bioconductor
+#'   data(miniACC, package = "MultiAssayExperiment")
 #'
-#' # Requires MultiAssayExperiment from Bioconductor
-#' data(miniACC, package = "MultiAssayExperiment")
-#'
-#' datasets <- init_filtered_data(list(mae = miniACC))
-#' fs <- teal_slices(
-#'   teal_slice(
-#'     dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
-#'     keep_na = TRUE, keep_inf = FALSE
-#'   ),
-#'   teal_slice(
-#'     dataname = "mae", varname = "vital_status", selected = "1",
-#'     keep_na = FALSE
-#'   ),
-#'   teal_slice(
-#'     dataname = "mae", varname = "gender", selected = "female",
-#'     keep_na = TRUE
-#'   ),
-#'   teal_slice(
-#'     dataname = "mae", varname = "ARRAY_TYPE", selected = "",
-#'     keep_na = TRUE, experiment = "RPPAArray", arg = "subset"
+#'   datasets <- init_filtered_data(list(mae = miniACC))
+#'   fs <- teal_slices(
+#'     teal_slice(
+#'       dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
+#'       keep_na = TRUE, keep_inf = FALSE
+#'     ),
+#'     teal_slice(
+#'       dataname = "mae", varname = "vital_status", selected = "1",
+#'       keep_na = FALSE
+#'     ),
+#'     teal_slice(
+#'       dataname = "mae", varname = "gender", selected = "female",
+#'       keep_na = TRUE
+#'     ),
+#'     teal_slice(
+#'       dataname = "mae", varname = "ARRAY_TYPE", selected = "",
+#'       keep_na = TRUE, experiment = "RPPAArray", arg = "subset"
+#'     )
 #'   )
-#' )
 #'
-#' # set initial filter state
-#' set_filter_state(datasets, filter = fs)
+#'   # set initial filter state
+#'   set_filter_state(datasets, filter = fs)
 #'
-#' # get filter state
-#' get_filter_state(datasets)
+#'   # get filter state
+#'   get_filter_state(datasets)
 #'
-#' # modify filter state
-#' set_filter_state(
-#'   datasets,
-#'   teal_slices(
-#'     teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(40, 60))
+#'   # modify filter state
+#'   set_filter_state(
+#'     datasets,
+#'     teal_slices(
+#'       teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(40, 60))
+#'     )
 #'   )
-#' )
 #'
-#' # remove specific filters
-#' remove_filter_state(
-#'   datasets,
-#'   teal_slices(
-#'     teal_slice(dataname = "mae", varname = "years_to_birth"),
-#'     teal_slice(dataname = "mae", varname = "vital_status")
+#'   # remove specific filters
+#'   remove_filter_state(
+#'     datasets,
+#'     teal_slices(
+#'       teal_slice(dataname = "mae", varname = "years_to_birth"),
+#'       teal_slice(dataname = "mae", varname = "vital_status")
+#'     )
 #'   )
-#' )
 #'
-#' # remove all states
-#' clear_filter_states(datasets)
+#'   # remove all states
+#'   clear_filter_states(datasets)
+#' }
+#' }
 NULL
 
 #' @rdname filter_state_api
