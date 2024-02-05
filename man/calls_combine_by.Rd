@@ -23,16 +23,4 @@ Combines calls with a logical operator.
 This function is used to combine logical predicates produced by \code{FilterState} objects
 to build a complete subset expression.
 }
-\examples{
-# use non-exported function from teal.slice
-calls_combine_by <- getFromNamespace("calls_combine_by", "teal.slice")
-
-calls <- list(
-  quote(SEX == "F"), # subsetting on factor
-  quote(AGE >= 20 & AGE <= 50), # subsetting on range
-  quote(!SURV) # subsetting on logical
-)
-calls_combine_by(calls, "&")
-
-}
 \keyword{internal}

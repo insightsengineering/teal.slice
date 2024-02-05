@@ -52,12 +52,6 @@ include_js_files <- function(pattern) {
 #'
 #' @return A `c` call.
 #'
-#' @examples
-#' # use non-exported function from teal.slice
-#' make_c_call <- getFromNamespace("make_c_call", "teal.slice")
-#' make_c_call(1:3)
-#' make_c_call(1)
-#'
 #' @keywords internal
 make_c_call <- function(choices) {
   if (length(choices) > 1) {
