@@ -38,41 +38,4 @@ Object of class \code{FilterStates}.
 \description{
 Initialize \code{FilterStates} object
 }
-\examples{
-# use non-exported function from teal.slice
-init_filter_states <- getFromNamespace("init_filter_states", "teal.slice")
-
-df <- data.frame(
-  character = letters,
-  numeric = seq_along(letters),
-  date = seq(Sys.Date(), length.out = length(letters), by = "1 day"),
-  datetime = seq(Sys.time(), length.out = length(letters), by = "33.33 hours")
-)
-rf <- init_filter_states(
-  data = df,
-  dataname = "DF"
-)
-
-library(shiny)
-ui <- fluidPage(
-  actionButton("clear", span(icon("xmark"), "Remove all filters")),
-  rf$ui_add(id = "add"),
-  rf$ui_active("states"),
-  verbatimTextOutput("expr"),
-)
-
-server <- function(input, output, session) {
-  rf$srv_add(id = "add")
-  rf$srv_active(id = "states")
-  output$expr <- renderText({
-    deparse1(rf$get_call(), collapse = "\n")
-  })
-  observeEvent(input$clear, rf$clear_filter_states())
-}
-
-if (interactive()) {
-  shinyApp(ui, server)
-}
-
-}
 \keyword{internal}

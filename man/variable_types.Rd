@@ -18,32 +18,4 @@ Character vector of classes of \code{columns} from provided \code{data}.
 \description{
 Get classes of selected columns from dataset
 }
-\examples{
-# use non-exported function from teal.slice
-variable_types <- getFromNamespace("variable_types", "teal.slice")
-
-variable_types(
-  data.frame(
-    x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
-    stringsAsFactors = FALSE
-  ),
-  "x"
-)
-
-variable_types(
-  data.frame(
-    x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
-    stringsAsFactors = FALSE
-  ),
-  c("x", "z")
-)
-
-variable_types(
-  data.frame(
-    x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
-    stringsAsFactors = FALSE
-  )
-)
-
-}
 \keyword{internal}

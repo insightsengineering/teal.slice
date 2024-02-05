@@ -21,42 +21,6 @@
 #' - `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
 #' - `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
 #'
-#' @examples
-#' # use non-exported function from teal.slice
-#' init_filter_state <- getFromNamespace("init_filter_state", "teal.slice")
-#'
-#' library(shiny)
-#'
-#' filter_state <- init_filter_state(
-#'   x = c(1:10, NA, Inf),
-#'   x_reactive = reactive(c(1:10, NA, Inf)),
-#'   slice = teal_slice(
-#'     varname = "varname",
-#'     dataname = "dataname"
-#'   ),
-#'   extract_type = "matrix"
-#' )
-#'
-#' isolate(filter_state$get_call())
-#'
-#' # working filter in an app
-#'
-#' ui <- fluidPage(
-#'   filter_state$ui(id = "app"),
-#'   verbatimTextOutput("call")
-#' )
-#' server <- function(input, output, session) {
-#'   filter_state$server("app")
-#'
-#'   output$call <- renderText(
-#'     deparse1(filter_state$get_call(), collapse = "\n")
-#'   )
-#' }
-#'
-#' if (interactive()) {
-#'   shinyApp(ui, server)
-#' }
-#'
 #' @return `FilterState` object
 #' @keywords internal
 init_filter_state <- function(x,
@@ -243,12 +207,6 @@ init_filter_state_expr <- function(slice) {
 #'              set to NULL to omit adding the alpha channel
 #'
 #' @return Named `character(1)` containing a hexadecimal color representation.
-#'
-#' @examples
-#' fetch_bs_color <- getFromNamespace("fetch_bs_color", "teal.slice")
-#' fetch_bs_color("primary")
-#' fetch_bs_color("danger", 0.35)
-#' fetch_bs_color("danger", "80")
 #'
 #' @keywords internal
 #'

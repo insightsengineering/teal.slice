@@ -9,33 +9,6 @@
 
 \code{MAEFilteredDataset} \code{R6} class
 }
-\examples{
-\dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# use non-exported function from teal.slice
-MAEFilteredDataset <- getFromNamespace("MAEFilteredDataset", "teal.slice")
-
-data(miniACC, package = "MultiAssayExperiment")
-dataset <- MAEFilteredDataset$new(miniACC, "MAE")
-fs <- teal_slices(
-  teal_slice(
-    dataname = "MAE", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE
-  ),
-  teal_slice(
-    dataname = "MAE", varname = "vital_status", selected = "1", keep_na = FALSE
-  ),
-  teal_slice(
-    dataname = "MAE", varname = "gender", selected = "female", keep_na = TRUE
-  ),
-  teal_slice(
-    dataname = "MAE", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE
-  )
-)
-dataset$set_filter_state(state = fs)
-
-library(shiny)
-isolate(dataset$get_filter_state())
-\dontshow{\}) # examplesIf}
-}
 \keyword{internal}
 \section{Super class}{
 \code{\link[teal.slice:FilteredDataset]{teal.slice::FilteredDataset}} -> \code{MAEFilteredDataset}
