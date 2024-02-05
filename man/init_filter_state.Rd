@@ -42,41 +42,4 @@ specifying whether condition calls should be prefixed by \code{dataname}. Possib
 \description{
 Initializes a \code{FilterState} object corresponding to the class of the filtered variable.
 }
-\examples{
-# use non-exported function from teal.slice
-init_filter_state <- getFromNamespace("init_filter_state", "teal.slice")
-
-library(shiny)
-
-filter_state <- init_filter_state(
-  x = c(1:10, NA, Inf),
-  x_reactive = reactive(c(1:10, NA, Inf)),
-  slice = teal_slice(
-    varname = "varname",
-    dataname = "dataname"
-  ),
-  extract_type = "matrix"
-)
-
-isolate(filter_state$get_call())
-
-# working filter in an app
-
-ui <- fluidPage(
-  filter_state$ui(id = "app"),
-  verbatimTextOutput("call")
-)
-server <- function(input, output, session) {
-  filter_state$server("app")
-
-  output$call <- renderText(
-    deparse1(filter_state$get_call(), collapse = "\n")
-  )
-}
-
-if (interactive()) {
-  shinyApp(ui, server)
-}
-
-}
 \keyword{internal}

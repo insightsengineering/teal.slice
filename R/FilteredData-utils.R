@@ -83,58 +83,6 @@ eval_expr_with_msg <- function(expr, env) {
 #'
 #' @return `NULL`, invisibly.
 #'
-#' @examples
-#' # use non-exported function from teal.slice
-#' toggle_icon <- getFromNamespace("toggle_icon", "teal.slice")
-#'
-#' library(shiny)
-#' library(shinyjs)
-#'
-#' ui <- fluidPage(
-#'   useShinyjs(),
-#'   actionButton("hide_content", label = "hide", icon = icon("xmark")),
-#'   actionButton("show_content", label = "show", icon = icon("check")),
-#'   actionButton("toggle_content", label = "toggle", icon = icon("angle-down")),
-#'   br(),
-#'   div(
-#'     id = "content",
-#'     verbatimTextOutput("printout")
-#'   )
-#' )
-#'
-#' server <- function(input, output, session) {
-#'   observeEvent(input$hide_content,
-#'     {
-#'       hide("content")
-#'       toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
-#'     },
-#'     ignoreInit = TRUE
-#'   )
-#'
-#'   observeEvent(input$show_content,
-#'     {
-#'       show("content")
-#'       toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
-#'     },
-#'     ignoreInit = TRUE
-#'   )
-#'
-#'   observeEvent(input$toggle_content,
-#'     {
-#'       toggle("content")
-#'       toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
-#'     },
-#'     ignoreInit = TRUE
-#'   )
-#'
-#'   output$printout <- renderPrint({
-#'     head(faithful, 10)
-#'   })
-#' }
-#' if (interactive()) {
-#'   shinyApp(ui, server)
-#' }
-#'
 #' @name toggle_button
 #' @rdname toggle_button
 #' @keywords internal
@@ -190,13 +138,7 @@ toggle_title <- function(input_id, titles, one_way = FALSE) {
 }
 
 #' @inherit teal.data::topological_sort description details params title
-#' @examples
-#' # use non-exported function from teal.slice
-#' topological_sort <- getFromNamespace("topological_sort", "teal.slice")
 #'
-#' topological_sort(list(A = c(), B = c("A"), C = c("B"), D = c("A")))
-#' topological_sort(list(D = c("A"), A = c(), B = c("A"), C = c("B")))
-#' topological_sort(list(D = c("A"), B = c("A"), C = c("B"), A = c()))
 #' @keywords internal
 topological_sort <- function(graph) {
   utils::getFromNamespace("topological_sort", ns = "teal.data")(graph)
