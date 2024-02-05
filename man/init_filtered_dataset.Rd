@@ -76,31 +76,33 @@ if (interactive()) {
   shinyApp(ui, server)
 }
 
-\dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# MAEFilteredDataset example
-library(shiny)
+\donttest{
+if (requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
+  # MAEFilteredDataset example
+  library(shiny)
 
-data(miniACC, package = "MultiAssayExperiment")
+  data(miniACC, package = "MultiAssayExperiment")
 
-MAE_fd <- init_filtered_dataset(miniACC, "MAE")
-ui <- fluidPage(
-  MAE_fd$ui_add(id = "add"),
-  MAE_fd$ui_active("dataset"),
-  verbatimTextOutput("call")
-)
-server <- function(input, output, session) {
-  MAE_fd$srv_add(id = "add")
-  MAE_fd$srv_active(id = "dataset")
-  output$call <- renderText({
-    paste(
-      vapply(MAE_fd$get_call(), deparse1, character(1), collapse = "\n"),
-      collapse = "\n"
-    )
-  })
+  MAE_fd <- init_filtered_dataset(miniACC, "MAE")
+  ui <- fluidPage(
+    MAE_fd$ui_add(id = "add"),
+    MAE_fd$ui_active("dataset"),
+    verbatimTextOutput("call")
+  )
+  server <- function(input, output, session) {
+    MAE_fd$srv_add(id = "add")
+    MAE_fd$srv_active(id = "dataset")
+    output$call <- renderText({
+      paste(
+        vapply(MAE_fd$get_call(), deparse1, character(1), collapse = "\n"),
+        collapse = "\n"
+      )
+    })
+  }
+  if (interactive()) {
+    shinyApp(ui, server)
+  }
 }
-if (interactive()) {
-  shinyApp(ui, server)
 }
-\dontshow{\}) # examplesIf}
 }
 \keyword{internal}
