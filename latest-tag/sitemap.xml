@@ -46,6 +46,9 @@
     <loc>https://insightsengineering.github.io/teal.slice/reference/DFFilterStates.html</loc>
   </url>
   <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/DataframeFilteredDataset.html</loc>
+  </url>
+  <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/DateFilterState.html</loc>
   </url>
   <url>
@@ -97,13 +100,13 @@
     <loc>https://insightsengineering.github.io/teal.slice/reference/calls_combine_by.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/reference/check_ellipsis.html</loc>
-  </url>
-  <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/check_simple_name.html</loc>
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/choices_labeled.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/coalesce_r.html</loc>
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/countBar.html</loc>
@@ -124,6 +127,9 @@
     <loc>https://insightsengineering.github.io/teal.slice/reference/filter_state_api.html</loc>
   </url>
   <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/format_time.html</loc>
+  </url>
+  <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/get_default_slice_id.html</loc>
   </url>
   <url>
@@ -131,9 +137,6 @@
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/get_supported_filter_varnames.html</loc>
-  </url>
-  <url>
-    <loc>https://insightsengineering.github.io/teal.slice/reference/get_teal_bs_theme.html</loc>
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/include_css_files.html</loc>
@@ -175,12 +178,6 @@
     <loc>https://insightsengineering.github.io/teal.slice/reference/setdiff_teal_slices.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/reference/slices_restore.html</loc>
-  </url>
-  <url>
-    <loc>https://insightsengineering.github.io/teal.slice/reference/slices_store.html</loc>
-  </url>
-  <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/teal.slice-package.html</loc>
   </url>
   <url>
@@ -200,9 +197,6 @@
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/trim_lines_json.html</loc>
-  </url>
-  <url>
-    <loc>https://insightsengineering.github.io/teal.slice/reference/validate_dataset_args.html</loc>
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/variable_types.html</loc>
