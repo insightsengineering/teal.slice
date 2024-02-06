@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9038</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,19 +34,6 @@
 <li class="active nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/release-candidate">release-candidate</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.5.0-rc2">v0.5.0-rc2</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.5.0-rc1">v0.5.0-rc1</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -75,13 +62,13 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.0.9038" id="tealslice-0409038">teal.slice 0.4.0.9038<a class="anchor" aria-label="anchor" href="#tealslice-0409038"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.5.0" id="tealslice-050">teal.slice 0.5.0<a class="anchor" aria-label="anchor" href="#tealslice-050"></a></h2><p class="text-muted">CRAN release: 2024-02-06</p>
 <div class="section level4">
-<h4 id="enhancements-0-4-0-9038">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-4-0-9038"></a></h4>
+<h4 id="enhancements-0-5-0">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-5-0"></a></h4>
 <ul><li>Simplified <code>init_filtered_data</code> to accept a named list of datasets. <code>init_filtered_data</code> does not currently handle a list containing <code>dataset</code>, <code>metadata</code>, <code>datalabel</code> and <code>code</code>.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="breaking-changes-0-4-0-9038">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-4-0-9038"></a></h4>
+<h4 id="breaking-changes-0-5-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-5-0"></a></h4>
 <ul><li>
 <code>TealData</code> object is no longer supported by <code>teal.slice</code>.</li>
 <li>
@@ -89,7 +76,7 @@
 <li>Renamed <code>FilteredDataset</code> subclass that handles <code>data.frame</code>s from <code>DefaultFilteredDataset</code> to <code>DataframeFilteredDataset</code>. Added new class <code>DefaultFilteredDataset</code> that will store any type of object. Filtering will is not supported.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="miscellaneous-0-4-0-9038">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-4-0-9038"></a></h4>
+<h4 id="miscellaneous-0-5-0">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-5-0"></a></h4>
 <ul><li>Specified minimal version of package dependencies.</li>
 <li>Removed storing and restoring of <code>teal_slices</code> objects.</li>
 <li>Update documentation and code to reflect the changes due to the refactor of <code>teal.data::JoinKeys</code> into <code><a href="https://insightsengineering.github.io/teal.data/reference/join_keys.html" class="external-link">teal.data::join_keys</a></code>.</li>
