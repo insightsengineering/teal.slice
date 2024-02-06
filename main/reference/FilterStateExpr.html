@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9000</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -285,6 +285,59 @@ id of the <code>FilterStates</code> card container.</p></dd>
 
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># use non-exported function from teal.slice</span></span></span>
+<span class="r-in"><span><span class="va">include_js_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/getFromNamespace.html" class="external-link">getFromNamespace</a></span><span class="op">(</span><span class="st">"include_js_files"</span>, <span class="st">"teal.slice"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">include_css_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/getFromNamespace.html" class="external-link">getFromNamespace</a></span><span class="op">(</span><span class="st">"include_css_files"</span>, <span class="st">"teal.slice"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">FilterStateExpr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/getFromNamespace.html" class="external-link">getFromNamespace</a></span><span class="op">(</span><span class="st">"FilterStateExpr"</span>, <span class="st">"teal.slice"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="va">FilterStateExpr</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  slice <span class="op">=</span> <span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    dataname <span class="op">=</span> <span class="st">"x"</span>,</span></span>
+<span class="r-in"><span>    id <span class="op">=</span> <span class="st">"FA"</span>,</span></span>
+<span class="r-in"><span>    title <span class="op">=</span> <span class="st">"Adult females"</span>,</span></span>
+<span class="r-in"><span>    expr <span class="op">=</span> <span class="st">"sex == 'F' &amp; age &gt;= 18"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">filter_state</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sex == "F" &amp; age &gt;= 18</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># working filter in an app</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://deanattali.com/shinyjs/" class="external-link">shinyjs</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shinyjs/man/useShinyjs.html" class="external-link">useShinyjs</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="include_css_files.html">include_css_files</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"filter-panel"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="include_js_files.html">include_js_files</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"count-bar-labels"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/column.html" class="external-link">column</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">div</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"ChoicesFilterState"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="va">filter_state</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="st">"fs"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/column.html" class="external-link">column</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">div</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"Condition (i.e. call)"</span><span class="op">)</span>, <span class="co"># display the condition call generated by this FilterState</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html" class="external-link">textOutput</a></span><span class="op">(</span><span class="st">"condition_choices"</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"Unformatted state"</span><span class="op">)</span>, <span class="co"># display raw filter state</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html" class="external-link">textOutput</a></span><span class="op">(</span><span class="st">"unformatted_choices"</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"Formatted state"</span><span class="op">)</span>, <span class="co"># display human readable filter state</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html" class="external-link">textOutput</a></span><span class="op">(</span><span class="st">"formatted_choices"</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">filter_state</span><span class="op">$</span><span class="fu">server</span><span class="op">(</span><span class="st">"fs"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">output</span><span class="op">$</span><span class="va">condition_choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderPrint</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">output</span><span class="op">$</span><span class="va">formatted_choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderText</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">output</span><span class="op">$</span><span class="va">unformatted_choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderPrint</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">get_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
