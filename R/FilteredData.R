@@ -823,16 +823,19 @@ FilteredData <- R6::R6Class( # nolint
 
             datasets_df <- self$get_filter_overview(datanames = active_datanames())
 
+            attr(datasets_df$dataname, "label") <- "Dataname"
+
             if (!is.null(datasets_df$obs)) {
               # some datasets (MAE colData) doesn't return obs column
               datasets_df <- transform(
                 datasets_df,
-                Obs = ifelse(
+                obs_str_summary = ifelse(
                   !is.na(obs),
                   sprintf("%s/%s", obs_filtered, obs),
                   ""
                 )
               )
+              attr(datasets_df$obs_str_summary, "label") <- "Obs"
             }
 
 
@@ -840,14 +843,15 @@ FilteredData <- R6::R6Class( # nolint
               # some datasets (without keys) doesn't return subjects
               datasets_df <- transform(
                 datasets_df,
-                Subjects = ifelse(
+                subjects_str_summary = ifelse(
                   !is.na(subjects),
                   sprintf("%s/%s", subjects_filtered, subjects),
                   ""
                 )
               )
+              attr(datasets_df$subjects_str_summary, "label") <- "Subjects"
             }
-            datasets_df <- datasets_df[, colnames(datasets_df) %in% c("dataname", "Obs", "Subjects")]
+            datasets_df <- datasets_df[, colnames(datasets_df) %in% c("dataname", "obs_str_summary", "subjects_str_summary")]
 
             body_html <- apply(
               datasets_df,
@@ -876,6 +880,7 @@ FilteredData <- R6::R6Class( # nolint
             header_html <- tags$tr(
               tagList(
                 lapply(colnames(datasets_df), tags$td)
+                lapply(vapply(names(datasets_df), function(i) attr(datasets_df[[i]], "label") %||% i), tags$td)
               )
             )
 
