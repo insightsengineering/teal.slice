@@ -847,7 +847,7 @@ FilteredData <- R6::R6Class( # nolint
                 )
               )
             }
-            datasets_df <- datasets_df[, colnames(datasets_df) %in% c("dataname", "Obs", "Subjects")]
+            datasets_df <- datasets_df[, colnames(datasets_df) %in% c("Dataname", "Obs", "Subjects")]
 
             body_html <- apply(
               datasets_df,
