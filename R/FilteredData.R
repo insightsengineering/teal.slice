@@ -879,7 +879,6 @@ FilteredData <- R6::R6Class( # nolint
 
             header_html <- tags$tr(
               tagList(
-                lapply(colnames(datasets_df), tags$td)
                 lapply(vapply(names(datasets_df), function(i) attr(datasets_df[[i]], "label") %||% i), tags$td)
               )
             )
