@@ -843,16 +843,16 @@ FilteredData <- R6::R6Class( # nolint
               # some datasets (without keys) doesn't return subjects
               datasets_df <- transform(
                 datasets_df,
-                subjects_str_summary = ifelse(
+                subjects_summary = ifelse(
                   !is.na(subjects),
                   sprintf("%s/%s", subjects_filtered, subjects),
                   ""
                 )
               )
-              attr(datasets_df$subjects_str_summary, "label") <- "Subjects"
+              attr(datasets_df$subjects_summary, "label") <- "Subjects"
             }
 
-            all_names <- c("dataname", "obs_str_summary", "subjects_str_summary")
+            all_names <- c("dataname", "obs_str_summary", "subjects_summary")
             datasets_df <- datasets_df[, colnames(datasets_df) %in% all_names]
 
             body_html <- apply(
