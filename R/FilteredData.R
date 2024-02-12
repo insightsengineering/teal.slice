@@ -851,7 +851,8 @@ FilteredData <- R6::R6Class( # nolint
               )
               attr(datasets_df$subjects_str_summary, "label") <- "Subjects"
             }
-            datasets_df <- datasets_df[, colnames(datasets_df) %in% c("dataname", "obs_str_summary", "subjects_str_summary")]
+            all_names <- c("dataname", "obs_str_summary", "subjects_str_summary")
+            datasets_df <- datasets_df[, colnames(datasets_df) %in% all_names]
 
             body_html <- apply(
               datasets_df,
