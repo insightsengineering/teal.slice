@@ -879,23 +879,15 @@ FilteredData <- R6::R6Class( # nolint
               }
             )
 
-            header_html <- tags$tr(
-              tagList(
-                lapply(
-                  vapply(
-                    seq_along(datasets_df),
-                    function(i) {
-                      ifelse(
-                        !is.null(attr(datasets_df[[i]], "label")),
-                        attr(datasets_df[[i]], "label"),
-                        names(datasets_df)[[i]]
-                      )
-                    }
-                  ),
-                  tags$td
-                )
-              )
+            header_labels <- vapply(
+              seq_along(datasets_df),
+              function(i) {
+                label <- attr(datasets_df[[i]], "label")
+                ifelse(!is.null(label), label, names(datasets_df)[[i]])
+              },
+              character(1)
             )
+            header_html <- tags$tr(tagList(lapply(header_labels, tags$td)))
 
             table_html <- tags$table(
               class = "table custom-table",
