@@ -19,13 +19,13 @@ init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, chec
   checkmate::assert_class(join_keys, "join_keys")
   if (!missing(code)) {
     lifecycle::deprecate_stop(
-      "0.4.1",
+      "0.5.0",
       "init_filtered_data(code = 'No longer supported')"
     )
   }
   if (!missing(check)) {
     lifecycle::deprecate_stop(
-      "0.4.1",
+      "0.5.0",
       "init_filtered_data(check = 'No longer supported')"
     )
   }
