@@ -823,7 +823,7 @@ FilteredData <- R6::R6Class( # nolint
 
             datasets_df <- self$get_filter_overview(datanames = active_datanames())
 
-            attr(datasets_df$dataname, "label") <- "Dataname"
+            attr(datasets_df$dataname, "label") <- "Data Name"
 
             if (!is.null(datasets_df$obs)) {
               # some datasets (MAE colData) doesn't return obs column
