@@ -14,7 +14,7 @@
 
 ### Bug fixes
 
-* Performs an exact match on `init_filtered_dataset` when determining the default label of a dataset.
+* Performs an exact match when determining the default label of a dataset from attributes.
 
 ### Miscellaneous
 
