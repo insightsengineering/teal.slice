@@ -11,7 +11,7 @@ init_filtered_dataset(
   parent_name = character(0),
   parent = reactive(dataset),
   join_keys = character(0),
-  label = attr(dataset, "label")
+  label = attr(dataset, "label", exact = TRUE)
 )
 }
 \arguments{

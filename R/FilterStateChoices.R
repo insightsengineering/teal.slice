@@ -159,7 +159,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         x_factor <- if (!is.factor(x)) {
           structure(
             factor(as.character(x), levels = as.character(sort(unique(x)))),
-            label = attr(x, "label")
+            label = attr(x, "label", exact = TRUE)
           )
         } else {
           x
