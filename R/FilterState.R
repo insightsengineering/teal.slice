@@ -96,7 +96,7 @@ FilterState <- R6::R6Class( # nolint
       if (is.null(isolate(slice$keep_na)) && anyNA(x)) slice$keep_na <- TRUE
       private$teal_slice <- slice
       # Obtain variable label.
-      varlabel <- attr(x, "label")
+      varlabel <- attr(x, "label", exact = TRUE)
       # Display only when different from varname.
       private$varlabel <-
         if (is.null(varlabel) || identical(varlabel, private$get_varname())) {
