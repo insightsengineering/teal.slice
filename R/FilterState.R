@@ -149,7 +149,7 @@ FilterState <- R6::R6Class( # nolint
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice")
       if (private$is_fixed()) {
-        logger::log_warn("attempt to set state on fixed filter aborted id: { private$get_id() }")
+        warning("attempt to set state on fixed filter aborted id: ", private$get_id())
       } else {
         logger::log_trace("{ class(self)[1] }$set_state setting state of filter id: { private$get_id() }")
         isolate({
