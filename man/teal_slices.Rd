@@ -2,13 +2,6 @@
 % Please edit documentation in R/teal_slices.R
 \name{teal_slices}
 \alias{teal_slices}
-\alias{is.teal_slices}
-\alias{as.teal_slices}
-\alias{as.list.teal_slices}
-\alias{[.teal_slices}
-\alias{c.teal_slices}
-\alias{format.teal_slices}
-\alias{print.teal_slices}
 \title{Complete filter specification}
 \usage{
 teal_slices(
@@ -23,15 +16,20 @@ is.teal_slices(x)
 
 as.teal_slices(x)
 
-\method{as.list}{teal_slices}(x, recursive = FALSE, ...)
+## S3 method for class 'teal_slices'
+as.list(x, recursive = FALSE, ...)
 
-\method{[}{teal_slices}(x, i)
+## S3 method for class 'teal_slices'
+x[i]
 
-\method{c}{teal_slices}(...)
+## S3 method for class 'teal_slices'
+c(...)
 
-\method{format}{teal_slices}(x, show_all = FALSE, trim_lines = TRUE, ...)
+## S3 method for class 'teal_slices'
+format(x, show_all = FALSE, trim_lines = TRUE, ...)
 
-\method{print}{teal_slices}(x, ...)
+## S3 method for class 'teal_slices'
+print(x, ...)
 }
 \arguments{
 \item{...}{any number of \code{teal_slice} objects. For \code{print} and \code{format},
@@ -58,13 +56,9 @@ Please make sure that adding new filters doesn't fail on target platform before 
 
 \item{x}{object to test for \code{teal_slices}, object to convert to \code{teal_slices} or a \code{teal_slices} object}
 
-\item{recursive}{(\code{logical(1)}) flag specifying whether to also convert to list the elements of this \code{teal_slices}}
-
 \item{i}{(\code{character} or \code{numeric} or \code{logical}) indicating which elements to extract}
 
-\item{show_all}{(\code{logical(1)}) whether to display non-null elements of constituent \code{teal_slice} objects}
-
-\item{trim_lines}{(\code{logical(1)}) whether to trim lines}
+\item{recursive}{(\code{logical(1)}) flag specifying whether to also convert to list the elements of this \code{teal_slices}}
 }
 \value{
 \code{teal_slices}, which is an unnamed list of \code{teal_slice} objects.
@@ -137,4 +131,3 @@ print(all_filters, trim_lines = FALSE)
 \item \code{\link[teal:slices_store]{teal::slices_store}} for robust utilities for saving and loading \code{teal_slices} in \code{JSON} format
 }
 }
-\keyword{internal}

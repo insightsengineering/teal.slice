@@ -110,6 +110,7 @@
 #'
 #' @seealso [`teal_slices`]
 #'
+# Custom @usage section is needed to that utility functions are listed in the usage and they do not have index entries.
 #' @usage
 #' teal_slice(
 #'   dataname,
@@ -131,17 +132,17 @@
 #'
 #' as.teal_slice(x)
 #'
-#' # S3 method for class 'teal_slice'
+#' ## S3 method for class 'teal_slice'
 #' as.list.teal_slice(x, ...)
 #'
-#' # S3 method for class 'teal_slice'
+#' ## S3 method for class 'teal_slice'
 #' format.teal_slice(show_all = FALSE, trim_lines = TRUE, ...)
 #'
-#' # S3 method for class 'teal_slice'
+#' ## S3 method for class 'teal_slice'
 #' print.teal_slice(x, ...)
 #'
 #' @export
-teal_slice <- function(dataname,
+teal_slice <- function(dataname, # When editing function parameters, please remember to update @usage section.
                        varname,
                        id,
                        expr,
