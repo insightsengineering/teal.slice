@@ -110,6 +110,36 @@
 #'
 #' @seealso [`teal_slices`]
 #'
+#' @usage
+#' teal_slice(
+#'   dataname,
+#'   varname,
+#'   id,
+#'   expr,
+#'   choices = NULL,
+#'   selected = NULL,
+#'   keep_na = NULL,
+#'   keep_inf = NULL,
+#'   fixed = FALSE,
+#'   anchored = FALSE,
+#'   multiple = TRUE,
+#'   title = NULL,
+#'   ...
+#' )
+#'
+#' is.teal_slice(x)
+#'
+#' as.teal_slice(x)
+#'
+#' # S3 method for class 'teal_slice'
+#' as.list.teal_slice(x, ...)
+#'
+#' # S3 method for class 'teal_slice'
+#' format.teal_slice(show_all = FALSE, trim_lines = TRUE, ...)
+#'
+#' # S3 method for class 'teal_slice'
+#' print.teal_slice(x, ...)
+#'
 #' @export
 teal_slice <- function(dataname,
                        varname,
@@ -172,7 +202,6 @@ teal_slice <- function(dataname,
   ans
 }
 
-#' @rdname teal_slice
 #' @export
 #' @keywords internal
 #'
@@ -180,7 +209,6 @@ is.teal_slice <- function(x) { # nolint
   inherits(x, "teal_slice")
 }
 
-#' @rdname teal_slice
 #' @export
 #' @keywords internal
 #'
@@ -189,7 +217,6 @@ as.teal_slice <- function(x) { # nolint
   do.call(teal_slice, x)
 }
 
-#' @rdname teal_slice
 #' @export
 #' @keywords internal
 #'
@@ -208,8 +235,6 @@ as.list.teal_slice <- function(x, ...) {
   x[c(formal_args, extra_args)]
 }
 
-
-#' @rdname teal_slice
 #' @export
 #' @keywords internal
 #'
@@ -223,14 +248,12 @@ format.teal_slice <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   jsonify(x_list, trim_lines)
 }
 
-#' @rdname teal_slice
 #' @export
 #' @keywords internal
 #'
 print.teal_slice <- function(x, ...) {
   cat(format(x, ...))
 }
-
 
 # format utils -----
 

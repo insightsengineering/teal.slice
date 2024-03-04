@@ -2,11 +2,6 @@
 % Please edit documentation in R/teal_slice.R
 \name{teal_slice}
 \alias{teal_slice}
-\alias{is.teal_slice}
-\alias{as.teal_slice}
-\alias{as.list.teal_slice}
-\alias{format.teal_slice}
-\alias{print.teal_slice}
 \title{Specify single filter}
 \usage{
 teal_slice(
@@ -29,11 +24,14 @@ is.teal_slice(x)
 
 as.teal_slice(x)
 
-\method{as.list}{teal_slice}(x, ...)
+# S3 method for class 'teal_slice'
+as.list.teal_slice(x, ...)
 
-\method{format}{teal_slice}(x, show_all = FALSE, trim_lines = TRUE, ...)
+# S3 method for class 'teal_slice'
+format.teal_slice(show_all = FALSE, trim_lines = TRUE, ...)
 
-\method{print}{teal_slice}(x, ...)
+# S3 method for class 'teal_slice'
+print.teal_slice(x, ...)
 }
 \arguments{
 \item{dataname}{(\code{character(1)}) name of data set}
@@ -171,4 +169,3 @@ print(x1, show_all = TRUE, trim_lines = FALSE)
 \seealso{
 \code{\link{teal_slices}}
 }
-\keyword{internal}
