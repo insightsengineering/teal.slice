@@ -272,8 +272,8 @@ LogicalFilterState <- R6::R6Class( # nolint
             width = "100%"
           )
         }
-        div(
-          div(
+        tags$div(
+          tags$div(
             class = "choices_state",
             uiOutput(ns("trigger_visible"), inline = TRUE),
             ui_input

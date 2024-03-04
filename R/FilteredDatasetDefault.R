@@ -101,7 +101,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @return An empty `div`.
     ui_active = function(id) {
       ns <- NS(id)
-      div()
+      tags$div()
     },
 
     #' @description
@@ -113,7 +113,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @return An empty `div`.
     ui_add = function(id) {
       ns <- NS(id)
-      div()
+      tags$div()
     }
   ),
   private = list(

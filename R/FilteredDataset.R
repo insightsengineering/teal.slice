@@ -221,7 +221,7 @@ FilteredDataset <- R6::R6Class( # nolint
       tags$span(
         id = id,
         include_css_files("filter-panel"),
-        div(
+        tags$div(
           id = ns("whole_ui"), # to hide it entirely
           fluidRow(
             column(
@@ -247,7 +247,7 @@ FilteredDataset <- R6::R6Class( # nolint
             )
           ),
           shinyjs::hidden(
-            div(
+            tags$div(
               id = ns("filter_count_ui"),
               tagList(
                 textOutput(ns("filter_count")),
@@ -255,7 +255,7 @@ FilteredDataset <- R6::R6Class( # nolint
               )
             )
           ),
-          div(
+          tags$div(
             # id needed to insert and remove UI to filter single variable as needed
             # it is currently also used by the above module to entirely hide this panel
             id = ns("filters"),

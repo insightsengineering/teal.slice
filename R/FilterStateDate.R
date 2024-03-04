@@ -278,8 +278,8 @@ DateFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
       isolate({
-        div(
-          div(
+        tags$div(
+          tags$div(
             class = "flex",
             actionButton(
               class = "date_reset_button",
@@ -287,7 +287,7 @@ DateFilterState <- R6::R6Class( # nolint
               label = NULL,
               icon = icon("fas fa-undo")
             ),
-            div(
+            tags$div(
               class = "w-80 filter_datelike_input",
               dateRangeInput(
                 inputId = ns("selection"),
@@ -402,9 +402,9 @@ DateFilterState <- R6::R6Class( # nolint
 
           output$selection <- renderUI({
             vals <- format(private$get_selected(), nsmall = 3)
-            div(
-              div(icon("calendar-days"), vals[1]),
-              div(span(" - "), icon("calendar-days"), vals[2])
+            tags$div(
+              tags$div(icon("calendar-days"), vals[1]),
+              tags$div(span(" - "), icon("calendar-days"), vals[2])
             )
           })
 

@@ -355,19 +355,19 @@ DatetimeFilterState <- R6::R6Class( # nolint
         ui_input_1$children[[2]]$attribs <- c(ui_input_1$children[[2]]$attribs, list(class = "input-sm"))
         ui_input_2$children[[2]]$attribs <- c(ui_input_2$children[[2]]$attribs, list(class = "input-sm"))
 
-        div(
-          div(
+        tags$div(
+          tags$div(
             class = "flex",
             ui_reset_1,
-            div(
+            tags$div(
               class = "flex w-80 filter_datelike_input",
-              div(class = "w-45 text-center", ui_input_1),
+              tags$div(class = "w-45 text-center", ui_input_1),
               tags$span(
                 class = "input-group-addon w-10",
                 tags$span(class = "input-group-text w-100 justify-content-center", "to"),
                 title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
               ),
-              div(class = "w-45 text-center", ui_input_2)
+              tags$div(class = "w-45 text-center", ui_input_2)
             ),
             ui_reset_2
           ),
@@ -515,9 +515,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
           output$selection <- renderUI({
             vals <- format(private$get_selected(), usetz = TRUE, nsmall = 3)
-            div(
-              div(icon("clock"), vals[1]),
-              div(span(" - "), icon("clock"), vals[2])
+            tags$div(
+              tags$div(icon("clock"), vals[1]),
+              tags$div(span(" - "), icon("clock"), vals[2])
             )
           })
 

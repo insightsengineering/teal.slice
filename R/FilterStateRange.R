@@ -417,7 +417,7 @@ RangeFilterState <- R6::R6Class( # nolint
           width = "100%"
         )
         tagList(
-          div(
+          tags$div(
             class = "choices_state",
             tags$head(tags$script(
               # Inline JS code for popover functionality.
@@ -437,7 +437,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 });'
               )
             )),
-            div(
+            tags$div(
               actionLink(
                 ns("plotly_info"),
                 label = NULL,
@@ -463,7 +463,7 @@ RangeFilterState <- R6::R6Class( # nolint
             ),
             ui_input
           ),
-          div(
+          tags$div(
             class = "filter-card-body-keep-na-inf",
             private$keep_inf_ui(ns("keep_inf")),
             private$keep_na_ui(ns("keep_na"))
@@ -675,7 +675,7 @@ RangeFilterState <- R6::R6Class( # nolint
           ),
           value = isolate(private$get_keep_inf())
         )
-        div(
+        tags$div(
           uiOutput(ns("trigger_visible"), inline = TRUE),
           ui_input
         )

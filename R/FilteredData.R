@@ -499,7 +499,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `shiny.tag`
     ui_filter_panel = function(id) {
       ns <- NS(id)
-      div(
+      tags$div(
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
         self$ui_overview(ns("overview")),
@@ -552,7 +552,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `shiny.tag`
     ui_active = function(id) {
       ns <- NS(id)
-      div(
+      tags$div(
         id = id, # not used, can be used to customize CSS behavior
         class = "well",
         tags$div(
@@ -574,7 +574,7 @@ FilteredData <- R6::R6Class( # nolint
             class = "remove_all pull-right"
           )
         ),
-        div(
+        tags$div(
           id = ns("filter_active_vars_contents"),
           tagList(
             lapply(
@@ -587,7 +587,7 @@ FilteredData <- R6::R6Class( # nolint
           )
         ),
         shinyjs::hidden(
-          div(
+          tags$div(
             id = ns("filters_active_count"),
             textOutput(ns("teal_filters_count"))
           )
@@ -671,7 +671,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `shiny.tag`
     ui_add = function(id) {
       ns <- NS(id)
-      div(
+      tags$div(
         id = id, # not used, can be used to customize CSS behavior
         class = "well",
         tags$div(
@@ -691,7 +691,7 @@ FilteredData <- R6::R6Class( # nolint
             )
           )
         ),
-        div(
+        tags$div(
           id = ns("filter_add_vars_contents"),
           tagList(
             lapply(
@@ -760,7 +760,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     ui_overview = function(id) {
       ns <- NS(id)
-      div(
+      tags$div(
         id = id, # not used, can be used to customize CSS behavior
         class = "well",
         tags$div(
@@ -780,9 +780,9 @@ FilteredData <- R6::R6Class( # nolint
             )
           )
         ),
-        div(
+        tags$div(
           id = ns("filters_overview_contents"),
-          div(
+          tags$div(
             class = "teal_active_summary_filter_panel",
             tableOutput(ns("table"))
           )
@@ -962,7 +962,7 @@ FilteredData <- R6::R6Class( # nolint
       ns <- NS(id)
 
       active_slices_id <- isolate(vapply(self$get_filter_state(), `[[`, character(1), "id"))
-      div(
+      tags$div(
         id = ns("available_menu"),
         shinyWidgets::dropMenu(
           actionLink(
@@ -972,7 +972,7 @@ FilteredData <- R6::R6Class( # nolint
             title = "Available filters",
             class = "remove pull-right"
           ),
-          div(
+          tags$div(
             class = "menu-content",
             shinycssloaders::withSpinner(
               uiOutput(ns("checkbox")),

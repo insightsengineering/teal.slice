@@ -190,7 +190,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       data <- self$get_dataset()
       experiment_names <- names(data)
 
-      div(
+      tags$div(
         tags$label("Add", tags$code(self$get_dataname()), "filter"),
         br(),
         HTML("&#9658;"),

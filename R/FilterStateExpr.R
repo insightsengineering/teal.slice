@@ -204,9 +204,9 @@ FilterStateExpr <- R6::R6Class( # nolint
               } else {
                 icon("lock", class = "filter-card-icon")
               },
-              div(class = "filter-card-varname", tags$strong(private$teal_slice$id)),
-              div(class = "filter-card-varlabel", private$teal_slice$title),
-              div(
+              tags$div(class = "filter-card-varname", tags$strong(private$teal_slice$id)),
+              tags$div(class = "filter-card-varlabel", private$teal_slice$title),
+              tags$div(
                 class = "filter-card-controls",
                 if (isFALSE(private$is_anchored())) {
                   actionLink(

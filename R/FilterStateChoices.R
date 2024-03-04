@@ -374,7 +374,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             countsnow = countsnow,
             countsmax = countsmax
           )
-          div(
+          tags$div(
             class = "choices_state",
             if (private$is_multiple()) {
               checkboxGroupInput(
@@ -416,7 +416,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             )
           )
         }
-        div(
+        tags$div(
           uiOutput(ns("trigger_visible")),
           ui_input,
           private$keep_na_ui(ns("keep_na"))
