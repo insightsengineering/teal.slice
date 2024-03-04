@@ -136,7 +136,7 @@
 #' as.list.teal_slice(x, ...)
 #'
 #' ## S3 method for class 'teal_slice'
-#' format.teal_slice(show_all = FALSE, trim_lines = TRUE, ...)
+#' format.teal_slice(x, show_all = FALSE, trim_lines = TRUE, ...)
 #'
 #' ## S3 method for class 'teal_slice'
 #' print.teal_slice(x, ...)
