@@ -717,7 +717,7 @@ FilterState <- R6::R6Class( # nolint
           countnow <- private$filtered_na_count()
           ui_input <- checkboxInput(
             inputId = ns("value"),
-            label = span(
+            label = tags$span(
               id = ns("count_label"),
               make_count_text(
                 label = "Keep NA",

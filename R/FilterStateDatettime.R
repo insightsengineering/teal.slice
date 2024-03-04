@@ -362,9 +362,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
             div(
               class = "flex w-80 filter_datelike_input",
               div(class = "w-45 text-center", ui_input_1),
-              span(
+              tags$span(
                 class = "input-group-addon w-10",
-                span(class = "input-group-text w-100 justify-content-center", "to"),
+                tags$span(class = "input-group-text w-100 justify-content-center", "to"),
                 title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
               ),
               div(class = "w-45 text-center", ui_input_2)

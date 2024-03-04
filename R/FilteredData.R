@@ -698,7 +698,7 @@ FilteredData <- R6::R6Class( # nolint
               self$datanames(),
               function(dataname) {
                 fdataset <- private$get_filtered_dataset(dataname)
-                span(id = ns(dataname), fdataset$ui_add(ns(dataname)))
+                tags$span(id = ns(dataname), fdataset$ui_add(ns(dataname)))
               }
             )
           )

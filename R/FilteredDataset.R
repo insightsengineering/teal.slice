@@ -218,7 +218,7 @@ FilteredDataset <- R6::R6Class( # nolint
 
       ns <- NS(id)
       if_multiple_filter_states <- length(private$get_filter_states()) > 1
-      span(
+      tags$span(
         id = id,
         include_css_files("filter-panel"),
         div(

@@ -454,7 +454,7 @@ FilterStates <- R6::R6Class( # nolint
               "FilterStates$srv_add@1 updating available column choices, dataname: { private$dataname }"
             )
             if (length(avail_column_choices()) == 0) {
-              span("No available columns to add.")
+              tags$span("No available columns to add.")
             } else {
               div(
                 teal.widgets::optionalSelectInput(
