@@ -27,10 +27,12 @@
 #'  - `"all"` to have counts of single `FilterState` to show number of observation in filtered
 #'   and unfiltered dataset. Note, that issues were reported when using this option with `MultiAssayExperiment`.
 #'   Please make sure that adding new filters doesn't fail on target platform before deploying for production.
-#' @param allow_add (`logical(1)`) logical flag specifying whether the user will be able to add new filters
-#' @param x object to test for `teal_slices`, object to convert to `teal_slices` or a `teal_slices` object
-#' @param i (`character` or `numeric` or `logical`) indicating which elements to extract
-#' @param recursive (`logical(1)`) flag specifying whether to also convert to list the elements of this `teal_slices`
+#' @param allow_add (`logical(1)`) logical flag specifying whether the user will be able to add new filters.
+#' @param x object to test for `teal_slices`, object to convert to `teal_slices` or a `teal_slices` object.
+#' @param i (`character` or `numeric` or `logical`) indicating which elements to extract.
+#' @param recursive (`logical(1)`) flag specifying whether to also convert to list the elements of this `teal_slices`.
+#' @param show_all (`logical(1)`) whether to display non-null elements of constituent `teal_slice` objects.
+#' @param trim_lines (`logical(1)`) whether to trim lines.
 #'
 #' @return
 #' `teal_slices`, which is an unnamed list of `teal_slice` objects.
@@ -225,8 +227,6 @@ c.teal_slices <- function(...) {
   )
 }
 
-#' @param show_all (`logical(1)`) whether to display non-null elements of constituent `teal_slice` objects
-#' @param trim_lines (`logical(1)`) whether to trim lines
 #' @export
 #' @keywords internal
 #'
