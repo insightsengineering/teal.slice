@@ -278,6 +278,12 @@ a.remove_all:hover {
   background-color: var(--bs-gray-200, #e9ecef);
 }
 
+.filter-card-header[aria-expanded="true"]:hover {
+  transition-property: background-color;
+  transition-duration: 150ms;
+  background-color: #f5f5f5;
+}
+
 .filter-card-title {
   display: flex;
   flex-direction: row;
