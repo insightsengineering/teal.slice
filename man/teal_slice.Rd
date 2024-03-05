@@ -33,7 +33,7 @@ as.teal_slice(x)
 
 \\method{format}{teal_slice}(x, show_all = FALSE, trim_lines = TRUE, ...)
 
-\\methods{print}{teal_slice}(x, ...)
+\\method{print}{teal_slice}(x, ...)
 }
 \arguments{
 \item{dataname}{(\code{character(1)}) name of data set}
