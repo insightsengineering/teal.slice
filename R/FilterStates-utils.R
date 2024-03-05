@@ -35,7 +35,7 @@
 #'
 #' library(shiny)
 #' ui <- fluidPage(
-#'   actionButton("clear", shiny::tags$span(icon("xmark"), "Remove all filters")),
+#'   actionButton("clear", tags$span(icon("xmark"), "Remove all filters")),
 #'   rf$ui_add(id = "add"),
 #'   rf$ui_active("states"),
 #'   verbatimTextOutput("expr"),
