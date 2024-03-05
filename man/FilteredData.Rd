@@ -142,7 +142,7 @@ Initialize a \code{FilteredData} object.
 List of data objects.
 Names of the list will be used as \code{dataname} for respective datasets.}
 
-\item{\code{join_keys}}{(\code{join_keys}) optional joining keys, see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
+\item{\code{join_keys}}{(\code{join_keys}) optional, joining keys, see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
 }
 \if{html}{\out{</div>}}
 }

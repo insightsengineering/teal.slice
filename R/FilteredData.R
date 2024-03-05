@@ -100,7 +100,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @param data_objects (`named list`)
     #'   List of data objects.
     #'   Names of the list will be used as `dataname` for respective datasets.
-    #' @param join_keys (`join_keys`) optional joining keys, see [`teal.data::join_keys()`].
+    #' @param join_keys (`join_keys`) optional, joining keys, see [`teal.data::join_keys()`].
     #'
     initialize = function(data_objects, join_keys = teal.data::join_keys()) {
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")

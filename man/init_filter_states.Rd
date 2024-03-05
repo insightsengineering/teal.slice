@@ -26,10 +26,10 @@ Function has to have \code{sid} argument being a character which is related to \
 name of the data used in the subset expression,
 passed to the function argument attached to this \code{FilterStates}.}
 
-\item{datalabel}{(\code{character(1)})
-optional text label.}
+\item{datalabel}{(\code{character(1)}) optional,
+text label.}
 
-\item{...}{(optional)
+\item{...}{optional,
 additional arguments for specific classes: keys.}
 }
 \value{
