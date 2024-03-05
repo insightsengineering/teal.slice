@@ -8,6 +8,7 @@
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{c.teal_slices}
+\alias{[.teal_slices}
 \title{Complete filter specification}
 \usage{
 teal_slices(
@@ -24,8 +25,7 @@ as.teal_slices(x)
 
 \\method{as.list}{teal_slices}(x, recursive = FALSE, ...)
 
-## S3 method for class 'teal_slices'
-x[i]
+\\method{[}{teal_slices}(x, i)
 
 \\method{c}{teal_slices}(...)
 

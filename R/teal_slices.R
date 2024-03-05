@@ -18,8 +18,7 @@
 #'
 #' \\method{as.list}{teal_slices}(x, recursive = FALSE, ...)
 #'
-#' ## S3 method for class 'teal_slices'
-#' x[i]
+#' \\method{[}{teal_slices}(x, i)
 #'
 #' \\method{c}{teal_slices}(...)
 #'
@@ -115,6 +114,7 @@
 #' - [`teal::slices_store`] for robust utilities for saving and loading `teal_slices` in `JSON` format
 #'
 #' @aliases is.teal_slices as.teal_slices as.list.teal_slices format.teal_slices print.teal_slices c.teal_slices
+#' [.teal_slices
 #'
 #' @export
 #'
