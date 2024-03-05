@@ -251,7 +251,7 @@ FilteredDataset <- R6::R6Class( # nolint
               id = ns("filter_count_ui"),
               tagList(
                 textOutput(ns("filter_count")),
-                br()
+                tags$br()
               )
             )
           ),

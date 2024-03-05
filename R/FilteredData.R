@@ -1053,7 +1053,7 @@ FilteredData <- R6::R6Class( # nolint
 
           htmltools::tagInsertChildren(
             checkbox,
-            br(),
+            tags$br(),
             if (length(non_interactive_choice_mock)) tags$strong("Fixed filters"),
             non_interactive_choice_mock,
             if (length(interactive_choice_mock)) tags$strong("Interactive filters"),
