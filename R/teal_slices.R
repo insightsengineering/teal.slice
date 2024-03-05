@@ -16,15 +16,15 @@
 #'
 #' as.teal_slices(x)
 #'
-#' \\method{as.list}{teal_slices}(x, recursive = FALSE, ...)
+#' \method{as.list}{teal_slices}(x, recursive = FALSE, ...)
 #'
-#' \\method{[}{teal_slices}(x, i)
+#' \method{[}{teal_slices}(x, i)
 #'
-#' \\method{c}{teal_slices}(...)
+#' \method{c}{teal_slices}(...)
 #'
-#' \\method{format}{teal_slices}(x, show_all = FALSE, trim_lines = TRUE, ...)
+#' \method{format}{teal_slices}(x, show_all = FALSE, trim_lines = TRUE, ...)
 #'
-#' \\method{print}{teal_slices}(x, ...)
+#' \method{print}{teal_slices}(x, ...)
 #'
 #' @details
 #' `teal_slices()` collates multiple `teal_slice` objects into a `teal_slices` object,

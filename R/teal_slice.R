@@ -24,11 +24,11 @@
 #'
 #' as.teal_slice(x)
 #'
-#' \\method{as.list}{teal_slice}(x, ...)
+#' \method{as.list}{teal_slice}(x, ...)
 #'
-#' \\method{format}{teal_slice}(x, show_all = FALSE, trim_lines = TRUE, ...)
+#' \method{format}{teal_slice}(x, show_all = FALSE, trim_lines = TRUE, ...)
 #'
-#' \\method{print}{teal_slice}(x, ...)
+#' \method{print}{teal_slice}(x, ...)
 #'
 #' @details
 #' `teal_slice` object fully describes filter state and can be used to create,
