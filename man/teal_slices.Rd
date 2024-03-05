@@ -22,20 +22,16 @@ is.teal_slices(x)
 
 as.teal_slices(x)
 
-## S3 method for class 'teal_slices'
-as.list(x, recursive = FALSE, ...)
+\\method{as.list}{teal_slices}(x, recursive = FALSE, ...)
 
 ## S3 method for class 'teal_slices'
 x[i]
 
-## S3 method for class 'teal_slices'
-c(...)
+\\method{c}{teal_slices}(...)
 
-## S3 method for class 'teal_slices'
-format(x, show_all = FALSE, trim_lines = TRUE, ...)
+\\method{format}{teal_slices}(x, show_all = FALSE, trim_lines = TRUE, ...)
 
-## S3 method for class 'teal_slices'
-print(x, ...)
+\\method{print}{teal_slices}(x, ...)
 }
 \arguments{
 \item{...}{any number of \code{teal_slice} objects. For \code{print} and \code{format},

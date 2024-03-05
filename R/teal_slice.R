@@ -24,14 +24,11 @@
 #'
 #' as.teal_slice(x)
 #'
-#' ## S3 method for class 'teal_slice'
-#' as.list(x, ...)
+#' \\method{as.list}{teal_slice}(x, ...)
 #'
-#' ## S3 method for class 'teal_slice'
-#' format(x, show_all = FALSE, trim_lines = TRUE, ...)
+#' \\method{format}{teal_slice}(x, show_all = FALSE, trim_lines = TRUE, ...)
 #'
-#' ## S3 method for class 'teal_slice'
-#' print(x, ...)
+#' \\methods{print}{teal_slice}(x, ...)
 #'
 #' @details
 #' `teal_slice` object fully describes filter state and can be used to create,
