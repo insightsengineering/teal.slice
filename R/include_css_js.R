@@ -13,5 +13,5 @@ include_css_files <- function(pattern = "*") {
     system.file("css", package = "teal.slice", mustWork = TRUE),
     pattern = pattern, full.names = TRUE
   )
-  singleton(tags$head(lapply(css_files, includeCSS)))
+  singleton(shiny::tags$head(lapply(css_files, includeCSS)))
 }

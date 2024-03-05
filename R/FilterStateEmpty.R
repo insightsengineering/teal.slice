@@ -128,8 +128,8 @@ EmptyFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
       isolate({
-        tags$div(
-          tags$span("Variable contains missing values only"),
+        shiny::tags$div(
+          shiny::tags$span("Variable contains missing values only"),
           private$keep_na_ui(ns("keep_na"))
         )
       })
@@ -155,7 +155,7 @@ EmptyFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           output$selection <- renderUI({
-            tags$span("Variable contains missing values only")
+            shiny::tags$span("Variable contains missing values only")
           })
           NULL
         }
@@ -166,7 +166,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     # Server module to display filter summary
     # Doesn't render anything
     content_summary = function(id) {
-      tags$span("All empty")
+      shiny::tags$span("All empty")
     }
   )
 )

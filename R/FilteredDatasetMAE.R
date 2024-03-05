@@ -190,11 +190,11 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       data <- self$get_dataset()
       experiment_names <- names(data)
 
-      tags$div(
-        tags$label("Add", tags$code(self$get_dataname()), "filter"),
-        tags$br(),
+      shiny::tags$div(
+        shiny::tags$label("Add", shiny::tags$code(self$get_dataname()), "filter"),
+        shiny::tags$br(),
         HTML("&#9658;"),
-        tags$label("Add subjects filter"),
+        shiny::tags$label("Add subjects filter"),
         private$get_filter_states()[["subjects"]]$ui_add(id = ns("subjects")),
         tagList(
           lapply(
@@ -202,7 +202,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
             function(experiment_name) {
               tagList(
                 HTML("&#9658;"),
-                tags$label("Add", tags$code(experiment_name), "filter"),
+                shiny::tags$label("Add", shiny::tags$code(experiment_name), "filter"),
                 private$get_filter_states()[[experiment_name]]$ui_add(id = ns(experiment_name))
               )
             }

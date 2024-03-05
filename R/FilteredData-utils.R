@@ -95,8 +95,8 @@ eval_expr_with_msg <- function(expr, env) {
 #'   actionButton("hide_content", label = "hide", icon = icon("xmark")),
 #'   actionButton("show_content", label = "show", icon = icon("check")),
 #'   actionButton("toggle_content", label = "toggle", icon = icon("angle-down")),
-#'   tags$br(),
-#'   tags$div(
+#'   shiny::tags$br(),
+#'   shiny::tags$div(
 #'     id = "content",
 #'     verbatimTextOutput("printout")
 #'   )

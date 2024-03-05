@@ -39,7 +39,7 @@
 #' )
 #'
 #' ui <- fluidPage(
-#'   tags$div(
+#'   shiny::tags$div(
 #'     class = "choices_state",
 #'     include_js_files("count-bar-labels.js"),
 #'     include_css_files(pattern = "filter-panel"),
@@ -125,17 +125,17 @@ countBar <- function(inputId, label, countmax, countnow = NULL, counttotal = cou
   label <- make_count_text(label, countmax = countmax, countnow = countnow)
   ns <- NS(inputId)
   if (is.null(countnow)) countnow <- 0
-  tags$div(
+  shiny::tags$div(
     class = "progress state-count-container",
     # * .9 to not exceed width of the parent html element
-    tags$div(
+    shiny::tags$div(
       id = ns("count_bar_filtered"),
       class = "progress-bar state-count-bar-filtered",
       style = sprintf("width: %s%%", countnow / counttotal * 100),
       role = "progressbar",
       label
     ),
-    tags$div(
+    shiny::tags$div(
       id = ns("count_bar_unfiltered"),
       class = "progress-bar state-count-bar-unfiltered",
       style = sprintf("width: %s%%", (countmax - countnow) / counttotal * 100),

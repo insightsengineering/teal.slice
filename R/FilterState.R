@@ -296,16 +296,16 @@ FilterState <- R6::R6Class( # nolint
       ### Title consists of conditional icon, varname, conditional varlabel, and controls, arranged in a row.
       ### Summary consists of value and controls, arranged in a row.
 
-      tags$div(
+      shiny::tags$div(
         id = id,
         class = "panel filter-card",
         include_js_files("count-bar-labels.js"),
-        tags$div(
+        shiny::tags$div(
           class = "filter-card-header",
           `data-toggle` = "collapse",
           `data-bs-toggle` = "collapse",
           href = paste0("#", ns("body")),
-          tags$div(
+          shiny::tags$div(
             class = "filter-card-title",
             if (private$is_anchored() && private$is_fixed()) {
               icon("anchor-lock", class = "filter-card-icon")
@@ -314,9 +314,9 @@ FilterState <- R6::R6Class( # nolint
             } else if (!private$is_anchored() && private$is_fixed()) {
               icon("lock", class = "filter-card-icon")
             },
-            tags$div(class = "filter-card-varname", tags$strong(private$get_varname())),
-            tags$div(class = "filter-card-varlabel", private$get_varlabel()),
-            tags$div(
+            shiny::tags$div(class = "filter-card-varname", shiny::tags$strong(private$get_varname())),
+            shiny::tags$div(class = "filter-card-varlabel", private$get_varlabel()),
+            shiny::tags$div(
               class = "filter-card-controls",
               # Suppress toggling body when clicking on this div.
               # This is for bootstrap 3 and 4. Causes page to scroll to top, prevented by setting href on buttons.
@@ -354,14 +354,14 @@ FilterState <- R6::R6Class( # nolint
               }
             )
           ),
-          tags$div(class = "filter-card-summary", private$ui_summary(ns("summary")))
+          shiny::tags$div(class = "filter-card-summary", private$ui_summary(ns("summary")))
         ),
-        tags$div(
+        shiny::tags$div(
           id = ns("body"),
           class = "collapse out",
           `data-parent` = paste0("#", parent_id),
           `data-bs-parent` = paste0("#", parent_id),
-          tags$div(
+          shiny::tags$div(
             class = "filter-card-body",
             if (private$is_fixed()) {
               private$ui_inputs_fixed(ns("inputs"))
@@ -692,7 +692,7 @@ FilterState <- R6::R6Class( # nolint
     # @param id (`character(1)`) `shiny` module instance id.
     ui_inputs_fixed = function(id) {
       ns <- NS(id)
-      tags$div(
+      shiny::tags$div(
         class = "choices_state",
         uiOutput(ns("selection"))
       )
@@ -717,7 +717,7 @@ FilterState <- R6::R6Class( # nolint
           countnow <- private$filtered_na_count()
           ui_input <- checkboxInput(
             inputId = ns("value"),
-            label = tags$span(
+            label = shiny::tags$span(
               id = ns("count_label"),
               make_count_text(
                 label = "Keep NA",
@@ -727,7 +727,7 @@ FilterState <- R6::R6Class( # nolint
             ),
             value = private$get_keep_na()
           )
-          tags$div(
+          shiny::tags$div(
             uiOutput(ns("trigger_visible"), inline = TRUE),
             ui_input
           )

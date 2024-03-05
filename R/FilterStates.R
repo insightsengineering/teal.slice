@@ -407,9 +407,9 @@ FilterStates <- R6::R6Class( # nolint
       ns <- NS(id)
 
       if (ncol(data) == 0) {
-        tags$div("no sample variables available")
+        shiny::tags$div("no sample variables available")
       } else if (nrow(data) == 0) {
-        tags$div("no samples available")
+        shiny::tags$div("no samples available")
       } else {
         uiOutput(ns("add_filter"))
       }
@@ -454,9 +454,9 @@ FilterStates <- R6::R6Class( # nolint
               "FilterStates$srv_add@1 updating available column choices, dataname: { private$dataname }"
             )
             if (length(avail_column_choices()) == 0) {
-              tags$span("No available columns to add.")
+              shiny::tags$span("No available columns to add.")
             } else {
-              tags$div(
+              shiny::tags$div(
                 teal.widgets::optionalSelectInput(
                   session$ns("var_to_add"),
                   choices = avail_column_choices(),
