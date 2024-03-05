@@ -2,6 +2,38 @@
 #'
 #' Create a `teal_slice` object that holds complete information on filtering one variable.
 #'
+# Custom @usage section is needed to that utility functions are listed in the usage and they do not have index entries.
+#' @usage
+#' teal_slice(
+#'   dataname,
+#'   varname,
+#'   id,
+#'   expr,
+#'   choices = NULL,
+#'   selected = NULL,
+#'   keep_na = NULL,
+#'   keep_inf = NULL,
+#'   fixed = FALSE,
+#'   anchored = FALSE,
+#'   multiple = TRUE,
+#'   title = NULL,
+#'   ...
+#' )
+#'
+#' is.teal_slice(x)
+#'
+#' as.teal_slice(x)
+#'
+#' ## S3 method for class 'teal_slice'
+#' as.list.teal_slice(x, ...)
+#'
+#' ## S3 method for class 'teal_slice'
+#' format.teal_slice(x, show_all = FALSE, trim_lines = TRUE, ...)
+#'
+#' ## S3 method for class 'teal_slice'
+#' print.teal_slice(x, ...)
+#'
+#' @details
 #' `teal_slice` object fully describes filter state and can be used to create,
 #' modify, and delete a filter state. A `teal_slice` contains a number of common fields
 #' (all named arguments of `teal_slice`), some of which are mandatory, but only
@@ -109,37 +141,6 @@
 #' print(x1, show_all = TRUE, trim_lines = FALSE)
 #'
 #' @seealso [`teal_slices`]
-#'
-# Custom @usage section is needed to that utility functions are listed in the usage and they do not have index entries.
-#' @usage
-#' teal_slice(
-#'   dataname,
-#'   varname,
-#'   id,
-#'   expr,
-#'   choices = NULL,
-#'   selected = NULL,
-#'   keep_na = NULL,
-#'   keep_inf = NULL,
-#'   fixed = FALSE,
-#'   anchored = FALSE,
-#'   multiple = TRUE,
-#'   title = NULL,
-#'   ...
-#' )
-#'
-#' is.teal_slice(x)
-#'
-#' as.teal_slice(x)
-#'
-#' ## S3 method for class 'teal_slice'
-#' as.list.teal_slice(x, ...)
-#'
-#' ## S3 method for class 'teal_slice'
-#' format.teal_slice(x, show_all = FALSE, trim_lines = TRUE, ...)
-#'
-#' ## S3 method for class 'teal_slice'
-#' print.teal_slice(x, ...)
 #'
 #' @export
 teal_slice <- function(dataname, # When editing function parameters, please remember to update @usage section.

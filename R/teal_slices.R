@@ -2,6 +2,36 @@
 #'
 #' Create `teal_slices` object to package multiple filters and additional settings.
 #'
+# Custom @usage section is needed to that utility functions are listed in the usage and they do not have index entries.
+#' @usage
+#' teal_slices(
+#'   ...,
+#'   exclude_varnames = NULL,
+#'   include_varnames = NULL,
+#'   count_type = NULL,
+#'   allow_add = TRUE
+#' )
+#'
+#' is.teal_slices(x)
+#'
+#' as.teal_slices(x)
+#'
+#' ## S3 method for class 'teal_slices'
+#' as.list(x, recursive = FALSE, ...)
+#'
+#' ## S3 method for class 'teal_slices'
+#' x[i]
+#'
+#' ## S3 method for class 'teal_slices'
+#' c(...)
+#'
+#' ## S3 method for class 'teal_slices'
+#' format(x, show_all = FALSE, trim_lines = TRUE, ...)
+#'
+#' ## S3 method for class 'teal_slices'
+#' print(x, ...)
+#'
+#' @details
 #' `teal_slices()` collates multiple `teal_slice` objects into a `teal_slices` object,
 #' a complete filter specification. This is used by all classes above `FilterState`
 #' as well as `filter_panel_api` wrapper functions.
@@ -87,35 +117,6 @@
 #' @seealso
 #' - [`teal_slice`] for creating constituent elements of `teal_slices`
 #' - [`teal::slices_store`] for robust utilities for saving and loading `teal_slices` in `JSON` format
-#'
-# Custom @usage section is needed to that utility functions are listed in the usage and they do not have index entries.
-#' @usage
-#' teal_slices(
-#'   ...,
-#'   exclude_varnames = NULL,
-#'   include_varnames = NULL,
-#'   count_type = NULL,
-#'   allow_add = TRUE
-#' )
-#'
-#' is.teal_slices(x)
-#'
-#' as.teal_slices(x)
-#'
-#' ## S3 method for class 'teal_slices'
-#' as.list(x, recursive = FALSE, ...)
-#'
-#' ## S3 method for class 'teal_slices'
-#' x[i]
-#'
-#' ## S3 method for class 'teal_slices'
-#' c(...)
-#'
-#' ## S3 method for class 'teal_slices'
-#' format(x, show_all = FALSE, trim_lines = TRUE, ...)
-#'
-#' ## S3 method for class 'teal_slices'
-#' print(x, ...)
 #'
 #' @export
 #'
