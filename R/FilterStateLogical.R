@@ -272,8 +272,8 @@ LogicalFilterState <- R6::R6Class( # nolint
             width = "100%"
           )
         }
-        shiny::tags$div(
-          shiny::tags$div(
+        tags$div(
+          tags$div(
             class = "choices_state",
             uiOutput(ns("trigger_visible"), inline = TRUE),
             ui_input
@@ -393,14 +393,14 @@ LogicalFilterState <- R6::R6Class( # nolint
     #  and if NA are included also
     content_summary = function(id) {
       tagList(
-        shiny::tags$span(
+        tags$span(
           class = "filter-card-summary-value",
           toString(private$get_selected())
         ),
-        shiny::tags$span(
+        tags$span(
           class = "filter-card-summary-controls",
           if (private$na_count > 0) {
-            shiny::tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
+            tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
           }
         )
       )

@@ -499,7 +499,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `shiny.tag`
     ui_filter_panel = function(id) {
       ns <- NS(id)
-      shiny::tags$div(
+      tags$div(
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
         self$ui_overview(ns("overview")),
@@ -552,12 +552,12 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `shiny.tag`
     ui_active = function(id) {
       ns <- NS(id)
-      shiny::tags$div(
+      tags$div(
         id = id, # not used, can be used to customize CSS behavior
         class = "well",
-        shiny::tags$div(
+        tags$div(
           class = "filter-panel-active-header",
-          shiny::tags$span("Active Filter Variables", class = "text-primary mb-4"),
+          tags$span("Active Filter Variables", class = "text-primary mb-4"),
           private$ui_available_filters(ns("available_filters")),
           actionLink(
             inputId = ns("minimise_filter_active"),
@@ -574,7 +574,7 @@ FilteredData <- R6::R6Class( # nolint
             class = "remove_all pull-right"
           )
         ),
-        shiny::tags$div(
+        tags$div(
           id = ns("filter_active_vars_contents"),
           tagList(
             lapply(
@@ -587,7 +587,7 @@ FilteredData <- R6::R6Class( # nolint
           )
         ),
         shinyjs::hidden(
-          shiny::tags$div(
+          tags$div(
             id = ns("filters_active_count"),
             textOutput(ns("teal_filters_count"))
           )
@@ -671,16 +671,16 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `shiny.tag`
     ui_add = function(id) {
       ns <- NS(id)
-      shiny::tags$div(
+      tags$div(
         id = id, # not used, can be used to customize CSS behavior
         class = "well",
-        shiny::tags$div(
+        tags$div(
           class = "row",
-          shiny::tags$div(
+          tags$div(
             class = "col-sm-9",
-            shiny::tags$label("Add Filter Variables", class = "text-primary mb-4")
+            tags$label("Add Filter Variables", class = "text-primary mb-4")
           ),
-          shiny::tags$div(
+          tags$div(
             class = "col-sm-3",
             actionLink(
               ns("minimise_filter_add_vars"),
@@ -691,14 +691,14 @@ FilteredData <- R6::R6Class( # nolint
             )
           )
         ),
-        shiny::tags$div(
+        tags$div(
           id = ns("filter_add_vars_contents"),
           tagList(
             lapply(
               self$datanames(),
               function(dataname) {
                 fdataset <- private$get_filtered_dataset(dataname)
-                shiny::tags$span(id = ns(dataname), fdataset$ui_add(ns(dataname)))
+                tags$span(id = ns(dataname), fdataset$ui_add(ns(dataname)))
               }
             )
           )
@@ -760,16 +760,16 @@ FilteredData <- R6::R6Class( # nolint
     #'
     ui_overview = function(id) {
       ns <- NS(id)
-      shiny::tags$div(
+      tags$div(
         id = id, # not used, can be used to customize CSS behavior
         class = "well",
-        shiny::tags$div(
+        tags$div(
           class = "row",
-          shiny::tags$div(
+          tags$div(
             class = "col-sm-9",
-            shiny::tags$label("Active Filter Summary", class = "text-primary mb-4")
+            tags$label("Active Filter Summary", class = "text-primary mb-4")
           ),
-          shiny::tags$div(
+          tags$div(
             class = "col-sm-3",
             actionLink(
               ns("minimise_filter_overview"),
@@ -780,9 +780,9 @@ FilteredData <- R6::R6Class( # nolint
             )
           )
         ),
-        shiny::tags$div(
+        tags$div(
           id = ns("filters_overview_contents"),
-          shiny::tags$div(
+          tags$div(
             class = "teal_active_summary_filter_panel",
             tableOutput(ns("table"))
           )
@@ -859,9 +859,9 @@ FilteredData <- R6::R6Class( # nolint
               datasets_df,
               1,
               function(x) {
-                shiny::tags$tr(
+                tags$tr(
                   tagList(
-                    shiny::tags$td(
+                    tags$td(
                       if (all(x[-1] == "")) {
                         icon(
                           name = "exclamation-triangle",
@@ -873,7 +873,7 @@ FilteredData <- R6::R6Class( # nolint
                       },
                       x[1]
                     ),
-                    lapply(x[-1], shiny::tags$td)
+                    lapply(x[-1], tags$td)
                   )
                 )
               }
@@ -887,12 +887,12 @@ FilteredData <- R6::R6Class( # nolint
               },
               character(1)
             )
-            header_html <- shiny::tags$tr(tagList(lapply(header_labels, shiny::tags$td)))
+            header_html <- tags$tr(tagList(lapply(header_labels, tags$td)))
 
-            table_html <- shiny::tags$table(
+            table_html <- tags$table(
               class = "table custom-table",
-              shiny::tags$thead(header_html),
-              shiny::tags$tbody(body_html)
+              tags$thead(header_html),
+              tags$tbody(body_html)
             )
             logger::log_trace("FilteredData$srv_filter_overview@1 updated counts")
             table_html
@@ -962,7 +962,7 @@ FilteredData <- R6::R6Class( # nolint
       ns <- NS(id)
 
       active_slices_id <- isolate(vapply(self$get_filter_state(), `[[`, character(1), "id"))
-      shiny::tags$div(
+      tags$div(
         id = ns("available_menu"),
         shinyWidgets::dropMenu(
           actionLink(
@@ -972,7 +972,7 @@ FilteredData <- R6::R6Class( # nolint
             title = "Available filters",
             class = "remove pull-right"
           ),
-          shiny::tags$div(
+          tags$div(
             class = "menu-content",
             shinycssloaders::withSpinner(
               uiOutput(ns("checkbox")),
@@ -1008,17 +1008,17 @@ FilteredData <- R6::R6Class( # nolint
         })
 
         checkbox_group_element <- function(name, value, label, checked, disabled = FALSE) {
-          shiny::tags$div(
+          tags$div(
             class = "checkbox available-filters",
-            shiny::tags$label(
-              shiny::tags$input(
+            tags$label(
+              tags$input(
                 type = "checkbox",
                 name = name,
                 value = value,
                 checked = checked,
                 disabled = if (disabled) "disabled"
               ),
-              shiny::tags$span(label, disabled = if (disabled) disabled)
+              tags$span(label, disabled = if (disabled) disabled)
             )
           )
         }
@@ -1053,10 +1053,10 @@ FilteredData <- R6::R6Class( # nolint
 
           htmltools::tagInsertChildren(
             checkbox,
-            shiny::tags$br(),
-            if (length(non_interactive_choice_mock)) shiny::tags$strong("Fixed filters"),
+            tags$br(),
+            if (length(non_interactive_choice_mock)) tags$strong("Fixed filters"),
             non_interactive_choice_mock,
-            if (length(interactive_choice_mock)) shiny::tags$strong("Interactive filters"),
+            if (length(interactive_choice_mock)) tags$strong("Interactive filters"),
             interactive_choice_mock,
             .cssSelector = "div.shiny-options-group",
             after = 0

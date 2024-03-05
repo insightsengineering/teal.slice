@@ -278,8 +278,8 @@ DateFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
       isolate({
-        shiny::tags$div(
-          shiny::tags$div(
+        tags$div(
+          tags$div(
             class = "flex",
             actionButton(
               class = "date_reset_button",
@@ -287,7 +287,7 @@ DateFilterState <- R6::R6Class( # nolint
               label = NULL,
               icon = icon("fas fa-undo")
             ),
-            shiny::tags$div(
+            tags$div(
               class = "w-80 filter_datelike_input",
               dateRangeInput(
                 inputId = ns("selection"),
@@ -402,9 +402,9 @@ DateFilterState <- R6::R6Class( # nolint
 
           output$selection <- renderUI({
             vals <- format(private$get_selected(), nsmall = 3)
-            shiny::tags$div(
-              shiny::tags$div(icon("calendar-days"), vals[1]),
-              shiny::tags$div(span(" - "), icon("calendar-days"), vals[2])
+            tags$div(
+              tags$div(icon("calendar-days"), vals[1]),
+              tags$div(span(" - "), icon("calendar-days"), vals[2])
             )
           })
 
@@ -423,14 +423,14 @@ DateFilterState <- R6::R6Class( # nolint
       min <- selected[1]
       max <- selected[2]
       tagList(
-        shiny::tags$span(
+        tags$span(
           class = "filter-card-summary-value",
           HTML(min, "&ndash;", max)
         ),
-        shiny::tags$span(
+        tags$span(
           class = "filter-card-summary-controls",
           if (private$na_count > 0) {
-            shiny::tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
+            tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
           }
         )
       )

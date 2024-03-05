@@ -102,9 +102,9 @@ SEFilterStates <- R6::R6Class( # nolint
       checkmate::assert_string(id)
       ns <- NS(id)
       row_input <- if (ncol(SummarizedExperiment::rowData(data)) == 0) {
-        shiny::tags$div("no sample variables available")
+        tags$div("no sample variables available")
       } else if (nrow(SummarizedExperiment::rowData(data)) == 0) {
-        shiny::tags$div("no samples available")
+        tags$div("no samples available")
       } else {
         teal.widgets::optionalSelectInput(
           ns("row_to_add"),
@@ -117,9 +117,9 @@ SEFilterStates <- R6::R6Class( # nolint
       }
 
       col_input <- if (ncol(SummarizedExperiment::colData(data)) == 0) {
-        shiny::tags$div("no sample variables available")
+        tags$div("no sample variables available")
       } else if (nrow(SummarizedExperiment::colData(data)) == 0) {
-        shiny::tags$div("no samples available")
+        tags$div("no samples available")
       } else {
         teal.widgets::optionalSelectInput(
           ns("col_to_add"),
@@ -131,7 +131,7 @@ SEFilterStates <- R6::R6Class( # nolint
         )
       }
 
-      shiny::tags$div(
+      tags$div(
         row_input,
         col_input
       )

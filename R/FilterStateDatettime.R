@@ -355,19 +355,19 @@ DatetimeFilterState <- R6::R6Class( # nolint
         ui_input_1$children[[2]]$attribs <- c(ui_input_1$children[[2]]$attribs, list(class = "input-sm"))
         ui_input_2$children[[2]]$attribs <- c(ui_input_2$children[[2]]$attribs, list(class = "input-sm"))
 
-        shiny::tags$div(
-          shiny::tags$div(
+        tags$div(
+          tags$div(
             class = "flex",
             ui_reset_1,
-            shiny::tags$div(
+            tags$div(
               class = "flex w-80 filter_datelike_input",
-              shiny::tags$div(class = "w-45 text-center", ui_input_1),
-              shiny::tags$span(
+              tags$div(class = "w-45 text-center", ui_input_1),
+              tags$span(
                 class = "input-group-addon w-10",
-                shiny::tags$span(class = "input-group-text w-100 justify-content-center", "to"),
+                tags$span(class = "input-group-text w-100 justify-content-center", "to"),
                 title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
               ),
-              shiny::tags$div(class = "w-45 text-center", ui_input_2)
+              tags$div(class = "w-45 text-center", ui_input_2)
             ),
             ui_reset_2
           ),
@@ -515,9 +515,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
           output$selection <- renderUI({
             vals <- format(private$get_selected(), usetz = TRUE, nsmall = 3)
-            shiny::tags$div(
-              shiny::tags$div(icon("clock"), vals[1]),
-              shiny::tags$div(span(" - "), icon("clock"), vals[2])
+            tags$div(
+              tags$div(icon("clock"), vals[1]),
+              tags$div(span(" - "), icon("clock"), vals[2])
             )
           })
 
@@ -536,14 +536,14 @@ DatetimeFilterState <- R6::R6Class( # nolint
       min <- selected[1]
       max <- selected[2]
       tagList(
-        shiny::tags$span(
+        tags$span(
           class = "filter-card-summary-value",
           HTML(min, "&ndash;", max)
         ),
-        shiny::tags$span(
+        tags$span(
           class = "filter-card-summary-controls",
           if (private$na_count > 0) {
-            shiny::tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
+            tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
           }
         )
       )

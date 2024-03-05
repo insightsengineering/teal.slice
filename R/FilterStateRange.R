@@ -417,9 +417,9 @@ RangeFilterState <- R6::R6Class( # nolint
           width = "100%"
         )
         tagList(
-          shiny::tags$div(
+          tags$div(
             class = "choices_state",
-            shiny::tags$head(shiny::tags$script(
+            tags$head(tags$script(
               # Inline JS code for popover functionality.
               # Adding the script inline because when added from a file with include_js_files(),
               # it only works in the first info_button instance and not others.
@@ -437,7 +437,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 });'
               )
             )),
-            shiny::tags$div(
+            tags$div(
               actionLink(
                 ns("plotly_info"),
                 label = NULL,
@@ -463,7 +463,7 @@ RangeFilterState <- R6::R6Class( # nolint
             ),
             ui_input
           ),
-          shiny::tags$div(
+          tags$div(
             class = "filter-card-body-keep-na-inf",
             private$keep_inf_ui(ns("keep_inf")),
             private$keep_na_ui(ns("keep_na"))
@@ -640,14 +640,14 @@ RangeFilterState <- R6::R6Class( # nolint
     content_summary = function() {
       selection <- private$get_selected()
       tagList(
-        shiny::tags$span(HTML(selection[1], "&ndash;", selection[2]), class = "filter-card-summary-value"),
-        shiny::tags$span(
+        tags$span(HTML(selection[1], "&ndash;", selection[2]), class = "filter-card-summary-value"),
+        tags$span(
           class = "filter-card-summary-controls",
           if (private$na_count > 0) {
-            shiny::tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
+            tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
           },
           if (private$inf_count > 0) {
-            shiny::tags$span("Inf", if (isTRUE(private$get_keep_inf())) icon("check") else icon("xmark"))
+            tags$span("Inf", if (isTRUE(private$get_keep_inf())) icon("check") else icon("xmark"))
           }
         )
       )
@@ -665,7 +665,7 @@ RangeFilterState <- R6::R6Class( # nolint
         countnow <- isolate(private$filtered_na_count())
         ui_input <- checkboxInput(
           inputId = ns("value"),
-          label = shiny::tags$span(
+          label = tags$span(
             id = ns("count_label"),
             make_count_text(
               label = "Keep Inf",
@@ -675,7 +675,7 @@ RangeFilterState <- R6::R6Class( # nolint
           ),
           value = isolate(private$get_keep_inf())
         )
-        shiny::tags$div(
+        tags$div(
           uiOutput(ns("trigger_visible"), inline = TRUE),
           ui_input
         )

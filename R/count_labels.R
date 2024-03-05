@@ -125,17 +125,17 @@ countBar <- function(inputId, label, countmax, countnow = NULL, counttotal = cou
   label <- make_count_text(label, countmax = countmax, countnow = countnow)
   ns <- NS(inputId)
   if (is.null(countnow)) countnow <- 0
-  shiny::tags$div(
+  tags$div(
     class = "progress state-count-container",
     # * .9 to not exceed width of the parent html element
-    shiny::tags$div(
+    tags$div(
       id = ns("count_bar_filtered"),
       class = "progress-bar state-count-bar-filtered",
       style = sprintf("width: %s%%", countnow / counttotal * 100),
       role = "progressbar",
       label
     ),
-    shiny::tags$div(
+    tags$div(
       id = ns("count_bar_unfiltered"),
       class = "progress-bar state-count-bar-unfiltered",
       style = sprintf("width: %s%%", (countmax - countnow) / counttotal * 100),

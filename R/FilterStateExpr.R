@@ -191,22 +191,22 @@ FilterStateExpr <- R6::R6Class( # nolint
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)
       isolate({
-        shiny::tags$div(
+        tags$div(
           id = id,
           class = "panel filter-card",
           include_js_files("count-bar-labels.js"),
-          shiny::tags$div(
+          tags$div(
             class = "filter-card-header",
-            shiny::tags$div(
+            tags$div(
               class = "filter-card-title",
               if (private$is_anchored()) {
                 icon("anchor-lock", class = "filter-card-icon")
               } else {
                 icon("lock", class = "filter-card-icon")
               },
-              shiny::tags$div(class = "filter-card-varname", shiny::tags$strong(private$teal_slice$id)),
-              shiny::tags$div(class = "filter-card-varlabel", private$teal_slice$title),
-              shiny::tags$div(
+              tags$div(class = "filter-card-varname", tags$strong(private$teal_slice$id)),
+              tags$div(class = "filter-card-varlabel", private$teal_slice$title),
+              tags$div(
                 class = "filter-card-controls",
                 if (isFALSE(private$is_anchored())) {
                   actionLink(
@@ -218,7 +218,7 @@ FilterStateExpr <- R6::R6Class( # nolint
                 }
               )
             ),
-            shiny::tags$div(
+            tags$div(
               class = "filter-card-summary",
               private$ui_summary(ns("summary"))
             )

@@ -374,7 +374,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             countsnow = countsnow,
             countsmax = countsmax
           )
-          shiny::tags$div(
+          tags$div(
             class = "choices_state",
             if (private$is_multiple()) {
               checkboxGroupInput(
@@ -416,7 +416,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             )
           )
         }
-        shiny::tags$div(
+        tags$div(
           uiOutput(ns("trigger_visible")),
           ui_input,
           private$keep_na_ui(ns("keep_na"))
@@ -603,14 +603,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
           }
         }
       tagList(
-        shiny::tags$span(
+        tags$span(
           class = "filter-card-summary-value",
           selected_text
         ),
-        shiny::tags$span(
+        tags$span(
           class = "filter-card-summary-controls",
           if (private$na_count > 0) {
-            shiny::tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
+            tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
           }
         )
       )
