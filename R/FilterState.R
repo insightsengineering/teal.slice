@@ -314,7 +314,7 @@ FilterState <- R6::R6Class( # nolint
             } else if (!private$is_anchored() && private$is_fixed()) {
               icon("lock", class = "filter-card-icon")
             },
-            tags$div(class = "filter-card-varname", strong(private$get_varname())),
+            tags$div(class = "filter-card-varname", tags$strong(private$get_varname())),
             tags$div(class = "filter-card-varlabel", private$get_varlabel()),
             tags$div(
               class = "filter-card-controls",

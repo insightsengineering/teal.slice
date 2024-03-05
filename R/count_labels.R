@@ -39,7 +39,7 @@
 #' )
 #'
 #' ui <- fluidPage(
-#'   div(
+#'   tags$div(
 #'     class = "choices_state",
 #'     include_js_files("count-bar-labels.js"),
 #'     include_css_files(pattern = "filter-panel"),
