@@ -25,13 +25,13 @@
 #' as.teal_slice(x)
 #'
 #' ## S3 method for class 'teal_slice'
-#' as.list.teal_slice(x, ...)
+#' as.list(x, ...)
 #'
 #' ## S3 method for class 'teal_slice'
-#' format.teal_slice(x, show_all = FALSE, trim_lines = TRUE, ...)
+#' format(x, show_all = FALSE, trim_lines = TRUE, ...)
 #'
 #' ## S3 method for class 'teal_slice'
-#' print.teal_slice(x, ...)
+#' print(x, ...)
 #'
 #' @details
 #' `teal_slice` object fully describes filter state and can be used to create,
@@ -141,6 +141,8 @@
 #' print(x1, show_all = TRUE, trim_lines = FALSE)
 #'
 #' @seealso [`teal_slices`]
+#'
+#' @aliases is.teal_slice as.teal_slice as.list.teal_slice format.teal_slice print.teal_slice
 #'
 #' @export
 teal_slice <- function(dataname, # When editing function parameters, please remember to update @usage section.

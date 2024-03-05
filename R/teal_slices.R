@@ -118,6 +118,8 @@
 #' - [`teal_slice`] for creating constituent elements of `teal_slices`
 #' - [`teal::slices_store`] for robust utilities for saving and loading `teal_slices` in `JSON` format
 #'
+#' @aliases is.teal_slices as.teal_slices as.list.teal_slices format.teal_slices print.teal_slices c.teal_slices
+#'
 #' @export
 #'
 teal_slices <- function(..., # When editing function parameters, please remember to update @usage section.

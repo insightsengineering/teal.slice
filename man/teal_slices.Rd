@@ -2,6 +2,12 @@
 % Please edit documentation in R/teal_slices.R
 \name{teal_slices}
 \alias{teal_slices}
+\alias{is.teal_slices}
+\alias{as.teal_slices}
+\alias{as.list.teal_slices}
+\alias{format.teal_slices}
+\alias{print.teal_slices}
+\alias{c.teal_slices}
 \title{Complete filter specification}
 \usage{
 teal_slices(
