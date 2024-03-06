@@ -8,6 +8,8 @@
   # Set up the teal logger instance
   teal.logger::register_logger("teal.slice")
 
+  remove_aliases(c("teal_slice", "teal_slices", "filter_state_api"))
+
   invisible()
 }
 
