@@ -13,7 +13,6 @@
 .project
 .settings/**
 /.project
-Meta
 coverage.*
 devel/*
 doc
