@@ -1,4 +1,3 @@
-
 #' Remove aliases from package index.
 #'
 #' Removes entries from package index page that list aliases of topics given in `names`.
@@ -14,7 +13,9 @@ remove_aliases <- function(names) {
 
   index_file <- system.file("html", "00Index.html", package = "teal.slice")
 
-  if (identical(index_file, "") || !isTRUE(utils::file_test("-w", index_file))) return(invisible(FALSE))
+  if (identical(index_file, "") || !isTRUE(utils::file_test("-w", index_file))) {
+    return(invisible(FALSE))
+  }
 
   index_contents <- readLines(index_file)
 
@@ -28,7 +29,9 @@ remove_aliases <- function(names) {
   )
 
   ind <- Reduce(union, indices)
-  if (identical(ind, integer(0L))) return(invisible(TRUE))
+  if (identical(ind, integer(0L))) {
+    return(invisible(TRUE))
+  }
   ind <- c(ind, ind + 1L)
   index_contents <- index_contents[-ind]
 
