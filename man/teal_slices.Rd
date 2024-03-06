@@ -137,4 +137,3 @@ print(all_filters, trim_lines = FALSE)
 \item \code{\link[teal:slices_store]{teal::slices_store}} for robust utilities for saving and loading \code{teal_slices} in \code{JSON} format
 }
 }
-\keyword{internal}

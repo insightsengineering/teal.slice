@@ -129,7 +129,6 @@ teal_slices <- function(...,
 
 #' @rdname teal_slices
 #' @export
-#' @keywords internal
 #'
 is.teal_slices <- function(x) { # nolint
   inherits(x, "teal_slices")
@@ -138,7 +137,6 @@ is.teal_slices <- function(x) { # nolint
 
 #' @rdname teal_slices
 #' @export
-#' @keywords internal
 #'
 as.teal_slices <- function(x) { # nolint
   checkmate::assert_list(x)
@@ -152,7 +150,6 @@ as.teal_slices <- function(x) { # nolint
 
 #' @rdname teal_slices
 #' @export
-#' @keywords internal
 #'
 as.list.teal_slices <- function(x, recursive = FALSE, ...) { # nolint
   ans <- unclass(x)
@@ -163,7 +160,6 @@ as.list.teal_slices <- function(x, recursive = FALSE, ...) { # nolint
 
 #' @rdname teal_slices
 #' @export
-#' @keywords internal
 #'
 `[.teal_slices` <- function(x, i) {
   if (missing(i)) i <- seq_along(x)
@@ -187,7 +183,6 @@ as.list.teal_slices <- function(x, recursive = FALSE, ...) { # nolint
 
 #' @rdname teal_slices
 #' @export
-#' @keywords internal
 #'
 c.teal_slices <- function(...) {
   x <- list(...)
@@ -211,7 +206,6 @@ c.teal_slices <- function(...) {
 #' @param show_all (`logical(1)`) whether to display non-null elements of constituent `teal_slice` objects
 #' @param trim_lines (`logical(1)`) whether to trim lines
 #' @export
-#' @keywords internal
 #'
 format.teal_slices <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   checkmate::assert_flag(show_all)
@@ -230,7 +224,6 @@ format.teal_slices <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
 
 #' @rdname teal_slices
 #' @export
-#' @keywords internal
 #'
 print.teal_slices <- function(x, ...) {
   cat(format(x, ...), "\n")
