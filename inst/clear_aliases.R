@@ -3,7 +3,7 @@
 # disabling linter because of multiple object name violations
 # lintr: off
 
-Rd_db <- getFromNamespace("Rd_db", "tools")  # nolint: object_name.
+Rd_db <- getFromNamespace("Rd_db", "tools") # nolint: object_name.
 Rd_contents <- getFromNamespace("Rd_contents", "tools")
 Rd_list <- Rd_db(dir = ".")
 Rd <- Rd_contents(Rd_list)
