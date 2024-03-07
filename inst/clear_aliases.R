@@ -14,4 +14,4 @@ Meta_dir <- file.path("inst", "Meta")
 if (!dir.exists(Meta_dir)) dir.create(Meta_dir)
 saveRDS(Rd, file = file.path(Meta_dir, "Rd.rds"))
 
-# nolint stop
+# nolint end
