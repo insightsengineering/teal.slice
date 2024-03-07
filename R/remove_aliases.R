@@ -4,7 +4,7 @@
 #'
 #' @param names (`character`) names of objects for which to remove aliases
 #'
-#' @return Invisible `TRUE` if operation succeded, invisible `FALSE` otherwise.
+#' @return Invisible `TRUE` if operation succeeded, invisible `FALSE` otherwise.
 #'
 #' @keywords internal
 #'

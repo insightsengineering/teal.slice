@@ -10,7 +10,7 @@ remove_aliases(names)
 \item{names}{(\code{character}) names of objects for which to remove aliases}
 }
 \value{
-Invisible \code{TRUE} if operation succeded, invisible \code{FALSE} otherwise.
+Invisible \code{TRUE} if operation succeeded, invisible \code{FALSE} otherwise.
 }
 \description{
 Removes entries from package index page that list aliases of topics given in \code{names}.
