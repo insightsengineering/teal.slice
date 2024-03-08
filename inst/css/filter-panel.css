@@ -253,10 +253,15 @@ a.remove_all:hover {
 }
 
 .filter-card:has(> .filter-card-header[aria-expanded="true"]) {
-  transition-property: box-shadow, background-color;
+  transition-property: background-color;
+  transition-duration: 150ms;
+  background-color: #ffffffb8;
+}
+
+.filter-card:has(> .filter-card-header[aria-expanded="true"]):hover {
+  transition-property: box-shadow;
   transition-duration: 150ms;
   box-shadow: 0 0 5px 2px #00000033;
-  background-color: #ffffffb8;
 }
 
 .filter-card-header {
