@@ -96,7 +96,7 @@ FilterState <- R6::R6Class( # nolint
       if (is.null(isolate(slice$keep_na)) && anyNA(x)) slice$keep_na <- TRUE
       private$teal_slice <- slice
       # Obtain variable label.
-      varlabel <- attr(x, "label")
+      varlabel <- attr(x, "label", exact = TRUE)
       # Display only when different from varname.
       private$varlabel <-
         if (is.null(varlabel) || identical(varlabel, private$get_varname())) {
@@ -149,7 +149,7 @@ FilterState <- R6::R6Class( # nolint
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice")
       if (private$is_fixed()) {
-        logger::log_warn("attempt to set state on fixed filter aborted id: { private$get_id() }")
+        warning("attempt to set state on fixed filter aborted id: ", private$get_id())
       } else {
         logger::log_trace("{ class(self)[1] }$set_state setting state of filter id: { private$get_id() }")
         isolate({

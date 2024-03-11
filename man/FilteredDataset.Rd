@@ -45,7 +45,7 @@ Initializes this \code{FilteredDataset} object.
   dataset,
   dataname,
   keys = character(0),
-  label = attr(dataset, "label")
+  label = attr(dataset, "label", exact = TRUE)
 )}\if{html}{\out{</div>}}
 }
 

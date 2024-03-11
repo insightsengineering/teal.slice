@@ -29,7 +29,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #'
     #' @return Object of class `FilteredDataset`, invisibly.
     #'
-    initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label")) {
+    initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label", exact = TRUE)) {
       logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
 
       # dataset assertion in child classes

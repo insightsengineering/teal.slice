@@ -135,5 +135,5 @@ testthat::test_that("ui_add is pure virtual", {
   filtered_dataset <- FilteredDataset$new(
     dataset = head(iris), dataname = "iris"
   )
-  testthat::expect_error(filtered_dataset$ui_add(), regex = "Pure virtual")
+  testthat::expect_error(filtered_dataset$ui_add(), regexp = "Pure virtual")
 })

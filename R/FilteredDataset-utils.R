@@ -51,53 +51,56 @@
 #'   shinyApp(ui, server)
 #' }
 #'
-#' @examplesIf requireNamespace("MultiAssayExperiment")
-#' # MAEFilteredDataset example
-#' library(shiny)
+#' @examples
+#' \donttest{
+#' if (requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
+#'   # MAEFilteredDataset example
+#'   library(shiny)
 #'
-#' data(miniACC, package = "MultiAssayExperiment")
+#'   data(miniACC, package = "MultiAssayExperiment")
 #'
-#' MAE_fd <- init_filtered_dataset(miniACC, "MAE")
-#' ui <- fluidPage(
-#'   MAE_fd$ui_add(id = "add"),
-#'   MAE_fd$ui_active("dataset"),
-#'   verbatimTextOutput("call")
-#' )
-#' server <- function(input, output, session) {
-#'   MAE_fd$srv_add(id = "add")
-#'   MAE_fd$srv_active(id = "dataset")
-#'   output$call <- renderText({
-#'     paste(
-#'       vapply(MAE_fd$get_call(), deparse1, character(1), collapse = "\n"),
-#'       collapse = "\n"
-#'     )
-#'   })
+#'   MAE_fd <- init_filtered_dataset(miniACC, "MAE")
+#'   ui <- fluidPage(
+#'     MAE_fd$ui_add(id = "add"),
+#'     MAE_fd$ui_active("dataset"),
+#'     verbatimTextOutput("call")
+#'   )
+#'   server <- function(input, output, session) {
+#'     MAE_fd$srv_add(id = "add")
+#'     MAE_fd$srv_active(id = "dataset")
+#'     output$call <- renderText({
+#'       paste(
+#'         vapply(MAE_fd$get_call(), deparse1, character(1), collapse = "\n"),
+#'         collapse = "\n"
+#'       )
+#'     })
+#'   }
+#'   if (interactive()) {
+#'     shinyApp(ui, server)
+#'   }
 #' }
-#' if (interactive()) {
-#'   shinyApp(ui, server)
 #' }
-#'
 #' @keywords internal
 #' @export
-init_filtered_dataset <- function(dataset, # nolint
+init_filtered_dataset <- function(dataset,
                                   dataname,
                                   keys = character(0),
                                   parent_name = character(0),
                                   parent = reactive(dataset),
                                   join_keys = character(0),
-                                  label = attr(dataset, "label")) {
+                                  label = attr(dataset, "label", exact = TRUE)) {
   UseMethod("init_filtered_dataset")
 }
 
 #' @keywords internal
 #' @export
-init_filtered_dataset.data.frame <- function(dataset, # nolint
+init_filtered_dataset.data.frame <- function(dataset,
                                              dataname,
                                              keys = character(0),
                                              parent_name = character(0),
                                              parent = NULL,
                                              join_keys = character(0),
-                                             label = attr(dataset, "label")) {
+                                             label = attr(dataset, "label", exact = TRUE)) {
   DataframeFilteredDataset$new(
     dataset = dataset,
     dataname = dataname,
@@ -111,13 +114,13 @@ init_filtered_dataset.data.frame <- function(dataset, # nolint
 
 #' @keywords internal
 #' @export
-init_filtered_dataset.MultiAssayExperiment <- function(dataset, # nolint
+init_filtered_dataset.MultiAssayExperiment <- function(dataset,
                                                        dataname,
                                                        keys = character(0),
                                                        parent_name, # ignored
                                                        parent, # ignored
                                                        join_keys, # ignored
-                                                       label = attr(dataset, "label")) {
+                                                       label = attr(dataset, "label", exact = TRUE)) {
   if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
     stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
   }
@@ -131,13 +134,13 @@ init_filtered_dataset.MultiAssayExperiment <- function(dataset, # nolint
 
 #' @keywords internal
 #' @export
-init_filtered_dataset.default <- function(dataset, # nolint
+init_filtered_dataset.default <- function(dataset,
                                           dataname,
                                           keys, # ignored
                                           parent_name, # ignored
                                           parent, # ignored
                                           join_keys, # ignored
-                                          label = attr(dataset, "label")) {
+                                          label = attr(dataset, "label", exact = TRUE)) {
   DefaultFilteredDataset$new(
     dataset = dataset,
     dataname = dataname,
