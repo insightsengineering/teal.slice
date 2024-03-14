@@ -40,8 +40,8 @@ FilterStates <- R6::R6Class( # nolint
     #' @param dataname (`character(1)`)
     #'   name of the dataset, used in the subset expression.
     #'   Passed to the function argument attached to this `FilterStates`.
-    #' @param datalabel (`character(1)`)
-    #'   optional text label.
+    #' @param datalabel (`character(1)`) optional
+    #'   text label.
     #'
     #' @return
     #' Object of class `FilterStates`, invisibly.
