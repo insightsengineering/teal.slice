@@ -55,18 +55,18 @@ Type and size depends on variable type. Factors are coerced to character.}
 \item{selected}{(\code{vector}) optional, of selected values from \code{choices};
 Type and size depends on variable type. Factors are coerced to character.}
 
-\item{keep_na}{(\code{logical(1)}) optional, flag specifying whether to keep missing values}
+\item{keep_na}{(\code{logical(1)}) optional flag specifying whether to keep missing values}
 
-\item{keep_inf}{(\code{logical(1)}) optional, flag specifying whether to keep infinite values}
+\item{keep_inf}{(\code{logical(1)}) optional flag specifying whether to keep infinite values}
 
 \item{fixed}{(\code{logical(1)}) flag specifying whether to fix this filter state (forbid setting state)}
 
 \item{anchored}{(\code{logical(1)}) flag specifying whether to lock this filter state (forbid removing and inactivating)}
 
-\item{multiple}{(\code{logical(1)}) optional, flag specifying whether more than one value can be selected;
+\item{multiple}{(\code{logical(1)}) optional flag specifying whether more than one value can be selected;
 only applicable to \code{ChoicesFilterState} and \code{LogicalFilterState}}
 
-\item{title}{(\code{character(1)}) optional, title of the filter. Ignored when \code{varname} is set.}
+\item{title}{(\code{character(1)}) optional title of the filter. Ignored when \code{varname} is set.}
 
 \item{...}{in \code{teal_slice} method these are additional arguments which can be handled by extensions
 of \code{teal.slice} classes. In other methods these are further arguments passed to or from other methods.}
