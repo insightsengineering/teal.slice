@@ -55,10 +55,10 @@
 #'  Must be a valid `R` expression which can be evaluated in the context of the data set.
 #'  For a `data.frame` `var == "x"` is sufficient, but `MultiAssayExperiment::subsetByColData`
 #'  requires `dataname` prefix, *e.g.* `data$var == "x"`.
-#' @param choices (`vector`) optional, specifying allowed choices;
+#' @param choices (`vector`) optional, specifies allowed choices;
 #' When specified it should be a subset of values in variable denoted by `varname`;
 #' Type and size depends on variable type. Factors are coerced to character.
-#' @param selected (`vector`) optional, of selected values from `choices`;
+#' @param selected (`vector`) optional, specifies selected values from `choices`;
 #' Type and size depends on variable type. Factors are coerced to character.
 #' @param multiple (`logical(1)`) optional, flag specifying whether more than one value can be selected;
 #' only applicable to `ChoicesFilterState` and `LogicalFilterState`
