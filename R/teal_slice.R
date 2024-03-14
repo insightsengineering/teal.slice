@@ -60,7 +60,7 @@
 #' Type and size depends on variable type. Factors are coerced to character.
 #' @param selected (`vector`) optional, of selected values from `choices`;
 #' Type and size depends on variable type. Factors are coerced to character.
-#' @param multiple (`logical(1)`) optional, flag specifying whether more than one value can be selected;
+#' @param multiple (`logical(1)`) optional flag specifying whether more than one value can be selected;
 #' only applicable to `ChoicesFilterState` and `LogicalFilterState`
 #' @param keep_na (`logical(1)`) optional, flag specifying whether to keep missing values
 #' @param keep_inf (`logical(1)`) optional, flag specifying whether to keep infinite values
