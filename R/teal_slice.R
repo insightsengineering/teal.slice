@@ -66,7 +66,7 @@
 #' @param keep_inf (`logical(1)`) optional, flag specifying whether to keep infinite values
 #' @param fixed (`logical(1)`) flag specifying whether to fix this filter state (forbid setting state)
 #' @param anchored (`logical(1)`) flag specifying whether to lock this filter state (forbid removing and inactivating)
-#' @param title (`character(1)`) optional, title of the filter. Ignored when `varname` is set.
+#' @param title (`character(1)`) optional title of the filter. Ignored when `varname` is set.
 #' @param ... in `teal_slice` method these are additional arguments which can be handled by extensions
 #'  of `teal.slice` classes. In other methods these are further arguments passed to or from other methods.
 #' @param x (`teal.slice`)
