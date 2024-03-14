@@ -24,7 +24,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param dataname (`character(1)`)
     #'   name of the data used in the subset expression.
     #'   Passed to the function argument attached to this `FilterStates`.
-    #' @param datalabel (`character(1)`) optional,
+    #' @param datalabel (`character(1)`) optional
     #'   text label.
     #' @param varlabels (`character`)
     #'   labels of the variables used in this object.
