@@ -174,7 +174,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @param dataname (`character`)
     #'   name of the data used in the *subset expression*.
     #'   Passed to the function argument attached to this `FilterStates`.
-    #' @param datalabel (`character(1)`) optional,
+    #' @param datalabel (`character(1)`) optional
     #'   text label.
     #' @param keys (`character`)
     #'   key column names.

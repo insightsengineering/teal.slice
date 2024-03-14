@@ -22,7 +22,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @param dataset any object
     #' @param dataname (`character(1)`)
     #'  syntactically valid name given to the dataset.
-    #' @param keys (`character`) optional,
+    #' @param keys (`character`) optional
     #'   vector of primary key column names.
     #' @param label (`character(1)`)
     #'   label to describe the dataset.
