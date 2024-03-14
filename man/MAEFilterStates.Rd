@@ -66,7 +66,7 @@ Function has to have \code{sid} argument being a character.}
 name of the data used in the subset expression.
 Passed to the function argument attached to this \code{FilterStates}.}
 
-\item{\code{datalabel}}{(\code{character(1)}) optional,
+\item{\code{datalabel}}{(\code{character(1)}) optional
 text label.}
 
 \item{\code{keys}}{(\code{character})
