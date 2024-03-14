@@ -55,18 +55,18 @@
 #'  Must be a valid `R` expression which can be evaluated in the context of the data set.
 #'  For a `data.frame` `var == "x"` is sufficient, but `MultiAssayExperiment::subsetByColData`
 #'  requires `dataname` prefix, *e.g.* `data$var == "x"`.
-#' @param choices (optional `vector`) specifying allowed choices;
+#' @param choices (`vector`) optional, specifies allowed choices;
 #' When specified it should be a subset of values in variable denoted by `varname`;
 #' Type and size depends on variable type. Factors are coerced to character.
-#' @param selected (optional `vector`) of selected values from `choices`;
+#' @param selected (`vector`) optional, specifies selected values from `choices`;
 #' Type and size depends on variable type. Factors are coerced to character.
-#' @param multiple (optional `logical(1)`) flag specifying whether more than one value can be selected;
+#' @param multiple (`logical(1)`) optional flag specifying whether more than one value can be selected;
 #' only applicable to `ChoicesFilterState` and `LogicalFilterState`
-#' @param keep_na (optional `logical(1)`) flag specifying whether to keep missing values
-#' @param keep_inf (optional `logical(1)`) flag specifying whether to keep infinite values
+#' @param keep_na (`logical(1)`) optional flag specifying whether to keep missing values
+#' @param keep_inf (`logical(1)`) optional flag specifying whether to keep infinite values
 #' @param fixed (`logical(1)`) flag specifying whether to fix this filter state (forbid setting state)
 #' @param anchored (`logical(1)`) flag specifying whether to lock this filter state (forbid removing and inactivating)
-#' @param title (optional `character(1)`) title of the filter. Ignored when `varname` is set.
+#' @param title (`character(1)`) optional title of the filter. Ignored when `varname` is set.
 #' @param ... in `teal_slice` method these are additional arguments which can be handled by extensions
 #'  of `teal.slice` classes. In other methods these are further arguments passed to or from other methods.
 #' @param x (`teal.slice`)

@@ -20,8 +20,8 @@ init_filtered_dataset(
 \item{dataname}{(\code{character(1)})
 syntactically valid name given to the dataset.}
 
-\item{keys}{(\code{character})
-optional vector of primary key column names.}
+\item{keys}{(\code{character}) optional
+vector of primary key column names.}
 
 \item{parent_name}{(\code{character(1)})
 name of the parent dataset.}
