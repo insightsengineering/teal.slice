@@ -255,13 +255,13 @@ a.remove_all:hover {
 .filter-card:has(> .filter-card-header[aria-expanded="true"]) {
   transition-property: background-color;
   transition-duration: 150ms;
-  background-color: #ffffffb8;
+  background-color: var(--bs-gray-100, #f8f9fa);
 }
 
 .filter-card:has(> .filter-card-header[aria-expanded="true"]):hover {
   transition-property: box-shadow;
   transition-duration: 150ms;
-  box-shadow: 0 0 5px 2px #00000033;
+  box-shadow: 0 0 5px 2px var(--bs-gray-800, #343a40);
 }
 
 .filter-card-header {
@@ -286,7 +286,7 @@ a.remove_all:hover {
 .filter-card-header[aria-expanded="true"]:hover {
   transition-property: background-color;
   transition-duration: 150ms;
-  background-color: #f5f5f5;
+  background-color: var(--bs-gray-100, #f8f9fa);
 }
 
 .filter-card-title {
