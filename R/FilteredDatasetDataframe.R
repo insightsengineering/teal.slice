@@ -45,8 +45,8 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #'  single `data.frame` for which filters are rendered.
     #' @param dataname (`character(1)`)
     #'  syntactically valid name given to the dataset.
-    #' @param keys (`character`)
-    #'   optional vector of primary key column names.
+    #' @param keys (`character`) optional
+    #'  vector of primary key column names.
     #' @param parent_name (`character(1)`)
     #'   name of the parent dataset.
     #' @param parent (`reactive`)
