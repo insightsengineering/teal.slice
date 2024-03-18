@@ -4,9 +4,9 @@
 #'
 #' @param dataset any object
 #' @param dataname (`character(1)`)
-#'  syntactically valid name given to the dataset.
-#' @param keys (`character`)
-#'   optional vector of primary key column names.
+#'   syntactically valid name given to the dataset.
+#' @param keys (`character`) optional
+#'   vector of primary key column names.
 #' @param parent_name (`character(1)`)
 #'   name of the parent dataset.
 #' @param parent (`reactive`)

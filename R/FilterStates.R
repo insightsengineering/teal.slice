@@ -40,8 +40,8 @@ FilterStates <- R6::R6Class( # nolint
     #' @param dataname (`character(1)`)
     #'   name of the dataset, used in the subset expression.
     #'   Passed to the function argument attached to this `FilterStates`.
-    #' @param datalabel (`character(1)`)
-    #'   optional text label.
+    #' @param datalabel (`character(1)`) optional
+    #'   text label.
     #'
     #' @return
     #' Object of class `FilterStates`, invisibly.
@@ -407,9 +407,9 @@ FilterStates <- R6::R6Class( # nolint
       ns <- NS(id)
 
       if (ncol(data) == 0) {
-        div("no sample variables available")
+        tags$div("no sample variables available")
       } else if (nrow(data) == 0) {
-        div("no samples available")
+        tags$div("no samples available")
       } else {
         uiOutput(ns("add_filter"))
       }
@@ -454,9 +454,9 @@ FilterStates <- R6::R6Class( # nolint
               "FilterStates$srv_add@1 updating available column choices, dataname: { private$dataname }"
             )
             if (length(avail_column_choices()) == 0) {
-              span("No available columns to add.")
+              tags$span("No available columns to add.")
             } else {
-              div(
+              tags$div(
                 teal.widgets::optionalSelectInput(
                   session$ns("var_to_add"),
                   choices = avail_column_choices(),

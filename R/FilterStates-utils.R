@@ -10,9 +10,9 @@
 #' @param dataname (`character(1)`)
 #'   name of the data used in the subset expression,
 #'   passed to the function argument attached to this `FilterStates`.
-#' @param datalabel (`character(1)`)
-#'   optional text label.
-#' @param ... (optional)
+#' @param datalabel (`character(1)`) optional
+#'   text label.
+#' @param ... optional,
 #'   additional arguments for specific classes: keys.
 #'
 #' @return Object of class `FilterStates`.
@@ -35,7 +35,7 @@
 #'
 #' library(shiny)
 #' ui <- fluidPage(
-#'   actionButton("clear", span(icon("xmark"), "Remove all filters")),
+#'   actionButton("clear", tags$span(icon("xmark"), "Remove all filters")),
 #'   rf$ui_add(id = "add"),
 #'   rf$ui_active("states"),
 #'   verbatimTextOutput("expr"),

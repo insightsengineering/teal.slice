@@ -93,8 +93,8 @@ single \code{MulitiAssayExperiment} for which filters are rendered.}
 \item{\code{dataname}}{(\code{character(1)})
 syntactically valid name given to the dataset.}
 
-\item{\code{keys}}{(\code{character})
-optional vector of primary key column names.}
+\item{\code{keys}}{(\code{character}) optional
+vector of primary key column names.}
 
 \item{\code{label}}{(\code{character(1)})
 label to describe the dataset.}
