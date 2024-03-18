@@ -181,7 +181,6 @@ teal_slice <- function(dataname,
 
 #' @rdname teal_slice-utilities
 #' @export
-#' @keywords internal
 #'
 is.teal_slice <- function(x) { # nolint
   inherits(x, "teal_slice")
@@ -189,7 +188,6 @@ is.teal_slice <- function(x) { # nolint
 
 #' @rdname teal_slice-utilities
 #' @export
-#' @keywords internal
 #'
 as.teal_slice <- function(x) { # nolint
   checkmate::assert_list(x, names = "named")
@@ -198,7 +196,6 @@ as.teal_slice <- function(x) { # nolint
 
 #' @rdname teal_slice-utilities
 #' @export
-#' @keywords internal
 #'
 as.list.teal_slice <- function(x, ...) {
   formal_args <- setdiff(names(formals(teal_slice)), "...")
@@ -218,7 +215,6 @@ as.list.teal_slice <- function(x, ...) {
 
 #' @rdname teal_slice-utilities
 #' @export
-#' @keywords internal
 #'
 format.teal_slice <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   checkmate::assert_flag(show_all)
@@ -232,7 +228,6 @@ format.teal_slice <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
 
 #' @rdname teal_slice-utilities
 #' @export
-#' @keywords internal
 #'
 print.teal_slice <- function(x, ...) {
   cat(format(x, ...))

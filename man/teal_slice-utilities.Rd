@@ -62,4 +62,3 @@ print(x1)
 print(x1, show_all = TRUE, trim_lines = FALSE)
 
 }
-\keyword{internal}
