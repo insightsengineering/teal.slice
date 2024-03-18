@@ -1,6 +1,7 @@
 #' Specify single filter
 #'
 #' Create a `teal_slice` object that holds complete information on filtering one variable.
+#' Check out [`teal_slice-utilities`] functions for working with `teal_slice` object.
 #'
 #' `teal_slice` object fully describes filter state and can be used to create,
 #' modify, and delete a filter state. A `teal_slice` contains a number of common fields
@@ -67,8 +68,7 @@
 #' @param fixed (`logical(1)`) flag specifying whether to fix this filter state (forbid setting state)
 #' @param anchored (`logical(1)`) flag specifying whether to lock this filter state (forbid removing and inactivating)
 #' @param title (`character(1)`) optional title of the filter. Ignored when `varname` is set.
-#' @param ... in `teal_slice` method these are additional arguments which can be handled by extensions
-#'  of `teal.slice` classes. In other methods these are further arguments passed to or from other methods.
+#' @param ... additional arguments which can be handled by extensions of `teal.slice` classes.
 #' @param x (`teal.slice`)
 #' @param show_all (`logical(1)`) indicating whether to show all fields. If set to `FALSE`,
 #'  only non-NULL elements will be printed.
@@ -108,7 +108,8 @@
 #' print(x1)
 #' print(x1, show_all = TRUE, trim_lines = FALSE)
 #'
-#' @seealso [`teal_slices`]
+#' @seealso [`teal_slices`],
+#' [`is.teal_slice`], [`as.teal_slice`], [`as.list.teal_slice`], [`print.teal_slice`], [`format.teal_slice`]
 #'
 #' @export
 teal_slice <- function(dataname,
@@ -172,7 +173,13 @@ teal_slice <- function(dataname,
   ans
 }
 
-#' @rdname teal_slice
+#' [`teal_slice`] utility functions
+#' @inheritParams teal_slice
+#' @param ... additional arguments passed to other functions.
+#' @name teal_slice-utilities
+#' @inherit teal_slice examples
+
+#' @rdname teal_slice-utilities
 #' @export
 #' @keywords internal
 #'
@@ -180,7 +187,7 @@ is.teal_slice <- function(x) { # nolint
   inherits(x, "teal_slice")
 }
 
-#' @rdname teal_slice
+#' @rdname teal_slice-utilities
 #' @export
 #' @keywords internal
 #'
@@ -189,7 +196,7 @@ as.teal_slice <- function(x) { # nolint
   do.call(teal_slice, x)
 }
 
-#' @rdname teal_slice
+#' @rdname teal_slice-utilities
 #' @export
 #' @keywords internal
 #'
@@ -209,7 +216,7 @@ as.list.teal_slice <- function(x, ...) {
 }
 
 
-#' @rdname teal_slice
+#' @rdname teal_slice-utilities
 #' @export
 #' @keywords internal
 #'
@@ -223,7 +230,7 @@ format.teal_slice <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   jsonify(x_list, trim_lines)
 }
 
-#' @rdname teal_slice
+#' @rdname teal_slice-utilities
 #' @export
 #' @keywords internal
 #'

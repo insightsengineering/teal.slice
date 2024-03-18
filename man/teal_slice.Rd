@@ -2,11 +2,6 @@
 % Please edit documentation in R/teal_slice.R
 \name{teal_slice}
 \alias{teal_slice}
-\alias{is.teal_slice}
-\alias{as.teal_slice}
-\alias{as.list.teal_slice}
-\alias{format.teal_slice}
-\alias{print.teal_slice}
 \title{Specify single filter}
 \usage{
 teal_slice(
@@ -24,16 +19,6 @@ teal_slice(
   title = NULL,
   ...
 )
-
-is.teal_slice(x)
-
-as.teal_slice(x)
-
-\method{as.list}{teal_slice}(x, ...)
-
-\method{format}{teal_slice}(x, show_all = FALSE, trim_lines = TRUE, ...)
-
-\method{print}{teal_slice}(x, ...)
 }
 \arguments{
 \item{dataname}{(\code{character(1)}) name of data set}
@@ -68,8 +53,7 @@ only applicable to \code{ChoicesFilterState} and \code{LogicalFilterState}}
 
 \item{title}{(\code{character(1)}) optional title of the filter. Ignored when \code{varname} is set.}
 
-\item{...}{in \code{teal_slice} method these are additional arguments which can be handled by extensions
-of \code{teal.slice} classes. In other methods these are further arguments passed to or from other methods.}
+\item{...}{additional arguments which can be handled by extensions of \code{teal.slice} classes.}
 
 \item{x}{(\code{teal.slice})}
 
@@ -84,6 +68,7 @@ A \code{teal.slice} object. Depending on whether \code{varname} or \code{expr} w
 }
 \description{
 Create a \code{teal_slice} object that holds complete information on filtering one variable.
+Check out \code{\link{teal_slice-utilities}} functions for working with \code{teal_slice} object.
 }
 \details{
 \code{teal_slice} object fully describes filter state and can be used to create,
@@ -169,6 +154,6 @@ print(x1, show_all = TRUE, trim_lines = FALSE)
 
 }
 \seealso{
-\code{\link{teal_slices}}
+\code{\link{teal_slices}},
+\code{\link{is.teal_slice}}, \code{\link{as.teal_slice}}, \code{\link{as.list.teal_slice}}, \code{\link{print.teal_slice}}, \code{\link{format.teal_slice}}
 }
-\keyword{internal}

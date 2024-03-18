@@ -1,6 +1,7 @@
 #' Complete filter specification
 #'
 #' Create `teal_slices` object to package multiple filters and additional settings.
+#' Check out [`teal_slices-utilities`] functions for working with `teal_slices` object.
 #'
 #' `teal_slices()` collates multiple `teal_slice` objects into a `teal_slices` object,
 #' a complete filter specification. This is used by all classes above `FilterState`
@@ -12,8 +13,7 @@
 #' Since these could be mutually exclusive, it is impossible to set both allowed and forbidden
 #' variables for one data set in one `teal_slices`.
 #'
-#' @param ... any number of `teal_slice` objects. For `print` and `format`,
-#'  additional arguments passed to other functions.
+#' @param ... any number of `teal_slice` objects.
 #' @param include_varnames,exclude_varnames (`named list`s of `character`) where list names
 #'  match names of data sets and vector elements match variable names in respective data sets;
 #'  specify which variables are allowed to be filtered; see `Details`.
@@ -85,6 +85,8 @@
 #' @seealso
 #' - [`teal_slice`] for creating constituent elements of `teal_slices`
 #' - [`teal::slices_store`] for robust utilities for saving and loading `teal_slices` in `JSON` format
+#' - [`is.teal_slices`], [`as.teal_slices`], [`as.list.teal_slices`], [`[.teal_slice`], [`c.teal_slice`]
+#' [`print.teal_slice`], [`format.teal_slice`]
 #'
 #' @export
 #'
@@ -126,8 +128,13 @@ teal_slices <- function(...,
   )
 }
 
+#' [`teal_slices`] utility functions
+#' @inheritParams teal_slices
+#' @param ... additional arguments passed to other functions.
+#' @name teal_slices-utilities
+#' @inherit teal_slices examples
 
-#' @rdname teal_slices
+#' @rdname teal_slices-utilities
 #' @export
 #' @keywords internal
 #'
@@ -136,7 +143,8 @@ is.teal_slices <- function(x) { # nolint
 }
 
 
-#' @rdname teal_slices
+#' @inheritParams teal_slices
+#' @rdname teal_slices-utilities
 #' @export
 #' @keywords internal
 #'
@@ -150,7 +158,7 @@ as.teal_slices <- function(x) { # nolint
 }
 
 
-#' @rdname teal_slices
+#' @rdname teal_slices-utilities
 #' @export
 #' @keywords internal
 #'
@@ -161,7 +169,7 @@ as.list.teal_slices <- function(x, recursive = FALSE, ...) { # nolint
 }
 
 
-#' @rdname teal_slices
+#' @rdname teal_slices-utilities
 #' @export
 #' @keywords internal
 #'
@@ -185,7 +193,7 @@ as.list.teal_slices <- function(x, recursive = FALSE, ...) { # nolint
 }
 
 
-#' @rdname teal_slices
+#' @rdname teal_slices-utilities
 #' @export
 #' @keywords internal
 #'
@@ -207,7 +215,7 @@ c.teal_slices <- function(...) {
 }
 
 
-#' @rdname teal_slices
+#' @rdname teal_slices-utilities
 #' @param show_all (`logical(1)`) whether to display non-null elements of constituent `teal_slice` objects
 #' @param trim_lines (`logical(1)`) whether to trim lines
 #' @export
@@ -228,7 +236,7 @@ format.teal_slices <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   jsonify(slices_list, trim_lines)
 }
 
-#' @rdname teal_slices
+#' @rdname teal_slices-utilities
 #' @export
 #' @keywords internal
 #'
