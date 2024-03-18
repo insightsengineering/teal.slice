@@ -190,9 +190,9 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       data <- self$get_dataset()
       experiment_names <- names(data)
 
-      div(
+      tags$div(
         tags$label("Add", tags$code(self$get_dataname()), "filter"),
-        br(),
+        tags$br(),
         HTML("&#9658;"),
         tags$label("Add subjects filter"),
         private$get_filter_states()[["subjects"]]$ui_add(id = ns("subjects")),
