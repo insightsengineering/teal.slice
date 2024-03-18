@@ -173,11 +173,14 @@ teal_slice <- function(dataname,
   ans
 }
 
-#' [`teal_slice`] utility functions
+#' `teal_slice` utility functions
+#'
+#' Helper functions for working with [`teal_slice`] object.
 #' @inheritParams teal_slice
 #' @param ... additional arguments passed to other functions.
 #' @name teal_slice-utilities
 #' @inherit teal_slice examples
+#' @keywords internal
 
 #' @rdname teal_slice-utilities
 #' @export

@@ -7,7 +7,7 @@
 \alias{as.list.teal_slice}
 \alias{format.teal_slice}
 \alias{print.teal_slice}
-\title{\code{\link{teal_slice}} utility functions}
+\title{\code{teal_slice} utility functions}
 \usage{
 is.teal_slice(x)
 
@@ -30,7 +30,7 @@ only non-NULL elements will be printed.}
 \item{trim_lines}{(\code{logical(1)}) indicating whether to trim lines when printing.}
 }
 \description{
-\code{\link{teal_slice}} utility functions
+Helper functions for working with \code{\link{teal_slice}} object.
 }
 \examples{
 x1 <- teal_slice(
@@ -62,3 +62,4 @@ print(x1)
 print(x1, show_all = TRUE, trim_lines = FALSE)
 
 }
+\keyword{internal}

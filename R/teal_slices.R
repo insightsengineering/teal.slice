@@ -128,7 +128,9 @@ teal_slices <- function(...,
   )
 }
 
-#' [`teal_slices`] utility functions
+#' `teal_slices` utility functions
+#'
+#' Helper functions for working with [`teal_slices`] object.
 #' @inheritParams teal_slices
 #' @param ... additional arguments passed to other functions.
 #' @name teal_slices-utilities

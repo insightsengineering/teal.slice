@@ -9,7 +9,7 @@
 \alias{c.teal_slices}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
-\title{\code{\link{teal_slices}} utility functions}
+\title{\code{teal_slices} utility functions}
 \usage{
 is.teal_slices(x)
 
@@ -39,7 +39,7 @@ as.teal_slices(x)
 \item{trim_lines}{(\code{logical(1)}) whether to trim lines}
 }
 \description{
-\code{\link{teal_slices}} utility functions
+Helper functions for working with \code{\link{teal_slices}} object.
 }
 \examples{
 filter_1 <- teal_slice(
