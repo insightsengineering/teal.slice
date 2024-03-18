@@ -54,13 +54,6 @@ only applicable to \code{ChoicesFilterState} and \code{LogicalFilterState}}
 \item{title}{(\code{character(1)}) optional title of the filter. Ignored when \code{varname} is set.}
 
 \item{...}{additional arguments which can be handled by extensions of \code{teal.slice} classes.}
-
-\item{x}{(\code{teal.slice})}
-
-\item{show_all}{(\code{logical(1)}) indicating whether to show all fields. If set to \code{FALSE},
-only non-NULL elements will be printed.}
-
-\item{trim_lines}{(\code{logical(1)}) indicating whether to trim lines when printing.}
 }
 \value{
 A \code{teal.slice} object. Depending on whether \code{varname} or \code{expr} was specified, the resulting

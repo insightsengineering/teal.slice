@@ -28,9 +28,6 @@
 #'   and unfiltered dataset. Note, that issues were reported when using this option with `MultiAssayExperiment`.
 #'   Please make sure that adding new filters doesn't fail on target platform before deploying for production.
 #' @param allow_add (`logical(1)`) logical flag specifying whether the user will be able to add new filters
-#' @param x object to test for `teal_slices`, object to convert to `teal_slices` or a `teal_slices` object
-#' @param i (`character` or `numeric` or `logical`) indicating which elements to extract
-#' @param recursive (`logical(1)`) flag specifying whether to also convert to list the elements of this `teal_slices`
 #'
 #' @return
 #' `teal_slices`, which is an unnamed list of `teal_slice` objects.
@@ -85,8 +82,8 @@
 #' @seealso
 #' - [`teal_slice`] for creating constituent elements of `teal_slices`
 #' - [`teal::slices_store`] for robust utilities for saving and loading `teal_slices` in `JSON` format
-#' - [`is.teal_slices`], [`as.teal_slices`], [`as.list.teal_slices`], [`[.teal_slice`], [`c.teal_slice`]
-#' [`print.teal_slice`], [`format.teal_slice`]
+#' - [`is.teal_slices`], [`as.teal_slices`], [`as.list.teal_slices`], [`[.teal_slices`], [`c.teal_slices`]
+#' [`print.teal_slices`], [`format.teal_slices`]
 #'
 #' @export
 #'
@@ -131,7 +128,9 @@ teal_slices <- function(...,
 #' `teal_slices` utility functions
 #'
 #' Helper functions for working with [`teal_slices`] object.
-#' @inheritParams teal_slices
+#' @param x object to test for `teal_slices`, object to convert to `teal_slices` or a `teal_slices` object
+#' @param i (`character` or `numeric` or `logical`) indicating which elements to extract
+#' @param recursive (`logical(1)`) flag specifying whether to also convert to list the elements of this `teal_slices`
 #' @param ... additional arguments passed to other functions.
 #' @name teal_slices-utilities
 #' @inherit teal_slices examples

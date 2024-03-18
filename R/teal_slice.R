@@ -69,10 +69,6 @@
 #' @param anchored (`logical(1)`) flag specifying whether to lock this filter state (forbid removing and inactivating)
 #' @param title (`character(1)`) optional title of the filter. Ignored when `varname` is set.
 #' @param ... additional arguments which can be handled by extensions of `teal.slice` classes.
-#' @param x (`teal.slice`)
-#' @param show_all (`logical(1)`) indicating whether to show all fields. If set to `FALSE`,
-#'  only non-NULL elements will be printed.
-#' @param trim_lines (`logical(1)`) indicating whether to trim lines when printing.
 #'
 #' @return A `teal.slice` object. Depending on whether `varname` or `expr` was specified, the resulting
 #' `teal_slice` also receives class `teal_slice_var` or `teal_slice_expr`, respectively.
@@ -176,7 +172,10 @@ teal_slice <- function(dataname,
 #' `teal_slice` utility functions
 #'
 #' Helper functions for working with [`teal_slice`] object.
-#' @inheritParams teal_slice
+#' @param x (`teal.slice`)
+#' @param show_all (`logical(1)`) indicating whether to show all fields. If set to `FALSE`,
+#'  only non-NULL elements will be printed.
+#' @param trim_lines (`logical(1)`) indicating whether to trim lines when printing.
 #' @param ... additional arguments passed to other functions.
 #' @name teal_slice-utilities
 #' @inherit teal_slice examples

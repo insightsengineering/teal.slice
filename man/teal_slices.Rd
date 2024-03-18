@@ -33,12 +33,6 @@ Please make sure that adding new filters doesn't fail on target platform before 
 }}
 
 \item{allow_add}{(\code{logical(1)}) logical flag specifying whether the user will be able to add new filters}
-
-\item{x}{object to test for \code{teal_slices}, object to convert to \code{teal_slices} or a \code{teal_slices} object}
-
-\item{i}{(\code{character} or \code{numeric} or \code{logical}) indicating which elements to extract}
-
-\item{recursive}{(\code{logical(1)}) flag specifying whether to also convert to list the elements of this \code{teal_slices}}
 }
 \value{
 \code{teal_slices}, which is an unnamed list of \code{teal_slice} objects.
@@ -110,7 +104,7 @@ print(all_filters, trim_lines = FALSE)
 \itemize{
 \item \code{\link{teal_slice}} for creating constituent elements of \code{teal_slices}
 \item \code{\link[teal:slices_store]{teal::slices_store}} for robust utilities for saving and loading \code{teal_slices} in \code{JSON} format
-\item \code{\link{is.teal_slices}}, \code{\link{as.teal_slices}}, \code{\link{as.list.teal_slices}}, [\verb{[.teal_slice}], \code{\link{c.teal_slice}}
-\code{\link{print.teal_slice}}, \code{\link{format.teal_slice}}
+\item \code{\link{is.teal_slices}}, \code{\link{as.teal_slices}}, \code{\link{as.list.teal_slices}}, [\verb{[.teal_slices}], \code{\link{c.teal_slices}}
+\code{\link{print.teal_slices}}, \code{\link{format.teal_slices}}
 }
 }
