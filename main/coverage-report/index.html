@@ -94,7 +94,7 @@ table.table-condensed {
   font-size: 11px;
 }</style>
   <div class="col-md-8 col-md-offset-2">
-    <h2>teal.slice coverage - 65.97%</h2>
+    <h2>teal.slice coverage - 65.96%</h2>
     <div class="tabbable">
       <ul class="nav nav-tabs" data-tabsetid="covr">
         <li class="active">
@@ -106,8 +106,8 @@ table.table-condensed {
       </ul>
       <div class="tab-content" data-tabsetid="covr">
         <div class="tab-pane active" title="Files" data-value="Files" id="tab-covr-1">
-          <div class="datatables html-widget html-fill-item" id="htmlwidget-7e8388bac5a26eb28a7c" style="width:100%;height:500px;"></div>
-          <script type="application/json" data-for="htmlwidget-7e8388bac5a26eb28a7c">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["<a href=\"#\">R/zzz.R<\/a>","<a href=\"#\">R/include_css_js.R<\/a>","<a href=\"#\">R/FilterStateExpr.R<\/a>","<a href=\"#\">R/FilterStatesSE.R<\/a>","<a href=\"#\">R/FilterStateLogical.R<\/a>","<a href=\"#\">R/FilterStateDatettime.R<\/a>","<a href=\"#\">R/FilterStateDate.R<\/a>","<a href=\"#\">R/FilterStateEmpty.R<\/a>","<a href=\"#\">R/variable_types.R<\/a>","<a href=\"#\">R/FilteredData.R<\/a>","<a href=\"#\">R/FilteredData-utils.R<\/a>","<a href=\"#\">R/FilteredDataset.R<\/a>","<a href=\"#\">R/FilterStateChoices.R<\/a>","<a href=\"#\">R/choices_labeled.R<\/a>","<a href=\"#\">R/FilteredDatasetMAE.R<\/a>","<a href=\"#\">R/FilterStateRange.R<\/a>","<a href=\"#\">R/FilteredDatasetDefault.R<\/a>","<a href=\"#\">R/FilterState.R<\/a>","<a href=\"#\">R/FilterStates-utils.R<\/a>","<a href=\"#\">R/FilterStatesMAE.R<\/a>","<a href=\"#\">R/FilterStates.R<\/a>","<a href=\"#\">R/FilteredDatasetDataframe.R<\/a>","<a href=\"#\">R/teal_slices.R<\/a>","<a href=\"#\">R/FilteredDataset-utils.R<\/a>","<a href=\"#\">R/teal_slice.R<\/a>","<a href=\"#\">R/filter_panel_api.R<\/a>","<a href=\"#\">R/FilterState-utils.R<\/a>","<a href=\"#\">R/count_labels.R<\/a>","<a href=\"#\">R/utils.R<\/a>","<a href=\"#\">R/test_utils.R<\/a>","<a href=\"#\">R/FilterPanelAPI.R<\/a>","<a href=\"#\">R/calls_combine_by.R<\/a>","<a href=\"#\">R/FilterStatesDF.R<\/a>","<a href=\"#\">R/FilterStatesMatrix.R<\/a>"],[50,17,275,305,409,552,439,172,58,1096,203,396,619,88,259,741,123,797,247,61,754,279,281,149,384,185,298,232,68,41,116,38,199,43],[16,4,59,157,153,242,168,40,13,435,51,137,260,45,106,329,18,289,60,10,284,97,77,20,92,25,89,85,16,14,10,6,5,3],[0,0,12,40,45,87,69,18,7,260,33,91,174,31,76,241,14,237,51,9,259,90,72,19,88,24,87,85,16,14,10,6,5,3],[16,4,47,117,108,155,99,22,6,175,18,46,86,14,30,88,4,52,9,1,25,7,5,1,4,1,2,0,0,0,0,0,0,0],["0","0","2","11","3","5","5","2","5","13","7","36","34","6","16","24","3","71","52","23","72","27","379","44","424","2","83","30","47","20","4","45","103","25"],["0.00%","0.00%","20.34%","25.48%","29.41%","35.95%","41.07%","45.00%","53.85%","59.77%","64.71%","66.42%","66.92%","68.89%","71.70%","73.25%","77.78%","82.01%","85.00%","90.00%","91.20%","92.78%","93.51%","95.00%","95.65%","96.00%","97.75%","100.00%","100.00%","100.00%","100.00%","100.00%","100.00%","100.00%"]],"container":"<table class=\"row-border\">\n  <thead>\n    <tr>\n      <th>File<\/th>\n      <th>Lines<\/th>\n      <th>Relevant<\/th>\n      <th>Covered<\/th>\n      <th>Missed<\/th>\n      <th>Hits / Line<\/th>\n      <th>Coverage<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"dom":"t","paging":false,"columnDefs":[{"targets":6,"createdCell":"function(td, cellData, rowData, row, col) {\n  var percent = cellData.replace(\"%\", \"\");\n  if (percent > 90) {\n    var grad = \"linear-gradient(90deg, #edfde7 \" + cellData + \", white \" + cellData + \")\";\n  } else if (percent > 75) {\n    var grad = \"linear-gradient(90deg, #f9ffe5 \" + cellData + \", white \" + cellData + \")\";\n  } else {\n    var grad = \"linear-gradient(90deg, #fcece9 \" + cellData + \", white \" + cellData + \")\";\n  }\n  $(td).css(\"background\", grad);\n}\n"},{"className":"dt-right","targets":[1,2,3,4]},{"name":"File","targets":0},{"name":"Lines","targets":1},{"name":"Relevant","targets":2},{"name":"Covered","targets":3},{"name":"Missed","targets":4},{"name":"Hits / Line","targets":5},{"name":"Coverage","targets":6}],"order":[],"autoWidth":false,"orderClasses":false},"callback":"function(table) {\ntable.on('click.dt', 'a', function() {\n  files = $('div#files div');\n  files.not('div.hidden').addClass('hidden');\n  id = $(this).text();\n  files.filter('div[id=\\'' + id + '\\']').removeClass('hidden');\n  $('ul.nav a[data-value=Source]').text(id).tab('show');\n});\n}"},"evals":["options.columnDefs.0.createdCell","callback"],"jsHooks":[]}</script>
+          <div class="datatables html-widget html-fill-item" id="htmlwidget-34eacc15e2607954959d" style="width:100%;height:500px;"></div>
+          <script type="application/json" data-for="htmlwidget-34eacc15e2607954959d">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["<a href=\"#\">R/zzz.R<\/a>","<a href=\"#\">R/include_css_js.R<\/a>","<a href=\"#\">R/FilterStateExpr.R<\/a>","<a href=\"#\">R/FilterStatesSE.R<\/a>","<a href=\"#\">R/FilterStateLogical.R<\/a>","<a href=\"#\">R/FilterStateDatettime.R<\/a>","<a href=\"#\">R/FilterStateDate.R<\/a>","<a href=\"#\">R/FilterStateEmpty.R<\/a>","<a href=\"#\">R/variable_types.R<\/a>","<a href=\"#\">R/FilteredData.R<\/a>","<a href=\"#\">R/FilteredData-utils.R<\/a>","<a href=\"#\">R/FilteredDataset.R<\/a>","<a href=\"#\">R/FilterStateChoices.R<\/a>","<a href=\"#\">R/choices_labeled.R<\/a>","<a href=\"#\">R/FilteredDatasetMAE.R<\/a>","<a href=\"#\">R/FilterStateRange.R<\/a>","<a href=\"#\">R/FilteredDatasetDefault.R<\/a>","<a href=\"#\">R/FilterState.R<\/a>","<a href=\"#\">R/FilterStates-utils.R<\/a>","<a href=\"#\">R/FilterStatesMAE.R<\/a>","<a href=\"#\">R/FilterStates.R<\/a>","<a href=\"#\">R/FilteredDatasetDataframe.R<\/a>","<a href=\"#\">R/teal_slices.R<\/a>","<a href=\"#\">R/FilteredDataset-utils.R<\/a>","<a href=\"#\">R/teal_slice.R<\/a>","<a href=\"#\">R/filter_panel_api.R<\/a>","<a href=\"#\">R/FilterState-utils.R<\/a>","<a href=\"#\">R/count_labels.R<\/a>","<a href=\"#\">R/utils.R<\/a>","<a href=\"#\">R/test_utils.R<\/a>","<a href=\"#\">R/FilterPanelAPI.R<\/a>","<a href=\"#\">R/calls_combine_by.R<\/a>","<a href=\"#\">R/FilterStatesDF.R<\/a>","<a href=\"#\">R/FilterStatesMatrix.R<\/a>"],[51,17,275,305,409,552,439,172,58,1096,203,396,619,88,259,741,123,797,247,61,754,279,281,149,384,185,298,232,68,41,116,38,199,43],[17,4,59,157,153,242,168,40,13,435,51,137,260,45,106,329,18,289,60,10,284,97,77,20,92,25,89,85,16,14,10,6,5,3],[0,0,12,40,45,87,69,18,7,260,33,91,174,31,76,241,14,237,51,9,259,90,72,19,88,24,87,85,16,14,10,6,5,3],[17,4,47,117,108,155,99,22,6,175,18,46,86,14,30,88,4,52,9,1,25,7,5,1,4,1,2,0,0,0,0,0,0,0],["0","0","2","11","3","5","5","2","5","13","7","36","34","6","16","24","3","71","52","23","72","27","379","44","424","2","83","30","47","20","4","45","103","25"],["0.00%","0.00%","20.34%","25.48%","29.41%","35.95%","41.07%","45.00%","53.85%","59.77%","64.71%","66.42%","66.92%","68.89%","71.70%","73.25%","77.78%","82.01%","85.00%","90.00%","91.20%","92.78%","93.51%","95.00%","95.65%","96.00%","97.75%","100.00%","100.00%","100.00%","100.00%","100.00%","100.00%","100.00%"]],"container":"<table class=\"row-border\">\n  <thead>\n    <tr>\n      <th>File<\/th>\n      <th>Lines<\/th>\n      <th>Relevant<\/th>\n      <th>Covered<\/th>\n      <th>Missed<\/th>\n      <th>Hits / Line<\/th>\n      <th>Coverage<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"dom":"t","paging":false,"columnDefs":[{"targets":6,"createdCell":"function(td, cellData, rowData, row, col) {\n  var percent = cellData.replace(\"%\", \"\");\n  if (percent > 90) {\n    var grad = \"linear-gradient(90deg, #edfde7 \" + cellData + \", white \" + cellData + \")\";\n  } else if (percent > 75) {\n    var grad = \"linear-gradient(90deg, #f9ffe5 \" + cellData + \", white \" + cellData + \")\";\n  } else {\n    var grad = \"linear-gradient(90deg, #fcece9 \" + cellData + \", white \" + cellData + \")\";\n  }\n  $(td).css(\"background\", grad);\n}\n"},{"className":"dt-right","targets":[1,2,3,4]},{"name":"File","targets":0},{"name":"Lines","targets":1},{"name":"Relevant","targets":2},{"name":"Covered","targets":3},{"name":"Missed","targets":4},{"name":"Hits / Line","targets":5},{"name":"Coverage","targets":6}],"order":[],"autoWidth":false,"orderClasses":false},"callback":"function(table) {\ntable.on('click.dt', 'a', function() {\n  files = $('div#files div');\n  files.not('div.hidden').addClass('hidden');\n  id = $(this).text();\n  files.filter('div[id=\\'' + id + '\\']').removeClass('hidden');\n  $('ul.nav a[data-value=Source]').text(id).tab('show');\n});\n}"},"evals":["options.columnDefs.0.createdCell","callback"],"jsHooks":[]}</script>
         </div>
         <div class="tab-pane" title="Source" data-value="Source" id="tab-covr-2">
           <div id="files">
@@ -51765,60 +51765,60 @@ table.table-condensed {
                       <pre class="language-r">  teal.logger::register_logger("teal.slice")</pre>
                     </td>
                   </tr>
-                  <tr class="never">
+                  <tr class="missed">
                     <td class="num">10</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  teal.logger::register_handlers("teal.slice")</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">11</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
                       <pre class="language-r"></pre>
                     </td>
                   </tr>
                   <tr class="missed">
-                    <td class="num">11</td>
+                    <td class="num">12</td>
                     <td class="coverage">!</td>
                     <td class="col-sm-12">
                       <pre class="language-r">  invisible()</pre>
                     </td>
                   </tr>
                   <tr class="never">
-                    <td class="num">12</td>
+                    <td class="num">13</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
                       <pre class="language-r">}</pre>
                     </td>
                   </tr>
                   <tr class="never">
-                    <td class="num">13</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r"></pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
                     <td class="num">14</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">### GLOBAL VARIABLES ###</pre>
+                      <pre class="language-r"></pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">15</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"></pre>
+                      <pre class="language-r">### GLOBAL VARIABLES ###</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">16</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">.filterable_class &lt;- c("logical", "integer", "numeric", "factor", "character", "Date", "POSIXct", "POSIXlt")</pre>
+                      <pre class="language-r"></pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">17</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"></pre>
+                      <pre class="language-r">.filterable_class &lt;- c("logical", "integer", "numeric", "factor", "character", "Date", "POSIXct", "POSIXlt")</pre>
                     </td>
                   </tr>
                   <tr class="never">
@@ -51832,14 +51832,14 @@ table.table-condensed {
                     <td class="num">19</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">### END GLOBAL VARIABLES ###</pre>
+                      <pre class="language-r"></pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">20</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"></pre>
+                      <pre class="language-r">### END GLOBAL VARIABLES ###</pre>
                     </td>
                   </tr>
                   <tr class="never">
@@ -51853,189 +51853,189 @@ table.table-condensed {
                     <td class="num">22</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">### ENSURE CHECK PASSES</pre>
+                      <pre class="language-r"></pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">23</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"></pre>
+                      <pre class="language-r">### ENSURE CHECK PASSES</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">24</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"># This function is necessary for check to properly process code dependencies within R6 classes.</pre>
+                      <pre class="language-r"></pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">25</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"># If `package` is listed in `Imports` in `DESCRIPTION`,</pre>
+                      <pre class="language-r"># This function is necessary for check to properly process code dependencies within R6 classes.</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">26</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"># (1) check goes through `NAMESPACE` looking for any `importFrom(package,&lt;foo&gt;)` statements</pre>
+                      <pre class="language-r"># If `package` is listed in `Imports` in `DESCRIPTION`,</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">27</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"># or an `import(package)` statement. If none are found,</pre>
+                      <pre class="language-r"># (1) check goes through `NAMESPACE` looking for any `importFrom(package,&lt;foo&gt;)` statements</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">28</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"># (2) check looks for `package::*` calls in the code. If none are found again,</pre>
+                      <pre class="language-r"># or an `import(package)` statement. If none are found,</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">29</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"># (3) check throws a NOTE;</pre>
+                      <pre class="language-r"># (2) check looks for `package::*` calls in the code. If none are found again,</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">30</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"># #  Namespaces in Imports field not imported from:</pre>
+                      <pre class="language-r"># (3) check throws a NOTE;</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">31</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"># #    'package'</pre>
+                      <pre class="language-r"># #  Namespaces in Imports field not imported from:</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">32</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"># #  All declared Imports should be used.</pre>
+                      <pre class="language-r"># #    'package'</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">33</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"># This note is banned by our CI.</pre>
+                      <pre class="language-r"># #  All declared Imports should be used.</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">34</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"># When package::* statements are made within an R6 class, they are not registered.</pre>
+                      <pre class="language-r"># This note is banned by our CI.</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">35</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"># This function provides single references to the imported namespaces for check to notice.</pre>
+                      <pre class="language-r"># When package::* statements are made within an R6 class, they are not registered.</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">36</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">.rectify_dependencies_check &lt;- function() {</pre>
+                      <pre class="language-r"># This function provides single references to the imported namespaces for check to notice.</pre>
                     </td>
                   </tr>
-                  <tr class="missed">
+                  <tr class="never">
                     <td class="num">37</td>
-                    <td class="coverage">!</td>
+                    <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  dplyr::filter</pre>
+                      <pre class="language-r">.rectify_dependencies_check &lt;- function() {</pre>
                     </td>
                   </tr>
                   <tr class="missed">
                     <td class="num">38</td>
                     <td class="coverage">!</td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  grDevices::rgb</pre>
+                      <pre class="language-r">  dplyr::filter</pre>
                     </td>
                   </tr>
                   <tr class="missed">
                     <td class="num">39</td>
                     <td class="coverage">!</td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  htmltools::tagInsertChildren</pre>
+                      <pre class="language-r">  grDevices::rgb</pre>
                     </td>
                   </tr>
                   <tr class="missed">
                     <td class="num">40</td>
                     <td class="coverage">!</td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  lifecycle::badge</pre>
+                      <pre class="language-r">  htmltools::tagInsertChildren</pre>
                     </td>
                   </tr>
                   <tr class="missed">
                     <td class="num">41</td>
                     <td class="coverage">!</td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  logger::log_trace</pre>
+                      <pre class="language-r">  lifecycle::badge</pre>
                     </td>
                   </tr>
                   <tr class="missed">
                     <td class="num">42</td>
                     <td class="coverage">!</td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  plotly::plot_ly</pre>
+                      <pre class="language-r">  logger::log_trace</pre>
                     </td>
                   </tr>
                   <tr class="missed">
                     <td class="num">43</td>
                     <td class="coverage">!</td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  shinycssloaders::withSpinner</pre>
+                      <pre class="language-r">  plotly::plot_ly</pre>
                     </td>
                   </tr>
                   <tr class="missed">
                     <td class="num">44</td>
                     <td class="coverage">!</td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  shinyWidgets::pickerOptions</pre>
+                      <pre class="language-r">  shinycssloaders::withSpinner</pre>
                     </td>
                   </tr>
                   <tr class="missed">
                     <td class="num">45</td>
                     <td class="coverage">!</td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  teal.data::datanames</pre>
+                      <pre class="language-r">  shinyWidgets::pickerOptions</pre>
                     </td>
                   </tr>
                   <tr class="missed">
                     <td class="num">46</td>
                     <td class="coverage">!</td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  teal.widgets::optionalSelectInput</pre>
+                      <pre class="language-r">  teal.data::datanames</pre>
                     </td>
                   </tr>
-                  <tr class="never">
+                  <tr class="missed">
                     <td class="num">47</td>
-                    <td class="coverage"></td>
+                    <td class="coverage">!</td>
                     <td class="col-sm-12">
-                      <pre class="language-r">}</pre>
+                      <pre class="language-r">  teal.widgets::optionalSelectInput</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">48</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"></pre>
+                      <pre class="language-r">}</pre>
                     </td>
                   </tr>
                   <tr class="never">
@@ -52047,6 +52047,13 @@ table.table-condensed {
                   </tr>
                   <tr class="never">
                     <td class="num">50</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r"></pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">51</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
                       <pre class="language-r">### END ENSURE CHECK PASSES</pre>
