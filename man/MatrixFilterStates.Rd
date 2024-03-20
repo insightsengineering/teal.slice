@@ -65,8 +65,8 @@ Function has to have \code{sid} argument being a character.}
 name of the data used in the subset expression.
 Passed to the function argument attached to this \code{FilterStates}.}
 
-\item{\code{datalabel}}{(\code{character(1)})
-Optional text label. Should be a name of experiment.}
+\item{\code{datalabel}}{(\code{character(1)}) optional
+text label. Should be a name of experiment.}
 }
 \if{html}{\out{</div>}}
 }

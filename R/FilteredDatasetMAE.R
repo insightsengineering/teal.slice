@@ -44,8 +44,8 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'  single `MulitiAssayExperiment` for which filters are rendered.
     #' @param dataname (`character(1)`)
     #'  syntactically valid name given to the dataset.
-    #' @param keys (`character`)
-    #'   optional vector of primary key column names.
+    #' @param keys (`character`) optional
+    #'   vector of primary key column names.
     #' @param label (`character(1)`)
     #'   label to describe the dataset.
     #'
@@ -190,9 +190,9 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       data <- self$get_dataset()
       experiment_names <- names(data)
 
-      div(
+      tags$div(
         tags$label("Add", tags$code(self$get_dataname()), "filter"),
-        br(),
+        tags$br(),
         HTML("&#9658;"),
         tags$label("Add subjects filter"),
         private$get_filter_states()[["subjects"]]$ui_add(id = ns("subjects")),
