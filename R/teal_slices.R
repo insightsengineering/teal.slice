@@ -1,6 +1,7 @@
 #' Complete filter specification
 #'
 #' Create `teal_slices` object to package multiple filters and additional settings.
+#' Check out [`teal_slices-utilities`] functions for working with `teal_slices` object.
 #'
 #' `teal_slices()` collates multiple `teal_slice` objects into a `teal_slices` object,
 #' a complete filter specification. This is used by all classes above `FilterState`
@@ -12,8 +13,7 @@
 #' Since these could be mutually exclusive, it is impossible to set both allowed and forbidden
 #' variables for one data set in one `teal_slices`.
 #'
-#' @param ... any number of `teal_slice` objects. For `print` and `format`,
-#'  additional arguments passed to other functions.
+#' @param ... any number of `teal_slice` objects.
 #' @param include_varnames,exclude_varnames (`named list`s of `character`) where list names
 #'  match names of data sets and vector elements match variable names in respective data sets;
 #'  specify which variables are allowed to be filtered; see `Details`.
@@ -28,9 +28,6 @@
 #'   and unfiltered dataset. Note, that issues were reported when using this option with `MultiAssayExperiment`.
 #'   Please make sure that adding new filters doesn't fail on target platform before deploying for production.
 #' @param allow_add (`logical(1)`) logical flag specifying whether the user will be able to add new filters
-#' @param x object to test for `teal_slices`, object to convert to `teal_slices` or a `teal_slices` object
-#' @param i (`character` or `numeric` or `logical`) indicating which elements to extract
-#' @param recursive (`logical(1)`) flag specifying whether to also convert to list the elements of this `teal_slices`
 #'
 #' @return
 #' `teal_slices`, which is an unnamed list of `teal_slice` objects.
@@ -85,6 +82,8 @@
 #' @seealso
 #' - [`teal_slice`] for creating constituent elements of `teal_slices`
 #' - [`teal::slices_store`] for robust utilities for saving and loading `teal_slices` in `JSON` format
+#' - [`is.teal_slices`], [`as.teal_slices`], [`as.list.teal_slices`], [`[.teal_slices`], [`c.teal_slices`]
+#' [`print.teal_slices`], [`format.teal_slices`]
 #'
 #' @export
 #'
@@ -126,19 +125,26 @@ teal_slices <- function(...,
   )
 }
 
-
-#' @rdname teal_slices
-#' @export
+#' `teal_slices` utility functions
+#'
+#' Helper functions for working with [`teal_slices`] object.
+#' @param x object to test for `teal_slices`, object to convert to `teal_slices` or a `teal_slices` object
+#' @param i (`character` or `numeric` or `logical`) indicating which elements to extract
+#' @param recursive (`logical(1)`) flag specifying whether to also convert to list the elements of this `teal_slices`
+#' @param ... additional arguments passed to other functions.
+#' @name teal_slices-utilities
+#' @inherit teal_slices examples
 #' @keywords internal
+
+#' @rdname teal_slices-utilities
+#' @export
 #'
 is.teal_slices <- function(x) { # nolint
   inherits(x, "teal_slices")
 }
 
-
-#' @rdname teal_slices
+#' @rdname teal_slices-utilities
 #' @export
-#' @keywords internal
 #'
 as.teal_slices <- function(x) { # nolint
   checkmate::assert_list(x)
@@ -150,9 +156,8 @@ as.teal_slices <- function(x) { # nolint
 }
 
 
-#' @rdname teal_slices
+#' @rdname teal_slices-utilities
 #' @export
-#' @keywords internal
 #'
 as.list.teal_slices <- function(x, recursive = FALSE, ...) { # nolint
   ans <- unclass(x)
@@ -161,9 +166,8 @@ as.list.teal_slices <- function(x, recursive = FALSE, ...) { # nolint
 }
 
 
-#' @rdname teal_slices
+#' @rdname teal_slices-utilities
 #' @export
-#' @keywords internal
 #'
 `[.teal_slices` <- function(x, i) {
   if (missing(i)) i <- seq_along(x)
@@ -185,9 +189,8 @@ as.list.teal_slices <- function(x, recursive = FALSE, ...) { # nolint
 }
 
 
-#' @rdname teal_slices
+#' @rdname teal_slices-utilities
 #' @export
-#' @keywords internal
 #'
 c.teal_slices <- function(...) {
   x <- list(...)
@@ -207,11 +210,10 @@ c.teal_slices <- function(...) {
 }
 
 
-#' @rdname teal_slices
+#' @rdname teal_slices-utilities
 #' @param show_all (`logical(1)`) whether to display non-null elements of constituent `teal_slice` objects
 #' @param trim_lines (`logical(1)`) whether to trim lines
 #' @export
-#' @keywords internal
 #'
 format.teal_slices <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   checkmate::assert_flag(show_all)
@@ -228,9 +230,8 @@ format.teal_slices <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   jsonify(slices_list, trim_lines)
 }
 
-#' @rdname teal_slices
+#' @rdname teal_slices-utilities
 #' @export
-#' @keywords internal
 #'
 print.teal_slices <- function(x, ...) {
   cat(format(x, ...), "\n")
