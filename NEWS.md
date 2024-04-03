@@ -1,4 +1,8 @@
-# teal.slice 0.5.0.9004
+# teal.slice 0.5.0.9009
+
+### Miscellaneous
+
+* Added `teal_slice` and `teal_slices` to package index. 
 
 # teal.slice 0.5.0
 

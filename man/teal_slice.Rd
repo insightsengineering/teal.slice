@@ -2,11 +2,6 @@
 % Please edit documentation in R/teal_slice.R
 \name{teal_slice}
 \alias{teal_slice}
-\alias{is.teal_slice}
-\alias{as.teal_slice}
-\alias{as.list.teal_slice}
-\alias{format.teal_slice}
-\alias{print.teal_slice}
 \title{Specify single filter}
 \usage{
 teal_slice(
@@ -24,16 +19,6 @@ teal_slice(
   title = NULL,
   ...
 )
-
-is.teal_slice(x)
-
-as.teal_slice(x)
-
-\method{as.list}{teal_slice}(x, ...)
-
-\method{format}{teal_slice}(x, show_all = FALSE, trim_lines = TRUE, ...)
-
-\method{print}{teal_slice}(x, ...)
 }
 \arguments{
 \item{dataname}{(\code{character(1)}) name of data set}
@@ -48,35 +33,27 @@ Must be a valid \code{R} expression which can be evaluated in the context of the
 For a \code{data.frame} \code{var == "x"} is sufficient, but \code{MultiAssayExperiment::subsetByColData}
 requires \code{dataname} prefix, \emph{e.g.} \code{data$var == "x"}.}
 
-\item{choices}{(optional \code{vector}) specifying allowed choices;
+\item{choices}{(\code{vector}) optional, specifies allowed choices;
 When specified it should be a subset of values in variable denoted by \code{varname};
 Type and size depends on variable type. Factors are coerced to character.}
 
-\item{selected}{(optional \code{vector}) of selected values from \code{choices};
+\item{selected}{(\code{vector}) optional, specifies selected values from \code{choices};
 Type and size depends on variable type. Factors are coerced to character.}
 
-\item{keep_na}{(optional \code{logical(1)}) flag specifying whether to keep missing values}
+\item{keep_na}{(\code{logical(1)}) optional flag specifying whether to keep missing values}
 
-\item{keep_inf}{(optional \code{logical(1)}) flag specifying whether to keep infinite values}
+\item{keep_inf}{(\code{logical(1)}) optional flag specifying whether to keep infinite values}
 
 \item{fixed}{(\code{logical(1)}) flag specifying whether to fix this filter state (forbid setting state)}
 
 \item{anchored}{(\code{logical(1)}) flag specifying whether to lock this filter state (forbid removing and inactivating)}
 
-\item{multiple}{(optional \code{logical(1)}) flag specifying whether more than one value can be selected;
+\item{multiple}{(\code{logical(1)}) optional flag specifying whether more than one value can be selected;
 only applicable to \code{ChoicesFilterState} and \code{LogicalFilterState}}
 
-\item{title}{(optional \code{character(1)}) title of the filter. Ignored when \code{varname} is set.}
+\item{title}{(\code{character(1)}) optional title of the filter. Ignored when \code{varname} is set.}
 
-\item{...}{in \code{teal_slice} method these are additional arguments which can be handled by extensions
-of \code{teal.slice} classes. In other methods these are further arguments passed to or from other methods.}
-
-\item{x}{(\code{teal.slice})}
-
-\item{show_all}{(\code{logical(1)}) indicating whether to show all fields. If set to \code{FALSE},
-only non-NULL elements will be printed.}
-
-\item{trim_lines}{(\code{logical(1)}) indicating whether to trim lines when printing.}
+\item{...}{additional arguments which can be handled by extensions of \code{teal.slice} classes.}
 }
 \value{
 A \code{teal.slice} object. Depending on whether \code{varname} or \code{expr} was specified, the resulting
@@ -84,6 +61,7 @@ A \code{teal.slice} object. Depending on whether \code{varname} or \code{expr} w
 }
 \description{
 Create a \code{teal_slice} object that holds complete information on filtering one variable.
+Check out \code{\link{teal_slice-utilities}} functions for working with \code{teal_slice} object.
 }
 \details{
 \code{teal_slice} object fully describes filter state and can be used to create,
@@ -169,6 +147,6 @@ print(x1, show_all = TRUE, trim_lines = FALSE)
 
 }
 \seealso{
-\code{\link{teal_slices}}
+\code{\link{teal_slices}},
+\code{\link{is.teal_slice}}, \code{\link{as.teal_slice}}, \code{\link{as.list.teal_slice}}, \code{\link{print.teal_slice}}, \code{\link{format.teal_slice}}
 }
-\keyword{internal}

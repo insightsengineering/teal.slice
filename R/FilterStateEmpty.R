@@ -128,7 +128,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
       isolate({
-        div(
+        tags$div(
           tags$span("Variable contains missing values only"),
           private$keep_na_ui(ns("keep_na"))
         )

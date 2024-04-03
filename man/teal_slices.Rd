@@ -2,13 +2,6 @@
 % Please edit documentation in R/teal_slices.R
 \name{teal_slices}
 \alias{teal_slices}
-\alias{is.teal_slices}
-\alias{as.teal_slices}
-\alias{as.list.teal_slices}
-\alias{[.teal_slices}
-\alias{c.teal_slices}
-\alias{format.teal_slices}
-\alias{print.teal_slices}
 \title{Complete filter specification}
 \usage{
 teal_slices(
@@ -18,24 +11,9 @@ teal_slices(
   count_type = NULL,
   allow_add = TRUE
 )
-
-is.teal_slices(x)
-
-as.teal_slices(x)
-
-\method{as.list}{teal_slices}(x, recursive = FALSE, ...)
-
-\method{[}{teal_slices}(x, i)
-
-\method{c}{teal_slices}(...)
-
-\method{format}{teal_slices}(x, show_all = FALSE, trim_lines = TRUE, ...)
-
-\method{print}{teal_slices}(x, ...)
 }
 \arguments{
-\item{...}{any number of \code{teal_slice} objects. For \code{print} and \code{format},
-additional arguments passed to other functions.}
+\item{...}{any number of \code{teal_slice} objects.}
 
 \item{include_varnames, exclude_varnames}{(\verb{named list}s of \code{character}) where list names
 match names of data sets and vector elements match variable names in respective data sets;
@@ -55,22 +33,13 @@ Please make sure that adding new filters doesn't fail on target platform before 
 }}
 
 \item{allow_add}{(\code{logical(1)}) logical flag specifying whether the user will be able to add new filters}
-
-\item{x}{object to test for \code{teal_slices}, object to convert to \code{teal_slices} or a \code{teal_slices} object}
-
-\item{recursive}{(\code{logical(1)}) flag specifying whether to also convert to list the elements of this \code{teal_slices}}
-
-\item{i}{(\code{character} or \code{numeric} or \code{logical}) indicating which elements to extract}
-
-\item{show_all}{(\code{logical(1)}) whether to display non-null elements of constituent \code{teal_slice} objects}
-
-\item{trim_lines}{(\code{logical(1)}) whether to trim lines}
 }
 \value{
 \code{teal_slices}, which is an unnamed list of \code{teal_slice} objects.
 }
 \description{
 Create \code{teal_slices} object to package multiple filters and additional settings.
+Check out \code{\link{teal_slices-utilities}} functions for working with \code{teal_slices} object.
 }
 \details{
 \code{teal_slices()} collates multiple \code{teal_slice} objects into a \code{teal_slices} object,
@@ -135,6 +104,7 @@ print(all_filters, trim_lines = FALSE)
 \itemize{
 \item \code{\link{teal_slice}} for creating constituent elements of \code{teal_slices}
 \item \code{\link[teal:slices_store]{teal::slices_store}} for robust utilities for saving and loading \code{teal_slices} in \code{JSON} format
+\item \code{\link{is.teal_slices}}, \code{\link{as.teal_slices}}, \code{\link{as.list.teal_slices}}, [\verb{[.teal_slices}], \code{\link{c.teal_slices}}
+\code{\link{print.teal_slices}}, \code{\link{format.teal_slices}}
 }
 }
-\keyword{internal}

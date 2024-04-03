@@ -1,6 +1,7 @@
 #' Specify single filter
 #'
 #' Create a `teal_slice` object that holds complete information on filtering one variable.
+#' Check out [`teal_slice-utilities`] functions for working with `teal_slice` object.
 #'
 #' `teal_slice` object fully describes filter state and can be used to create,
 #' modify, and delete a filter state. A `teal_slice` contains a number of common fields
@@ -55,24 +56,19 @@
 #'  Must be a valid `R` expression which can be evaluated in the context of the data set.
 #'  For a `data.frame` `var == "x"` is sufficient, but `MultiAssayExperiment::subsetByColData`
 #'  requires `dataname` prefix, *e.g.* `data$var == "x"`.
-#' @param choices (optional `vector`) specifying allowed choices;
+#' @param choices (`vector`) optional, specifies allowed choices;
 #' When specified it should be a subset of values in variable denoted by `varname`;
 #' Type and size depends on variable type. Factors are coerced to character.
-#' @param selected (optional `vector`) of selected values from `choices`;
+#' @param selected (`vector`) optional, specifies selected values from `choices`;
 #' Type and size depends on variable type. Factors are coerced to character.
-#' @param multiple (optional `logical(1)`) flag specifying whether more than one value can be selected;
+#' @param multiple (`logical(1)`) optional flag specifying whether more than one value can be selected;
 #' only applicable to `ChoicesFilterState` and `LogicalFilterState`
-#' @param keep_na (optional `logical(1)`) flag specifying whether to keep missing values
-#' @param keep_inf (optional `logical(1)`) flag specifying whether to keep infinite values
+#' @param keep_na (`logical(1)`) optional flag specifying whether to keep missing values
+#' @param keep_inf (`logical(1)`) optional flag specifying whether to keep infinite values
 #' @param fixed (`logical(1)`) flag specifying whether to fix this filter state (forbid setting state)
 #' @param anchored (`logical(1)`) flag specifying whether to lock this filter state (forbid removing and inactivating)
-#' @param title (optional `character(1)`) title of the filter. Ignored when `varname` is set.
-#' @param ... in `teal_slice` method these are additional arguments which can be handled by extensions
-#'  of `teal.slice` classes. In other methods these are further arguments passed to or from other methods.
-#' @param x (`teal.slice`)
-#' @param show_all (`logical(1)`) indicating whether to show all fields. If set to `FALSE`,
-#'  only non-NULL elements will be printed.
-#' @param trim_lines (`logical(1)`) indicating whether to trim lines when printing.
+#' @param title (`character(1)`) optional title of the filter. Ignored when `varname` is set.
+#' @param ... additional arguments which can be handled by extensions of `teal.slice` classes.
 #'
 #' @return A `teal.slice` object. Depending on whether `varname` or `expr` was specified, the resulting
 #' `teal_slice` also receives class `teal_slice_var` or `teal_slice_expr`, respectively.
@@ -108,7 +104,8 @@
 #' print(x1)
 #' print(x1, show_all = TRUE, trim_lines = FALSE)
 #'
-#' @seealso [`teal_slices`]
+#' @seealso [`teal_slices`],
+#' [`is.teal_slice`], [`as.teal_slice`], [`as.list.teal_slice`], [`print.teal_slice`], [`format.teal_slice`]
 #'
 #' @export
 teal_slice <- function(dataname,
@@ -172,26 +169,35 @@ teal_slice <- function(dataname,
   ans
 }
 
-#' @rdname teal_slice
-#' @export
+#' `teal_slice` utility functions
+#'
+#' Helper functions for working with [`teal_slice`] object.
+#' @param x (`teal.slice`)
+#' @param show_all (`logical(1)`) indicating whether to show all fields. If set to `FALSE`,
+#'  only non-NULL elements will be printed.
+#' @param trim_lines (`logical(1)`) indicating whether to trim lines when printing.
+#' @param ... additional arguments passed to other functions.
+#' @name teal_slice-utilities
+#' @inherit teal_slice examples
 #' @keywords internal
+
+#' @rdname teal_slice-utilities
+#' @export
 #'
 is.teal_slice <- function(x) { # nolint
   inherits(x, "teal_slice")
 }
 
-#' @rdname teal_slice
+#' @rdname teal_slice-utilities
 #' @export
-#' @keywords internal
 #'
 as.teal_slice <- function(x) { # nolint
   checkmate::assert_list(x, names = "named")
   do.call(teal_slice, x)
 }
 
-#' @rdname teal_slice
+#' @rdname teal_slice-utilities
 #' @export
-#' @keywords internal
 #'
 as.list.teal_slice <- function(x, ...) {
   formal_args <- setdiff(names(formals(teal_slice)), "...")
@@ -209,9 +215,8 @@ as.list.teal_slice <- function(x, ...) {
 }
 
 
-#' @rdname teal_slice
+#' @rdname teal_slice-utilities
 #' @export
-#' @keywords internal
 #'
 format.teal_slice <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   checkmate::assert_flag(show_all)
@@ -223,9 +228,8 @@ format.teal_slice <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   jsonify(x_list, trim_lines)
 }
 
-#' @rdname teal_slice
+#' @rdname teal_slice-utilities
 #' @export
-#' @keywords internal
 #'
 print.teal_slice <- function(x, ...) {
   cat(format(x, ...))
