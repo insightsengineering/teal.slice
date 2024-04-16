@@ -155,18 +155,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
           length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
           combine = "or"
         )
-
-        x_factor <- if (!is.factor(x)) {
-          structure(
-            factor(as.character(x), levels = as.character(sort(unique(x)))),
-            label = attr(x, "label", exact = TRUE)
-          )
-        } else {
-          x
-        }
-
         super$initialize(
-          x = x_factor,
+          x = x,
           x_reactive = x_reactive,
           slice = slice,
           extract_type = extract_type
@@ -184,12 +174,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
           slice$selected <- slice$selected[1]
         }
         private$set_selected(slice$selected)
-        private$data_class <- class(x)[1L]
         if (inherits(x, "POSIXt")) {
           private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
         }
 
-        private$set_choices_counts(unname(table(x_factor)))
+        private$set_choices_counts(unname(table(x)))
       })
       invisible(self)
     },
@@ -207,41 +196,34 @@ ChoicesFilterState <- R6::R6Class( # nolint
       }
       if (missing(dataname)) dataname <- private$get_dataname()
       varname <- private$get_varname_prefixed(dataname)
+      choices <- private$get_choices()
       selected <- private$get_selected()
-      if (length(selected) == 0) {
-        choices <- private$get_choices()
-        fun_compare <- if (length(choices) == 1L) "==" else "%in%"
-        filter_call <- call("!", call(fun_compare, varname, make_c_call(as.character(choices))))
+      fun_compare <- if (length(selected) == 1L) "==" else "%in%"
+      filter_call <- if (length(selected) == 0) {
+        call("!", call(fun_compare, varname, make_c_call(as.character(choices))))
       } else {
-        if (setequal(na.omit(private$x), selected)) {
-          filter_call <- NULL
+        if (setequal(selected, choices) && !private$is_choice_limited) {
+          NULL
+        } else if (inherits(private$x, "Date")) {
+          call(fun_compare, varname, call("as.Date", make_c_call(as.character(selected))))
+        } else if (inherits(private$x, c("POSIXct", "POSIXlt"))) {
+          class <- class(private$x)[1L]
+          date_fun <- as.name(
+            switch(class,
+              "POSIXct" = "as.POSIXct",
+              "POSIXlt" = "as.POSIXlt"
+            )
+          )
+          call(
+            fun_compare,
+            varname,
+            as.call(list(date_fun, make_c_call(as.character(selected)), tz = private$tzone))
+          )
+        } else if (is.numeric(private$x)) {
+          call(fun_compare, varname, make_c_call(as.numeric(selected)))
         } else {
-          fun_compare <- if (length(selected) == 1L) "==" else "%in%"
-
-          if (private$data_class != "factor") {
-            selected <- do.call(sprintf("as.%s", private$data_class), list(x = selected))
-          }
-
-          filter_call <-
-            if (inherits(selected, "Date")) {
-              call(fun_compare, varname, call("as.Date", make_c_call(as.character(selected))))
-            } else if (inherits(selected, c("POSIXct", "POSIXlt"))) {
-              class <- class(selected)[1L]
-              date_fun <- as.name(
-                switch(class,
-                  "POSIXct" = "as.POSIXct",
-                  "POSIXlt" = "as.POSIXlt"
-                )
-              )
-              call(
-                fun_compare,
-                varname,
-                as.call(list(date_fun, make_c_call(as.character(selected)), tz = private$tzone))
-              )
-            } else {
-              # This handles numerics, characters, and factors.
-              call(fun_compare, varname, make_c_call(selected))
-            }
+          # This handles numerics, characters, and factors.
+          call(fun_compare, varname, make_c_call(selected))
         }
       }
       private$add_keep_na_call(filter_call, varname)
@@ -252,7 +234,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
   private = list(
     x = NULL,
     choices_counts = integer(0),
-    data_class = character(0), # stores class of filtered variable so that it can be restored in $get_call
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
 
     # private methods ----
@@ -262,10 +243,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #  are limited by default from the start.
     set_choices = function(choices) {
       if (is.null(choices)) {
-        choices <- levels(private$x)
+        choices <- unique(as.character(na.omit(private$x)))
       } else {
         choices <- as.character(choices)
-        choices_adjusted <- choices[choices %in% levels(private$x)]
+        choices_adjusted <- choices[choices %in% unique(private$x)]
         if (length(setdiff(choices, choices_adjusted)) > 0L) {
           warning(
             sprintf(
@@ -288,7 +269,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       private$set_is_choice_limited(private$x, choices)
       private$teal_slice$choices <- choices
       private$x <- private$x[(private$x %in% private$get_choices()) | is.na(private$x)]
-      private$x <- droplevels(private$x)
+      if (is.factor(private$x)) private$x <- droplevels(private$x)
       invisible(NULL)
     },
     # @description

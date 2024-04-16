@@ -104,7 +104,7 @@ testthat::test_that("get_call returns call always if choices are limited - regar
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
-    NULL
+    quote(var %in% c("a", "b", "c"))
   )
 })
 
@@ -176,6 +176,17 @@ testthat::test_that("get_call returns calls appropriate for factor var", {
   )
 })
 
+testthat::test_that("get_call returns calls appropriate for factor var", {
+  filter_state <- ChoicesFilterState$new(
+    x = ordered(facts),
+    slice = teal_slice(dataname = "data", varname = "var", selected = facts[1])
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(var == "item1")
+  )
+})
+
 testthat::test_that("get_call returns calls appropriate for numeric var", {
   filter_state <- ChoicesFilterState$new(
     nums,
@@ -219,6 +230,7 @@ testthat::test_that("get_call returns calls appropriate for posixlt var", {
     quote(var == as.POSIXlt("2000-01-01 12:00:00", tz = "GMT"))
   )
 })
+
 
 # set_state ----
 testthat::test_that("set_state raises warning when selection not within allowed choices", {
