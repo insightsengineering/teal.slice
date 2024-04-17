@@ -177,8 +177,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         if (inherits(x, "POSIXt")) {
           private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
         }
-
-        private$set_choices_counts(unname(table(x)))
       })
       invisible(self)
     },
@@ -242,8 +240,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
     # Checks validity of the choices, adjust if neccessary and sets the flag for the case where choices
     #  are limited by default from the start.
     set_choices = function(choices) {
+      ordered_counts <- table(private$x)
       if (is.null(choices)) {
-        choices <- unique(as.character(na.omit(private$x)))
+        choices <- names(ordered_counts)
       } else {
         choices <- as.character(choices)
         choices_adjusted <- choices[choices %in% unique(private$x)]
@@ -266,6 +265,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           choices <- levels(private$x)
         }
       }
+      private$set_choices_counts(unname(ordered_counts))
       private$set_is_choice_limited(private$x, choices)
       private$teal_slice$choices <- choices
       private$x <- private$x[(private$x %in% private$get_choices()) | is.na(private$x)]
