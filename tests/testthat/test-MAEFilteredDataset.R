@@ -125,7 +125,7 @@ testthat::test_that("get_call returns a call with applying filter", {
         miniacc <- MultiAssayExperiment::subsetByColData(
           miniacc,
           miniacc$years_to_birth >= 30 & miniacc$years_to_birth <= 50 &
-            miniacc$vital_status == 1L & miniacc$gender == "female"
+            miniacc$vital_status == 1 & miniacc$gender == "female"
         )
       ),
       RPPAArray = quote(
@@ -208,7 +208,7 @@ testthat::test_that(
           miniacc <- MultiAssayExperiment::subsetByColData( # nolint
             miniacc,
             miniacc$years_to_birth >= 30 & miniacc$years_to_birth <= 50 &
-              miniacc$vital_status == 1L &
+              miniacc$vital_status == 1 &
               miniacc$gender == "female"
           )
         ),
