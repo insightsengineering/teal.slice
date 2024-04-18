@@ -1,8 +1,8 @@
 Type: Package
 Package: teal.slice
 Title: Filter Module for 'teal' Applications
-Version: 0.5.0.9009
-Date: 2024-03-21
+Version: 0.5.0.9011
+Date: 2024-04-17
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9533-457X")),
@@ -56,6 +56,7 @@ Imports:
 Suggests:
     knitr (>= 1.42),
     MultiAssayExperiment,
+    rmarkdown (>= 2.19),
     SummarizedExperiment,
     testthat (>= 3.1.5),
     withr (>= 2.1.0)
@@ -69,7 +70,7 @@ Config/Needs/verdepcheck: rstudio/shiny, rstudio/bslib, mllg/checkmate,
     daattali/shinyjs, dreamRs/shinyWidgets, insightsengineering/teal.data,
     insightsengineering/teal.logger, insightsengineering/teal.widgets,
     yihui/knitr, bioc::MultiAssayExperiment, bioc::SummarizedExperiment,
-    r-lib/testthat, r-lib/withr
+    rstudio/rmarkdown, r-lib/testthat, r-lib/withr
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
 Language: en-US
