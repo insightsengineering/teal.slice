@@ -240,9 +240,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
     # Checks validity of the choices, adjust if neccessary and sets the flag for the case where choices
     #  are limited by default from the start.
     set_choices = function(choices) {
-      ordered_counts <- table(private$x)
+      ordered_counts <- table(as.character(private$x))
+      possible_choices <- names(ordered_counts)
       if (is.null(choices)) {
-        choices <- names(ordered_counts)
+        choices <- possible_choices
       } else {
         choices <- as.character(choices)
         choices_adjusted <- choices[choices %in% unique(private$x)]
@@ -262,11 +263,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
               private$get_id()
             )
           )
-          choices <- levels(private$x)
+          choices <- possible_choices
         }
       }
-      private$set_choices_counts(unname(ordered_counts))
-      private$set_is_choice_limited(private$x, choices)
+      private$set_choices_counts(unname(ordered_counts[choices]))
+      private$set_is_choice_limited(possible_choices, choices)
       private$teal_slice$choices <- choices
       private$x <- private$x[(private$x %in% private$get_choices()) | is.na(private$x)]
       if (is.factor(private$x)) private$x <- droplevels(private$x)
