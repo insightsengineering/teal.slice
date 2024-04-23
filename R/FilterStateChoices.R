@@ -243,9 +243,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #  are limited by default from the start.
     set_choices = function(choices) {
       if (is.null(choices)) {
-        choices <- unique(as.character(na.omit(private$x)))
+        choices <- sort(unique(as.character(na.omit(private$x))))
       } else {
-        choices <- as.character(choices)
+        choices <- sort(as.character(choices))
         choices_adjusted <- choices[choices %in% unique(private$x)]
         if (length(setdiff(choices, choices_adjusted)) > 0L) {
           warning(
