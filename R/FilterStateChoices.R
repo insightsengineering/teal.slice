@@ -177,8 +177,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         if (inherits(x, "POSIXt")) {
           private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
         }
-
-        private$set_choices_counts(unname(table(x)))
       })
       invisible(self)
     },
@@ -242,11 +240,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
     # Checks validity of the choices, adjust if neccessary and sets the flag for the case where choices
     #  are limited by default from the start.
     set_choices = function(choices) {
+      ordered_counts <- .table(private$x)
+      possible_choices <- names(ordered_counts)
       if (is.null(choices)) {
-        choices <- unique(as.character(na.omit(private$x)))
+        choices <- possible_choices
       } else {
         choices <- as.character(choices)
-        choices_adjusted <- choices[choices %in% unique(private$x)]
+        choices_adjusted <- choices[choices %in% possible_choices]
         if (length(setdiff(choices, choices_adjusted)) > 0L) {
           warning(
             sprintf(
@@ -263,13 +263,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
               private$get_id()
             )
           )
-          choices <- levels(private$x)
+          choices <- possible_choices
         }
       }
-      private$set_is_choice_limited(private$x, choices)
+      private$set_choices_counts(unname(ordered_counts[choices]))
+      private$set_is_choice_limited(possible_choices, choices)
       private$teal_slice$choices <- choices
-      private$x <- private$x[(private$x %in% private$get_choices()) | is.na(private$x)]
-      if (is.factor(private$x)) private$x <- droplevels(private$x)
       invisible(NULL)
     },
     # @description
@@ -284,15 +283,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
       invisible(NULL)
-    },
-    # @description
-    # Checks how many counts of each choice is present in the data.
-    get_choices_counts = function() {
-      if (!is.null(private$x_reactive)) {
-        table(factor(private$x_reactive(), levels = private$get_choices()))
-      } else {
-        NULL
-      }
     },
     # @description
     # Checks whether the input should be rendered as a checkboxgroup/radiobutton or a drop-down.
@@ -345,7 +335,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
       isolate({
         countsmax <- private$choices_counts
         countsnow <- if (!is.null(private$x_reactive())) {
-          unname(table(factor(private$x_reactive(), levels = private$get_choices())))
+          unname(
+            .table(private$x_reactive())[private$get_choices()]
+          )
         }
 
         ui_input <- if (private$is_checkboxgroup()) {
@@ -423,7 +415,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
             logger::log_trace("ChoicesFilterState$server_inputs@1 updating count labels, id: { private$get_id() }")
 
             countsnow <- if (!is.null(private$x_reactive())) {
-              unname(table(factor(non_missing_values(), levels = private$get_choices())))
+              unname(
+                .table(non_missing_values())[private$get_choices()]
+              )
             }
 
             # update should be based on a change of counts only
@@ -548,7 +542,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
           output$selection <- renderUI({
             countsnow <- if (!is.null(private$x_reactive())) {
-              unname(table(factor(private$x_reactive(), levels = private$get_choices())))
+              unname(
+                .table(private$x_reactive())[private$get_choices()]
+              )
             }
             countsmax <- private$choices_counts
 
@@ -598,3 +594,19 @@ ChoicesFilterState <- R6::R6Class( # nolint
     }
   )
 )
+
+#' `table` handling `POSIXlt`
+#'
+#' @param x (`vector`) variable to get counts from.
+#' @return vector of counts named by unique values of `x`.
+#'
+#' @keywords internal
+.table <- function(x) {
+  table(
+    if (is.factor(x)) {
+      x
+    } else {
+      as.character(x)
+    }
+  )
+}

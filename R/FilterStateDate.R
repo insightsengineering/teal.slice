@@ -191,7 +191,10 @@ DateFilterState <- R6::R6Class( # nolint
       if (is.null(choices)) {
         choices <- range(private$x, na.rm = TRUE)
       } else {
-        choices_adjusted <- c(max(choices[1L], min(private$x)), min(choices[2L], max(private$x)))
+        choices_adjusted <- c(
+          max(choices[1L], min(private$x, na.rm = TRUE)),
+          min(choices[2L], max(private$x, na.rm = TRUE))
+        )
         if (any(choices != choices_adjusted)) {
           warning(sprintf(
             "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
