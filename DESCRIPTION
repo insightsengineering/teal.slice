@@ -49,7 +49,7 @@ Imports:
     shinycssloaders (>= 1.0.0),
     shinyjs,
     shinyWidgets (>= 0.6.2),
-    teal.data (>= 0.6.0),
+    teal.data (>= 0.4.0),
     teal.logger (>= 0.1.3.9013),
     teal.widgets (>= 0.4.0),
     utils
