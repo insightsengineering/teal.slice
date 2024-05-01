@@ -37,9 +37,6 @@
     <loc>https://insightsengineering.github.io/teal.slice/news/index.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/pull_request_template.html</loc>
-  </url>
-  <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/ChoicesFilterState.html</loc>
   </url>
   <url>
@@ -118,6 +115,9 @@
     <loc>https://insightsengineering.github.io/teal.slice/reference/data_choices_labeled.html</loc>
   </url>
   <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/dot-table.html</loc>
+  </url>
+  <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/eval_expr_with_msg.html</loc>
   </url>
   <url>
@@ -181,7 +181,13 @@
     <loc>https://insightsengineering.github.io/teal.slice/reference/teal.slice-package.html</loc>
   </url>
   <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/teal_slice-utilities.html</loc>
+  </url>
+  <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/teal_slice.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/teal_slices-utilities.html</loc>
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/teal_slices.html</loc>
