@@ -1,8 +1,14 @@
-# teal.slice 0.5.0.9014
+# teal.slice 0.5.1
+
+### Bug fixes
+* Fix how the filter panel handles NA values in a Date column.
+* Fix filtering of `ordered` column to return the right call.
+* Ensure choices are sorted for `factor` and `ordered` data types.
 
 ### Miscellaneous
 
-* Added `teal_slice` and `teal_slices` to package index. 
+* Added `teal_slice` and `teal_slices` to package index.
+* Implement mouse-over behavior for the filter card when it is selected.
 
 # teal.slice 0.5.0
 
