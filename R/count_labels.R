@@ -230,3 +230,17 @@ make_count_text <- function(label, countmax, countnow = NULL) {
     countmax
   )
 }
+
+
+#' Adjust counts to match choices
+#'
+#' @param choices (`character`) Choices to match.
+#' @param counts (`named numeric`) Counts to adjust.
+#' @keywords internal
+pair_counts <- function(choices, counts) {
+  checkmate::assert_numeric(counts)
+  counts <- counts[match(choices, names(counts))]
+  counts[is.na(counts)] <- 0
+  names(counts) <- choices
+  counts
+}
