@@ -70,6 +70,88 @@ testthat::test_that("constructor forces single selected when multiple is FALSE",
   )
 })
 
+testthat::test_that("constructor drops zero-count choices", {
+  test <- R6::R6Class("testChoicesFilterState", inherit = ChoicesFilterState, public = list(
+    get_choices_counts = function() {
+      private$choices_counts
+    }
+  ))
+  state <- test$new(
+    x = factor(
+      c("a", "b", "c", "c", "a", NA),
+      levels = c("a", "b", "c", "d", "") # "" instead of "e" to handle edge case with empty name
+    ),
+    slice = teal_slice(dataname = "data", varname = "var")
+  )
+
+  testthat::expect_identical(
+    shiny::isolate(state$get_state()$choices),
+    c("a", "b", "c")
+  )
+
+  testthat::expect_equal(
+    shiny::isolate(state$get_choices_counts()),
+    stats::setNames(
+      c(2L, 1L, 2L),
+      c("a", "b", "c")
+    )
+  )
+})
+
+testthat::test_that("constructor doesn't drop '' choice and includes it in a counts", {
+  test <- R6::R6Class("testChoicesFilterState", inherit = ChoicesFilterState, public = list(
+    get_choices_counts = function() {
+      private$choices_counts
+    }
+  ))
+  state <- test$new(
+    x = factor(
+      c("a", "b", "c", "c", "a", ""),
+      levels = c("a", "b", "c", "d", "")
+    ),
+    slice = teal_slice(dataname = "data", varname = "var")
+  )
+
+  testthat::expect_identical(
+    shiny::isolate(state$get_state()$choices),
+    c("a", "b", "c", "")
+  )
+
+  testthat::expect_equal(
+    shiny::isolate(state$get_choices_counts()),
+    stats::setNames(
+      c(2L, 1L, 2L, 1L),
+      c("a", "b", "c", "")
+    )
+  )
+})
+
+
+testthat::test_that("ui_input with filtered x_reactive outputs filtered counts", {
+  test <- R6::R6Class("testChoicesFilterState", inherit = ChoicesFilterState, public = list(
+    ui_inputs = function() {
+      private$ui_inputs("test")
+    }
+  ))
+
+  state <- test$new(
+    x = c("a", "b", "c", "c", "a", ""),
+    x_reactive = shiny::reactive(c("b", "a")),
+    slice = teal_slice(dataname = "data", varname = "var")
+  )
+
+  xx <- state$ui_inputs()
+  testthat::expect_identical(
+    gsub(
+      "^.+(\\(.+\\)).+(\\(.+\\)).+(\\(.+\\)).+$",
+      "\\1 \\2 \\3",
+      as.character(state$ui_inputs())
+    ),
+    "(1/2) (1/1) (0/2)"
+  )
+})
+
+
 # get_call ----
 testthat::test_that("method get_call of default ChoicesFilterState object returns NULL", {
   filter_state <- ChoicesFilterState$new(letters, slice = teal_slice(dataname = "data", varname = "var"))

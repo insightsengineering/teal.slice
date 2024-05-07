@@ -155,6 +155,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
           length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
           combine = "or"
         )
+        if (is.factor(x)) {
+          x <- droplevels(x)
+        }
         super$initialize(
           x = x,
           x_reactive = x_reactive,
@@ -240,8 +243,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
     # Checks validity of the choices, adjust if neccessary and sets the flag for the case where choices
     #  are limited by default from the start.
     set_choices = function(choices) {
-      ordered_counts <- .table(private$x)
-      possible_choices <- names(ordered_counts)
+      named_counts <- .table(private$x)
+      possible_choices <- names(named_counts)
       if (is.null(choices)) {
         choices <- possible_choices
       } else {
@@ -266,7 +269,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
           choices <- possible_choices
         }
       }
-      private$set_choices_counts(unname(ordered_counts[choices]))
+      private$set_choices_counts(
+        pair_counts(choices, named_counts)
+      )
       private$set_is_choice_limited(possible_choices, choices)
       private$teal_slice$choices <- choices
       invisible(NULL)
@@ -331,12 +336,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      # we need to isolate UI to not rettrigger renderUI
+      # we need to isolate UI to not retrigger renderUI
       isolate({
         countsmax <- private$choices_counts
         countsnow <- if (!is.null(private$x_reactive())) {
-          unname(
-            .table(private$x_reactive())[private$get_choices()]
+          pair_counts(
+            private$get_choices(),
+            .table(private$x_reactive())
           )
         }
 
@@ -415,8 +421,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
             logger::log_trace("ChoicesFilterState$server_inputs@1 updating count labels, id: { private$get_id() }")
 
             countsnow <- if (!is.null(private$x_reactive())) {
-              unname(
-                .table(non_missing_values())[private$get_choices()]
+              pair_counts(
+                private$get_choices(),
+                .table(non_missing_values())
               )
             }
 
@@ -542,8 +549,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
           output$selection <- renderUI({
             countsnow <- if (!is.null(private$x_reactive())) {
-              unname(
-                .table(private$x_reactive())[private$get_choices()]
+              pair_counts(
+                private$get_choices(),
+                .table(private$x_reactive())
               )
             }
             countsmax <- private$choices_counts
@@ -602,11 +610,17 @@ ChoicesFilterState <- R6::R6Class( # nolint
 #'
 #' @keywords internal
 .table <- function(x) {
-  table(
+  tbl <- table(
     if (is.factor(x)) {
       x
     } else {
       as.character(x)
     }
+  )
+  # tbl returns an array with dimnames instead of a simple vector
+  # we need to convert it to a vector so the object is simpler to handle
+  stats::setNames(
+    as.vector(tbl),
+    names(tbl)
   )
 }
