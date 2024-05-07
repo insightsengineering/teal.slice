@@ -350,8 +350,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
           labels <- countBars(
             inputId = ns("labels"),
             choices = private$get_choices(),
-            countsnow = unname(countsnow),
-            countsmax = unname(countsmax)
+            countsnow = countsnow,
+            countsmax = countsmax
           )
           tags$div(
             class = "choices_state",
