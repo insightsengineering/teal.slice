@@ -99,7 +99,7 @@ testthat::test_that("get_join_keys returns empty join_keys object", {
 testthat::test_that("get_keys returns keys of the dataset specified via join_keys", {
   jk <- teal.data::join_keys(teal.data::join_key("iris", "iris", "test"))
   filtered_data <- FilteredData$new(list(iris = head(iris)), join_keys = jk)
-  testthat::expect_identical(filtered_data$get_keys("iris"), setNames("test", "test"))
+  testthat::expect_identical(filtered_data$get_keys("iris"), stats::setNames("test", "test"))
 })
 
 testthat::test_that("get_join_keys returns join_keys object if it exists", {

@@ -619,7 +619,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
   )
   # tbl returns an array with dimnames instead of a simple vector
   # we need to convert it to a vector so the object is simpler to handle
-  setNames(
+  stats::setNames(
     as.vector(tbl),
     names(tbl)
   )

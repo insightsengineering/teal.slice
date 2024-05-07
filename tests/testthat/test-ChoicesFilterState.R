@@ -91,7 +91,7 @@ testthat::test_that("constructor drops zero-count choices", {
 
   testthat::expect_equal(
     shiny::isolate(state$get_choices_counts()),
-    setNames(
+    stats::setNames(
       c(2L, 1L, 2L),
       c("a", "b", "c")
     )
@@ -119,7 +119,7 @@ testthat::test_that("constructor doesn't drop '' choice and includes it in a cou
 
   testthat::expect_equal(
     shiny::isolate(state$get_choices_counts()),
-    setNames(
+    stats::setNames(
       c(2L, 1L, 2L, 1L),
       c("a", "b", "c", "")
     )
