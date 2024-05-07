@@ -1,5 +1,8 @@
 # teal.slice 0.5.1.9000
 
+### Bug fixes
+* Fix error while creating the filter choices when the data has a factor with a level containing an empty string ("").
+
 # teal.slice 0.5.1
 
 ### Bug fixes
