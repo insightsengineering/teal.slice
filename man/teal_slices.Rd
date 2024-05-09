@@ -103,7 +103,7 @@ print(all_filters, trim_lines = FALSE)
 \seealso{
 \itemize{
 \item \code{\link{teal_slice}} for creating constituent elements of \code{teal_slices}
-\item \code{\link[teal:slices_store]{teal::slices_store}} for robust utilities for saving and loading \code{teal_slices} in \code{JSON} format
+\item \code{teal::slices_store} for robust utilities for saving and loading \code{teal_slices} in \code{JSON} format
 \item \code{\link{is.teal_slices}}, \code{\link{as.teal_slices}}, \code{\link{as.list.teal_slices}}, [\verb{[.teal_slices}], \code{\link{c.teal_slices}}
 \code{\link{print.teal_slices}}, \code{\link{format.teal_slices}}
 }
