@@ -41,7 +41,7 @@ Imports:
     htmltools (>= 0.5.4),
     jsonlite,
     lifecycle (>= 0.2.0),
-    logger (>= 0.2.0),
+    logger (>= 0.3.0),
     methods,
     plotly (>= 4.9.2.2),
     R6 (>= 2.2.0),
