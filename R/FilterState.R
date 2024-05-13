@@ -207,6 +207,7 @@ FilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("FilterState$server initializing module for slice: { private$get_id() } ")
+          logger::log_shiny_input_changes(input, namespace = "teal.slice")
           private$server_summary("summary")
           if (private$is_fixed()) {
             private$server_inputs_fixed("inputs")
@@ -745,6 +746,7 @@ FilterState <- R6::R6Class( # nolint
     # @return `NULL`, invisibly.
     keep_na_srv = function(id) {
       moduleServer(id, function(input, output, session) {
+        logger::log_shiny_input_changes(input, namespace = "teal.slice")
         # 1. renderUI is used here as an observer which triggers only if output is visible
         #  and if the reactive changes - reactive triggers only if the output is visible.
         # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)

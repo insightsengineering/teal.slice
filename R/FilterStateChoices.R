@@ -412,6 +412,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("ChoicesFilterState$server_inputs initializing, id: { private$get_id() }")
+          logger::log_shiny_input_changes(input, namespace = "teal.slice")
 
           # 1. renderUI is used here as an observer which triggers only if output is visible
           #  and if the reactive changes - reactive triggers only if the output is visible.
