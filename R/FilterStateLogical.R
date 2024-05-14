@@ -297,7 +297,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           non_missing_values <- reactive(Filter(Negate(is.na), private$x_reactive()))
           output$trigger_visible <- renderUI({
             logger::log_trace("LogicalFilterState$server@1 updating count labels, id: { private$get_id() }")
-            logger::log_shiny_input_changes(input, namespace = "teal.slice")
+            logger::log_shiny_input_changes(input, namespace = "teal.slice", session = session)
 
             countsnow <- if (!is.null(private$x_reactive())) {
               unname(table(factor(non_missing_values(), levels = private$get_choices())))

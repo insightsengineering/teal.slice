@@ -431,7 +431,7 @@ FilterStates <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("FilterStates$srv_add initializing, dataname: { private$dataname }")
-          logger::log_shiny_input_changes(input, namespace = "teal.slice")
+          logger::log_shiny_input_changes(input, namespace = "teal.slice", session = session)
 
           # available choices to display
           avail_column_choices <- reactive({
