@@ -168,7 +168,7 @@ FilterStateExpr <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_shiny_input_changes(input, namespace = "teal.slice", session = session)
+          if (shiny::isRunning()) logger::log_shiny_input_changes(input, namespace = "teal.slice")
           private$server_summary("summary")
 
           private$destroy_shiny <- function() {
