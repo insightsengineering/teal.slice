@@ -44,10 +44,6 @@ FilteredDataset <- R6::R6Class( # nolint
       private$label <- if (is.null(label)) character(0) else label
       private$reactive_call <- reactiveVal()
 
-      observeEvent(self$get_call(), ignoreNULL = FALSE, {
-        private$reactive_call(self$get_call())
-      })
-
       # function executing reactive call and returning data
       private$data_filtered_fun <- function(sid = "") {
         checkmate::assert_character(sid)
@@ -305,6 +301,10 @@ FilteredDataset <- R6::R6Class( # nolint
               private$get_filter_states()[[x]]$srv_active(id = x)
             }
           )
+
+          observeEvent(self$get_call(), ignoreNULL = FALSE, {
+            private$reactive_call(self$get_call())
+          })
 
           observeEvent(self$get_filter_state(), {
             shinyjs::hide("filter_count_ui")
