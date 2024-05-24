@@ -730,7 +730,7 @@ FilterStates <- R6::R6Class( # nolint
             # create a new FilterState
             fstate <- init_filter_state(
               x = data[, slice$varname, drop = TRUE],
-              # data_reactive is a function which eventually calls get_call(sid).
+              # data_reactive is a function which eventually depends on the reactiveVal reactive_call().
               # This chain of calls returns column from the data filtered by everything
               # but filter identified by the sid argument. FilterState then get x_reactive
               # and this no longer needs to be a function to pass sid. reactive in the FilterState
