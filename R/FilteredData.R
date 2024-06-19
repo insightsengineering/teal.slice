@@ -606,7 +606,6 @@ FilteredData <- R6::R6Class( # nolint
       checkmate::assert_function(active_datanames)
       moduleServer(id, function(input, output, session) {
         logger::log_trace("FilteredData$srv_active initializing")
-        if (shiny::isRunning()) logger::log_shiny_input_changes(input, namespace = "teal.slice")
 
         private$srv_available_filters("available_filters")
 
@@ -718,7 +717,6 @@ FilteredData <- R6::R6Class( # nolint
       checkmate::assert_class(active_datanames, "reactive")
       moduleServer(id, function(input, output, session) {
         logger::log_trace("FilteredData$srv_add initializing")
-        if (shiny::isRunning()) logger::log_shiny_input_changes(input, namespace = "teal.slice")
         observeEvent(input$minimise_filter_add_vars, {
           shinyjs::toggle("filter_add_vars_contents")
           toggle_icon(session$ns("minimise_filter_add_vars"), c("fa-angle-right", "fa-angle-down"))
@@ -810,7 +808,6 @@ FilteredData <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("FilteredData$srv_filter_overview initializing")
-          if (shiny::isRunning()) logger::log_shiny_input_changes(input, namespace = "teal.slice")
 
           observeEvent(input$minimise_filter_overview, {
             shinyjs::toggle("filters_overview_contents")
@@ -992,7 +989,6 @@ FilteredData <- R6::R6Class( # nolint
     # the appropriate filter state id.
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
-        if (shiny::isRunning()) logger::log_shiny_input_changes(input, namespace = "teal.slice")
         slices_available <- self$get_available_teal_slices()
         slices_interactive <- reactive(
           Filter(function(slice) isFALSE(slice$fixed), slices_available())

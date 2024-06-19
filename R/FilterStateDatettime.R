@@ -385,7 +385,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("DatetimeFilterState$server initializing, id: { private$get_id() }")
-          if (shiny::isRunning()) logger::log_shiny_input_changes(input, namespace = "teal.slice")
           # this observer is needed in the situation when teal_slice$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
