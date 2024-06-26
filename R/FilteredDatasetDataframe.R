@@ -89,7 +89,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
           env <- new.env(parent = parent.env(globalenv()))
           env[[dataname]] <- private$dataset
           env[[parent_name]] <- parent()
-          filter_call <- self$get_call(sid)
+          filter_call <- private$reactive_call()
           eval_expr_with_msg(filter_call, env)
           get(x = dataname, envir = env)
         }

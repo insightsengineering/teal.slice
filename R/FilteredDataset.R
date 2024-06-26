@@ -42,6 +42,7 @@ FilteredDataset <- R6::R6Class( # nolint
       private$dataname <- dataname
       private$keys <- keys
       private$label <- if (is.null(label)) character(0) else label
+      private$reactive_call <- reactiveVal()
 
       # function executing reactive call and returning data
       private$data_filtered_fun <- function(sid = "") {
@@ -53,7 +54,7 @@ FilteredDataset <- R6::R6Class( # nolint
         }
         env <- new.env(parent = parent.env(globalenv()))
         env[[dataname]] <- private$dataset
-        filter_call <- self$get_call(sid)
+        filter_call <- private$reactive_call()
         eval_expr_with_msg(filter_call, env)
         get(x = dataname, envir = env)
       }
@@ -301,6 +302,10 @@ FilteredDataset <- R6::R6Class( # nolint
             }
           )
 
+          observeEvent(self$get_call(), ignoreNULL = FALSE, {
+            private$reactive_call(self$get_call())
+          })
+
           observeEvent(self$get_filter_state(), {
             shinyjs::hide("filter_count_ui")
             shinyjs::show("filters")
@@ -374,6 +379,7 @@ FilteredDataset <- R6::R6Class( # nolint
     dataname = character(0),
     keys = character(0),
     label = character(0),
+    reactive_call = NULL, # reactiveVal
 
     # Adds `FilterStates` to the `private$filter_states`.
     # `FilterStates` is added once for each element of the dataset.
