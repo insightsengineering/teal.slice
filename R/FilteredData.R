@@ -496,6 +496,8 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
+    #' @param active_datanames (`reactive`)
+    #'   defining subset of `self$datanames()` to be displayed.
     #' @return `shiny.tag`
     ui_filter_panel = function(id, active_datanames = self$datanames()) {
       ns <- NS(id)
@@ -549,6 +551,8 @@ FilteredData <- R6::R6Class( # nolint
     #' Server module responsible for displaying active filters.
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
+    #' @param active_datanames (`reactive`)
+    #'   defining subset of `self$datanames()` to be displayed.
     #' @return `shiny.tag`
     ui_active = function(id, active_datanames = self$datanames()) {
       ns <- NS(id)
@@ -668,6 +672,8 @@ FilteredData <- R6::R6Class( # nolint
     #' Server module responsible for displaying drop-downs with variables to add a filter.
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
+    #' @param active_datanames (`reactive`)
+    #'   defining subset of `self$datanames()` to be displayed.
     #' @return `shiny.tag`
     ui_add = function(id, active_datanames = self$datanames()) {
       ns <- NS(id)

@@ -527,7 +527,7 @@ flag specifying whether to include anchored filter states.}
 top-level \code{shiny} module for the filter panel in the \code{teal} app.
 Contains 1) filter overview panel, 2) filter active panel, and 3) add filters panel.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_filter_panel(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_filter_panel(id, active_datanames = self$datanames())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -535,6 +535,9 @@ Contains 1) filter overview panel, 2) filter active panel, and 3) add filters pa
 \describe{
 \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
+
+\item{\code{active_datanames}}{(\code{reactive})
+defining subset of \code{self$datanames()} to be displayed.}
 }
 \if{html}{\out{</div>}}
 }
@@ -575,7 +578,7 @@ the filter panel will be hidden.}
 \subsection{Method \code{ui_active()}}{
 Server module responsible for displaying active filters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_active(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_active(id, active_datanames = self$datanames())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -583,6 +586,9 @@ Server module responsible for displaying active filters.
 \describe{
 \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
+
+\item{\code{active_datanames}}{(\code{reactive})
+defining subset of \code{self$datanames()} to be displayed.}
 }
 \if{html}{\out{</div>}}
 }
@@ -620,7 +626,7 @@ defining subset of \code{self$datanames()} to be displayed.}
 \subsection{Method \code{ui_add()}}{
 Server module responsible for displaying drop-downs with variables to add a filter.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_add(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_add(id, active_datanames = self$datanames())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -628,6 +634,9 @@ Server module responsible for displaying drop-downs with variables to add a filt
 \describe{
 \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
+
+\item{\code{active_datanames}}{(\code{reactive})
+defining subset of \code{self$datanames()} to be displayed.}
 }
 \if{html}{\out{</div>}}
 }
