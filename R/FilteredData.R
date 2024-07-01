@@ -497,15 +497,15 @@ FilteredData <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
     #' @return `shiny.tag`
-    ui_filter_panel = function(id) {
+    ui_filter_panel = function(id, active_datanames = self$datanames()) {
       ns <- NS(id)
       tags$div(
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
         self$ui_overview(ns("overview")),
-        self$ui_active(ns("active")),
+        self$ui_active(ns("active"), active_datanames),
         if (private$allow_add) {
-          self$ui_add(ns("add"))
+          self$ui_add(ns("add"), active_datanames)
         }
       )
     },
@@ -550,7 +550,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
     #' @return `shiny.tag`
-    ui_active = function(id) {
+    ui_active = function(id, active_datanames = self$datanames()) {
       ns <- NS(id)
       tags$div(
         id = id, # not used, can be used to customize CSS behavior
@@ -578,7 +578,7 @@ FilteredData <- R6::R6Class( # nolint
           id = ns("filter_active_vars_contents"),
           tagList(
             lapply(
-              self$datanames(),
+              active_datanames,
               function(dataname) {
                 fdataset <- private$get_filtered_dataset(dataname)
                 fdataset$ui_active(id = ns(dataname))
@@ -669,7 +669,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
     #' @return `shiny.tag`
-    ui_add = function(id) {
+    ui_add = function(id, active_datanames = self$datanames()) {
       ns <- NS(id)
       tags$div(
         id = id, # not used, can be used to customize CSS behavior
@@ -695,7 +695,7 @@ FilteredData <- R6::R6Class( # nolint
           id = ns("filter_add_vars_contents"),
           tagList(
             lapply(
-              self$datanames(),
+              active_datanames,
               function(dataname) {
                 fdataset <- private$get_filtered_dataset(dataname)
                 tags$span(id = ns(dataname), fdataset$ui_add(ns(dataname)))
