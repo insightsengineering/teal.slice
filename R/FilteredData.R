@@ -504,7 +504,7 @@ FilteredData <- R6::R6Class( # nolint
       tags$div(
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
-        self$ui_overview(ns("overview")),
+        #self$ui_overview(ns("overview")),
         self$ui_active(ns("active"), active_datanames),
         if (private$allow_add) {
           self$ui_add(ns("add"), active_datanames)
