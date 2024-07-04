@@ -232,7 +232,7 @@ FilteredDataset <- R6::R6Class( # nolint
               width = 4,
               tagList(
                 actionLink(
-                  ns("add_new_filte_ui"),
+                  ns("show_new_filter_ui"),
                   label = "",
                   icon = icon("plus", lib = "font-awesome"),
                   class = "remove pull-right"
@@ -343,20 +343,20 @@ FilteredDataset <- R6::R6Class( # nolint
             logger::log_trace("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
           })
 
-          observeEvent(input$add_new_filte_ui, {
+          observeEvent(input$show_new_filter_ui, {
             shinyjs::show("filter_add_ui")
-            shinyjs::toggle("add_new_filte_ui")
+            shinyjs::toggle("show_new_filter_ui")
             shinyjs::toggle("hide_new_filter_ui")
           })
 
           observeEvent(input$hide_new_filter_ui, {
             shinyjs::hide("filter_add_ui")
-            shinyjs::toggle("add_new_filte_ui")
+            shinyjs::toggle("show_new_filter_ui")
             shinyjs::toggle("hide_new_filter_ui")
           })
 
           self$srv_add(private$dataname)
-          
+
 
           logger::log_trace("FilteredDataset$initialized, dataname: { dataname }")
 
