@@ -232,6 +232,20 @@ FilteredDataset <- R6::R6Class( # nolint
               width = 4,
               tagList(
                 actionLink(
+                  ns("add_new_filte_ui"),
+                  label = "",
+                  icon = icon("plus", lib = "font-awesome"),
+                  class = "remove pull-right"
+                ),
+                shinyjs::hidden(
+                  actionLink(
+                    ns("hide_new_filter_ui"),
+                    label = "",
+                    icon = icon("minus", lib = "font-awesome"),
+                    class = "remove pull-right"
+                  )
+                ),
+                actionLink(
                   ns("remove_filters"),
                   label = "",
                   icon = icon("circle-xmark", lib = "font-awesome"),
@@ -242,6 +256,15 @@ FilteredDataset <- R6::R6Class( # nolint
                   label = "",
                   icon = icon("angle-down", lib = "font-awesome"),
                   class = "remove pull-right"
+                )
+              )
+            ),
+            column(
+              width = 12,
+              shinyjs::hidden(
+                tags$div(
+                  id = ns("filter_add_ui"),
+                  self$ui_add(ns(private$dataname))
                 )
               )
             )
@@ -319,6 +342,21 @@ FilteredDataset <- R6::R6Class( # nolint
             self$clear_filter_states()
             logger::log_trace("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
           })
+
+          observeEvent(input$add_new_filte_ui, {
+            shinyjs::show("filter_add_ui")
+            shinyjs::toggle("add_new_filte_ui")
+            shinyjs::toggle("hide_new_filter_ui")
+          })
+
+          observeEvent(input$hide_new_filter_ui, {
+            shinyjs::hide("filter_add_ui")
+            shinyjs::toggle("add_new_filte_ui")
+            shinyjs::toggle("hide_new_filter_ui")
+          })
+
+          self$srv_add(private$dataname)
+          
 
           logger::log_trace("FilteredDataset$initialized, dataname: { dataname }")
 
