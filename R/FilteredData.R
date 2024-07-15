@@ -576,7 +576,7 @@ FilteredData <- R6::R6Class( # nolint
           id = ns("filter_active_vars_contents"),
           tagList(
             lapply(
-              active_datanames,
+              isolate(active_datanames()),
               function(dataname) {
                 fdataset <- private$get_filtered_dataset(dataname)
                 fdataset$ui_active(id = ns(dataname), allow_add)
