@@ -236,7 +236,7 @@ FilteredDataset <- R6::R6Class( # nolint
               tagList(
                 if (allow_add) {
                   actionLink(
-                    ns("show_hide_add_panel"),
+                    ns("toggle_add_panel"),
                     label = "",
                     icon = icon("plus", lib = "font-awesome"),
                     class = "remove pull-right",
@@ -262,7 +262,7 @@ FilteredDataset <- R6::R6Class( # nolint
               if (allow_add) {
                 shinyjs::hidden(
                   tags$div(
-                    id = ns("filter_add_ui"),
+                    id = ns("add_panel"),
                     self$ui_add(ns(private$dataname))
                   )
                 )
@@ -343,8 +343,8 @@ FilteredDataset <- R6::R6Class( # nolint
             logger::log_trace("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
           })
 
-          observeEvent(input$show_hide_add_panel, {
-            shinyjs::toggle("filter_add_ui")
+          observeEvent(input$toggle_add_panel, {
+            shinyjs::toggle("add_panel")
           })
 
           self$srv_add(private$dataname)

@@ -548,7 +548,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @param active_datanames (`reactive`)
     #'   defining subset of `self$datanames()` to be displayed.
     #' @return `shiny.tag`
-    ui_active = function(id, active_datanames = self$datanames(), allow_add = TRUE) {
+    ui_active = function(id, active_datanames = self$datanames()) {
       ns <- NS(id)
       tags$div(
         id = id, # not used, can be used to customize CSS behavior
@@ -579,7 +579,7 @@ FilteredData <- R6::R6Class( # nolint
               isolate(active_datanames()),
               function(dataname) {
                 fdataset <- private$get_filtered_dataset(dataname)
-                fdataset$ui_active(id = ns(dataname), allow_add)
+                fdataset$ui_active(id = ns(dataname), private$allow_add)
               }
             )
           )
