@@ -210,9 +210,11 @@ FilteredDataset <- R6::R6Class( # nolint
     #' `shiny` module containing active filters for a dataset, along with a title and a remove button.
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
+    #' @param allow_add (`logical(1)`)
+    #'   logical flag specifying whether the user will be able to add new filters
     #'
     #' @return `shiny.tag`
-    ui_active = function(id) {
+    ui_active = function(id, allow_add = TRUE) {
       dataname <- self$get_dataname()
       checkmate::assert_string(dataname)
 
@@ -221,6 +223,7 @@ FilteredDataset <- R6::R6Class( # nolint
       tags$span(
         id = id,
         include_css_files("filter-panel"),
+        include_js_files(pattern = "icons"),
         tags$div(
           id = ns("whole_ui"), # to hide it entirely
           fluidRow(
@@ -231,20 +234,15 @@ FilteredDataset <- R6::R6Class( # nolint
             column(
               width = 4,
               tagList(
-                actionLink(
-                  ns("show_new_filter_ui"),
-                  label = "",
-                  icon = icon("plus", lib = "font-awesome"),
-                  class = "remove pull-right"
-                ),
-                shinyjs::hidden(
+                if (allow_add) {
                   actionLink(
-                    ns("hide_new_filter_ui"),
+                    ns("show_hide_add_panel"),
                     label = "",
-                    icon = icon("minus", lib = "font-awesome"),
-                    class = "remove pull-right"
+                    icon = icon("plus", lib = "font-awesome"),
+                    class = "remove pull-right",
+                    onclick = "toggleAddRemoveIcon(this)"
                   )
-                ),
+                },
                 actionLink(
                   ns("remove_filters"),
                   label = "",
@@ -261,12 +259,14 @@ FilteredDataset <- R6::R6Class( # nolint
             ),
             column(
               width = 12,
-              shinyjs::hidden(
-                tags$div(
-                  id = ns("filter_add_ui"),
-                  self$ui_add(ns(private$dataname))
+              if (allow_add) {
+                shinyjs::hidden(
+                  tags$div(
+                    id = ns("filter_add_ui"),
+                    self$ui_add(ns(private$dataname))
+                  )
                 )
-              )
+              }
             )
           ),
           shinyjs::hidden(
@@ -343,16 +343,8 @@ FilteredDataset <- R6::R6Class( # nolint
             logger::log_trace("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
           })
 
-          observeEvent(input$show_new_filter_ui, {
-            shinyjs::show("filter_add_ui")
-            shinyjs::toggle("show_new_filter_ui")
-            shinyjs::toggle("hide_new_filter_ui")
-          })
-
-          observeEvent(input$hide_new_filter_ui, {
-            shinyjs::hide("filter_add_ui")
-            shinyjs::toggle("show_new_filter_ui")
-            shinyjs::toggle("hide_new_filter_ui")
+          observeEvent(input$show_hide_add_panel, {
+            shinyjs::toggle("filter_add_ui")
           })
 
           self$srv_add(private$dataname)
