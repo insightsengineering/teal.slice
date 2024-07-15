@@ -505,10 +505,7 @@ FilteredData <- R6::R6Class( # nolint
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
         self$ui_overview(ns("overview")),
-        self$ui_active(ns("active"), active_datanames),
-        if (private$allow_add) {
-          self$ui_add(ns("add"), active_datanames)
-        }
+        self$ui_active(ns("active"), active_datanames, private$allow_add)
       )
     },
 
@@ -537,9 +534,6 @@ FilteredData <- R6::R6Class( # nolint
 
           self$srv_overview("overview", active_datanames_resolved)
           self$srv_active("active", active_datanames_resolved)
-          if (private$allow_add) {
-            self$srv_add("add", active_datanames_resolved)
-          }
 
           logger::log_trace("FilteredData$srv_filter_panel initialized")
           NULL
@@ -582,10 +576,10 @@ FilteredData <- R6::R6Class( # nolint
           id = ns("filter_active_vars_contents"),
           tagList(
             lapply(
-              active_datanames,
+              isolate(active_datanames()),
               function(dataname) {
                 fdataset <- private$get_filtered_dataset(dataname)
-                fdataset$ui_active(id = ns(dataname))
+                fdataset$ui_active(id = ns(dataname), allow_add = private$allow_add)
               }
             )
           )
@@ -664,91 +658,6 @@ FilteredData <- R6::R6Class( # nolint
           logger::log_trace("FilteredData$srv_filter_panel@1 removed all non-anchored filters")
         })
         logger::log_trace("FilteredData$srv_active initialized")
-        NULL
-      })
-    },
-
-    #' @description
-    #' Server module responsible for displaying drop-downs with variables to add a filter.
-    #' @param id (`character(1)`)
-    #'   `shiny` module instance id.
-    #' @param active_datanames (`reactive`)
-    #'   defining subset of `self$datanames()` to be displayed.
-    #' @return `shiny.tag`
-    ui_add = function(id, active_datanames = self$datanames()) {
-      ns <- NS(id)
-      tags$div(
-        id = id, # not used, can be used to customize CSS behavior
-        class = "well",
-        tags$div(
-          class = "row",
-          tags$div(
-            class = "col-sm-9",
-            tags$label("Add Filter Variables", class = "text-primary mb-4")
-          ),
-          tags$div(
-            class = "col-sm-3",
-            actionLink(
-              ns("minimise_filter_add_vars"),
-              label = NULL,
-              icon = icon("angle-down", lib = "font-awesome"),
-              title = "Minimise panel",
-              class = "remove pull-right"
-            )
-          )
-        ),
-        tags$div(
-          id = ns("filter_add_vars_contents"),
-          tagList(
-            lapply(
-              active_datanames,
-              function(dataname) {
-                fdataset <- private$get_filtered_dataset(dataname)
-                tags$span(id = ns(dataname), fdataset$ui_add(ns(dataname)))
-              }
-            )
-          )
-        )
-      )
-    },
-
-    #' @description
-    #' Server module responsible for displaying drop-downs with variables to add a filter.
-    #' @param id (`character(1)`)
-    #'   `shiny` module instance id.
-    #' @param active_datanames (`reactive`)
-    #'   defining subset of `self$datanames()` to be displayed.
-    #' @return `NULL`.
-    srv_add = function(id, active_datanames = reactive(self$datanames())) {
-      checkmate::assert_class(active_datanames, "reactive")
-      moduleServer(id, function(input, output, session) {
-        logger::log_trace("FilteredData$srv_add initializing")
-        observeEvent(input$minimise_filter_add_vars, {
-          shinyjs::toggle("filter_add_vars_contents")
-          toggle_icon(session$ns("minimise_filter_add_vars"), c("fa-angle-right", "fa-angle-down"))
-          toggle_title(session$ns("minimise_filter_add_vars"), c("Restore panel", "Minimise Panel"))
-        })
-
-        observeEvent(active_datanames(), {
-          lapply(self$datanames(), function(dataname) {
-            if (dataname %in% active_datanames()) {
-              shinyjs::show(dataname)
-            } else {
-              shinyjs::hide(dataname)
-            }
-          })
-        })
-
-        # should not use for-loop as variables are otherwise only bound by reference
-        # and last dataname would be used
-        lapply(
-          self$datanames(),
-          function(dataname) {
-            fdataset <- private$get_filtered_dataset(dataname)
-            fdataset$srv_add(id = dataname)
-          }
-        )
-        logger::log_trace("FilteredData$srv_filter_panel initialized")
         NULL
       })
     },

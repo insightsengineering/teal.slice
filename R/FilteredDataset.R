@@ -210,9 +210,11 @@ FilteredDataset <- R6::R6Class( # nolint
     #' `shiny` module containing active filters for a dataset, along with a title and a remove button.
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
+    #' @param allow_add (`logical(1)`)
+    #'   logical flag specifying whether the user will be able to add new filters
     #'
     #' @return `shiny.tag`
-    ui_active = function(id) {
+    ui_active = function(id, allow_add = TRUE) {
       dataname <- self$get_dataname()
       checkmate::assert_string(dataname)
 
@@ -221,6 +223,7 @@ FilteredDataset <- R6::R6Class( # nolint
       tags$span(
         id = id,
         include_css_files("filter-panel"),
+        include_js_files(pattern = "icons"),
         tags$div(
           id = ns("whole_ui"), # to hide it entirely
           fluidRow(
@@ -231,6 +234,15 @@ FilteredDataset <- R6::R6Class( # nolint
             column(
               width = 4,
               tagList(
+                if (allow_add) {
+                  actionLink(
+                    ns("toggle_add_panel"),
+                    label = "",
+                    icon = icon("plus", lib = "font-awesome"),
+                    class = "remove pull-right",
+                    onclick = "toggleAddRemoveIcon(this)"
+                  )
+                },
                 actionLink(
                   ns("remove_filters"),
                   label = "",
@@ -244,6 +256,17 @@ FilteredDataset <- R6::R6Class( # nolint
                   class = "remove pull-right"
                 )
               )
+            ),
+            column(
+              width = 12,
+              if (allow_add) {
+                shinyjs::hidden(
+                  tags$div(
+                    id = ns("add_panel"),
+                    self$ui_add(ns(private$dataname))
+                  )
+                )
+              }
             )
           ),
           shinyjs::hidden(
@@ -319,6 +342,13 @@ FilteredDataset <- R6::R6Class( # nolint
             self$clear_filter_states()
             logger::log_trace("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
           })
+
+          observeEvent(input$toggle_add_panel, {
+            shinyjs::toggle("add_panel")
+          })
+
+          self$srv_add(private$dataname)
+
 
           logger::log_trace("FilteredDataset$initialized, dataname: { dataname }")
 
