@@ -134,7 +134,6 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #'
     #' @return Either a `list` of length 1 containing a filter `call`, or `NULL`.
     get_call = function(sid = "") {
-      logger::log_trace("DataframeFilteredDataset$get_call initializing for dataname: { private$dataname }")
       filter_call <- super$get_call(sid)
       dataname <- private$dataname
       parent_dataname <- private$parent_name
@@ -177,7 +176,6 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
 
         filter_call <- c(filter_call, merge_call)
       }
-      logger::log_trace("DataframeFilteredDataset$get_call initializing for dataname: { private$dataname }")
       filter_call
     },
 
