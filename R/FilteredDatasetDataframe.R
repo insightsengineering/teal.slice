@@ -241,7 +241,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #' `dataname -- observations (remaining/total)` - data.frame
     #' @return A `data.frame`.
     get_filter_overview = function() {
-      logger::log_trace("FilteredDataset$srv_filter_overview initialized")
+      logger::log_trace("FilteredDataset$srv_filter_overview initializing")
       # Gets filter overview subjects number and returns a list
       # of the number of subjects of filtered/non-filtered datasets
       subject_keys <- if (length(private$parent_name) > 0) {

@@ -349,9 +349,6 @@ FilteredDataset <- R6::R6Class( # nolint
 
           self$srv_add(private$dataname)
 
-
-          logger::log_trace("FilteredDataset$initialized, dataname: { dataname }")
-
           NULL
         }
       )
@@ -389,7 +386,7 @@ FilteredDataset <- R6::R6Class( # nolint
             elem_names,
             function(elem_name) elems[[elem_name]]$srv_add(elem_name)
           )
-          logger::log_trace("MAEFilteredDataset$srv_add initialized, dataname: { deparse1(self$get_dataname()) }")
+
           NULL
         }
       )

@@ -87,7 +87,6 @@ SEFilterStates <- R6::R6Class( # nolint
           }
         )
 
-        logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
         invisible(NULL)
       })
     },
@@ -296,7 +295,6 @@ SEFilterStates <- R6::R6Class( # nolint
             }
           )
 
-          logger::log_trace("SEFilterState$srv_add initialized, dataname: { private$dataname }")
           NULL
         }
       )

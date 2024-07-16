@@ -357,7 +357,6 @@ LogicalFilterState <- R6::R6Class( # nolint
 
           private$keep_na_srv("keep_na")
 
-          logger::log_trace("LogicalFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )
@@ -381,7 +380,6 @@ LogicalFilterState <- R6::R6Class( # nolint
             )
           })
 
-          logger::log_trace("LogicalFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )

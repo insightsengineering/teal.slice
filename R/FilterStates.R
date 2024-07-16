@@ -124,8 +124,6 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `call` or `NULL`
     #'
     get_call = function(sid = "") {
-      logger::log_trace("FilterStates$get_call initializing")
-
       # `arg` must be the same as argument of the function where
       # predicate is passed to.
       # For unnamed arguments state_list should have `arg = NULL`
@@ -280,7 +278,6 @@ FilterStates <- R6::R6Class( # nolint
             data_reactive = private$data_reactive
           )
         }
-        logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
       })
 
       invisible(NULL)
@@ -495,7 +492,6 @@ FilterStates <- R6::R6Class( # nolint
             }
           )
 
-          logger::log_trace("FilterStates$srv_add initialized, dataname: { private$dataname }")
           NULL
         }
       )

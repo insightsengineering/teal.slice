@@ -536,7 +536,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
             }
           })
 
-          logger::log_trace("ChoicesFilterState$server_inputs initialized, id: { private$get_id() }")
           NULL
         }
       )
@@ -565,7 +564,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
             )
           })
 
-          logger::log_trace("ChoicesFilterState$server_inputs_fixed initialized, id: { private$get_id() }")
           NULL
         }
       )

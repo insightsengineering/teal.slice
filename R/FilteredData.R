@@ -418,7 +418,7 @@ FilteredData <- R6::R6Class( # nolint
           private$get_filtered_dataset(dataname)$set_filter_state(states)
         })
 
-        logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
+        invisible(NULL)
       })
 
       invisible(NULL)
@@ -535,7 +535,6 @@ FilteredData <- R6::R6Class( # nolint
           self$srv_overview("overview", active_datanames_resolved)
           self$srv_active("active", active_datanames_resolved)
 
-          logger::log_trace("FilteredData$srv_filter_panel initialized")
           NULL
         }
       )
@@ -657,7 +656,7 @@ FilteredData <- R6::R6Class( # nolint
           self$clear_filter_states()
           logger::log_trace("FilteredData$srv_filter_panel@1 removed all non-anchored filters")
         })
-        logger::log_trace("FilteredData$srv_active initialized")
+
         NULL
       })
     },
@@ -812,7 +811,7 @@ FilteredData <- R6::R6Class( # nolint
             logger::log_trace("FilteredData$srv_filter_overview@1 updated counts")
             table_html
           })
-          logger::log_trace("FilteredData$srv_filter_overview initialized")
+
           NULL
         }
       )

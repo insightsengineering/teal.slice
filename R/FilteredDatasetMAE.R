@@ -128,8 +128,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
           private$get_filter_states()[[experiment]]$set_filter_state(slices)
         })
 
-        logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-
         invisible(NULL)
       })
     },
