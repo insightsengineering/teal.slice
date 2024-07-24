@@ -411,14 +411,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("ChoicesFilterState$server_inputs initializing, id: { private$get_id() }")
+          logger::log_debug("ChoicesFilterState$server_inputs initializing, id: { private$get_id() }")
 
           # 1. renderUI is used here as an observer which triggers only if output is visible
           #  and if the reactive changes - reactive triggers only if the output is visible.
           # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
           non_missing_values <- reactive(Filter(Negate(is.na), private$x_reactive()))
           output$trigger_visible <- renderUI({
-            logger::log_trace("ChoicesFilterState$server_inputs@1 updating count labels, id: { private$get_id() }")
+            logger::log_debug("ChoicesFilterState$server_inputs@1 updating count labels, id: { private$get_id() }")
 
             countsnow <- if (!is.null(private$x_reactive())) {
               pair_counts(
@@ -460,7 +460,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
               ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
               eventExpr = input$selection,
               handlerExpr = {
-                logger::log_trace("ChoicesFilterState$server_inputs@2 changed selection, id: { private$get_id() }")
+                logger::log_debug("ChoicesFilterState$server_inputs@2 changed selection, id: { private$get_id() }")
 
                 selection <- if (is.null(input$selection) && private$is_multiple()) {
                   character(0)
@@ -478,7 +478,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
               eventExpr = input$selection_open, # observe click on a dropdown
               handlerExpr = {
                 if (!isTRUE(input$selection_open)) { # only when the dropdown got closed
-                  logger::log_trace("ChoicesFilterState$server_inputs@2 changed selection, id: { private$get_id() }")
+                  logger::log_debug("ChoicesFilterState$server_inputs@2 changed selection, id: { private$get_id() }")
 
                   selection <- if (is.null(input$selection) && private$is_multiple()) {
                     character(0)
@@ -514,7 +514,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             # it's important to not retrigger when the input$selection is the same as reactive values
             # kept in the teal_slice$selected
             if (!setequal(input$selection, private$get_selected())) {
-              logger::log_trace("ChoicesFilterState$server@1 state changed, id: { private$get_id() }")
+              logger::log_debug("ChoicesFilterState$server@1 state changed, id: { private$get_id() }")
               if (private$is_checkboxgroup()) {
                 if (private$is_multiple()) {
                   updateCheckboxGroupInput(
@@ -544,7 +544,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("ChoicesFilterState$server_inputs_fixed initializing, id: { private$get_id() }")
+          logger::log_debug("ChoicesFilterState$server_inputs_fixed initializing, id: { private$get_id() }")
 
           output$selection <- renderUI({
             countsnow <- if (!is.null(private$x_reactive())) {

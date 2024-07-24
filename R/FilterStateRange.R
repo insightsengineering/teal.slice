@@ -480,7 +480,7 @@ RangeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("RangeFilterState$server initializing, id: { private$get_id() }")
+          logger::log_debug("RangeFilterState$server initializing, id: { private$get_id() }")
 
           # Capture manual input with debounce.
           selection_manual <- debounce(reactive(input$selection_manual), 200)
@@ -504,7 +504,7 @@ RangeFilterState <- R6::R6Class( # nolint
               ignoreInit = TRUE,
               eventExpr = plotly::event_data("plotly_relayout", source = session$ns("histogram_plot")),
               handlerExpr = {
-                logger::log_trace("RangeFilterState$server@1 selection changed, id: { private$get_id() }")
+                logger::log_debug("RangeFilterState$server@1 selection changed, id: { private$get_id() }")
                 event <- plotly::event_data("plotly_relayout", source = session$ns("histogram_plot"))
                 if (any(grepl("shapes", names(event)))) {
                   line_positions <- private$get_selected()
@@ -539,7 +539,7 @@ RangeFilterState <- R6::R6Class( # nolint
               ignoreInit = TRUE,
               eventExpr = private$get_selected(),
               handlerExpr = {
-                logger::log_trace("RangeFilterState$server@2 state changed, id: {private$get_id() }")
+                logger::log_debug("RangeFilterState$server@2 state changed, id: {private$get_id() }")
                 if (!isTRUE(all.equal(private$get_selected(), selection_manual()))) {
                   shinyWidgets::updateNumericRangeInput(
                     session = session,
@@ -587,7 +587,7 @@ RangeFilterState <- R6::R6Class( # nolint
 
 
               if (!isTRUE(all.equal(selection, private$get_selected()))) {
-                logger::log_trace("RangeFilterState$server@3 manual selection changed, id: { private$get_id() }")
+                logger::log_debug("RangeFilterState$server@3 manual selection changed, id: { private$get_id() }")
                 private$set_selected(selection)
               }
             }
@@ -604,7 +604,7 @@ RangeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("RangeFilterState$server initializing, id: { private$get_id() }")
+          logger::log_debug("RangeFilterState$server initializing, id: { private$get_id() }")
 
           plot_config <- private$plot_config()
           plot_config$staticPlot <- TRUE
@@ -712,7 +712,7 @@ RangeFilterState <- R6::R6Class( # nolint
           eventExpr = private$get_keep_inf(),
           handlerExpr = {
             if (!setequal(private$get_keep_inf(), input$value)) {
-              logger::log_trace("RangeFilterState$keep_inf_srv@1 changed reactive value, id: { private$get_id() }")
+              logger::log_debug("RangeFilterState$keep_inf_srv@1 changed reactive value, id: { private$get_id() }")
               updateCheckboxInput(
                 inputId = "value",
                 value = private$get_keep_inf()
@@ -726,7 +726,7 @@ RangeFilterState <- R6::R6Class( # nolint
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,
           handlerExpr = {
-            logger::log_trace("FilterState$keep_na_srv@2 changed input, id: { private$get_id() }")
+            logger::log_debug("FilterState$keep_na_srv@2 changed input, id: { private$get_id() }")
             keep_inf <- input$value
             private$set_keep_inf(keep_inf)
           }

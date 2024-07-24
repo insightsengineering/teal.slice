@@ -306,7 +306,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     set_dataset = function(data, dataname) {
       checkmate::assert_string(dataname)
-      logger::log_trace("FilteredData$set_dataset setting dataset, name: { dataname }")
+      logger::log_debug("FilteredData$set_dataset setting dataset, name: { dataname }")
       # to include it nicely in the Show R Code;
       # the UI also uses `datanames` in ids, so no whitespaces allowed
       check_simple_name(dataname)
@@ -406,7 +406,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `NULL`, invisibly.
     set_filter_state = function(state) {
       isolate({
-        logger::log_trace("{ class(self)[1] }$set_filter_state initializing")
+        logger::log_debug("{ class(self)[1] }$set_filter_state initializing")
         checkmate::assert_class(state, "teal_slices")
         allow_add <- attr(state, "allow_add")
         if (!is.null(allow_add)) {
@@ -439,7 +439,7 @@ FilteredData <- R6::R6Class( # nolint
         datanames <- unique(vapply(state, "[[", character(1L), "dataname"))
         checkmate::assert_subset(datanames, self$datanames())
 
-        logger::log_trace(
+        logger::log_debug(
           "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
         )
 
@@ -448,7 +448,7 @@ FilteredData <- R6::R6Class( # nolint
           private$get_filtered_dataset(dataname)$remove_filter_state(slices)
         })
 
-        logger::log_trace(
+        logger::log_debug(
           "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
         )
       })
@@ -468,7 +468,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `NULL`, invisibly.
     #'
     clear_filter_states = function(datanames = self$datanames(), force = FALSE) {
-      logger::log_trace(
+      logger::log_debug(
         "FilteredData$clear_filter_states called, datanames: { toString(datanames) }"
       )
 
@@ -477,7 +477,7 @@ FilteredData <- R6::R6Class( # nolint
         fdataset$clear_filter_states(force)
       }
 
-      logger::log_trace(
+      logger::log_debug(
         paste(
           "FilteredData$clear_filter_states removed all non-anchored FilterStates,",
           "datanames: { toString(datanames) }"
@@ -525,7 +525,7 @@ FilteredData <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("FilteredData$srv_filter_panel initializing")
+          logger::log_debug("FilteredData$srv_filter_panel initializing")
 
           active_datanames_resolved <- reactive({
             checkmate::assert_subset(active_datanames(), self$datanames())
@@ -602,7 +602,7 @@ FilteredData <- R6::R6Class( # nolint
     srv_active = function(id, active_datanames = self$datanames) {
       checkmate::assert_function(active_datanames)
       moduleServer(id, function(input, output, session) {
-        logger::log_trace("FilteredData$srv_active initializing")
+        logger::log_debug("FilteredData$srv_active initializing")
 
         private$srv_available_filters("available_filters")
 
@@ -652,9 +652,9 @@ FilteredData <- R6::R6Class( # nolint
         })
 
         observeEvent(input$remove_all_filters, {
-          logger::log_trace("FilteredData$srv_filter_panel@1 removing all non-anchored filters")
+          logger::log_debug("FilteredData$srv_filter_panel@1 removing all non-anchored filters")
           self$clear_filter_states()
-          logger::log_trace("FilteredData$srv_filter_panel@1 removed all non-anchored filters")
+          logger::log_debug("FilteredData$srv_filter_panel@1 removed all non-anchored filters")
         })
 
         NULL
@@ -721,7 +721,7 @@ FilteredData <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("FilteredData$srv_filter_overview initializing")
+          logger::log_debug("FilteredData$srv_filter_overview initializing")
 
           observeEvent(input$minimise_filter_overview, {
             shinyjs::toggle("filters_overview_contents")
@@ -730,7 +730,7 @@ FilteredData <- R6::R6Class( # nolint
           })
 
           output$table <- renderUI({
-            logger::log_trace("FilteredData$srv_filter_overview@1 updating counts")
+            logger::log_debug("FilteredData$srv_filter_overview@1 updating counts")
             if (length(active_datanames()) == 0) {
               return(NULL)
             }
@@ -808,7 +808,7 @@ FilteredData <- R6::R6Class( # nolint
               tags$thead(header_html),
               tags$tbody(body_html)
             )
-            logger::log_trace("FilteredData$srv_filter_overview@1 updated counts")
+            logger::log_debug("FilteredData$srv_filter_overview@1 updated counts")
             table_html
           })
 

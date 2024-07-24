@@ -322,7 +322,7 @@ DateFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("DateFilterState$server initializing, id: { private$get_id() }")
+          logger::log_debug("DateFilterState$server initializing, id: { private$get_id() }")
 
           # this observer is needed in the situation when teal_slice$selected has been
           # changed directly by the api - then it's needed to rerender UI element
@@ -333,7 +333,7 @@ DateFilterState <- R6::R6Class( # nolint
             eventExpr = private$get_selected(),
             handlerExpr = {
               if (!setequal(private$get_selected(), input$selection)) {
-                logger::log_trace("DateFilterState$server@1 state changed, id: { private$get_id() }")
+                logger::log_debug("DateFilterState$server@1 state changed, id: { private$get_id() }")
                 updateDateRangeInput(
                   session = session,
                   inputId = "selection",
@@ -349,7 +349,7 @@ DateFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection,
             handlerExpr = {
-              logger::log_trace("DateFilterState$server@2 selection changed, id: { private$get_id() }")
+              logger::log_debug("DateFilterState$server@2 selection changed, id: { private$get_id() }")
               start_date <- input$selection[1]
               end_date <- input$selection[2]
 
@@ -375,7 +375,7 @@ DateFilterState <- R6::R6Class( # nolint
           private$keep_na_srv("keep_na")
 
           private$observers$reset1 <- observeEvent(input$start_date_reset, {
-            logger::log_trace("DateFilterState$server@3 reset start date, id: { private$get_id() }")
+            logger::log_debug("DateFilterState$server@3 reset start date, id: { private$get_id() }")
             updateDateRangeInput(
               session = session,
               inputId = "selection",
@@ -384,7 +384,7 @@ DateFilterState <- R6::R6Class( # nolint
           })
 
           private$observers$reset2 <- observeEvent(input$end_date_reset, {
-            logger::log_trace("DateFilterState$server@4 reset end date, id: { private$get_id() }")
+            logger::log_debug("DateFilterState$server@4 reset end date, id: { private$get_id() }")
             updateDateRangeInput(
               session = session,
               inputId = "selection",
@@ -400,7 +400,7 @@ DateFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("DateFilterState$server initializing, id: { private$get_id() }")
+          logger::log_debug("DateFilterState$server initializing, id: { private$get_id() }")
 
           output$selection <- renderUI({
             vals <- format(private$get_selected(), nsmall = 3)

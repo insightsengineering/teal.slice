@@ -107,7 +107,7 @@ FilterState <- R6::R6Class( # nolint
 
       private$state_history <- reactiveVal(list())
 
-      logger::log_trace("Instantiated FilterState object id: { private$get_id() }")
+      logger::log_debug("Instantiated FilterState object id: { private$get_id() }")
 
       invisible(self)
     },
@@ -151,7 +151,7 @@ FilterState <- R6::R6Class( # nolint
       if (private$is_fixed()) {
         warning("attempt to set state on fixed filter aborted id: ", private$get_id())
       } else {
-        logger::log_trace("{ class(self)[1] }$set_state setting state of filter id: { private$get_id() }")
+        logger::log_debug("{ class(self)[1] }$set_state setting state of filter id: { private$get_id() }")
         isolate({
           if (!is.null(state$selected)) {
             private$set_selected(state$selected)
@@ -206,7 +206,7 @@ FilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("FilterState$server initializing module for slice: { private$get_id() } ")
+          logger::log_debug("FilterState$server initializing module for slice: { private$get_id() } ")
           private$server_summary("summary")
           if (private$is_fixed()) {
             private$server_inputs_fixed("inputs")
@@ -268,7 +268,7 @@ FilterState <- R6::R6Class( # nolint
           )
 
           private$destroy_shiny <- function() {
-            logger::log_trace("Destroying FilterState inputs and observers; id: { private$get_id() }")
+            logger::log_debug("Destroying FilterState inputs and observers; id: { private$get_id() }")
             # remove values from the input list
             lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
 
@@ -422,7 +422,7 @@ FilterState <- R6::R6Class( # nolint
     #
     # @return `NULL`, invisibly.
     set_selected = function(value) {
-      logger::log_trace(
+      logger::log_debug(
         sprintf(
           "%s$set_selected setting selection of id: %s",
           class(self)[1],
@@ -435,7 +435,7 @@ FilterState <- R6::R6Class( # nolint
         value <- private$remove_out_of_bounds_values(value)
         private$teal_slice$selected <- value
       })
-      logger::log_trace(
+      logger::log_debug(
         sprintf(
           "%s$set_selected selection of id: %s",
           class(self)[1],
@@ -457,7 +457,7 @@ FilterState <- R6::R6Class( # nolint
     set_keep_na = function(value) {
       checkmate::assert_flag(value)
       private$teal_slice$keep_na <- value
-      logger::log_trace(
+      logger::log_debug(
         sprintf(
           "%s$set_keep_na set for filter %s to %s.",
           class(self)[1],
@@ -479,7 +479,7 @@ FilterState <- R6::R6Class( # nolint
     set_keep_inf = function(value) {
       checkmate::assert_flag(value)
       private$teal_slice$keep_inf <- value
-      logger::log_trace(
+      logger::log_debug(
         sprintf(
           "%s$set_keep_inf of filter %s set to %s",
           class(self)[1],
@@ -767,7 +767,7 @@ FilterState <- R6::R6Class( # nolint
           eventExpr = private$get_keep_na(),
           handlerExpr = {
             if (!setequal(private$get_keep_na(), input$value)) {
-              logger::log_trace("FilterState$keep_na_srv@1 changed reactive value, id: { private$get_id() }")
+              logger::log_debug("FilterState$keep_na_srv@1 changed reactive value, id: { private$get_id() }")
               updateCheckboxInput(
                 inputId = "value",
                 label = sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
@@ -781,7 +781,7 @@ FilterState <- R6::R6Class( # nolint
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,
           handlerExpr = {
-            logger::log_trace("FilterState$keep_na_srv@2 changed input, id: { private$get_id() }")
+            logger::log_debug("FilterState$keep_na_srv@2 changed input, id: { private$get_id() }")
             keep_na <- if (is.null(input$value)) {
               FALSE
             } else {

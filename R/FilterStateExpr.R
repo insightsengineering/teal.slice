@@ -171,7 +171,7 @@ FilterStateExpr <- R6::R6Class( # nolint
           private$server_summary("summary")
 
           private$destroy_shiny <- function() {
-            logger::log_trace("Destroying FilterStateExpr inputs; id: { private$get_id() }")
+            logger::log_debug("Destroying FilterStateExpr inputs; id: { private$get_id() }")
             # remove values from the input list
             lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
           }

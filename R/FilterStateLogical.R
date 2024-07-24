@@ -296,7 +296,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           # to show relevant values
           non_missing_values <- reactive(Filter(Negate(is.na), private$x_reactive()))
           output$trigger_visible <- renderUI({
-            logger::log_trace("LogicalFilterState$server@1 updating count labels, id: { private$get_id() }")
+            logger::log_debug("LogicalFilterState$server@1 updating count labels, id: { private$get_id() }")
 
             countsnow <- if (!is.null(private$x_reactive())) {
               unname(table(factor(non_missing_values(), levels = private$get_choices())))
@@ -319,7 +319,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             eventExpr = private$get_selected(),
             handlerExpr = {
               if (!setequal(private$get_selected(), input$selection)) {
-                logger::log_trace("LogicalFilterState$server@1 state changed, id: { private$get_id() }")
+                logger::log_debug("LogicalFilterState$server@1 state changed, id: { private$get_id() }")
                 if (private$is_multiple()) {
                   updateCheckboxGroupInput(
                     inputId = "selection",
@@ -340,7 +340,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = input$selection,
             handlerExpr = {
-              logger::log_trace("LogicalFilterState$server@2 selection changed, id: { private$get_id() }")
+              logger::log_debug("LogicalFilterState$server@2 selection changed, id: { private$get_id() }")
               # for private$is_multiple() == TRUE input$selection will always have value
               if (is.null(input$selection) && isFALSE(private$is_multiple())) {
                 selection_state <- private$get_selected()
@@ -365,7 +365,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("LogicalFilterState$server initializing, id: { private$get_id() }")
+          logger::log_debug("LogicalFilterState$server initializing, id: { private$get_id() }")
 
           output$selection <- renderUI({
             countsnow <- unname(table(factor(private$x_reactive(), levels = private$get_choices())))

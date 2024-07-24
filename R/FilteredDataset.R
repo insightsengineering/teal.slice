@@ -30,14 +30,14 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return Object of class `FilteredDataset`, invisibly.
     #'
     initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label", exact = TRUE)) {
-      logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
+      logger::log_debug("Instantiating { class(self)[1] }, dataname: { dataname }")
 
       # dataset assertion in child classes
       check_simple_name(dataname)
       checkmate::assert_character(keys, any.missing = FALSE)
       checkmate::assert_character(label, null.ok = TRUE)
 
-      logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
+      logger::log_debug("Instantiating { class(self)[1] }, dataname: { dataname }")
       private$dataset <- dataset
       private$dataname <- dataname
       private$keys <- keys
@@ -47,9 +47,9 @@ FilteredDataset <- R6::R6Class( # nolint
       private$data_filtered_fun <- function(sid = "") {
         checkmate::assert_character(sid)
         if (length(sid)) {
-          logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
+          logger::log_debug("filtering data dataname: { dataname }, sid: { sid }")
         } else {
-          logger::log_trace("filtering data dataname: { private$dataname }")
+          logger::log_debug("filtering data dataname: { private$dataname }")
         }
         env <- new.env(parent = parent.env(globalenv()))
         env[[dataname]] <- private$dataset
@@ -59,7 +59,7 @@ FilteredDataset <- R6::R6Class( # nolint
       }
 
       private$data_filtered <- reactive(private$data_filtered_fun())
-      logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
+      logger::log_debug("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
     },
 
@@ -96,12 +96,12 @@ FilteredDataset <- R6::R6Class( # nolint
     #'
     #' @return `NULL`.
     clear_filter_states = function(force = FALSE) {
-      logger::log_trace("Removing filters from FilteredDataset: { deparse1(self$get_dataname()) }")
+      logger::log_debug("Removing filters from FilteredDataset: { deparse1(self$get_dataname()) }")
       lapply(
         private$get_filter_states(),
         function(filter_states) filter_states$clear_filter_states(force)
       )
-      logger::log_trace("Removed filters from FilteredDataset: { deparse1(self$get_dataname()) }")
+      logger::log_debug("Removed filters from FilteredDataset: { deparse1(self$get_dataname()) }")
       NULL
     },
 
@@ -307,7 +307,7 @@ FilteredDataset <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           dataname <- self$get_dataname()
-          logger::log_trace("FilteredDataset$srv_active initializing, dataname: { dataname }")
+          logger::log_debug("FilteredDataset$srv_active initializing, dataname: { dataname }")
           checkmate::assert_string(dataname)
           output$filter_count <- renderText(
             sprintf(
@@ -338,9 +338,9 @@ FilteredDataset <- R6::R6Class( # nolint
           })
 
           observeEvent(input$remove_filters, {
-            logger::log_trace("FilteredDataset$srv_active@1 removing all non-anchored filters, dataname: { dataname }")
+            logger::log_debug("FilteredDataset$srv_active@1 removing all non-anchored filters, dataname: { dataname }")
             self$clear_filter_states()
-            logger::log_trace("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
+            logger::log_debug("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
           })
 
           observeEvent(input$toggle_add_panel, {
@@ -379,7 +379,7 @@ FilteredDataset <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("MAEFilteredDataset$srv_add initializing, dataname: { deparse1(self$get_dataname()) }")
+          logger::log_debug("MAEFilteredDataset$srv_add initializing, dataname: { deparse1(self$get_dataname()) }")
           elems <- private$get_filter_states()
           elem_names <- names(private$get_filter_states())
           lapply(
