@@ -373,12 +373,20 @@ FilterStates <- R6::R6Class( # nolint
               logger::log_debug("FilterStates$srv_active@2 triggered by added states: { toString(added_state_names) }")
               lapply(added_states(), function(state) {
                 fs_callback <- state$server(id = fs_to_shiny_ns(state))
-                observeEvent(
+                state_id <- state$get_state()$id
+                remove_observer <- observeEvent(
                   once = TRUE, # remove button can be called once, should be destroyed afterwards
                   ignoreInit = TRUE, # ignoreInit: should not matter because we destroy the previous input set of the UI
                   eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
-                  handlerExpr = private$state_list_remove(state$get_state()$id)
+                  handlerExpr = private$state_list_remove(state_id)
                 )
+
+                # Each filter state_id can only have 1 active remove observer at the time
+                remove_id <- sprintf("remove_%s", state_id)
+                if (!is.null(private$observers[[remove_id]])) {
+                  private$observers[[remove_id]]$destroy()
+                }
+                private$observers[[remove_id]] <- remove_observer
               })
               added_states(NULL)
             }
@@ -642,6 +650,7 @@ FilterStates <- R6::R6Class( # nolint
                   return(TRUE)
                 } else {
                   state$destroy_observers()
+                  private$observers[[sprintf("remove_%s", state$get_state()$id)]]$destroy()
                   FALSE
                 }
               } else {
