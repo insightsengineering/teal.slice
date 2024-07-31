@@ -488,13 +488,21 @@ RangeFilterState <- R6::R6Class( # nolint
           # Prepare for histogram construction.
           plot_data <- c(private$plot_data, source = session$ns("histogram_plot"))
 
+          trigger_event_data <- reactiveVal(NULL)
+
           # Display histogram, adding a second trace that contains filtered data.
           output$plot <- plotly::renderPlotly({
             histogram <- do.call(plotly::plot_ly, plot_data)
             histogram <- do.call(plotly::layout, c(list(p = histogram), private$plot_layout()))
             histogram <- do.call(plotly::config, c(list(p = histogram), private$plot_config()))
             histogram <- do.call(plotly::add_histogram, c(list(p = histogram), private$plot_filtered()))
+            trigger_event_data(TRUE)
             histogram
+          })
+
+          relayout_data <- reactive({
+            req(trigger_event_data())
+            plotly::event_data("plotly_relayout", source = session$ns("histogram_plot"))
           })
 
           # Dragging shapes (lines) on plot updates selection.
@@ -502,10 +510,10 @@ RangeFilterState <- R6::R6Class( # nolint
             observeEvent(
               ignoreNULL = FALSE,
               ignoreInit = TRUE,
-              eventExpr = plotly::event_data("plotly_relayout", source = session$ns("histogram_plot")),
+              eventExpr = relayout_data(),
               handlerExpr = {
                 logger::log_debug("RangeFilterState$server@1 selection changed, id: { private$get_id() }")
-                event <- plotly::event_data("plotly_relayout", source = session$ns("histogram_plot"))
+                event <- relayout_data()
                 if (any(grepl("shapes", names(event)))) {
                   line_positions <- private$get_selected()
                   if (any(grepl("shapes[0]", names(event), fixed = TRUE))) {
