@@ -346,10 +346,6 @@ FilteredDataset <- R6::R6Class( # nolint
             logger::log_debug("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
           })
 
-          observeEvent(input$toggle_add_panel, {
-            shinyjs::toggle("add_panel")
-          })
-
           self$srv_add(private$dataname)
 
           NULL
