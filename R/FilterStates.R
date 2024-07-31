@@ -381,11 +381,9 @@ FilterStates <- R6::R6Class( # nolint
                   handlerExpr = private$state_list_remove(state_id)
                 )
 
-                # Each filter state_id can only have 1 active remove observer at the time
-                remove_id <- sprintf("remove_%s", state_id)
-                if (!is.null(private$observers[[remove_id]])) {
-                  private$observers[[remove_id]]$destroy()
-                }
+                # Keep track of all remove observers
+                remove_id_prefix <- sprintf("remove_%s", state_id)
+                remove_id <- sprintf("%s_%s", remove_id_prefix, sum(grepl(remove_id_prefix, names(private$observers))))
                 private$observers[[remove_id]] <- remove_observer
               })
               added_states(NULL)
@@ -650,7 +648,10 @@ FilterStates <- R6::R6Class( # nolint
                   return(TRUE)
                 } else {
                   state$destroy_observers()
-                  private$observers[[sprintf("remove_%s", state$get_state()$id)]]$destroy()
+                  lapply(
+                    Filter(function(x) grepl(state$get_state()$id, x, fixed = TRUE), names(private$observers)),
+                    function(x) private$observers[[x]]$destroy()
+                  )
                   FALSE
                 }
               } else {
