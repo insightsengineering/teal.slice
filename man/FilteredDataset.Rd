@@ -280,7 +280,7 @@ Character string.
 \subsection{Method \code{ui_active()}}{
 \code{shiny} module containing active filters for a dataset, along with a title and a remove button.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$ui_active(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$ui_active(id, allow_add = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -288,6 +288,9 @@ Character string.
 \describe{
 \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
+
+\item{\code{allow_add}}{(\code{logical(1)})
+logical flag specifying whether the user will be able to add new filters}
 }
 \if{html}{\out{</div>}}
 }
