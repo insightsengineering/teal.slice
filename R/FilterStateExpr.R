@@ -164,7 +164,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'
     #' @return Reactive expression signaling that the remove button has been clicked.
     #'
-    server = function(id) {
+    server = function(id, remove_callback) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -176,7 +176,14 @@ FilterStateExpr <- R6::R6Class( # nolint
             lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
           }
 
-          reactive(input$remove) # back to parent to remove self
+          private$observers[[session$ns("remove")]] <- observeEvent(
+            once = TRUE, # remove button can be called once, should be destroyed afterwards
+            ignoreInit = TRUE, # ignoreInit: should not matter because we destroy the previous input set of the UI
+            eventExpr = input$remove, # when remove button is clicked in the FilterState ui
+            handlerExpr = remove_callback()
+          )
+
+          NULL
         }
       )
     },
