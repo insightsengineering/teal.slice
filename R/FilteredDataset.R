@@ -235,12 +235,16 @@ FilteredDataset <- R6::R6Class( # nolint
               width = 4,
               tagList(
                 if (allow_add) {
-                  actionLink(
-                    ns("toggle_add_panel"),
-                    label = "",
-                    icon = icon("plus", lib = "font-awesome"),
+                  tags$a(
                     class = "remove pull-right",
-                    onclick = "toggleAddRemoveIcon(this)"
+                    tags$i(
+                      class = "fa fa-plus",
+                      title = "fold/expand transform panel",
+                      onclick = sprintf(
+                        "togglePanelItem(this, '%s', 'fa-minus', 'fa-plus');",
+                        ns("add_panel")
+                      )
+                    )
                   )
                 },
                 actionLink(
@@ -260,11 +264,10 @@ FilteredDataset <- R6::R6Class( # nolint
             column(
               width = 12,
               if (allow_add) {
-                shinyjs::hidden(
-                  tags$div(
-                    id = ns("add_panel"),
-                    self$ui_add(ns(private$dataname))
-                  )
+                tags$div(
+                  id = ns("add_panel"),
+                  style = "display: none",
+                  self$ui_add(ns(private$dataname))
                 )
               }
             )
