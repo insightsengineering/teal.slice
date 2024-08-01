@@ -525,7 +525,7 @@ flag specifying whether to include anchored filter states.}
 top-level \code{shiny} module for the filter panel in the \code{teal} app.
 Contains 1) filter overview panel, 2) filter active panel, and 3) add filters panel.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_filter_panel(id, active_datanames = self$datanames())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_filter_panel(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -576,7 +576,7 @@ the filter panel will be hidden.}
 \subsection{Method \code{ui_active()}}{
 Server module responsible for displaying active filters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_active(id, active_datanames = self$datanames())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_active(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

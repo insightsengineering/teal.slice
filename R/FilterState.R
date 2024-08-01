@@ -200,6 +200,9 @@ FilterState <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
     #'
+    #' @param remove_callback (`function`)
+    #'   callback to handle removal of this `FilterState` object from `state_list`
+    #'
     #' @return Reactive expression signaling that remove button has been clicked.
     #'
     server = function(id, remove_callback) {
@@ -267,6 +270,13 @@ FilterState <- R6::R6Class( # nolint
             }
           )
 
+          private$observers[[session$ns("remove")]] <- observeEvent(
+            once = TRUE, # remove button can be called once, should be destroyed afterwards
+            ignoreInit = TRUE, # ignoreInit: should not matter because we destroy the previous input set of the UI
+            eventExpr = input$remove, # when remove button is clicked in the FilterState ui
+            handlerExpr = remove_callback()
+          )
+
           private$destroy_shiny <- function() {
             logger::log_debug("Destroying FilterState inputs and observers; id: { private$get_id() }")
             # remove values from the input list
@@ -275,13 +285,6 @@ FilterState <- R6::R6Class( # nolint
             # remove observers
             lapply(private$observers, function(x) x$destroy())
           }
-
-          private$observers[[session$ns("remove")]] <- observeEvent(
-            once = TRUE, # remove button can be called once, should be destroyed afterwards
-            ignoreInit = TRUE, # ignoreInit: should not matter because we destroy the previous input set of the UI
-            eventExpr = input$remove, # when remove button is clicked in the FilterState ui
-            handlerExpr = remove_callback()
-          )
 
           NULL
         }
