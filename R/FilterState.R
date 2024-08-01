@@ -200,9 +200,12 @@ FilterState <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
     #'
+    #' @param remove_callback (`function`)
+    #'   callback to handle removal of this `FilterState` object from `state_list`
+    #'
     #' @return Reactive expression signaling that remove button has been clicked.
     #'
-    server = function(id) {
+    server = function(id, remove_callback) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -214,7 +217,7 @@ FilterState <- R6::R6Class( # nolint
             private$server_inputs("inputs")
           }
 
-          private$observers$state <- observeEvent(
+          private$observers[[session$ns("state")]] <- observeEvent(
             eventExpr = list(private$get_selected(), private$get_keep_na(), private$get_keep_inf()),
             handlerExpr = {
               current_state <- as.list(self$get_state())
@@ -224,7 +227,7 @@ FilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observers$back <- observeEvent(
+          private$observers[[session$ns("back")]] <- observeEvent(
             eventExpr = input$back,
             handlerExpr = {
               history <- rev(private$state_history())
@@ -235,7 +238,7 @@ FilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observers$reset <- observeEvent(
+          private$observers[[session$ns("reset")]] <- observeEvent(
             eventExpr = input$reset,
             handlerExpr = {
               slice <- private$state_history()[[1L]]
@@ -245,7 +248,7 @@ FilterState <- R6::R6Class( # nolint
 
           # Buttons for rewind/reset are disabled upon change in history to prevent double-clicking.
           # Re-enabling occurs after 100 ms, after they are potentially hidden when no history is present.
-          private$observers$state_history <- observeEvent(
+          private$observers[[session$ns("state_history")]] <- observeEvent(
             eventExpr = private$state_history(),
             handlerExpr = {
               shinyjs::disable(id = "back")
@@ -267,6 +270,13 @@ FilterState <- R6::R6Class( # nolint
             }
           )
 
+          private$observers[[session$ns("remove")]] <- observeEvent(
+            once = TRUE, # remove button can be called once, should be destroyed afterwards
+            ignoreInit = TRUE, # ignoreInit: should not matter because we destroy the previous input set of the UI
+            eventExpr = input$remove, # when remove button is clicked in the FilterState ui
+            handlerExpr = remove_callback()
+          )
+
           private$destroy_shiny <- function() {
             logger::log_debug("Destroying FilterState inputs and observers; id: { private$get_id() }")
             # remove values from the input list
@@ -276,7 +286,7 @@ FilterState <- R6::R6Class( # nolint
             lapply(private$observers, function(x) x$destroy())
           }
 
-          reactive(input$remove)
+          NULL
         }
       )
     },
@@ -381,6 +391,7 @@ FilterState <- R6::R6Class( # nolint
     destroy_observers = function() {
       if (!is.null(private$destroy_shiny)) {
         private$destroy_shiny()
+        private$destroy_shiny <- NULL
       }
     }
   ),
@@ -761,7 +772,7 @@ FilterState <- R6::R6Class( # nolint
         # this observer is needed in the situation when private$keep_inf has been
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
-        private$observers$keep_na_api <- observeEvent(
+        private$observers[[session$ns("keep_na_api")]] <- observeEvent(
           ignoreNULL = FALSE, # nothing selected is possible for NA
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = private$get_keep_na(),
@@ -776,7 +787,7 @@ FilterState <- R6::R6Class( # nolint
             }
           }
         )
-        private$observers$keep_na <- observeEvent(
+        private$observers[[session$ns("keep_na")]] <- observeEvent(
           ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,

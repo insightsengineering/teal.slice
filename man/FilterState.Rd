@@ -200,7 +200,7 @@ and must be executed in reactive or isolated context.
 \subsection{Method \code{server()}}{
 \code{shiny} module server.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$server(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$server(id, remove_callback)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -208,6 +208,9 @@ and must be executed in reactive or isolated context.
 \describe{
 \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
+
+\item{\code{remove_callback}}{(\code{function})
+callback to handle removal of this \code{FilterState} object from \code{state_list}}
 }
 \if{html}{\out{</div>}}
 }

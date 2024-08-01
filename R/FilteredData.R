@@ -499,13 +499,13 @@ FilteredData <- R6::R6Class( # nolint
     #' @param active_datanames (`reactive`)
     #'   defining subset of `self$datanames()` to be displayed.
     #' @return `shiny.tag`
-    ui_filter_panel = function(id, active_datanames = self$datanames()) {
+    ui_filter_panel = function(id, active_datanames = self$datanames) {
       ns <- NS(id)
       tags$div(
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
         self$ui_overview(ns("overview")),
-        self$ui_active(ns("active"), active_datanames, private$allow_add)
+        self$ui_active(ns("active"), active_datanames = active_datanames)
       )
     },
 
@@ -547,7 +547,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @param active_datanames (`reactive`)
     #'   defining subset of `self$datanames()` to be displayed.
     #' @return `shiny.tag`
-    ui_active = function(id, active_datanames = self$datanames()) {
+    ui_active = function(id, active_datanames = self$datanames) {
       ns <- NS(id)
       tags$div(
         id = id, # not used, can be used to customize CSS behavior

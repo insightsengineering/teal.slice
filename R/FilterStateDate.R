@@ -327,7 +327,7 @@ DateFilterState <- R6::R6Class( # nolint
           # this observer is needed in the situation when teal_slice$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
-          private$observers$seletion_api <- observeEvent(
+          private$observers[[session$ns("selection_api")]] <- observeEvent(
             ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE,
             eventExpr = private$get_selected(),
@@ -344,7 +344,7 @@ DateFilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observers$selection <- observeEvent(
+          private$observers[[session$ns("selection")]] <- observeEvent(
             ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection,
@@ -374,7 +374,7 @@ DateFilterState <- R6::R6Class( # nolint
 
           private$keep_na_srv("keep_na")
 
-          private$observers$reset1 <- observeEvent(input$start_date_reset, {
+          private$observers[[session$ns("reset1")]] <- observeEvent(input$start_date_reset, {
             logger::log_debug("DateFilterState$server@3 reset start date, id: { private$get_id() }")
             updateDateRangeInput(
               session = session,
@@ -383,7 +383,7 @@ DateFilterState <- R6::R6Class( # nolint
             )
           })
 
-          private$observers$reset2 <- observeEvent(input$end_date_reset, {
+          private$observers[[session$ns("reset2")]] <- observeEvent(input$end_date_reset, {
             logger::log_debug("DateFilterState$server@4 reset end date, id: { private$get_id() }")
             updateDateRangeInput(
               session = session,

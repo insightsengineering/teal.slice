@@ -372,12 +372,9 @@ FilterStates <- R6::R6Class( # nolint
               added_state_names <- vapply(added_states(), function(x) x$get_state()$id, character(1L))
               logger::log_debug("FilterStates$srv_active@2 triggered by added states: { toString(added_state_names) }")
               lapply(added_states(), function(state) {
-                fs_callback <- state$server(id = fs_to_shiny_ns(state))
-                observeEvent(
-                  once = TRUE, # remove button can be called once, should be destroyed afterwards
-                  ignoreInit = TRUE, # ignoreInit: should not matter because we destroy the previous input set of the UI
-                  eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
-                  handlerExpr = private$state_list_remove(state$get_state()$id)
+                state$server(
+                  id = fs_to_shiny_ns(state),
+                  function() private$state_list_remove(state$get_state()$id)
                 )
               })
               added_states(NULL)
@@ -642,6 +639,10 @@ FilterStates <- R6::R6Class( # nolint
                   return(TRUE)
                 } else {
                   state$destroy_observers()
+                  lapply(
+                    Filter(function(x) grepl(state$get_state()$id, x, fixed = TRUE), names(private$observers)),
+                    function(x) private$observers[[x]]$destroy()
+                  )
                   FALSE
                 }
               } else {
