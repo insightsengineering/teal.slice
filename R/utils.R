@@ -66,3 +66,14 @@ make_c_call <- function(choices) {
     choices
   }
 }
+
+.finalize_observers <- function(self, private) {
+  if (length(private$observers) > 0) lapply(private$observers, function(x) x$destroy())
+  invisible(NULL)
+}
+
+.finalize_state_list <- function(self, private) {
+  private$state_list_empty(force = TRUE)
+  isolate(private$state_list(NULL))
+  invisible(NULL)
+}

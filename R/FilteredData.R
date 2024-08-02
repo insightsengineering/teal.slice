@@ -828,6 +828,13 @@ FilteredData <- R6::R6Class( # nolint
           NULL
         }
       )
+    },
+
+    finalize = function() {
+      .finalize_observers(self, private)
+      lapply(private$filtered_datasets, function(x) x$finalize())
+      self$clear_filter_states(force = TRUE)
+      invisible(NULL)
     }
   ),
 

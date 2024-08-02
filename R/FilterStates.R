@@ -492,6 +492,11 @@ FilterStates <- R6::R6Class( # nolint
           NULL
         }
       )
+    },
+
+    finalize = function() {
+      .finalize_observers(self, private) # Remove all observers
+      .finalize_state_list(self, private) # Remove all FilterState objects
     }
   ),
   private = list(
@@ -639,10 +644,6 @@ FilterStates <- R6::R6Class( # nolint
                   return(TRUE)
                 } else {
                   state$destroy_observers()
-                  lapply(
-                    Filter(function(x) grepl(state$get_state()$id, x, fixed = TRUE), names(private$observers)),
-                    function(x) private$observers[[x]]$destroy()
-                  )
                   FALSE
                 }
               } else {
