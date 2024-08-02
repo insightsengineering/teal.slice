@@ -107,6 +107,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
 
       # todo: Should we make these defaults? It could be handled by the app developer
       if (!is.null(parent)) {
+        logger::log_debug("Excluding { parent_name } columns from possible teal_slices for dataname: { dataname }")
         fs <- teal_slices(
           exclude_varnames = structure(
             list(intersect(colnames(dataset), colnames(isolate(parent())))),

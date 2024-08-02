@@ -30,14 +30,10 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return Object of class `FilteredDataset`, invisibly.
     #'
     initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label", exact = TRUE)) {
-      logger::log_debug("Instantiating { class(self)[1] }, dataname: { dataname }")
-
-      # dataset assertion in child classes
       check_simple_name(dataname)
+      logger::log_debug("Instantiating { class(self)[1] }, dataname: { dataname }")
       checkmate::assert_character(keys, any.missing = FALSE)
       checkmate::assert_character(label, null.ok = TRUE)
-
-      logger::log_debug("Instantiating { class(self)[1] }, dataname: { dataname }")
       private$dataset <- dataset
       private$dataname <- dataname
       private$keys <- keys
@@ -59,7 +55,6 @@ FilteredDataset <- R6::R6Class( # nolint
       }
 
       private$data_filtered <- reactive(private$data_filtered_fun())
-      logger::log_debug("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
     },
 
@@ -327,20 +322,20 @@ FilteredDataset <- R6::R6Class( # nolint
             }
           )
 
-          observeEvent(self$get_filter_state(), {
+          private$observers[[session$ns("get_filter_state")]] <- observeEvent(self$get_filter_state(), {
             shinyjs::hide("filter_count_ui")
             shinyjs::show("filters")
             shinyjs::toggle("remove_filters", condition = length(self$get_filter_state()) != 0)
             shinyjs::toggle("collapse", condition = length(self$get_filter_state()) != 0)
           })
 
-          observeEvent(input$collapse, {
+          private$observers[[session$ns("collapse")]] <- observeEvent(input$collapse, {
             shinyjs::toggle("filter_count_ui")
             shinyjs::toggle("filters")
             toggle_icon(session$ns("collapse"), c("fa-angle-right", "fa-angle-down"))
           })
 
-          observeEvent(input$remove_filters, {
+          private$observers[[session$ns("remove_filters")]] <- observeEvent(input$remove_filters, {
             logger::log_debug("FilteredDataset$srv_active@1 removing all non-anchored filters, dataname: { dataname }")
             self$clear_filter_states()
             logger::log_debug("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
@@ -389,6 +384,19 @@ FilteredDataset <- R6::R6Class( # nolint
           NULL
         }
       )
+    },
+
+    #' @description
+    #' Object and dependencies cleanup.
+    #'
+    #' - Destroy observers stored in `private$observers`
+    #' - Finalize `FilterStates` stored in `private$filter_states`
+    #'
+    #' @return `NULL`, invisibly.
+    finalize = function() {
+      .finalize_observers(self, private)
+      lapply(private$filter_states, function(x) x$finalize())
+      invisible(NULL)
     }
   ),
   # private fields ----
@@ -400,6 +408,7 @@ FilteredDataset <- R6::R6Class( # nolint
     dataname = character(0),
     keys = character(0),
     label = character(0),
+    observers = list(),
 
     # Adds `FilterStates` to the `private$filter_states`.
     # `FilterStates` is added once for each element of the dataset.

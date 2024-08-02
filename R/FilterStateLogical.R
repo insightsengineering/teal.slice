@@ -313,7 +313,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             NULL
           })
 
-          private$observers$seleted_api <- observeEvent(
+          private$observers[[session$ns("selected_api")]] <- observeEvent(
             ignoreNULL = !private$is_multiple(),
             ignoreInit = TRUE,
             eventExpr = private$get_selected(),
@@ -335,7 +335,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observers$selection <- observeEvent(
+          private$observers[[session$ns("selection")]] <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
             eventExpr = input$selection,

@@ -61,8 +61,6 @@ FilterStates <- R6::R6Class( # nolint
       private$data <- data
       private$data_reactive <- data_reactive
       private$state_list <- reactiveVal()
-
-      logger::log_debug("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
     },
 
@@ -365,19 +363,16 @@ FilterStates <- R6::R6Class( # nolint
             )
           })
 
-          observeEvent(
+          private$observers[[session$ns("added_states")]] <- observeEvent(
             added_states(), # we want to call FilterState module only once when it's added
             ignoreNULL = TRUE,
             {
               added_state_names <- vapply(added_states(), function(x) x$get_state()$id, character(1L))
               logger::log_debug("FilterStates$srv_active@2 triggered by added states: { toString(added_state_names) }")
               lapply(added_states(), function(state) {
-                fs_callback <- state$server(id = fs_to_shiny_ns(state))
-                observeEvent(
-                  once = TRUE, # remove button can be called once, should be destroyed afterwards
-                  ignoreInit = TRUE, # ignoreInit: should not matter because we destroy the previous input set of the UI
-                  eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
-                  handlerExpr = private$state_list_remove(state$get_state()$id)
+                state$server(
+                  id = fs_to_shiny_ns(state),
+                  function() private$state_list_remove(state$get_state()$id)
                 )
               })
               added_states(NULL)
@@ -467,7 +462,7 @@ FilterStates <- R6::R6Class( # nolint
             }
           })
 
-          observeEvent(
+          private$observers[[session$ns("var_to_add")]] <- observeEvent(
             eventExpr = input$var_to_add,
             handlerExpr = {
               logger::log_debug(
@@ -495,6 +490,21 @@ FilterStates <- R6::R6Class( # nolint
           NULL
         }
       )
+    },
+
+    #' @description
+    #' Object cleanup.
+    #'
+    #' - Destroy observers stored in `private$observers`
+    #' - Clean `state_list`
+    #'
+    #' @return `NULL`, invisibly.
+    #'
+    finalize = function() {
+      .finalize_observers(self, private) # Remove all observers
+      private$state_list_empty(force = TRUE)
+      isolate(private$state_list(NULL))
+      invisible(NULL)
     }
   ),
   private = list(
@@ -641,7 +651,7 @@ FilterStates <- R6::R6Class( # nolint
                 if (state$get_state()$anchored && !force) {
                   return(TRUE)
                 } else {
-                  state$destroy_observers()
+                  state$finalize()
                   FALSE
                 }
               } else {

@@ -499,13 +499,13 @@ FilteredData <- R6::R6Class( # nolint
     #' @param active_datanames (`reactive`)
     #'   defining subset of `self$datanames()` to be displayed.
     #' @return `shiny.tag`
-    ui_filter_panel = function(id, active_datanames = self$datanames()) {
+    ui_filter_panel = function(id, active_datanames = self$datanames) {
       ns <- NS(id)
       tags$div(
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
         self$ui_overview(ns("overview")),
-        self$ui_active(ns("active"), active_datanames, private$allow_add)
+        self$ui_active(ns("active"), active_datanames = active_datanames)
       )
     },
 
@@ -547,7 +547,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @param active_datanames (`reactive`)
     #'   defining subset of `self$datanames()` to be displayed.
     #' @return `shiny.tag`
-    ui_active = function(id, active_datanames = self$datanames()) {
+    ui_active = function(id, active_datanames = self$datanames) {
       ns <- NS(id)
       tags$div(
         id = id, # not used, can be used to customize CSS behavior
@@ -606,30 +606,37 @@ FilteredData <- R6::R6Class( # nolint
 
         private$srv_available_filters("available_filters")
 
-        observeEvent(input$minimise_filter_active, {
-          shinyjs::toggle("filter_active_vars_contents")
-          shinyjs::toggle("filters_active_count")
-          toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"))
-          toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"))
-        })
+        private$observers[[session$ns("minimise_filter_active")]] <- observeEvent(
+          eventExpr = input$minimise_filter_active,
+          handlerExpr = {
+            shinyjs::toggle("filter_active_vars_contents")
+            shinyjs::toggle("filters_active_count")
+            toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"))
+            toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"))
+          }
+        )
 
-        observeEvent(private$get_filter_count(), {
-          shinyjs::toggle("remove_all_filters", condition = private$get_filter_count() != 0)
-          shinyjs::show("filter_active_vars_contents")
-          shinyjs::hide("filters_active_count")
-          toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"), TRUE)
-          toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"), TRUE)
-        })
+        private$observers[[session$ns("get_filter_count")]] <- observeEvent(
+          eventExpr = private$get_filter_count(),
+          handlerExpr = {
+            shinyjs::toggle("remove_all_filters", condition = private$get_filter_count() != 0)
+            shinyjs::show("filter_active_vars_contents")
+            shinyjs::hide("filters_active_count")
+            toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"), TRUE)
+            toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"), TRUE)
+          }
+        )
 
-        observeEvent(active_datanames(), {
-          lapply(self$datanames(), function(dataname) {
+        private$observers[[session$ns("active_datanames")]] <- observeEvent(
+          eventExpr = active_datanames(),
+          handlerExpr = lapply(self$datanames(), function(dataname) {
             if (dataname %in% active_datanames()) {
               shinyjs::show(dataname)
             } else {
               shinyjs::hide(dataname)
             }
           })
-        })
+        )
 
         # should not use for-loop as variables are otherwise only bound by reference
         # and last dataname would be used
@@ -651,11 +658,14 @@ FilteredData <- R6::R6Class( # nolint
           )
         })
 
-        observeEvent(input$remove_all_filters, {
-          logger::log_debug("FilteredData$srv_filter_panel@1 removing all non-anchored filters")
-          self$clear_filter_states()
-          logger::log_debug("FilteredData$srv_filter_panel@1 removed all non-anchored filters")
-        })
+        private$observers[[session$ns("remove_all_filters")]] <- observeEvent(
+          eventExpr = input$remove_all_filters,
+          handlerExpr = {
+            logger::log_debug("FilteredData$srv_filter_panel@1 removing all non-anchored filters")
+            self$clear_filter_states()
+            logger::log_debug("FilteredData$srv_filter_panel@1 removed all non-anchored filters")
+          }
+        )
 
         NULL
       })
@@ -723,11 +733,14 @@ FilteredData <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_debug("FilteredData$srv_filter_overview initializing")
 
-          observeEvent(input$minimise_filter_overview, {
-            shinyjs::toggle("filters_overview_contents")
-            toggle_icon(session$ns("minimise_filter_overview"), c("fa-angle-right", "fa-angle-down"))
-            toggle_title(session$ns("minimise_filter_overview"), c("Restore panel", "Minimise Panel"))
-          })
+          private$observers[[session$ns("minimise_filter_overview")]] <- observeEvent(
+            eventExpr = input$minimise_filter_overview,
+            handlerExpr = {
+              shinyjs::toggle("filters_overview_contents")
+              toggle_icon(session$ns("minimise_filter_overview"), c("fa-angle-right", "fa-angle-down"))
+              toggle_title(session$ns("minimise_filter_overview"), c("Restore panel", "Minimise Panel"))
+            }
+          )
 
           output$table <- renderUI({
             logger::log_debug("FilteredData$srv_filter_overview@1 updating counts")
@@ -815,6 +828,19 @@ FilteredData <- R6::R6Class( # nolint
           NULL
         }
       )
+    },
+
+    #' @description
+    #' Object and dependencies cleanup.
+    #'
+    #' - Destroy observers stored in `private$observers`
+    #' - Finalize `FilteredData` stored in `private$filtered_datasets`
+    #'
+    #' @return `NULL`, invisibly.
+    finalize = function() {
+      .finalize_observers(self, private)
+      lapply(private$filtered_datasets, function(x) x$finalize())
+      invisible(NULL)
     }
   ),
 
@@ -836,6 +862,9 @@ FilteredData <- R6::R6Class( # nolint
 
     # flag specifying whether the user may add filters
     allow_add = TRUE,
+
+    # observers list
+    observers = list(),
 
     # private methods ----
 
@@ -977,33 +1006,42 @@ FilteredData <- R6::R6Class( # nolint
           )
         })
 
-        observeEvent(input$available_slices_id, ignoreNULL = FALSE, ignoreInit = TRUE, {
-          new_slices_id <- setdiff(input$available_slices_id, active_slices_id())
-          removed_slices_id <- setdiff(active_slices_id(), input$available_slices_id)
-          if (length(new_slices_id)) {
-            new_teal_slices <- Filter(
-              function(slice) slice$id %in% new_slices_id,
-              private$available_teal_slices()
-            )
-            self$set_filter_state(new_teal_slices)
-          }
+        private$observers[[session$ns("available_slices_id")]] <- observeEvent(
+          eventExpr = input$available_slices_id,
+          ignoreNULL = FALSE,
+          ignoreInit = TRUE,
+          handlerExpr = {
+            new_slices_id <- setdiff(input$available_slices_id, active_slices_id())
+            removed_slices_id <- setdiff(active_slices_id(), input$available_slices_id)
+            if (length(new_slices_id)) {
+              new_teal_slices <- Filter(
+                function(slice) slice$id %in% new_slices_id,
+                private$available_teal_slices()
+              )
+              self$set_filter_state(new_teal_slices)
+            }
 
-          if (length(removed_slices_id)) {
-            removed_teal_slices <- Filter(
-              function(slice) slice$id %in% removed_slices_id,
-              self$get_filter_state()
-            )
-            self$remove_filter_state(removed_teal_slices)
+            if (length(removed_slices_id)) {
+              removed_teal_slices <- Filter(
+                function(slice) slice$id %in% removed_slices_id,
+                self$get_filter_state()
+              )
+              self$remove_filter_state(removed_teal_slices)
+            }
           }
-        })
+        )
 
-        observeEvent(private$available_teal_slices(), ignoreNULL = FALSE, {
-          if (length(private$available_teal_slices())) {
-            shinyjs::show("available_menu")
-          } else {
-            shinyjs::hide("available_menu")
+        private$observers[[session$ns("available_teal_slices")]] <- observeEvent(
+          eventExpr = private$available_teal_slices(),
+          ignoreNULL = FALSE,
+          handlerExpr = {
+            if (length(private$available_teal_slices())) {
+              shinyjs::show("available_menu")
+            } else {
+              shinyjs::hide("available_menu")
+            }
           }
-        })
+        )
       })
     }
   )
