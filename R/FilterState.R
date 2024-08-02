@@ -446,13 +446,6 @@ FilterState <- R6::R6Class( # nolint
         value <- private$remove_out_of_bounds_values(value)
         private$teal_slice$selected <- value
       })
-      logger::log_debug(
-        sprintf(
-          "%s$set_selected selection of id: %s",
-          class(self)[1],
-          private$get_id()
-        )
-      )
 
       invisible(NULL)
     },

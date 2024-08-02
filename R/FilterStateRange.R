@@ -545,8 +545,8 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = private$get_selected(),
             handlerExpr = {
-              logger::log_debug("RangeFilterState$server@2 state changed, id: {private$get_id() }")
               if (!isTRUE(all.equal(private$get_selected(), selection_manual()))) {
+                logger::log_debug("RangeFilterState$server@2 state changed, id: {private$get_id() }")
                 shinyWidgets::updateNumericRangeInput(
                   session = session,
                   inputId = "selection_manual",
