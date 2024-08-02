@@ -491,9 +491,20 @@ FilterStates <- R6::R6Class( # nolint
         }
       )
     },
+
+    #' @description
+    #' Object cleanup.
+    #'
+    #' - Destroy observers stored in `private$observers`
+    #' - Clean `state_list`
+    #'
+    #' @return `NULL`, invisibly.
+    #'
     finalize = function() {
       .finalize_observers(self, private) # Remove all observers
-      .finalize_state_list(self, private) # Remove all FilterState objects
+      private$state_list_empty(force = TRUE)
+      isolate(private$state_list(NULL))
+      invisible(NULL)
     }
   ),
   private = list(
@@ -640,7 +651,7 @@ FilterStates <- R6::R6Class( # nolint
                 if (state$get_state()$anchored && !force) {
                   return(TRUE)
                 } else {
-                  state$destroy_observers()
+                  state$finalize()
                   FALSE
                 }
               } else {

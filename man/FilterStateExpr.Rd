@@ -72,7 +72,7 @@ if (interactive()) {
 \item \href{#method-FilterStateExpr-get_state}{\code{FilterStateExpr$get_state()}}
 \item \href{#method-FilterStateExpr-set_state}{\code{FilterStateExpr$set_state()}}
 \item \href{#method-FilterStateExpr-get_call}{\code{FilterStateExpr$get_call()}}
-\item \href{#method-FilterStateExpr-destroy_observers}{\code{FilterStateExpr$destroy_observers()}}
+\item \href{#method-FilterStateExpr-finalize}{\code{FilterStateExpr$finalize()}}
 \item \href{#method-FilterStateExpr-server}{\code{FilterStateExpr$server()}}
 \item \href{#method-FilterStateExpr-ui}{\code{FilterStateExpr$ui()}}
 \item \href{#method-FilterStateExpr-clone}{\code{FilterStateExpr$clone()}}
@@ -199,12 +199,12 @@ and must be executed in reactive or isolated context.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStateExpr-destroy_observers"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStateExpr-destroy_observers}{}}}
-\subsection{Method \code{destroy_observers()}}{
+\if{html}{\out{<a id="method-FilterStateExpr-finalize"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStateExpr-finalize}{}}}
+\subsection{Method \code{finalize()}}{
 Destroy observers stored in \code{private$observers}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$destroy_observers()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$finalize()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

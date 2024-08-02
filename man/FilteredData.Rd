@@ -121,6 +121,7 @@ isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-srv_active}{\code{FilteredData$srv_active()}}
 \item \href{#method-FilteredData-ui_overview}{\code{FilteredData$ui_overview()}}
 \item \href{#method-FilteredData-srv_overview}{\code{FilteredData$srv_overview()}}
+\item \href{#method-FilteredData-finalize}{\code{FilteredData$finalize()}}
 \item \href{#method-FilteredData-clone}{\code{FilteredData$clone()}}
 }
 }
@@ -667,6 +668,23 @@ panel will be hidden.}
 }
 \subsection{Returns}{
 \code{NULL}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-finalize"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-finalize}{}}}
+\subsection{Method \code{finalize()}}{
+Object and dependencies cleanup.
+\itemize{
+\item Destroy observers stored in \code{private$observers}
+\item Finalize \code{FilteredData} stored in \code{private$filtered_datasets}
+}
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$finalize()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

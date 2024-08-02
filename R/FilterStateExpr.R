@@ -145,7 +145,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'
     #' @return `NULL`, invisibly.
     #'
-    destroy_observers = function() {
+    finalize = function() {
       lapply(private$observers, function(x) x$destroy())
 
       if (!is.null(private$destroy_shiny)) {

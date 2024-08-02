@@ -389,6 +389,14 @@ FilteredDataset <- R6::R6Class( # nolint
         }
       )
     },
+
+    #' @description
+    #' Object and dependencies cleanup.
+    #'
+    #' - Destroy observers stored in `private$observers`
+    #' - Finalize `FilterStates` stored in `private$filter_states`
+    #'
+    #' @return `NULL`, invisibly.
     finalize = function() {
       .finalize_observers(self, private)
       lapply(private$filter_states, function(x) x$finalize())
