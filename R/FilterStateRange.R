@@ -506,57 +506,55 @@ RangeFilterState <- R6::R6Class( # nolint
           })
 
           # Dragging shapes (lines) on plot updates selection.
-          private$observers[[session$ns("relayout")]] <-
-            observeEvent(
-              ignoreNULL = FALSE,
-              ignoreInit = TRUE,
-              eventExpr = relayout_data(),
-              handlerExpr = {
-                logger::log_debug("RangeFilterState$server@1 selection changed, id: { private$get_id() }")
-                event <- relayout_data()
-                if (any(grepl("shapes", names(event)))) {
-                  line_positions <- private$get_selected()
-                  if (any(grepl("shapes[0]", names(event), fixed = TRUE))) {
-                    line_positions[1] <- event[["shapes[0].x0"]]
-                  } else if (any(grepl("shapes[1]", names(event), fixed = TRUE))) {
-                    line_positions[2] <- event[["shapes[1].x0"]]
-                  }
-                  # If one line was dragged past the other, abort action and reset lines.
-                  if (line_positions[1] > line_positions[2]) {
-                    showNotification(
-                      "Numeric range start value must be less than end value.",
-                      type = "warning"
-                    )
-                    plotly::plotlyProxyInvoke(
-                      plotly::plotlyProxy("plot"),
-                      "relayout",
-                      shapes = private$get_shape_properties(private$get_selected())
-                    )
-                    return(NULL)
-                  }
-
-                  private$set_selected(signif(line_positions, digits = 4L))
+          private$observers[[session$ns("relayout")]] <- observeEvent(
+            ignoreNULL = FALSE,
+            ignoreInit = TRUE,
+            eventExpr = relayout_data(),
+            handlerExpr = {
+              logger::log_debug("RangeFilterState$server@1 selection changed, id: { private$get_id() }")
+              event <- relayout_data()
+              if (any(grepl("shapes", names(event)))) {
+                line_positions <- private$get_selected()
+                if (any(grepl("shapes[0]", names(event), fixed = TRUE))) {
+                  line_positions[1] <- event[["shapes[0].x0"]]
+                } else if (any(grepl("shapes[1]", names(event), fixed = TRUE))) {
+                  line_positions[2] <- event[["shapes[1].x0"]]
                 }
+                # If one line was dragged past the other, abort action and reset lines.
+                if (line_positions[1] > line_positions[2]) {
+                  showNotification(
+                    "Numeric range start value must be less than end value.",
+                    type = "warning"
+                  )
+                  plotly::plotlyProxyInvoke(
+                    plotly::plotlyProxy("plot"),
+                    "relayout",
+                    shapes = private$get_shape_properties(private$get_selected())
+                  )
+                  return(NULL)
+                }
+
+                private$set_selected(signif(line_positions, digits = 4L))
               }
-            )
+            }
+          )
 
           # Change in selection updates shapes (lines) on plot and numeric input.
-          private$observers[[session$ns("selection_api")]] <-
-            observeEvent(
-              ignoreNULL = FALSE,
-              ignoreInit = TRUE,
-              eventExpr = private$get_selected(),
-              handlerExpr = {
-                logger::log_debug("RangeFilterState$server@2 state changed, id: {private$get_id() }")
-                if (!isTRUE(all.equal(private$get_selected(), selection_manual()))) {
-                  shinyWidgets::updateNumericRangeInput(
-                    session = session,
-                    inputId = "selection_manual",
-                    value = private$get_selected()
-                  )
-                }
+          private$observers[[session$ns("selection_api")]] <- observeEvent(
+            ignoreNULL = FALSE,
+            ignoreInit = TRUE,
+            eventExpr = private$get_selected(),
+            handlerExpr = {
+              logger::log_debug("RangeFilterState$server@2 state changed, id: {private$get_id() }")
+              if (!isTRUE(all.equal(private$get_selected(), selection_manual()))) {
+                shinyWidgets::updateNumericRangeInput(
+                  session = session,
+                  inputId = "selection_manual",
+                  value = private$get_selected()
+                )
               }
-            )
+            }
+          )
 
           # Manual input updates selection.
           private$observers[[session$ns("selection_manual")]] <- observeEvent(

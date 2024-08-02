@@ -61,8 +61,6 @@ FilterStates <- R6::R6Class( # nolint
       private$data <- data
       private$data_reactive <- data_reactive
       private$state_list <- reactiveVal()
-
-      logger::log_debug("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
     },
 
@@ -365,7 +363,7 @@ FilterStates <- R6::R6Class( # nolint
             )
           })
 
-          observeEvent(
+          private$observers[[session$ns("added_states")]] <- observeEvent(
             added_states(), # we want to call FilterState module only once when it's added
             ignoreNULL = TRUE,
             {
@@ -464,7 +462,7 @@ FilterStates <- R6::R6Class( # nolint
             }
           })
 
-          observeEvent(
+          private$observers[[session$ns("var_to_add")]] <- observeEvent(
             eventExpr = input$var_to_add,
             handlerExpr = {
               logger::log_debug(
@@ -492,6 +490,21 @@ FilterStates <- R6::R6Class( # nolint
           NULL
         }
       )
+    },
+
+    #' @description
+    #' Object cleanup.
+    #'
+    #' - Destroy observers stored in `private$observers`
+    #' - Clean `state_list`
+    #'
+    #' @return `NULL`, invisibly.
+    #'
+    finalize = function() {
+      .finalize_observers(self, private) # Remove all observers
+      private$state_list_empty(force = TRUE)
+      isolate(private$state_list(NULL))
+      invisible(NULL)
     }
   ),
   private = list(
@@ -638,11 +651,7 @@ FilterStates <- R6::R6Class( # nolint
                 if (state$get_state()$anchored && !force) {
                   return(TRUE)
                 } else {
-                  state$destroy_observers()
-                  lapply(
-                    Filter(function(x) grepl(state$get_state()$id, x, fixed = TRUE), names(private$observers)),
-                    function(x) private$observers[[x]]$destroy()
-                  )
+                  state$finalize()
                   FALSE
                 }
               } else {

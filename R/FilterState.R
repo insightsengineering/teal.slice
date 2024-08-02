@@ -107,8 +107,6 @@ FilterState <- R6::R6Class( # nolint
 
       private$state_history <- reactiveVal(list())
 
-      logger::log_debug("Instantiated FilterState object id: { private$get_id() }")
-
       invisible(self)
     },
 
@@ -386,9 +384,11 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Destroy observers stored in `private$observers`.
     #'
+    #' The `destroy_shiny` definition is set in the server method.
+    #'
     #' @return `NULL`, invisibly.
     #'
-    destroy_observers = function() {
+    finalize = function() {
       if (!is.null(private$destroy_shiny)) {
         private$destroy_shiny()
         private$destroy_shiny <- NULL

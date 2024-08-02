@@ -32,6 +32,7 @@ components of the dataset.
 \item \href{#method-FilteredDataset-srv_active}{\code{FilteredDataset$srv_active()}}
 \item \href{#method-FilteredDataset-ui_add}{\code{FilteredDataset$ui_add()}}
 \item \href{#method-FilteredDataset-srv_add}{\code{FilteredDataset$srv_add()}}
+\item \href{#method-FilteredDataset-finalize}{\code{FilteredDataset$finalize()}}
 \item \href{#method-FilteredDataset-clone}{\code{FilteredDataset$clone()}}
 }
 }
@@ -362,6 +363,23 @@ contains one \code{FilterStates} object for \code{colData} and one for each expe
 }
 \subsection{Returns}{
 \code{NULL}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredDataset-finalize"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-finalize}{}}}
+\subsection{Method \code{finalize()}}{
+Object and dependencies cleanup.
+\itemize{
+\item Destroy observers stored in \code{private$observers}
+\item Finalize \code{FilterStates} stored in \code{private$filter_states}
+}
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$finalize()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

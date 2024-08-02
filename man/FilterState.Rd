@@ -54,7 +54,7 @@ Modifying a \code{FilterState} object is possible in three scenarios:
 \item \href{#method-FilterState-get_call}{\code{FilterState$get_call()}}
 \item \href{#method-FilterState-server}{\code{FilterState$server()}}
 \item \href{#method-FilterState-ui}{\code{FilterState$ui()}}
-\item \href{#method-FilterState-destroy_observers}{\code{FilterState$destroy_observers()}}
+\item \href{#method-FilterState-finalize}{\code{FilterState$finalize()}}
 \item \href{#method-FilterState-clone}{\code{FilterState$clone()}}
 }
 }
@@ -240,12 +240,14 @@ The UI for this class contains simple message stating that it is not supported.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-destroy_observers"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-destroy_observers}{}}}
-\subsection{Method \code{destroy_observers()}}{
+\if{html}{\out{<a id="method-FilterState-finalize"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-finalize}{}}}
+\subsection{Method \code{finalize()}}{
 Destroy observers stored in \code{private$observers}.
+
+The \code{destroy_shiny} definition is set in the server method.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$destroy_observers()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$finalize()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
