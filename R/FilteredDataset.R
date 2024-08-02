@@ -327,26 +327,26 @@ FilteredDataset <- R6::R6Class( # nolint
             }
           )
 
-          observeEvent(self$get_filter_state(), {
+          private$observers[[session$ns("get_filter_state")]] <- observeEvent(self$get_filter_state(), {
             shinyjs::hide("filter_count_ui")
             shinyjs::show("filters")
             shinyjs::toggle("remove_filters", condition = length(self$get_filter_state()) != 0)
             shinyjs::toggle("collapse", condition = length(self$get_filter_state()) != 0)
           })
 
-          observeEvent(input$collapse, {
+          private$observers[[session$ns("collapse")]] <- observeEvent(input$collapse, {
             shinyjs::toggle("filter_count_ui")
             shinyjs::toggle("filters")
             toggle_icon(session$ns("collapse"), c("fa-angle-right", "fa-angle-down"))
           })
 
-          observeEvent(input$remove_filters, {
+          private$observers[[session$ns("remove_filters")]] <- observeEvent(input$remove_filters, {
             logger::log_debug("FilteredDataset$srv_active@1 removing all non-anchored filters, dataname: { dataname }")
             self$clear_filter_states()
             logger::log_debug("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
           })
 
-          observeEvent(input$toggle_add_panel, {
+          private$observers[[session$ns("toggle_add_panel")]] <- observeEvent(input$toggle_add_panel, {
             shinyjs::toggle("add_panel")
           })
 
@@ -404,6 +404,7 @@ FilteredDataset <- R6::R6Class( # nolint
     dataname = character(0),
     keys = character(0),
     label = character(0),
+    observers = list(),
 
     # Adds `FilterStates` to the `private$filter_states`.
     # `FilterStates` is added once for each element of the dataset.

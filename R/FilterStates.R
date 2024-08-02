@@ -365,7 +365,7 @@ FilterStates <- R6::R6Class( # nolint
             )
           })
 
-          observeEvent(
+          private$observers[[session$ns("added_states")]] <- observeEvent(
             added_states(), # we want to call FilterState module only once when it's added
             ignoreNULL = TRUE,
             {
@@ -464,7 +464,7 @@ FilterStates <- R6::R6Class( # nolint
             }
           })
 
-          observeEvent(
+          private$observers[[session$ns("var_to_add")]] <- observeEvent(
             eventExpr = input$var_to_add,
             handlerExpr = {
               logger::log_debug(
