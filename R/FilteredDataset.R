@@ -30,14 +30,10 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return Object of class `FilteredDataset`, invisibly.
     #'
     initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label", exact = TRUE)) {
-      logger::log_debug("Instantiating { class(self)[1] }, dataname: { dataname }")
-
-      # dataset assertion in child classes
       check_simple_name(dataname)
+      logger::log_debug("Instantiating { class(self)[1] }, dataname: { dataname }")
       checkmate::assert_character(keys, any.missing = FALSE)
       checkmate::assert_character(label, null.ok = TRUE)
-
-      logger::log_debug("Instantiating { class(self)[1] }, dataname: { dataname }")
       private$dataset <- dataset
       private$dataname <- dataname
       private$keys <- keys
@@ -59,7 +55,6 @@ FilteredDataset <- R6::R6Class( # nolint
       }
 
       private$data_filtered <- reactive(private$data_filtered_fun())
-      logger::log_debug("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
     },
 
@@ -394,7 +389,6 @@ FilteredDataset <- R6::R6Class( # nolint
         }
       )
     },
-
     finalize = function() {
       .finalize_observers(self, private)
       lapply(private$filter_states, function(x) x$finalize())

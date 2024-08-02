@@ -61,8 +61,6 @@ FilterStates <- R6::R6Class( # nolint
       private$data <- data
       private$data_reactive <- data_reactive
       private$state_list <- reactiveVal()
-
-      logger::log_debug("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
     },
 
@@ -493,7 +491,6 @@ FilterStates <- R6::R6Class( # nolint
         }
       )
     },
-
     finalize = function() {
       .finalize_observers(self, private) # Remove all observers
       .finalize_state_list(self, private) # Remove all FilterState objects

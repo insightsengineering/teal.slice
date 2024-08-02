@@ -107,8 +107,6 @@ FilterState <- R6::R6Class( # nolint
 
       private$state_history <- reactiveVal(list())
 
-      logger::log_debug("Instantiated FilterState object id: { private$get_id() }")
-
       invisible(self)
     },
 
