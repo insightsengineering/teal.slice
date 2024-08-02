@@ -189,7 +189,7 @@ A \code{data.frame}.
 \subsection{Method \code{ui_active()}}{
 Overwrites parent method.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$ui_active(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$ui_active(id, allow_add)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -197,6 +197,8 @@ Overwrites parent method.
 \describe{
 \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
+
+\item{\code{allow_add}}{(ignored)}
 }
 \if{html}{\out{</div>}}
 }
