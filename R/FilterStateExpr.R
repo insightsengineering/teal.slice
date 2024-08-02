@@ -162,6 +162,9 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
     #'
+    #' @param remove_callback (`function`)
+    #'   callback to handle removal of this `FilterState` object from `state_list`
+    #'
     #' @return Reactive expression signaling that the remove button has been clicked.
     #'
     server = function(id, remove_callback) {
