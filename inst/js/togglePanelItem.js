@@ -1,14 +1,71 @@
+function setAndRemoveClass(element, setClass, removeClass) {
+  if (typeof element === "string") {
+    element = document.querySelector(element);
+  }
+  element.classList.add(setClass);
+  element.classList.remove(removeClass);
+}
 
-// when invoked it hides/show targetId element and change class of element from class1 <-> class2
-function togglePanelItem(element, targetId, class1, class2) {
-  var target = document.getElementById(targetId);
-  if (target.style.display === "none") {
-    target.style.display = "block";
-    element.classList.remove(class1);
-    element.classList.add(class2);
+function toggleClass(element, class1, class2) {
+  if (typeof element === "string") {
+    element = document.querySelector(element);
+  }
+  if (element.classList.contains(class1)) {
+    setAndRemoveClass(element, class2, class1);
   } else {
-    target.style.display = "none";
-    element.classList.remove(class2);
-    element.classList.add(class1);
+    setAndRemoveClass(element, class1, class2);
+  }
+}
+
+function showPanelItem(targeSelector, duration = 400, easing = "slideInTop") {
+  $(`#${targeSelector}`).show(duration, easing);
+  $(`#${targeSelector}`).trigger("shown");
+}
+
+function hidePanelItem(targeSelector, duration = 400, easing = "slideOutLeft") {
+  $(`#${targeSelector}`).hide(duration, easing);
+}
+
+function setTitle(targeSelector, title) {
+  $(`#${targeSelector}`).attr("title", title);
+}
+
+function toggleTitle(targeSelector, title1, title2) {
+  var currentTitle = $(`#${targeSelector}`).attr("title");
+  var newTitle = currentTitle === title1 ? title2 : title1;
+  setTitle(targeSelector, newTitle);
+}
+
+// when invoked it hides/shows targeSelectors elements and changes class of element from class1 <-> class2
+function togglePanelItem(
+  element,
+  targetSelectors,
+  class1,
+  class2,
+  duration = 400,
+  easing = "swing"
+) {
+  if (!Array.isArray(targetSelectors)) {
+    targetSelectors = [targetSelectors];
+  }
+
+  targetSelectors.forEach((targetSelector) => {
+    if ($(`#${targetSelector}`).is(":visible")) {
+      hidePanelItem(targetSelector, duration, easing);
+    } else {
+      showPanelItem(targetSelector, duration, easing);
+    }
+  });
+
+  toggleClass(element, class1, class2);
+}
+
+function clickWhenClassPresent(
+  targetSelector,
+  className,
+  additionalCondition = true
+) {
+  if ($(`#${targetSelector}`).hasClass(className) && additionalCondition) {
+    $(`#${targetSelector}`).trigger("click");
   }
 }

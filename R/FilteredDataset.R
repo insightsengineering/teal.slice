@@ -153,6 +153,25 @@ FilteredDataset <- R6::R6Class( # nolint
     get_filter_count = function() {
       length(self$get_filter_state())
     },
+    is_filter_active = function() {
+      filter_active <- FALSE
+      if (self$get_filter_count() != 0) {
+        if (
+          !all(
+            sapply(
+              as.list(self$get_filter_state()),
+              function(x) as.list(x)$anchored
+            )
+          )
+        ) {
+          filter_active <- TRUE
+        }
+      }
+      filter_active
+    },
+    is_filter_collapsable = function() {
+      length(self$get_filter_state()) != 0
+    },
 
     #' @description
     #' Gets the name of the dataset.
@@ -222,57 +241,47 @@ FilteredDataset <- R6::R6Class( # nolint
         tags$div(
           id = ns("whole_ui"), # to hide it entirely
           fluidRow(
-            column(
-              width = 8,
-              tags$span(dataname, class = "filter_panel_dataname")
-            ),
-            column(
-              width = 4,
-              tagList(
+            style = "padding: 0px 15px 0px 15px;",
+            tags$div(
+              style = "display: flex; align-items: center; justify-content: space-between;",
+              tags$div(
+                style = "display: flex;",
+                tags$span(dataname, class = "filter_panel_dataname"),
                 if (allow_add) {
                   tags$a(
-                    class = "remove pull-right",
+                    class = "filter-icon add-filter",
                     tags$i(
+                      id = ns("add_filter_icon"),
                       class = "fa fa-plus",
                       title = "fold/expand transform panel",
                       onclick = sprintf(
-                        "togglePanelItem(this, '%s', 'fa-minus', 'fa-plus');",
+                        "togglePanelItem(this, '%s', 'fa-plus', 'fa-minus');",
                         ns("add_panel")
                       )
                     )
                   )
-                },
-                actionLink(
-                  ns("remove_filters"),
-                  label = "",
-                  icon = icon("circle-xmark", lib = "font-awesome"),
-                  class = "remove pull-right"
-                ),
-                actionLink(
-                  ns("collapse"),
-                  label = "",
-                  icon = icon("angle-down", lib = "font-awesome"),
-                  class = "remove pull-right"
-                )
+                }
+              ),
+              tags$div(
+                style = "min-width: 40px; z-index: 1; display: flex; justify-content: flex-end;",
+                uiOutput(ns("collapse_ui")),
+                uiOutput(ns("remove_filters_ui"))
               )
             ),
-            column(
-              width = 12,
-              if (allow_add) {
-                tags$div(
-                  id = ns("add_panel"),
-                  style = "display: none",
-                  self$ui_add(ns(private$dataname))
-                )
-              }
-            )
+            if (allow_add) {
+              tags$div(
+                id = ns("add_panel"),
+                class = "add-panel",
+                style = "display: none;",
+                self$ui_add(ns(private$dataname))
+              )
+            }
           ),
           shinyjs::hidden(
             tags$div(
               id = ns("filter_count_ui"),
               tagList(
-                textOutput(ns("filter_count")),
-                tags$br()
+                textOutput(ns("filter_count"))
               )
             )
           ),
@@ -322,17 +331,47 @@ FilteredDataset <- R6::R6Class( # nolint
             }
           )
 
+          output$collapse_ui <- renderUI({
+            req(self$is_filter_collapsable())
+            tags$a(
+              id = session$ns("collapse"),
+              class = "filter-icon",
+              tags$i(
+                id = session$ns("collapse_icon"),
+                class = "fa fa-angle-down",
+                title = "fold/expand transform panel",
+                onclick = sprintf(
+                  "togglePanelItem(this, ['%s', '%s'], 'fa-angle-down', 'fa-angle-right');
+                  clickWhenClassPresent('%s', 'fa-minus', this.classList.contains('fa-angle-right'));",
+                  session$ns("filter_count_ui"),
+                  session$ns("filters"),
+                  session$ns("add_filter_icon")
+                )
+              )
+            )
+          })
+
           private$observers[[session$ns("get_filter_state")]] <- observeEvent(self$get_filter_state(), {
             shinyjs::hide("filter_count_ui")
             shinyjs::show("filters")
-            shinyjs::toggle("remove_filters", condition = length(self$get_filter_state()) != 0)
-            shinyjs::toggle("collapse", condition = length(self$get_filter_state()) != 0)
+            shinyjs::toggle("remove_filters_ui", condition = self$is_filter_active())
+            shinyjs::toggle("collapse_ui", condition = self$is_filter_collapsable())
+            shinyjs::runjs(
+              sprintf(
+                "setAndRemoveClass('#%s', 'fa-angle-down', 'fa-angle-right')",
+                session$ns("collapse_icon")
+              )
+            )
           })
 
-          private$observers[[session$ns("collapse")]] <- observeEvent(input$collapse, {
-            shinyjs::toggle("filter_count_ui")
-            shinyjs::toggle("filters")
-            toggle_icon(session$ns("collapse"), c("fa-angle-right", "fa-angle-down"))
+          output$remove_filters_ui <- renderUI({
+            req(self$is_filter_active())
+            actionLink(
+              session$ns("remove_filters"),
+              label = "",
+              icon = icon("circle-xmark", lib = "font-awesome"),
+              class = "filter-icon"
+            )
           })
 
           private$observers[[session$ns("remove_filters")]] <- observeEvent(input$remove_filters, {

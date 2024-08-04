@@ -504,6 +504,8 @@ FilteredData <- R6::R6Class( # nolint
       tags$div(
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
+        include_js_files(pattern = "togglePanelItem"),
+        shinyjs::useShinyjs(),
         self$ui_overview(ns("overview")),
         self$ui_active(ns("active"), active_datanames = active_datanames)
       )
@@ -552,23 +554,27 @@ FilteredData <- R6::R6Class( # nolint
       tags$div(
         id = id, # not used, can be used to customize CSS behavior
         class = "well",
+        include_js_files(pattern = "togglePanelItem"),
         tags$div(
-          class = "filter-panel-active-header",
-          tags$span("Active Filter Variables", class = "text-primary mb-4"),
-          private$ui_available_filters(ns("available_filters")),
-          actionLink(
-            inputId = ns("minimise_filter_active"),
-            label = NULL,
-            icon = icon("angle-down", lib = "font-awesome"),
-            title = "Minimise panel",
-            class = "remove_all pull-right"
-          ),
-          actionLink(
-            inputId = ns("remove_all_filters"),
-            label = "",
-            icon("circle-xmark", lib = "font-awesome"),
-            title = "Remove active filters",
-            class = "remove_all pull-right"
+          # class = "filter-panel-active-header",
+          style = "display: flex; justify-content: space-between;",
+          tags$span("Active Filter Variables", class = "text-primary", style = "font-weight: 700;"),
+          tags$div(
+            style = "min-width: 60px;",
+            uiOutput(ns("remove_all_filters_ui")),
+            tags$a(
+              class = "remove_all",
+              tags$i(
+                class = "fa fa-angle-down",
+                title = "fold/expand ...",
+                onclick = sprintf(
+                  "togglePanelItem(this, ['%s', '%s'], 'fa-angle-down', 'fa-angle-right');",
+                  ns("filter_active_vars_contents"),
+                  ns("filters_active_count")
+                )
+              )
+            ),
+            private$ui_available_filters(ns("available_filters"))
           )
         ),
         tags$div(
@@ -616,10 +622,21 @@ FilteredData <- R6::R6Class( # nolint
           }
         )
 
+        output$remove_all_filters_ui <- renderUI({
+          req(private$is_filter_active())
+          actionLink(
+            inputId = session$ns("remove_all_filters"),
+            label = "",
+            icon("circle-xmark", lib = "font-awesome"),
+            title = "Remove active filters",
+            class = "remove_all"
+          )
+        })
+
         private$observers[[session$ns("get_filter_count")]] <- observeEvent(
           eventExpr = private$get_filter_count(),
           handlerExpr = {
-            shinyjs::toggle("remove_all_filters", condition = private$get_filter_count() != 0)
+            shinyjs::toggle("remove_all_filters", condition = private$is_filter_active())
             shinyjs::show("filter_active_vars_contents")
             shinyjs::hide("filters_active_count")
             toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"), TRUE)
@@ -695,12 +712,16 @@ FilteredData <- R6::R6Class( # nolint
           ),
           tags$div(
             class = "col-sm-3",
-            actionLink(
-              ns("minimise_filter_overview"),
-              label = NULL,
-              icon = icon("angle-down", lib = "font-awesome"),
-              title = "Minimise panel",
-              class = "remove pull-right"
+            tags$a(
+              class = "filter-icon",
+              tags$i(
+                class = "fa fa-angle-down",
+                title = "fold/expand ...",
+                onclick = sprintf(
+                  "togglePanelItem(this, '%s', 'fa-angle-down', 'fa-angle-right');",
+                  ns("filters_overview_contents")
+                )
+              )
             )
           )
         ),
@@ -732,15 +753,6 @@ FilteredData <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_debug("FilteredData$srv_filter_overview initializing")
-
-          private$observers[[session$ns("minimise_filter_overview")]] <- observeEvent(
-            eventExpr = input$minimise_filter_overview,
-            handlerExpr = {
-              shinyjs::toggle("filters_overview_contents")
-              toggle_icon(session$ns("minimise_filter_overview"), c("fa-angle-right", "fa-angle-down"))
-              toggle_title(session$ns("minimise_filter_overview"), c("Restore panel", "Minimise Panel"))
-            }
-          )
 
           output$table <- renderUI({
             logger::log_debug("FilteredData$srv_filter_overview@1 updating counts")
@@ -894,6 +906,22 @@ FilteredData <- R6::R6Class( # nolint
     # @return `integer(1)`
     get_filter_count = function() {
       length(self$get_filter_state())
+    },
+    is_filter_active = function() {
+      filter_active <- FALSE
+      if (private$get_filter_count() != 0) {
+        if (
+          !all(
+            sapply(
+              as.list(self$get_filter_state()),
+              function(x) as.list(x)$anchored
+            )
+          )
+        ) {
+          filter_active <- TRUE
+        }
+      }
+      filter_active
     },
 
     # @description
