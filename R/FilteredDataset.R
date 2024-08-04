@@ -277,12 +277,11 @@ FilteredDataset <- R6::R6Class( # nolint
               )
             }
           ),
-          shinyjs::hidden(
-            tags$div(
-              id = ns("filter_count_ui"),
-              tagList(
-                textOutput(ns("filter_count"))
-              )
+          tags$div(
+            id = ns("filter_count_ui"),
+            style = "display: none;",
+            tagList(
+              textOutput(ns("filter_count"))
             )
           ),
           tags$div(
