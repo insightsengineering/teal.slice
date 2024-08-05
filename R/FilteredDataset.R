@@ -342,7 +342,8 @@ FilteredDataset <- R6::R6Class( # nolint
             isTRUE(length(non_anchored) > 0)
           })
 
-          private$observers[[session$ns("get_filter_state")]] <- observeEvent(self$get_filter_state(), {
+          private$observers[[session$ns("get_filter_state")]] <- observeEvent(
+            self$get_filter_state(), ignoreInit = TRUE, {
             shinyjs::hide("filter_count_ui")
             shinyjs::show("filters")
             shinyjs::toggle("remove_filters_ui", condition = is_filter_removable())
