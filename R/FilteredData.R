@@ -588,11 +588,10 @@ FilteredData <- R6::R6Class( # nolint
             )
           )
         ),
-        shinyjs::hidden(
-          tags$div(
-            id = ns("filters_active_count"),
-            textOutput(ns("teal_filters_count"))
-          )
+        tags$div(
+          id = ns("filters_active_count"),
+          style = "display: none;",
+          textOutput(ns("teal_filters_count"))
         )
       )
     },
