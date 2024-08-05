@@ -336,20 +336,8 @@ FilteredDataset <- R6::R6Class( # nolint
           })
 
           is_filter_removable <- reactive({
-            filter_active <- FALSE
-            if (self$get_filter_count() != 0) {
-              if (
-                !all(
-                  sapply(
-                    as.list(self$get_filter_state()),
-                    function(x) as.list(x)$anchored
-                  )
-                )
-              ) {
-                filter_active <- TRUE
-              }
-            }
-            filter_active
+            non_anchored <- Filter(function(x) x$anchored, self$get_filter_state())
+            isTRUE(length(non_anchored) > 0)
           })
 
           private$observers[[session$ns("get_filter_state")]] <- observeEvent(self$get_filter_state(), {
