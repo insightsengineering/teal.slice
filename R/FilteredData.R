@@ -917,8 +917,8 @@ FilteredData <- R6::R6Class( # nolint
         if (
           !all(
             sapply(
-              as.list(self$get_filter_state()),
-              function(x) as.list(x)$anchored
+              self$get_filter_state(),
+              function(x) x$anchored
             )
           )
         ) {
