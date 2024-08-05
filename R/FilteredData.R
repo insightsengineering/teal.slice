@@ -556,7 +556,6 @@ FilteredData <- R6::R6Class( # nolint
         class = "well",
         include_js_files(pattern = "togglePanelItem"),
         tags$div(
-          # class = "filter-panel-active-header",
           style = "display: flex; justify-content: space-between;",
           tags$span("Active Filter Variables", class = "text-primary", style = "font-weight: 700;"),
           tags$div(
