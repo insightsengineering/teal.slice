@@ -179,7 +179,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' Get the logical value if the filter is collapsable.
     #' Collapsable means there is at least one filter applied.
     #' @return `logical(1)`
-    is_filter_collapsable = function() {
+    is_filter_collapsible = function() {
       length(self$get_filter_state()) != 0
     },
 
@@ -341,7 +341,7 @@ FilteredDataset <- R6::R6Class( # nolint
           )
 
           output$collapse_ui <- renderUI({
-            req(self$is_filter_collapsable())
+            req(self$is_filter_collapsible())
             tags$a(
               id = session$ns("collapse"),
               class = "filter-icon",
@@ -364,7 +364,7 @@ FilteredDataset <- R6::R6Class( # nolint
             shinyjs::hide("filter_count_ui")
             shinyjs::show("filters")
             shinyjs::toggle("remove_filters_ui", condition = self$is_filter_removable())
-            shinyjs::toggle("collapse_ui", condition = self$is_filter_collapsable())
+            shinyjs::toggle("collapse_ui", condition = self$is_filter_collapsible())
             shinyjs::runjs(
               sprintf(
                 "setAndRemoveClass('#%s', 'fa-angle-down', 'fa-angle-right')",

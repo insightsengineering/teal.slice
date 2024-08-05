@@ -24,7 +24,7 @@ components of the dataset.
 \item \href{#method-FilteredDataset-set_filter_state}{\code{FilteredDataset$set_filter_state()}}
 \item \href{#method-FilteredDataset-get_filter_count}{\code{FilteredDataset$get_filter_count()}}
 \item \href{#method-FilteredDataset-is_filter_removable}{\code{FilteredDataset$is_filter_removable()}}
-\item \href{#method-FilteredDataset-is_filter_collapsable}{\code{FilteredDataset$is_filter_collapsable()}}
+\item \href{#method-FilteredDataset-is_filter_collapsible}{\code{FilteredDataset$is_filter_collapsible()}}
 \item \href{#method-FilteredDataset-get_dataname}{\code{FilteredDataset$get_dataname()}}
 \item \href{#method-FilteredDataset-get_dataset}{\code{FilteredDataset$get_dataset()}}
 \item \href{#method-FilteredDataset-get_filter_overview}{\code{FilteredDataset$get_filter_overview()}}
@@ -219,13 +219,13 @@ Removable means there is at least one un-anchored filter applied.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-is_filter_collapsable"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-is_filter_collapsable}{}}}
-\subsection{Method \code{is_filter_collapsable()}}{
+\if{html}{\out{<a id="method-FilteredDataset-is_filter_collapsible"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-is_filter_collapsible}{}}}
+\subsection{Method \code{is_filter_collapsible()}}{
 Get the logical value if the filter is collapsable.
 Collapsable means there is at least one filter applied.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$is_filter_collapsable()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$is_filter_collapsible()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
