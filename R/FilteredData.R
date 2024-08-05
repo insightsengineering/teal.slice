@@ -620,9 +620,13 @@ FilteredData <- R6::R6Class( # nolint
           }
         )
 
+        filter_count <- reactive({
+          length(self$get_filter_state())
+        })
+
         is_filter_removable <- reactive({
           filter_active <- FALSE
-          if (private$get_filter_count() != 0) {
+          if (filter_count() != 0) {
             if (
               !all(
                 sapply(
@@ -649,7 +653,7 @@ FilteredData <- R6::R6Class( # nolint
         })
 
         private$observers[[session$ns("get_filter_count")]] <- observeEvent(
-          eventExpr = private$get_filter_count(),
+          eventExpr = filter_count(),
           handlerExpr = {
             shinyjs::toggle("remove_all_filters", condition = is_filter_removable())
             shinyjs::show("filter_active_vars_contents")
@@ -681,7 +685,7 @@ FilteredData <- R6::R6Class( # nolint
         )
 
         output$teal_filters_count <- renderText({
-          n_filters_active <- private$get_filter_count()
+          n_filters_active <- filter_count()
           req(n_filters_active > 0L)
           sprintf(
             "%s filter%s applied across datasets",
@@ -910,17 +914,6 @@ FilteredData <- R6::R6Class( # nolint
       } else {
         private$filtered_datasets[[dataname]]
       }
-    },
-
-    # we implement these functions as checks rather than returning logicals so they can
-    # give informative error messages immediately
-
-    # @description
-    # Gets the number of active `FilterState` objects in all `FilterStates`
-    # in all `FilteredDataset`s in this `FilteredData` object.
-    # @return `integer(1)`
-    get_filter_count = function() {
-      length(self$get_filter_state())
     },
 
     # @description
