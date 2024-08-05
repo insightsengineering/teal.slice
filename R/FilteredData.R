@@ -620,8 +620,25 @@ FilteredData <- R6::R6Class( # nolint
           }
         )
 
+        is_filter_removable <- reactive({
+          filter_active <- FALSE
+          if (private$get_filter_count() != 0) {
+            if (
+              !all(
+                sapply(
+                  self$get_filter_state(),
+                  function(x) x$anchored
+                )
+              )
+            ) {
+              filter_active <- TRUE
+            }
+          }
+          filter_active
+        })
+
         output$remove_all_filters_ui <- renderUI({
-          req(private$is_filter_removable())
+          req(is_filter_removable())
           actionLink(
             inputId = session$ns("remove_all_filters"),
             label = "",
@@ -634,7 +651,7 @@ FilteredData <- R6::R6Class( # nolint
         private$observers[[session$ns("get_filter_count")]] <- observeEvent(
           eventExpr = private$get_filter_count(),
           handlerExpr = {
-            shinyjs::toggle("remove_all_filters", condition = private$is_filter_removable())
+            shinyjs::toggle("remove_all_filters", condition = is_filter_removable())
             shinyjs::show("filter_active_vars_contents")
             shinyjs::hide("filters_active_count")
             toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"), TRUE)
@@ -904,27 +921,6 @@ FilteredData <- R6::R6Class( # nolint
     # @return `integer(1)`
     get_filter_count = function() {
       length(self$get_filter_state())
-    },
-
-    # @description
-    # Get the logical value if the filter is removable.
-    # Removable means there is at least one un-anchored filter applied.
-    # @return `logical(1)`
-    is_filter_removable = function() {
-      filter_active <- FALSE
-      if (private$get_filter_count() != 0) {
-        if (
-          !all(
-            sapply(
-              self$get_filter_state(),
-              function(x) x$anchored
-            )
-          )
-        ) {
-          filter_active <- TRUE
-        }
-      }
-      filter_active
     },
 
     # @description

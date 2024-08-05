@@ -155,35 +155,6 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Get the logical value if the filter is removable.
-    #' Removable means there is at least one un-anchored filter applied.
-    #' @return `logical(1)`
-    is_filter_removable = function() {
-      filter_active <- FALSE
-      if (self$get_filter_count() != 0) {
-        if (
-          !all(
-            sapply(
-              as.list(self$get_filter_state()),
-              function(x) as.list(x)$anchored
-            )
-          )
-        ) {
-          filter_active <- TRUE
-        }
-      }
-      filter_active
-    },
-
-    #' @description
-    #' Get the logical value if the filter is collapsable.
-    #' Collapsable means there is at least one filter applied.
-    #' @return `logical(1)`
-    is_filter_collapsible = function() {
-      length(self$get_filter_state()) != 0
-    },
-
-    #' @description
     #' Gets the name of the dataset.
     #'
     #' @return A character string.
@@ -340,8 +311,12 @@ FilteredDataset <- R6::R6Class( # nolint
             }
           )
 
+          is_filter_collapsible <- reactive({
+            length(self$get_filter_state()) != 0
+          })
+
           output$collapse_ui <- renderUI({
-            req(self$is_filter_collapsible())
+            req(is_filter_collapsible())
             tags$a(
               id = session$ns("collapse"),
               class = "filter-icon",
@@ -360,11 +335,28 @@ FilteredDataset <- R6::R6Class( # nolint
             )
           })
 
+          is_filter_removable <- reactive({
+            filter_active <- FALSE
+            if (self$get_filter_count() != 0) {
+              if (
+                !all(
+                  sapply(
+                    as.list(self$get_filter_state()),
+                    function(x) as.list(x)$anchored
+                  )
+                )
+              ) {
+                filter_active <- TRUE
+              }
+            }
+            filter_active
+          })
+
           private$observers[[session$ns("get_filter_state")]] <- observeEvent(self$get_filter_state(), {
             shinyjs::hide("filter_count_ui")
             shinyjs::show("filters")
-            shinyjs::toggle("remove_filters_ui", condition = self$is_filter_removable())
-            shinyjs::toggle("collapse_ui", condition = self$is_filter_collapsible())
+            shinyjs::toggle("remove_filters_ui", condition = is_filter_removable())
+            shinyjs::toggle("collapse_ui", condition = is_filter_collapsible())
             shinyjs::runjs(
               sprintf(
                 "setAndRemoveClass('#%s', 'fa-angle-down', 'fa-angle-right')",
@@ -374,7 +366,7 @@ FilteredDataset <- R6::R6Class( # nolint
           })
 
           output$remove_filters_ui <- renderUI({
-            req(self$is_filter_removable())
+            req(is_filter_removable())
             actionLink(
               session$ns("remove_filters"),
               label = "",
