@@ -236,7 +236,7 @@ FilteredDataset <- R6::R6Class( # nolint
                       class = "fa fa-plus",
                       title = "fold/expand transform panel",
                       onclick = sprintf(
-                        "togglePanelItem(this, '%s', 'fa-plus', 'fa-minus');",
+                        "togglePanelItems(this, '%s', 'fa-plus', 'fa-minus');",
                         ns("add_panel")
                       )
                     )
@@ -327,7 +327,7 @@ FilteredDataset <- R6::R6Class( # nolint
                 # TODO: clickWhenClassPresent() is used to hide the add_ui pannel during a collapse of the UI.
                 # In the future, it should be completely handled by collapsing the UI by positioning.
                 onclick = sprintf(
-                  "togglePanelItem(this, ['%s', '%s'], 'fa-angle-down', 'fa-angle-right');
+                  "togglePanelItems(this, ['%s', '%s'], 'fa-angle-down', 'fa-angle-right');
                   clickWhenClassPresent('%s', 'fa-minus', this.classList.contains('fa-angle-right'));",
                   session$ns("filter_count_ui"),
                   session$ns("filters"),

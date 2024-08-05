@@ -504,7 +504,7 @@ FilteredData <- R6::R6Class( # nolint
       tags$div(
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
-        include_js_files(pattern = "togglePanelItem"),
+        include_js_files(pattern = "togglePanelItems"),
         shinyjs::useShinyjs(),
         self$ui_overview(ns("overview")),
         self$ui_active(ns("active"), active_datanames = active_datanames)
@@ -554,7 +554,7 @@ FilteredData <- R6::R6Class( # nolint
       tags$div(
         id = id, # not used, can be used to customize CSS behavior
         class = "well",
-        include_js_files(pattern = "togglePanelItem"),
+        include_js_files(pattern = "togglePanelItems"),
         tags$div(
           style = "display: flex; justify-content: space-between;",
           tags$span("Active Filter Variables", class = "text-primary", style = "font-weight: 700;"),
@@ -567,7 +567,7 @@ FilteredData <- R6::R6Class( # nolint
                 class = "fa fa-angle-down",
                 title = "fold/expand ...",
                 onclick = sprintf(
-                  "togglePanelItem(this, ['%s', '%s'], 'fa-angle-down', 'fa-angle-right');",
+                  "togglePanelItems(this, ['%s', '%s'], 'fa-angle-down', 'fa-angle-right');",
                   ns("filter_active_vars_contents"),
                   ns("filters_active_count")
                 )
@@ -725,7 +725,7 @@ FilteredData <- R6::R6Class( # nolint
                 class = "fa fa-angle-down",
                 title = "fold/expand ...",
                 onclick = sprintf(
-                  "togglePanelItem(this, '%s', 'fa-angle-down', 'fa-angle-right');",
+                  "togglePanelItems(this, '%s', 'fa-angle-down', 'fa-angle-right');",
                   ns("filters_overview_contents")
                 )
               )
