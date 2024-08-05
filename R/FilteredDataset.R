@@ -348,7 +348,7 @@ FilteredDataset <- R6::R6Class( # nolint
               tags$i(
                 id = session$ns("collapse_icon"),
                 class = "fa fa-angle-down",
-                title = "fold/expand transform panel",
+                title = "fold/expand dataset filters",
                 onclick = sprintf(
                   "togglePanelItem(this, ['%s', '%s'], 'fa-angle-down', 'fa-angle-right');
                   clickWhenClassPresent('%s', 'fa-minus', this.classList.contains('fa-angle-right'));",
