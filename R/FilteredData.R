@@ -625,20 +625,8 @@ FilteredData <- R6::R6Class( # nolint
         })
 
         is_filter_removable <- reactive({
-          filter_active <- FALSE
-          if (filter_count() != 0) {
-            if (
-              !all(
-                sapply(
-                  self$get_filter_state(),
-                  function(x) x$anchored
-                )
-              )
-            ) {
-              filter_active <- TRUE
-            }
-          }
-          filter_active
+          non_anchored <- Filter(function(x) x$anchored, self$get_filter_state())
+          isTRUE(length(non_anchored) > 0)
         })
 
         output$remove_all_filters_ui <- renderUI({
