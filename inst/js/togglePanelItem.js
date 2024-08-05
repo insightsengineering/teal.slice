@@ -1,3 +1,4 @@
+// When invoked it adds the setClass and removes the removeClass from the element.
 function setAndRemoveClass(element, setClass, removeClass) {
   if (typeof element === "string") {
     element = document.querySelector(element);
@@ -6,6 +7,7 @@ function setAndRemoveClass(element, setClass, removeClass) {
   element.classList.remove(removeClass);
 }
 
+// When invoked it toggles the class of the element.
 function toggleClass(element, class1, class2) {
   if (typeof element === "string") {
     element = document.querySelector(element);
@@ -17,27 +19,20 @@ function toggleClass(element, class1, class2) {
   }
 }
 
+// When invoked it shows the targetSelector element.
 function showPanelItem(targeSelector, duration = 400, easing = "slideInTop") {
   $(`#${targeSelector}`).show(duration, easing);
   $(`#${targeSelector}`).trigger("shown");
 }
 
+// When invoked it hides the targetSelector element.
 function hidePanelItem(targeSelector, duration = 400, easing = "slideOutLeft") {
   $(`#${targeSelector}`).hide(duration, easing);
 }
 
-function setTitle(targeSelector, title) {
-  $(`#${targeSelector}`).attr("title", title);
-}
-
-function toggleTitle(targeSelector, title1, title2) {
-  var currentTitle = $(`#${targeSelector}`).attr("title");
-  var newTitle = currentTitle === title1 ? title2 : title1;
-  setTitle(targeSelector, newTitle);
-}
-
-// when invoked it hides/shows targeSelectors elements and changes class of element from class1 <-> class2
-function togglePanelItem(
+// When invoked it hides/shows targetSelectors elements
+// and changes class of element from class1 <-> class2
+function togglePanelItems(
   element,
   targetSelectors,
   class1,
@@ -60,6 +55,9 @@ function togglePanelItem(
   toggleClass(element, class1, class2);
 }
 
+// Clicks the targetSelector element when the element contains the class className.
+// Can also add additional condition to be meet before clicking
+// by passing a boolean value in additionalCondition.
 function clickWhenClassPresent(
   targetSelector,
   className,

@@ -324,6 +324,8 @@ FilteredDataset <- R6::R6Class( # nolint
                 id = session$ns("collapse_icon"),
                 class = "fa fa-angle-down",
                 title = "fold/expand dataset filters",
+                # TODO: clickWhenClassPresent() is used to hide the add_ui pannel during a collapse of the UI.
+                # In the future, it should be completely handled by collapsing the UI by positioning.
                 onclick = sprintf(
                   "togglePanelItem(this, ['%s', '%s'], 'fa-angle-down', 'fa-angle-right');
                   clickWhenClassPresent('%s', 'fa-minus', this.classList.contains('fa-angle-right'));",
