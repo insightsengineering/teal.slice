@@ -183,7 +183,9 @@ FilterStateExpr <- R6::R6Class( # nolint
           private$destroy_shiny <- function() {
             logger::log_debug("Destroying FilterStateExpr inputs; id: { private$get_id() }")
 
-            if (session$isEnded()) return(NULL) # skip input removal if session has ended
+            if (session$isEnded()) {
+              return(NULL)
+            } # skip input removal if session has ended
             # remove values from the input list
             lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
           }
