@@ -312,7 +312,7 @@ FilteredDataset <- R6::R6Class( # nolint
           )
 
           is_filter_collapsible <- reactive({
-            length(self$get_filter_state()) != 0
+            length(filter_count()) != 0
           })
 
           output$collapse_ui <- renderUI({
