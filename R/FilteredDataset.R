@@ -343,18 +343,21 @@ FilteredDataset <- R6::R6Class( # nolint
           })
 
           private$observers[[session$ns("get_filter_state")]] <- observeEvent(
-            self$get_filter_state(), ignoreInit = TRUE, {
-            shinyjs::hide("filter_count_ui")
-            shinyjs::show("filters")
-            shinyjs::toggle("remove_filters_ui", condition = is_filter_removable())
-            shinyjs::toggle("collapse_ui", condition = is_filter_collapsible())
-            shinyjs::runjs(
-              sprintf(
-                "setAndRemoveClass('#%s', 'fa-angle-down', 'fa-angle-right')",
-                session$ns("collapse_icon")
+            self$get_filter_state(),
+            ignoreInit = TRUE,
+            {
+              shinyjs::hide("filter_count_ui")
+              shinyjs::show("filters")
+              shinyjs::toggle("remove_filters_ui", condition = is_filter_removable())
+              shinyjs::toggle("collapse_ui", condition = is_filter_collapsible())
+              shinyjs::runjs(
+                sprintf(
+                  "setAndRemoveClass('#%s', 'fa-angle-down', 'fa-angle-right')",
+                  session$ns("collapse_icon")
+                )
               )
-            )
-          })
+            }
+          )
 
           output$remove_filters_ui <- renderUI({
             req(is_filter_removable())
