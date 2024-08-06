@@ -338,7 +338,7 @@ FilteredDataset <- R6::R6Class( # nolint
           })
 
           is_filter_removable <- reactive({
-            non_anchored <- Filter(function(x) x$anchored, self$get_filter_state())
+            non_anchored <- Filter(function(x) !x$anchored, self$get_filter_state())
             isTRUE(length(non_anchored) > 0)
           })
 
