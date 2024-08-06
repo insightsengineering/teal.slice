@@ -510,7 +510,6 @@ FilterStates <- R6::R6Class( # nolint
     datalabel = NULL, # to follow default `experiment = NULL` in `teal_slice`
     dataname = NULL, # because it holds object of class name
     dataname_prefixed = character(0), # name used in call returned from get_call
-    destroy_shiny = NULL, # function to destroy inputs
     exclude_varnames = character(0), # holds column names
     include_varnames = character(0), # holds column names
     extract_type = character(0), # type of the prefix in a subset call (eg. "list": x$var; "matrix": x[["var"]])
