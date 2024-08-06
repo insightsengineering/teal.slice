@@ -440,12 +440,13 @@ FilterStates <- R6::R6Class( # nolint
             )
           })
 
-
           output$add_filter <- renderUI({
             logger::log_debug(
               "FilterStates$srv_add@1 updating available column choices, dataname: { private$dataname }"
             )
             if (length(avail_column_choices()) == 0) {
+              # because input is not rendered anymore and still holds the latest selected value
+              shinyjs::runjs(sprintf("Shiny.setInputValue('%s', null);", session$ns("var_to_add")))
               tags$span("No available columns to add.")
             } else {
               tags$div(
@@ -464,6 +465,7 @@ FilterStates <- R6::R6Class( # nolint
 
           private$observers[[session$ns("var_to_add")]] <- observeEvent(
             eventExpr = input$var_to_add,
+            ignoreInit = TRUE, # variable can't be added on init - in needs user input
             handlerExpr = {
               logger::log_debug(
                 sprintf(
@@ -475,13 +477,6 @@ FilterStates <- R6::R6Class( # nolint
               self$set_filter_state(
                 teal_slices(
                   teal_slice(dataname = private$dataname, varname = input$var_to_add)
-                )
-              )
-              logger::log_debug(
-                sprintf(
-                  "FilterStates$srv_add@2 added FilterState of variable %s, dataname: %s",
-                  input$var_to_add,
-                  private$dataname
                 )
               )
             }
@@ -515,6 +510,7 @@ FilterStates <- R6::R6Class( # nolint
     datalabel = NULL, # to follow default `experiment = NULL` in `teal_slice`
     dataname = NULL, # because it holds object of class name
     dataname_prefixed = character(0), # name used in call returned from get_call
+    destroy_shiny = NULL, # function to destroy inputs
     exclude_varnames = character(0), # holds column names
     include_varnames = character(0), # holds column names
     extract_type = character(0), # type of the prefix in a subset call (eg. "list": x$var; "matrix": x[["var"]])
