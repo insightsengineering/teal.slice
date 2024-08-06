@@ -1,5 +1,72 @@
 /* teal.slice filter-panel css */
 
+.well {
+  padding: 15px;
+}
+
+a.filter-icon {
+  font-weight: normal;
+  float: right;
+  border: 0;
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.3);
+  font-weight: 100;
+  font-size: 0.9em;
+  margin-top: 0;
+}
+
+a.filter-icon i {
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+a.filter-icon:hover {
+  color: #337ab7;
+}
+
+a.filter-icon_all {
+  font-weight: normal;
+  float: right;
+  border: 0;
+  background-color: transparent;
+  color: rgb(136, 0, 0, 0.72);
+  font-weight: 100;
+  font-size: 0.9em;
+  padding: 2px 4px;
+  opacity: 50%;
+}
+
+a.filter-icon_all:hover {
+  color: #d40000;
+}
+
+.filter-icon.add-filter {
+  max-height: 20px;
+  align-self: flex-end;
+  margin-left: 7px;
+  background: white;
+  border-radius: 5px;
+  border: solid 1px #e3e3e3;
+}
+
+.filter-icon.add-filter:has(.fa-minus) {
+  border-radius: 5px 5px 0px 0px;
+  border-bottom-color: white;
+  border-bottom-width: 2px;
+}
+
+.add-panel {
+  background: white;
+  border-radius: 3px;
+  border: solid 1px #e3e3e3;
+  margin-top: -1px;
+  padding: 7px;
+}
+
+.add-panel .form-group {
+  margin-bottom: 0;
+}
+
 .relative {
   position: relative;
 }
@@ -123,6 +190,7 @@ a.remove:hover {
 }
 
 a.remove_all {
+  cursor: pointer;
   font-weight: normal;
   float: right;
   border: 0;
@@ -163,18 +231,18 @@ a.remove_all:hover {
 }
 
 .choices_state_label {
-  background-color:lightblue;
-  height:2rem;
-  display:inline-block;
-  position:absolute;
+  background-color: lightblue;
+  height: 2rem;
+  display: inline-block;
+  position: absolute;
   margin-top: -3px;
 }
 
 .choices_state_label_unfiltered {
-  background-color:lightgray;
+  background-color: lightgray;
   height: 2rem;
   margin-top: -3px;
-  display:inline-block;
+  display: inline-block;
   position: absolute;
 }
 
@@ -338,7 +406,7 @@ a.remove_all:hover {
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  padding-right: 0.5em
+  padding-right: 0.5em;
 }
 .filter-card-summary-controls {
   flex: 0 0 auto;
@@ -351,11 +419,11 @@ a.remove_all:hover {
 }
 
 .fa-check {
-  color: var(--bs-success, var(--success, #3c763d))
+  color: var(--bs-success, var(--success, #3c763d));
 }
 
 .fa-xmark {
-  color: var(--bs-danger, var(--danger, #a94442))
+  color: var(--bs-danger, var(--danger, #a94442));
 }
 
 .filter-card-remove,
@@ -402,11 +470,10 @@ a.remove_all:hover {
 }
 
 .input-group-prepend {
- font-size: 1em !important;;
+  font-size: 1em !important;
 }
 
-
-.filter_datelike_input  input {
+.filter_datelike_input input {
   font-size: 1em !important;
 }
 
@@ -414,10 +481,8 @@ a.remove_all:hover {
   margin-top: 0.1em;
 }
 
-
-
 .choices_state {
-  margin-bottom: .45rem;
+  margin-bottom: 0.45rem;
 }
 
 .popover-header {

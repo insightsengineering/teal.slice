@@ -22,7 +22,6 @@ components of the dataset.
 \item \href{#method-FilteredDataset-get_call}{\code{FilteredDataset$get_call()}}
 \item \href{#method-FilteredDataset-get_filter_state}{\code{FilteredDataset$get_filter_state()}}
 \item \href{#method-FilteredDataset-set_filter_state}{\code{FilteredDataset$set_filter_state()}}
-\item \href{#method-FilteredDataset-get_filter_count}{\code{FilteredDataset$get_filter_count()}}
 \item \href{#method-FilteredDataset-get_dataname}{\code{FilteredDataset$get_dataname()}}
 \item \href{#method-FilteredDataset-get_dataset}{\code{FilteredDataset$get_dataset()}}
 \item \href{#method-FilteredDataset-get_filter_overview}{\code{FilteredDataset$get_filter_overview()}}
@@ -187,19 +186,6 @@ Set filter state.
 }
 \subsection{Returns}{
 Virtual method, returns nothing and raises error.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_filter_count"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_count}{}}}
-\subsection{Method \code{get_filter_count()}}{
-Gets the number of \code{FilterState} objects in all \code{FilterStates} in this \code{FilteredDataset}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_count()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{integer(1)}
 }
 }
 \if{html}{\out{<hr>}}

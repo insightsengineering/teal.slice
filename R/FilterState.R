@@ -288,6 +288,8 @@ FilterState <- R6::R6Class( # nolint
             lapply(private$observers, function(x) x$destroy())
           }
 
+          private$state_history <- reactiveVal(list())
+
           NULL
         }
       )
