@@ -148,13 +148,6 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets the number of `FilterState` objects in all `FilterStates` in this `FilteredDataset`.
-    #' @return `integer(1)`
-    get_filter_count = function() {
-      length(self$get_filter_state())
-    },
-
-    #' @description
     #' Gets the name of the dataset.
     #'
     #' @return A character string.
@@ -296,11 +289,15 @@ FilteredDataset <- R6::R6Class( # nolint
           dataname <- self$get_dataname()
           logger::log_debug("FilteredDataset$srv_active initializing, dataname: { dataname }")
           checkmate::assert_string(dataname)
+
+          filter_count <- reactive({
+            length(self$get_filter_state())
+          })
           output$filter_count <- renderText(
             sprintf(
               "%d filter%s applied",
-              self$get_filter_count(),
-              if (self$get_filter_count() != 1) "s" else ""
+              filter_count(),
+              if (filter_count() != 1) "s" else ""
             )
           )
 
