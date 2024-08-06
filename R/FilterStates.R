@@ -445,7 +445,7 @@ FilterStates <- R6::R6Class( # nolint
               "FilterStates$srv_add@1 updating available column choices, dataname: { private$dataname }"
             )
             if (length(avail_column_choices()) == 0) {
-              # because input is not rendered anymore and still holds the latest selected value
+              # because input UI is not rendered on this condition but shiny still holds latest selected value
               shinyjs::runjs(sprintf("Shiny.setInputValue('%s', null);", session$ns("var_to_add")))
               tags$span("No available columns to add.")
             } else {
@@ -465,7 +465,7 @@ FilterStates <- R6::R6Class( # nolint
 
           private$observers[[session$ns("var_to_add")]] <- observeEvent(
             eventExpr = input$var_to_add,
-            ignoreInit = TRUE, # variable can't be added on init - in needs user input
+            ignoreInit = TRUE, # variable can't be added on init - it needs user input
             handlerExpr = {
               logger::log_debug(
                 sprintf(
