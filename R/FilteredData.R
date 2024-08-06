@@ -640,7 +640,7 @@ FilteredData <- R6::R6Class( # nolint
           )
         })
 
-        private$observers[[session$ns("get_filter_count")]] <- observeEvent(
+        private$observers[[session$ns("is_filter_removable")]] <- observeEvent(
           eventExpr = is_filter_removable(),
           handlerExpr = {
             shinyjs::toggle("remove_all_filters", condition = is_filter_removable())
