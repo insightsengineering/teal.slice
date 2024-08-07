@@ -176,13 +176,14 @@ FilterStateExpr <- R6::R6Class( # nolint
             handlerExpr = remove_callback()
           )
 
-          private$session_bindings[[session$ns("inputs")]] <- function() {
-            logger::log_debug("Destroying FilterState inputs and observers; id: { private$get_id() }")
-            if (!session$isEnded()) {
-              # remove inputs and observers
-              lapply(private$session_bindings, function(x) x$destroy()))
-            } # skip input removal if session has ended
-          }
+          private$session_bindings[[session$ns("inputs")]] <- list(
+            destroy = function() {
+              logger::log_debug("Destroying FilterState inputs and observers; id: { private$get_id() }")
+              if (!session$isEnded()) {
+                lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+              } # skip input removal if session has ended
+            }
+          )
 
           NULL
         }

@@ -412,7 +412,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_debug("ChoicesFilterState$server_inputs initializing, id: { private$get_id() }")
-
           # 1. renderUI is used here as an observer which triggers only if output is visible
           #  and if the reactive changes - reactive triggers only if the output is visible.
           # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
@@ -503,7 +502,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
               }
             )
           }
-
 
           private$keep_na_srv("keep_na")
 

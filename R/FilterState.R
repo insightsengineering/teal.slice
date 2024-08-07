@@ -275,13 +275,14 @@ FilterState <- R6::R6Class( # nolint
             handlerExpr = remove_callback()
           )
 
-          private$session_bindings[[session$ns("inputs")]] <- function() {
-            logger::log_debug("Destroying FilterState inputs and observers; id: { private$get_id() }")
-            if (!session$isEnded()) {
-              # remove observers
-              lapply(private$session_bindings, function(x) x$destroy()))
-            } # skip input removal if session has ended
-          }
+          private$session_bindings[[session$ns("inputs")]] <- list(
+            destroy = function() {
+              logger::log_debug("Destroying FilterState inputs and observers; id: { private$get_id() }")
+              if (!session$isEnded()) {
+                lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+              } # skip input removal if session has ended
+            }
+          )
 
           private$state_history <- reactiveVal(list())
 
@@ -406,7 +407,7 @@ FilterState <- R6::R6Class( # nolint
     varlabel = character(0), # taken from variable labels in data; displayed in filter cards
     # other
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
-    session_bindigs = list(), # stores observers and inputs to destroy afterwards
+    session_bindings = list(), # stores observers and inputs to destroy afterwards
     state_history = NULL, # reactiveVal holding a list storing states this FilterState has had since instantiation
 
     # private methods ----

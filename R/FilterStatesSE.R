@@ -296,7 +296,7 @@ SEFilterStates <- R6::R6Class( # nolint
           )
 
           # Extra observer that clears all input values in session
-          private$session_bindings[[session$ns("inputs")"]] <- list(
+          private$session_bindings[[session$ns("inputs")]] <- list(
             destroy = function() {
               if (!session$isEnded()) {
                 lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)

@@ -372,7 +372,7 @@ FilterStates <- R6::R6Class( # nolint
               lapply(added_states(), function(state) {
                 state$server(
                   id = fs_to_shiny_ns(state),
-                  function() private$state_list_remove(state$get_state()$id)
+                  remove_callback = function() private$state_list_remove(state$get_state()$id)
                 )
               })
               added_states(NULL)
@@ -446,7 +446,6 @@ FilterStates <- R6::R6Class( # nolint
             )
             if (length(avail_column_choices()) == 0) {
               # because input UI is not rendered on this condition but shiny still holds latest selected value
-              shinyjs::runjs(sprintf("Shiny.setInputValue('%s', null);", session$ns("var_to_add")))
               tags$span("No available columns to add.")
             } else {
               tags$div(
@@ -643,7 +642,6 @@ FilterStates <- R6::R6Class( # nolint
     state_list_remove = function(state_id, force = FALSE) {
       checkmate::assert_character(state_id)
       logger::log_debug("{ class(self)[1] } removing a filter, state_id: { toString(state_id) }")
-
       isolate({
         current_state_ids <- vapply(private$state_list(), function(x) x$get_state()$id, character(1))
         to_remove <- state_id %in% current_state_ids

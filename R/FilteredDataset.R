@@ -290,9 +290,6 @@ FilteredDataset <- R6::R6Class( # nolint
           logger::log_debug("FilteredDataset$srv_active initializing, dataname: { dataname }")
           checkmate::assert_string(dataname)
 
-
-          self$srv_add(private$dataname)
-
           filter_count <- reactive({
             length(self$get_filter_state())
           })
@@ -376,7 +373,6 @@ FilteredDataset <- R6::R6Class( # nolint
             logger::log_debug("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
           })
 
-
           private$session_bindings[[session$ns("inputs")]] <- list(
             destroy = function() {
               if (!session$isEnded()) {
@@ -384,6 +380,8 @@ FilteredDataset <- R6::R6Class( # nolint
               }
             }
           )
+
+          self$srv_add(private$dataname)
 
           NULL
         }
