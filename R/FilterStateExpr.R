@@ -240,7 +240,7 @@ FilterStateExpr <- R6::R6Class( # nolint
   # private members ----
 
   private = list(
-    shiny_bindigs = list(), # stores observers and inputs to destroy afterwards
+    session_bindings = list(), # stores observers and inputs to destroy afterwards
     teal_slice = NULL, # stores reactiveValues
 
     # @description
