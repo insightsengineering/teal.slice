@@ -290,9 +290,13 @@ FilteredDataset <- R6::R6Class( # nolint
           logger::log_debug("FilteredDataset$srv_active initializing, dataname: { dataname }")
           checkmate::assert_string(dataname)
 
+
+          self$srv_add(private$dataname)
+
           filter_count <- reactive({
             length(self$get_filter_state())
           })
+
           output$filter_count <- renderText(
             sprintf(
               "%d filter%s applied",
@@ -339,7 +343,7 @@ FilteredDataset <- R6::R6Class( # nolint
             isTRUE(length(non_anchored) > 0)
           })
 
-          private$observers[[session$ns("get_filter_state")]] <- observeEvent(
+          private$session_bindings[[session$ns("get_filter_state")]] <- observeEvent(
             self$get_filter_state(),
             ignoreInit = TRUE,
             {
@@ -366,13 +370,20 @@ FilteredDataset <- R6::R6Class( # nolint
             )
           })
 
-          private$observers[[session$ns("remove_filters")]] <- observeEvent(input$remove_filters, {
+          private$session_bindings[[session$ns("remove_filters")]] <- observeEvent(input$remove_filters, {
             logger::log_debug("FilteredDataset$srv_active@1 removing all non-anchored filters, dataname: { dataname }")
             self$clear_filter_states()
             logger::log_debug("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
           })
 
-          self$srv_add(private$dataname)
+
+          private$session_bindings[[session$ns("inputs")]] <- list(
+            destroy = function() {
+              if (!session$isEnded()) {
+                lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+              }
+            }
+          )
 
           NULL
         }
@@ -420,12 +431,12 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Object and dependencies cleanup.
     #'
-    #' - Destroy observers stored in `private$observers`
+    #' - Destroy inputs and observers stored in `private$session_bindings`
     #' - Finalize `FilterStates` stored in `private$filter_states`
     #'
     #' @return `NULL`, invisibly.
     finalize = function() {
-      .finalize_observers(self, private)
+      .finalize_session_bindings(self, private)
       lapply(private$filter_states, function(x) x$finalize())
       invisible(NULL)
     }
@@ -439,7 +450,7 @@ FilteredDataset <- R6::R6Class( # nolint
     dataname = character(0),
     keys = character(0),
     label = character(0),
-    observers = list(),
+    session_bindings = list(),
 
     # Adds `FilterStates` to the `private$filter_states`.
     # `FilterStates` is added once for each element of the dataset.

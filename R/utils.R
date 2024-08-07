@@ -67,7 +67,16 @@ make_c_call <- function(choices) {
   }
 }
 
-.finalize_observers <- function(self, private) {
-  if (length(private$observers) > 0) lapply(private$observers, function(x) x$destroy())
+#' Destroys inputs and observers stored in `private$session_bindings`
+#'
+#' @description
+#' Call a `destroy` method to remove `observer` and `input` from obsolete session which happens
+#' when `filter_panel_srv` is called again in new `FilteredData` object.
+#' Inputs are not stored directly in a field as they don't have `destroy` method. Instead, we
+#' store callback `destroy` function for inputs which removes bindings from a `session`.
+#' @param self,private slots of a `R6` class
+#' @return `NULL` invisibly
+.finalize_session_bindings <- function(self, private) {
+  if (length(private$session_bindings) > 0) lapply(private$session_bindings, function(x) x$destroy())
   invisible(NULL)
 }

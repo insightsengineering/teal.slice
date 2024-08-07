@@ -454,7 +454,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             })
           })
 
-          private$observers[[session$ns("selection")]] <- if (private$is_checkboxgroup()) {
+          private$session_bindings[[session$ns("selection")]] <- if (private$is_checkboxgroup()) {
             observeEvent(
               ignoreNULL = FALSE,
               ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
@@ -510,7 +510,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           # this observer is needed in the situation when teal_slice$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
-          private$observers[[session$ns("selection_api")]] <- observeEvent(private$get_selected(), {
+          private$session_bindings[[session$ns("selection_api")]] <- observeEvent(private$get_selected(), {
             # it's important to not retrigger when the input$selection is the same as reactive values
             # kept in the teal_slice$selected
             if (!setequal(input$selection, private$get_selected())) {

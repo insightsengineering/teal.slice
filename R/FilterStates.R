@@ -363,7 +363,7 @@ FilterStates <- R6::R6Class( # nolint
             )
           })
 
-          private$observers[[session$ns("added_states")]] <- observeEvent(
+          private$session_bindings[[session$ns("added_states")]] <- observeEvent(
             added_states(), # we want to call FilterState module only once when it's added
             ignoreNULL = TRUE,
             {
@@ -463,9 +463,8 @@ FilterStates <- R6::R6Class( # nolint
             }
           })
 
-          private$observers[[session$ns("var_to_add")]] <- observeEvent(
+          private$session_bindings[[session$ns("var_to_add")]] <- observeEvent(
             eventExpr = input$var_to_add,
-            ignoreInit = TRUE, # variable can't be added on init - it needs user input
             handlerExpr = {
               logger::log_debug(
                 sprintf(
@@ -482,6 +481,15 @@ FilterStates <- R6::R6Class( # nolint
             }
           )
 
+          # Extra observer that clears all input values in session
+          private$session_bindings[[session$ns("inputs")]] <- list(
+            destroy = function() {
+              if (!session$isEnded()) {
+                lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+              }
+            }
+          )
+
           NULL
         }
       )
@@ -490,13 +498,13 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Object cleanup.
     #'
-    #' - Destroy observers stored in `private$observers`
+    #' - Destroy inputs and observers stored in `private$session_bindings`
     #' - Clean `state_list`
     #'
     #' @return `NULL`, invisibly.
     #'
     finalize = function() {
-      .finalize_observers(self, private) # Remove all observers
+      .finalize_session_bindings(self, private) # Remove all inputs and observers
       private$state_list_empty(force = TRUE)
       isolate(private$state_list(NULL))
       invisible(NULL)
@@ -516,7 +524,7 @@ FilterStates <- R6::R6Class( # nolint
     fun = quote(subset), # function used to generate subset call
     keys = character(0),
     ns = NULL, # shiny ns()
-    observers = list(), # observers
+    session_bindings = list(), # inputs and observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
 
     # private methods ----
