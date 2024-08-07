@@ -1,4 +1,4 @@
-# teal.slice 0.5.1.9006
+# teal.slice 0.5.1.9008
 
 ### Enhancements
 * The `ui_add` and `srv_add` methods from the `FilteredData` class are being called inside the `ui_active` and `srv_active` methods, respectively. This allows us to reduce the space of the filter panel by not displaying the "add filters" UI in a separate panel.
