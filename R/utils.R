@@ -76,6 +76,7 @@ make_c_call <- function(choices) {
 #' store callback `destroy` function for inputs which removes bindings from a `session`.
 #' @param self,private slots of a `R6` class
 #' @return `NULL` invisibly
+#' @keywords internal
 .finalize_session_bindings <- function(self, private) {
   if (length(private$session_bindings) > 0) lapply(private$session_bindings, function(x) x$destroy())
   invisible(NULL)

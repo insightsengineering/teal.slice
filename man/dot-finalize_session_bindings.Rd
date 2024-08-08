@@ -18,3 +18,4 @@ when \code{filter_panel_srv} is called again in new \code{FilteredData} object.
 Inputs are not stored directly in a field as they don't have \code{destroy} method. Instead, we
 store callback \code{destroy} function for inputs which removes bindings from a \code{session}.
 }
+\keyword{internal}
