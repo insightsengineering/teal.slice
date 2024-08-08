@@ -107,8 +107,6 @@ FilterState <- R6::R6Class( # nolint
 
       private$state_history <- reactiveVal(list())
 
-      logger::log_trace("Instantiated FilterState object id: { private$get_id() }")
-
       invisible(self)
     },
 
@@ -151,7 +149,7 @@ FilterState <- R6::R6Class( # nolint
       if (private$is_fixed()) {
         warning("attempt to set state on fixed filter aborted id: ", private$get_id())
       } else {
-        logger::log_trace("{ class(self)[1] }$set_state setting state of filter id: { private$get_id() }")
+        logger::log_debug("{ class(self)[1] }$set_state setting state of filter id: { private$get_id() }")
         isolate({
           if (!is.null(state$selected)) {
             private$set_selected(state$selected)
@@ -200,13 +198,16 @@ FilterState <- R6::R6Class( # nolint
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
     #'
+    #' @param remove_callback (`function`)
+    #'   callback to handle removal of this `FilterState` object from `state_list`
+    #'
     #' @return Reactive expression signaling that remove button has been clicked.
     #'
-    server = function(id) {
+    server = function(id, remove_callback) {
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("FilterState$server initializing module for slice: { private$get_id() } ")
+          logger::log_debug("FilterState$server initializing module for slice: { private$get_id() } ")
           private$server_summary("summary")
           if (private$is_fixed()) {
             private$server_inputs_fixed("inputs")
@@ -214,7 +215,7 @@ FilterState <- R6::R6Class( # nolint
             private$server_inputs("inputs")
           }
 
-          private$observers$state <- observeEvent(
+          private$session_bindings[[session$ns("state")]] <- observeEvent(
             eventExpr = list(private$get_selected(), private$get_keep_na(), private$get_keep_inf()),
             handlerExpr = {
               current_state <- as.list(self$get_state())
@@ -224,7 +225,7 @@ FilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observers$back <- observeEvent(
+          private$session_bindings[[session$ns("back")]] <- observeEvent(
             eventExpr = input$back,
             handlerExpr = {
               history <- rev(private$state_history())
@@ -235,7 +236,7 @@ FilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observers$reset <- observeEvent(
+          private$session_bindings[[session$ns("reset")]] <- observeEvent(
             eventExpr = input$reset,
             handlerExpr = {
               slice <- private$state_history()[[1L]]
@@ -245,7 +246,7 @@ FilterState <- R6::R6Class( # nolint
 
           # Buttons for rewind/reset are disabled upon change in history to prevent double-clicking.
           # Re-enabling occurs after 100 ms, after they are potentially hidden when no history is present.
-          private$observers$state_history <- observeEvent(
+          private$session_bindings[[session$ns("state_history")]] <- observeEvent(
             eventExpr = private$state_history(),
             handlerExpr = {
               shinyjs::disable(id = "back")
@@ -267,16 +268,25 @@ FilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$destroy_shiny <- function() {
-            logger::log_trace("Destroying FilterState inputs and observers; id: { private$get_id() }")
-            # remove values from the input list
-            lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+          private$session_bindings[[session$ns("remove")]] <- observeEvent(
+            once = TRUE, # remove button can be called once, should be destroyed afterwards
+            ignoreInit = TRUE, # ignoreInit: should not matter because we destroy the previous input set of the UI
+            eventExpr = input$remove, # when remove button is clicked in the FilterState ui
+            handlerExpr = remove_callback()
+          )
 
-            # remove observers
-            lapply(private$observers, function(x) x$destroy())
-          }
+          private$session_bindings[[session$ns("inputs")]] <- list(
+            destroy = function() {
+              logger::log_debug("Destroying FilterState inputs and observers; id: { private$get_id() }")
+              if (!session$isEnded()) {
+                lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+              }
+            }
+          )
 
-          reactive(input$remove)
+          private$state_history <- reactiveVal(list())
+
+          NULL
         }
       )
     },
@@ -374,14 +384,14 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Destroy observers stored in `private$observers`.
+    #' Destroy inputs and observers stored in `private$session_bindings`.
+    #'
     #'
     #' @return `NULL`, invisibly.
     #'
-    destroy_observers = function() {
-      if (!is.null(private$destroy_shiny)) {
-        private$destroy_shiny()
-      }
+    finalize = function() {
+      .finalize_session_bindings(self, private)
+      invisible(NULL)
     }
   ),
 
@@ -395,10 +405,9 @@ FilterState <- R6::R6Class( # nolint
     na_count = integer(0),
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
     varlabel = character(0), # taken from variable labels in data; displayed in filter cards
-    destroy_shiny = NULL, # function is set in server
     # other
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
-    observers = list(), # stores observers
+    session_bindings = list(), # stores observers and inputs to destroy afterwards
     state_history = NULL, # reactiveVal holding a list storing states this FilterState has had since instantiation
 
     # private methods ----
@@ -422,7 +431,7 @@ FilterState <- R6::R6Class( # nolint
     #
     # @return `NULL`, invisibly.
     set_selected = function(value) {
-      logger::log_trace(
+      logger::log_debug(
         sprintf(
           "%s$set_selected setting selection of id: %s",
           class(self)[1],
@@ -435,13 +444,6 @@ FilterState <- R6::R6Class( # nolint
         value <- private$remove_out_of_bounds_values(value)
         private$teal_slice$selected <- value
       })
-      logger::log_trace(
-        sprintf(
-          "%s$set_selected selection of id: %s",
-          class(self)[1],
-          private$get_id()
-        )
-      )
 
       invisible(NULL)
     },
@@ -457,7 +459,7 @@ FilterState <- R6::R6Class( # nolint
     set_keep_na = function(value) {
       checkmate::assert_flag(value)
       private$teal_slice$keep_na <- value
-      logger::log_trace(
+      logger::log_debug(
         sprintf(
           "%s$set_keep_na set for filter %s to %s.",
           class(self)[1],
@@ -479,7 +481,7 @@ FilterState <- R6::R6Class( # nolint
     set_keep_inf = function(value) {
       checkmate::assert_flag(value)
       private$teal_slice$keep_inf <- value
-      logger::log_trace(
+      logger::log_debug(
         sprintf(
           "%s$set_keep_inf of filter %s set to %s",
           class(self)[1],
@@ -761,13 +763,13 @@ FilterState <- R6::R6Class( # nolint
         # this observer is needed in the situation when private$keep_inf has been
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
-        private$observers$keep_na_api <- observeEvent(
+        private$session_bindings[[session$ns("keep_na_api")]] <- observeEvent(
           ignoreNULL = FALSE, # nothing selected is possible for NA
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = private$get_keep_na(),
           handlerExpr = {
             if (!setequal(private$get_keep_na(), input$value)) {
-              logger::log_trace("FilterState$keep_na_srv@1 changed reactive value, id: { private$get_id() }")
+              logger::log_debug("FilterState$keep_na_srv@1 changed reactive value, id: { private$get_id() }")
               updateCheckboxInput(
                 inputId = "value",
                 label = sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
@@ -776,12 +778,12 @@ FilterState <- R6::R6Class( # nolint
             }
           }
         )
-        private$observers$keep_na <- observeEvent(
+        private$session_bindings[[session$ns("keep_na")]] <- observeEvent(
           ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,
           handlerExpr = {
-            logger::log_trace("FilterState$keep_na_srv@2 changed input, id: { private$get_id() }")
+            logger::log_debug("FilterState$keep_na_srv@2 changed input, id: { private$get_id() }")
             keep_na <- if (is.null(input$value)) {
               FALSE
             } else {

@@ -54,7 +54,7 @@ Modifying a \code{FilterState} object is possible in three scenarios:
 \item \href{#method-FilterState-get_call}{\code{FilterState$get_call()}}
 \item \href{#method-FilterState-server}{\code{FilterState$server()}}
 \item \href{#method-FilterState-ui}{\code{FilterState$ui()}}
-\item \href{#method-FilterState-destroy_observers}{\code{FilterState$destroy_observers()}}
+\item \href{#method-FilterState-finalize}{\code{FilterState$finalize()}}
 \item \href{#method-FilterState-clone}{\code{FilterState$clone()}}
 }
 }
@@ -200,7 +200,7 @@ and must be executed in reactive or isolated context.
 \subsection{Method \code{server()}}{
 \code{shiny} module server.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$server(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$server(id, remove_callback)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -208,6 +208,9 @@ and must be executed in reactive or isolated context.
 \describe{
 \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
+
+\item{\code{remove_callback}}{(\code{function})
+callback to handle removal of this \code{FilterState} object from \code{state_list}}
 }
 \if{html}{\out{</div>}}
 }
@@ -237,12 +240,12 @@ The UI for this class contains simple message stating that it is not supported.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-destroy_observers"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-destroy_observers}{}}}
-\subsection{Method \code{destroy_observers()}}{
-Destroy observers stored in \code{private$observers}.
+\if{html}{\out{<a id="method-FilterState-finalize"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-finalize}{}}}
+\subsection{Method \code{finalize()}}{
+Destroy inputs and observers stored in \code{private$session_bindings}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$destroy_observers()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$finalize()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

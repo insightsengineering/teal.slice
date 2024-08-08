@@ -39,7 +39,7 @@
   grDevices::rgb
   htmltools::tagInsertChildren
   lifecycle::badge
-  logger::log_trace
+  logger::log_debug
   plotly::plot_ly
   shinycssloaders::withSpinner
   shinyWidgets::pickerOptions

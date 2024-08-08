@@ -599,57 +599,6 @@ testthat::test_that("srv_active - clicking remove_all button clears filters", {
   )
 })
 
-# get_filter_count
-testthat::test_that("get_filter_count properly tallies active filter states", {
-  testthat::skip_if_not_installed("MultiAssayExperiment")
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  test_class <- R6::R6Class(
-    classname = "test_class",
-    inherit = FilteredData,
-    public = list(
-      get_filter_count = function() private$get_filter_count()
-    )
-  )
-  datasets <- test_class$new(list(iris = iris, mtcars = mtcars, mae = miniACC))
-  fs <- teal_slices(
-    teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
-    teal_slice(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
-    teal_slice(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
-  )
-  shiny::isolate(testthat::expect_equal(datasets$get_filter_count(), 0L))
-  datasets$set_filter_state(state = fs)
-  shiny::isolate(testthat::expect_equal(datasets$get_filter_count(), 4L))
-})
-
-testthat::test_that("get_filter_count properly tallies active filter states for MAE objects", {
-  test_class <- R6::R6Class(
-    classname = "test_class",
-    inherit = FilteredData,
-    public = list(
-      get_filter_count = function() {
-        length(self$get_filter_state())
-      }
-    )
-  )
-  testthat::skip_if_not_installed("MultiAssayExperiment")
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  datasets <- test_class$new(list(iris = iris, mtcars = mtcars, mae = miniACC))
-  fs <- teal_slices(
-    teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    teal_slice(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    teal_slice(
-      dataname = "mae", varname = "ARRAY_TYPE",
-      selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset"
-    )
-  )
-  shiny::isolate(testthat::expect_equal(datasets$get_filter_count(), 0L))
-  datasets$set_filter_state(state = fs)
-  shiny::isolate(testthat::expect_equal(datasets$get_filter_count(), 4L))
-})
-
-
 
 test_class <- R6::R6Class(
   classname = "test_class",

@@ -167,12 +167,9 @@ clear_filter_states <- function(datasets, force = FALSE) {
 #' @export
 #'
 get_filter_expr <- function(datasets, datanames = datasets$datanames()) {
-  checkmate::assert_character(datanames, min.len = 1, any.missing = FALSE)
-  stopifnot(
-    is(datasets, "FilteredData"),
-    all(datanames %in% datasets$datanames())
-  )
-
+  checkmate::check_class(datasets, "FilteredData")
+  checkmate::assert_character(datanames, any.missing = FALSE)
+  checkmate::assert_subset(datanames, datasets$datanames())
   paste(
     unlist(lapply(
       datanames,

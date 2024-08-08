@@ -98,8 +98,9 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' Blank UI module that would list active filter states for this dataset.
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
+    #' @param allow_add (ignored)
     #' @return An empty `div`.
-    ui_active = function(id) {
+    ui_active = function(id, allow_add) {
       ns <- NS(id)
       tags$div()
     },

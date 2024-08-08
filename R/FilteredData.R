@@ -306,7 +306,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     set_dataset = function(data, dataname) {
       checkmate::assert_string(dataname)
-      logger::log_trace("FilteredData$set_dataset setting dataset, name: { dataname }")
+      logger::log_debug("FilteredData$set_dataset setting dataset, name: { dataname }")
       # to include it nicely in the Show R Code;
       # the UI also uses `datanames` in ids, so no whitespaces allowed
       check_simple_name(dataname)
@@ -406,7 +406,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `NULL`, invisibly.
     set_filter_state = function(state) {
       isolate({
-        logger::log_trace("{ class(self)[1] }$set_filter_state initializing")
+        logger::log_debug("{ class(self)[1] }$set_filter_state initializing")
         checkmate::assert_class(state, "teal_slices")
         allow_add <- attr(state, "allow_add")
         if (!is.null(allow_add)) {
@@ -418,7 +418,7 @@ FilteredData <- R6::R6Class( # nolint
           private$get_filtered_dataset(dataname)$set_filter_state(states)
         })
 
-        logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
+        invisible(NULL)
       })
 
       invisible(NULL)
@@ -439,7 +439,7 @@ FilteredData <- R6::R6Class( # nolint
         datanames <- unique(vapply(state, "[[", character(1L), "dataname"))
         checkmate::assert_subset(datanames, self$datanames())
 
-        logger::log_trace(
+        logger::log_debug(
           "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
         )
 
@@ -448,7 +448,7 @@ FilteredData <- R6::R6Class( # nolint
           private$get_filtered_dataset(dataname)$remove_filter_state(slices)
         })
 
-        logger::log_trace(
+        logger::log_debug(
           "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
         )
       })
@@ -468,7 +468,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `NULL`, invisibly.
     #'
     clear_filter_states = function(datanames = self$datanames(), force = FALSE) {
-      logger::log_trace(
+      logger::log_debug(
         "FilteredData$clear_filter_states called, datanames: { toString(datanames) }"
       )
 
@@ -477,7 +477,7 @@ FilteredData <- R6::R6Class( # nolint
         fdataset$clear_filter_states(force)
       }
 
-      logger::log_trace(
+      logger::log_debug(
         paste(
           "FilteredData$clear_filter_states removed all non-anchored FilterStates,",
           "datanames: { toString(datanames) }"
@@ -496,17 +496,18 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
+    #' @param active_datanames (`reactive`)
+    #'   defining subset of `self$datanames()` to be displayed.
     #' @return `shiny.tag`
-    ui_filter_panel = function(id) {
+    ui_filter_panel = function(id, active_datanames = self$datanames) {
       ns <- NS(id)
       tags$div(
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
+        include_js_files(pattern = "togglePanelItems"),
+        shinyjs::useShinyjs(),
         self$ui_overview(ns("overview")),
-        self$ui_active(ns("active")),
-        if (private$allow_add) {
-          self$ui_add(ns("add"))
-        }
+        self$ui_active(ns("active"), active_datanames = active_datanames)
       )
     },
 
@@ -526,7 +527,7 @@ FilteredData <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("FilteredData$srv_filter_panel initializing")
+          logger::log_debug("FilteredData$srv_filter_panel initializing")
 
           active_datanames_resolved <- reactive({
             checkmate::assert_subset(active_datanames(), self$datanames())
@@ -535,11 +536,7 @@ FilteredData <- R6::R6Class( # nolint
 
           self$srv_overview("overview", active_datanames_resolved)
           self$srv_active("active", active_datanames_resolved)
-          if (private$allow_add) {
-            self$srv_add("add", active_datanames_resolved)
-          }
 
-          logger::log_trace("FilteredData$srv_filter_panel initialized")
           NULL
         }
       )
@@ -549,48 +546,52 @@ FilteredData <- R6::R6Class( # nolint
     #' Server module responsible for displaying active filters.
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
+    #' @param active_datanames (`reactive`)
+    #'   defining subset of `self$datanames()` to be displayed.
     #' @return `shiny.tag`
-    ui_active = function(id) {
+    ui_active = function(id, active_datanames = self$datanames) {
       ns <- NS(id)
       tags$div(
         id = id, # not used, can be used to customize CSS behavior
         class = "well",
+        include_js_files(pattern = "togglePanelItems"),
         tags$div(
-          class = "filter-panel-active-header",
-          tags$span("Active Filter Variables", class = "text-primary mb-4"),
-          private$ui_available_filters(ns("available_filters")),
-          actionLink(
-            inputId = ns("minimise_filter_active"),
-            label = NULL,
-            icon = icon("angle-down", lib = "font-awesome"),
-            title = "Minimise panel",
-            class = "remove_all pull-right"
-          ),
-          actionLink(
-            inputId = ns("remove_all_filters"),
-            label = "",
-            icon("circle-xmark", lib = "font-awesome"),
-            title = "Remove active filters",
-            class = "remove_all pull-right"
+          style = "display: flex; justify-content: space-between;",
+          tags$span("Active Filter Variables", class = "text-primary", style = "font-weight: 700;"),
+          tags$div(
+            style = "min-width: 60px;",
+            uiOutput(ns("remove_all_filters_ui")),
+            tags$a(
+              class = "remove_all",
+              tags$i(
+                class = "fa fa-angle-down",
+                title = "fold/expand ...",
+                onclick = sprintf(
+                  "togglePanelItems(this, ['%s', '%s'], 'fa-angle-down', 'fa-angle-right');",
+                  ns("filter_active_vars_contents"),
+                  ns("filters_active_count")
+                )
+              )
+            ),
+            private$ui_available_filters(ns("available_filters"))
           )
         ),
         tags$div(
           id = ns("filter_active_vars_contents"),
           tagList(
             lapply(
-              self$datanames(),
+              isolate(active_datanames()),
               function(dataname) {
                 fdataset <- private$get_filtered_dataset(dataname)
-                fdataset$ui_active(id = ns(dataname))
+                fdataset$ui_active(id = ns(dataname), allow_add = private$allow_add)
               }
             )
           )
         ),
-        shinyjs::hidden(
-          tags$div(
-            id = ns("filters_active_count"),
-            textOutput(ns("teal_filters_count"))
-          )
+        tags$div(
+          id = ns("filters_active_count"),
+          style = "display: none;",
+          textOutput(ns("teal_filters_count"))
         )
       )
     },
@@ -605,34 +606,61 @@ FilteredData <- R6::R6Class( # nolint
     srv_active = function(id, active_datanames = self$datanames) {
       checkmate::assert_function(active_datanames)
       moduleServer(id, function(input, output, session) {
-        logger::log_trace("FilteredData$srv_active initializing")
+        logger::log_debug("FilteredData$srv_active initializing")
 
         private$srv_available_filters("available_filters")
 
-        observeEvent(input$minimise_filter_active, {
-          shinyjs::toggle("filter_active_vars_contents")
-          shinyjs::toggle("filters_active_count")
-          toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"))
-          toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"))
+        private$session_bindings[[session$ns("minimise_filter_active")]] <- observeEvent(
+          eventExpr = input$minimise_filter_active,
+          handlerExpr = {
+            shinyjs::toggle("filter_active_vars_contents")
+            shinyjs::toggle("filters_active_count")
+            toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"))
+            toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"))
+          }
+        )
+
+        filter_count <- reactive({
+          length(self$get_filter_state())
         })
 
-        observeEvent(private$get_filter_count(), {
-          shinyjs::toggle("remove_all_filters", condition = private$get_filter_count() != 0)
-          shinyjs::show("filter_active_vars_contents")
-          shinyjs::hide("filters_active_count")
-          toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"), TRUE)
-          toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"), TRUE)
+        is_filter_removable <- reactive({
+          non_anchored <- Filter(function(x) !x$anchored, self$get_filter_state())
+          isTRUE(length(non_anchored) > 0)
         })
 
-        observeEvent(active_datanames(), {
-          lapply(self$datanames(), function(dataname) {
+        output$remove_all_filters_ui <- renderUI({
+          req(is_filter_removable())
+          actionLink(
+            inputId = session$ns("remove_all_filters"),
+            label = "",
+            icon("circle-xmark", lib = "font-awesome"),
+            title = "Remove active filters",
+            class = "remove_all"
+          )
+        })
+
+        private$session_bindings[[session$ns("is_filter_removable")]] <- observeEvent(
+          eventExpr = is_filter_removable(),
+          handlerExpr = {
+            shinyjs::toggle("remove_all_filters", condition = is_filter_removable())
+            shinyjs::show("filter_active_vars_contents")
+            shinyjs::hide("filters_active_count")
+            toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"), TRUE)
+            toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"), TRUE)
+          }
+        )
+
+        private$session_bindings[[session$ns("active_datanames")]] <- observeEvent(
+          eventExpr = active_datanames(),
+          handlerExpr = lapply(self$datanames(), function(dataname) {
             if (dataname %in% active_datanames()) {
               shinyjs::show(dataname)
             } else {
               shinyjs::hide(dataname)
             }
           })
-        })
+        )
 
         # should not use for-loop as variables are otherwise only bound by reference
         # and last dataname would be used
@@ -645,7 +673,7 @@ FilteredData <- R6::R6Class( # nolint
         )
 
         output$teal_filters_count <- renderText({
-          n_filters_active <- private$get_filter_count()
+          n_filters_active <- filter_count()
           req(n_filters_active > 0L)
           sprintf(
             "%s filter%s applied across datasets",
@@ -654,95 +682,23 @@ FilteredData <- R6::R6Class( # nolint
           )
         })
 
-        observeEvent(input$remove_all_filters, {
-          logger::log_trace("FilteredData$srv_filter_panel@1 removing all non-anchored filters")
-          self$clear_filter_states()
-          logger::log_trace("FilteredData$srv_filter_panel@1 removed all non-anchored filters")
-        })
-        logger::log_trace("FilteredData$srv_active initialized")
-        NULL
-      })
-    },
-
-    #' @description
-    #' Server module responsible for displaying drop-downs with variables to add a filter.
-    #' @param id (`character(1)`)
-    #'   `shiny` module instance id.
-    #' @return `shiny.tag`
-    ui_add = function(id) {
-      ns <- NS(id)
-      tags$div(
-        id = id, # not used, can be used to customize CSS behavior
-        class = "well",
-        tags$div(
-          class = "row",
-          tags$div(
-            class = "col-sm-9",
-            tags$label("Add Filter Variables", class = "text-primary mb-4")
-          ),
-          tags$div(
-            class = "col-sm-3",
-            actionLink(
-              ns("minimise_filter_add_vars"),
-              label = NULL,
-              icon = icon("angle-down", lib = "font-awesome"),
-              title = "Minimise panel",
-              class = "remove pull-right"
-            )
-          )
-        ),
-        tags$div(
-          id = ns("filter_add_vars_contents"),
-          tagList(
-            lapply(
-              self$datanames(),
-              function(dataname) {
-                fdataset <- private$get_filtered_dataset(dataname)
-                tags$span(id = ns(dataname), fdataset$ui_add(ns(dataname)))
-              }
-            )
-          )
-        )
-      )
-    },
-
-    #' @description
-    #' Server module responsible for displaying drop-downs with variables to add a filter.
-    #' @param id (`character(1)`)
-    #'   `shiny` module instance id.
-    #' @param active_datanames (`reactive`)
-    #'   defining subset of `self$datanames()` to be displayed.
-    #' @return `NULL`.
-    srv_add = function(id, active_datanames = reactive(self$datanames())) {
-      checkmate::assert_class(active_datanames, "reactive")
-      moduleServer(id, function(input, output, session) {
-        logger::log_trace("FilteredData$srv_add initializing")
-        observeEvent(input$minimise_filter_add_vars, {
-          shinyjs::toggle("filter_add_vars_contents")
-          toggle_icon(session$ns("minimise_filter_add_vars"), c("fa-angle-right", "fa-angle-down"))
-          toggle_title(session$ns("minimise_filter_add_vars"), c("Restore panel", "Minimise Panel"))
-        })
-
-        observeEvent(active_datanames(), {
-          lapply(self$datanames(), function(dataname) {
-            if (dataname %in% active_datanames()) {
-              shinyjs::show(dataname)
-            } else {
-              shinyjs::hide(dataname)
-            }
-          })
-        })
-
-        # should not use for-loop as variables are otherwise only bound by reference
-        # and last dataname would be used
-        lapply(
-          self$datanames(),
-          function(dataname) {
-            fdataset <- private$get_filtered_dataset(dataname)
-            fdataset$srv_add(id = dataname)
+        private$session_bindings[[session$ns("remove_all_filters")]] <- observeEvent(
+          eventExpr = input$remove_all_filters,
+          handlerExpr = {
+            logger::log_debug("FilteredData$srv_filter_panel@1 removing all non-anchored filters")
+            self$clear_filter_states()
+            logger::log_debug("FilteredData$srv_filter_panel@1 removed all non-anchored filters")
           }
         )
-        logger::log_trace("FilteredData$srv_filter_panel initialized")
+
+        private$session_bindings[[session$ns("inputs")]] <- list(
+          destroy = function() {
+            if (!session$isEnded()) {
+              lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+            }
+          }
+        )
+
         NULL
       })
     },
@@ -771,12 +727,16 @@ FilteredData <- R6::R6Class( # nolint
           ),
           tags$div(
             class = "col-sm-3",
-            actionLink(
-              ns("minimise_filter_overview"),
-              label = NULL,
-              icon = icon("angle-down", lib = "font-awesome"),
-              title = "Minimise panel",
-              class = "remove pull-right"
+            tags$a(
+              class = "filter-icon",
+              tags$i(
+                class = "fa fa-angle-down",
+                title = "fold/expand ...",
+                onclick = sprintf(
+                  "togglePanelItems(this, '%s', 'fa-angle-down', 'fa-angle-right');",
+                  ns("filters_overview_contents")
+                )
+              )
             )
           )
         ),
@@ -807,16 +767,10 @@ FilteredData <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("FilteredData$srv_filter_overview initializing")
-
-          observeEvent(input$minimise_filter_overview, {
-            shinyjs::toggle("filters_overview_contents")
-            toggle_icon(session$ns("minimise_filter_overview"), c("fa-angle-right", "fa-angle-down"))
-            toggle_title(session$ns("minimise_filter_overview"), c("Restore panel", "Minimise Panel"))
-          })
+          logger::log_debug("FilteredData$srv_filter_overview initializing")
 
           output$table <- renderUI({
-            logger::log_trace("FilteredData$srv_filter_overview@1 updating counts")
+            logger::log_debug("FilteredData$srv_filter_overview@1 updating counts")
             if (length(active_datanames()) == 0) {
               return(NULL)
             }
@@ -894,13 +848,26 @@ FilteredData <- R6::R6Class( # nolint
               tags$thead(header_html),
               tags$tbody(body_html)
             )
-            logger::log_trace("FilteredData$srv_filter_overview@1 updated counts")
+            logger::log_debug("FilteredData$srv_filter_overview@1 updated counts")
             table_html
           })
-          logger::log_trace("FilteredData$srv_filter_overview initialized")
+
           NULL
         }
       )
+    },
+
+    #' @description
+    #' Object and dependencies cleanup.
+    #'
+    #' - Destroy inputs and observers stored in `private$session_bindings`
+    #' - Finalize `FilteredData` stored in `private$filtered_datasets`
+    #'
+    #' @return `NULL`, invisibly.
+    finalize = function() {
+      .finalize_session_bindings(self, private)
+      lapply(private$filtered_datasets, function(x) x$finalize())
+      invisible(NULL)
     }
   ),
 
@@ -923,6 +890,9 @@ FilteredData <- R6::R6Class( # nolint
     # flag specifying whether the user may add filters
     allow_add = TRUE,
 
+    # observers and inputs list
+    session_bindings = list(),
+
     # private methods ----
 
     # @description
@@ -940,17 +910,6 @@ FilteredData <- R6::R6Class( # nolint
       } else {
         private$filtered_datasets[[dataname]]
       }
-    },
-
-    # we implement these functions as checks rather than returning logicals so they can
-    # give informative error messages immediately
-
-    # @description
-    # Gets the number of active `FilterState` objects in all `FilterStates`
-    # in all `FilteredDataset`s in this `FilteredData` object.
-    # @return `integer(1)`
-    get_filter_count = function() {
-      length(self$get_filter_state())
     },
 
     # @description
@@ -1063,33 +1022,42 @@ FilteredData <- R6::R6Class( # nolint
           )
         })
 
-        observeEvent(input$available_slices_id, ignoreNULL = FALSE, ignoreInit = TRUE, {
-          new_slices_id <- setdiff(input$available_slices_id, active_slices_id())
-          removed_slices_id <- setdiff(active_slices_id(), input$available_slices_id)
-          if (length(new_slices_id)) {
-            new_teal_slices <- Filter(
-              function(slice) slice$id %in% new_slices_id,
-              private$available_teal_slices()
-            )
-            self$set_filter_state(new_teal_slices)
-          }
+        private$session_bindings[[session$ns("available_slices_id")]] <- observeEvent(
+          eventExpr = input$available_slices_id,
+          ignoreNULL = FALSE,
+          ignoreInit = TRUE,
+          handlerExpr = {
+            new_slices_id <- setdiff(input$available_slices_id, active_slices_id())
+            removed_slices_id <- setdiff(active_slices_id(), input$available_slices_id)
+            if (length(new_slices_id)) {
+              new_teal_slices <- Filter(
+                function(slice) slice$id %in% new_slices_id,
+                private$available_teal_slices()
+              )
+              self$set_filter_state(new_teal_slices)
+            }
 
-          if (length(removed_slices_id)) {
-            removed_teal_slices <- Filter(
-              function(slice) slice$id %in% removed_slices_id,
-              self$get_filter_state()
-            )
-            self$remove_filter_state(removed_teal_slices)
+            if (length(removed_slices_id)) {
+              removed_teal_slices <- Filter(
+                function(slice) slice$id %in% removed_slices_id,
+                self$get_filter_state()
+              )
+              self$remove_filter_state(removed_teal_slices)
+            }
           }
-        })
+        )
 
-        observeEvent(private$available_teal_slices(), ignoreNULL = FALSE, {
-          if (length(private$available_teal_slices())) {
-            shinyjs::show("available_menu")
-          } else {
-            shinyjs::hide("available_menu")
+        private$session_bindings[[session$ns("available_teal_slices")]] <- observeEvent(
+          eventExpr = private$available_teal_slices(),
+          ignoreNULL = FALSE,
+          handlerExpr = {
+            if (length(private$available_teal_slices())) {
+              shinyjs::show("available_menu")
+            } else {
+              shinyjs::hide("available_menu")
+            }
           }
-        })
+        )
       })
     }
   )
