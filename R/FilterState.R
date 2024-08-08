@@ -280,7 +280,7 @@ FilterState <- R6::R6Class( # nolint
               logger::log_debug("Destroying FilterState inputs and observers; id: { private$get_id() }")
               if (!session$isEnded()) {
                 lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
-              } # skip input removal if session has ended
+              }
             }
           )
 
