@@ -243,9 +243,7 @@ The UI for this class contains simple message stating that it is not supported.
 \if{html}{\out{<a id="method-FilterState-finalize"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-finalize}{}}}
 \subsection{Method \code{finalize()}}{
-Destroy observers stored in \code{private$observers}.
-
-The \code{destroy_shiny} definition is set in the server method.
+Destroy inputs and observers stored in \code{private$session_bindings}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$finalize()}\if{html}{\out{</div>}}
 }

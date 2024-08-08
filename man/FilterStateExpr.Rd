@@ -202,7 +202,7 @@ and must be executed in reactive or isolated context.}
 \if{html}{\out{<a id="method-FilterStateExpr-finalize"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-finalize}{}}}
 \subsection{Method \code{finalize()}}{
-Destroy observers stored in \code{private$observers}.
+Destroy inputs and observers stored in \code{private$session_bindings}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$finalize()}\if{html}{\out{</div>}}
 }

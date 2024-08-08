@@ -676,7 +676,7 @@ panel will be hidden.}
 \subsection{Method \code{finalize()}}{
 Object and dependencies cleanup.
 \itemize{
-\item Destroy observers stored in \code{private$observers}
+\item Destroy inputs and observers stored in \code{private$session_bindings}
 \item Finalize \code{FilteredData} stored in \code{private$filtered_datasets}
 }
 \subsection{Usage}{

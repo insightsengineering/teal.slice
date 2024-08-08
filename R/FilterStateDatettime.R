@@ -388,7 +388,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
           # this observer is needed in the situation when teal_slice$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
-          private$observers[[session$ns("selection_api")]] <- observeEvent(
+          private$session_bindings[[session$ns("selection_api")]] <- observeEvent(
             ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE, # on init selected == default, so no need to trigger
             eventExpr = private$get_selected(),
@@ -417,7 +417,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
           )
 
 
-          private$observers[[session$ns("selection_start")]] <- observeEvent(
+          private$session_bindings[[session$ns("selection_start")]] <- observeEvent(
             ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection_start,
@@ -445,7 +445,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observers[[session$ns("selection_end")]] <- observeEvent(
+          private$session_bindings[[session$ns("selection_end")]] <- observeEvent(
             ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection_end,
@@ -475,7 +475,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
           private$keep_na_srv("keep_na")
 
-          private$observers[[session$ns("reset1")]] <- observeEvent(
+          private$session_bindings[[session$ns("reset1")]] <- observeEvent(
             ignoreInit = TRUE, # reset button shouldn't be trigger on init
             ignoreNULL = TRUE, # it's impossible and wrong to set default to NULL
             input$start_date_reset,
@@ -488,7 +488,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
               logger::log_debug("DatetimeFilterState$server@2 reset start date, id: { private$get_id() }")
             }
           )
-          private$observers[[session$ns("reset2")]] <- observeEvent(
+          private$session_bindings[[session$ns("reset2")]] <- observeEvent(
             ignoreInit = TRUE, # reset button shouldn't be trigger on init
             ignoreNULL = TRUE, # it's impossible and wrong to set default to NULL
             input$end_date_reset,

@@ -141,16 +141,12 @@ FilterStateExpr <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Destroy observers stored in `private$observers`.
+    #' Destroy inputs and observers stored in `private$session_bindings`.
     #'
     #' @return `NULL`, invisibly.
     #'
     finalize = function() {
-      lapply(private$observers, function(x) x$destroy())
-
-      if (!is.null(private$destroy_shiny)) {
-        private$destroy_shiny()
-      }
+      .finalize_session_bindings(self, private)
       invisible(NULL)
     },
 
@@ -173,22 +169,21 @@ FilterStateExpr <- R6::R6Class( # nolint
         function(input, output, session) {
           private$server_summary("summary")
 
-          private$observers[[session$ns("remove")]] <- observeEvent(
+          private$session_bindings[[session$ns("remove")]] <- observeEvent(
             once = TRUE, # remove button can be called once, should be destroyed afterwards
             ignoreInit = TRUE, # ignoreInit: should not matter because we destroy the previous input set of the UI
             eventExpr = input$remove, # when remove button is clicked in the FilterState ui
             handlerExpr = remove_callback()
           )
 
-          private$destroy_shiny <- function() {
-            logger::log_debug("Destroying FilterStateExpr inputs; id: { private$get_id() }")
-
-            if (session$isEnded()) {
-              return(NULL)
-            } # skip input removal if session has ended
-            # remove values from the input list
-            lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
-          }
+          private$session_bindings[[session$ns("inputs")]] <- list(
+            destroy = function() {
+              logger::log_debug("Destroying FilterState inputs and observers; id: { private$get_id() }")
+              if (!session$isEnded()) {
+                lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+              }
+            }
+          )
 
           NULL
         }
@@ -245,9 +240,8 @@ FilterStateExpr <- R6::R6Class( # nolint
   # private members ----
 
   private = list(
-    observers = NULL, # stores observers
+    session_bindings = list(), # stores observers and inputs to destroy afterwards
     teal_slice = NULL, # stores reactiveValues
-    destroy_shiny = NULL, # function is set in server
 
     # @description
     # Get id of the teal_slice.

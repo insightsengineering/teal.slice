@@ -357,7 +357,7 @@ contains one \code{FilterStates} object for \code{colData} and one for each expe
 \subsection{Method \code{finalize()}}{
 Object and dependencies cleanup.
 \itemize{
-\item Destroy observers stored in \code{private$observers}
+\item Destroy inputs and observers stored in \code{private$session_bindings}
 \item Finalize \code{FilterStates} stored in \code{private$filter_states}
 }
 \subsection{Usage}{

@@ -506,7 +506,7 @@ RangeFilterState <- R6::R6Class( # nolint
           })
 
           # Dragging shapes (lines) on plot updates selection.
-          private$observers[[session$ns("relayout")]] <- observeEvent(
+          private$session_bindings[[session$ns("relayout")]] <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
             eventExpr = relayout_data(),
@@ -540,7 +540,7 @@ RangeFilterState <- R6::R6Class( # nolint
           )
 
           # Change in selection updates shapes (lines) on plot and numeric input.
-          private$observers[[session$ns("selection_api")]] <- observeEvent(
+          private$session_bindings[[session$ns("selection_api")]] <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
             eventExpr = private$get_selected(),
@@ -557,7 +557,7 @@ RangeFilterState <- R6::R6Class( # nolint
           )
 
           # Manual input updates selection.
-          private$observers[[session$ns("selection_manual")]] <- observeEvent(
+          private$session_bindings[[session$ns("selection_manual")]] <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
             eventExpr = selection_manual(),
@@ -712,7 +712,7 @@ RangeFilterState <- R6::R6Class( # nolint
         # this observer is needed in the situation when private$teal_slice$keep_inf has been
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
-        private$observers[[session$ns("keep_inf_api")]] <- observeEvent(
+        private$session_bindings[[session$ns("keep_inf_api")]] <- observeEvent(
           ignoreNULL = TRUE, # its not possible for range that NULL is selected
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = private$get_keep_inf(),
@@ -727,7 +727,7 @@ RangeFilterState <- R6::R6Class( # nolint
           }
         )
 
-        private$observers[[session$ns("keep_inf")]] <- observeEvent(
+        private$session_bindings[[session$ns("keep_inf")]] <- observeEvent(
           ignoreNULL = TRUE, # it's not possible for range that NULL is selected
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,

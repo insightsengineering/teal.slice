@@ -363,7 +363,7 @@ FilterStates <- R6::R6Class( # nolint
             )
           })
 
-          private$observers[[session$ns("added_states")]] <- observeEvent(
+          private$session_bindings[[session$ns("added_states")]] <- observeEvent(
             added_states(), # we want to call FilterState module only once when it's added
             ignoreNULL = TRUE,
             {
@@ -372,7 +372,7 @@ FilterStates <- R6::R6Class( # nolint
               lapply(added_states(), function(state) {
                 state$server(
                   id = fs_to_shiny_ns(state),
-                  function() private$state_list_remove(state$get_state()$id)
+                  remove_callback = function() private$state_list_remove(state$get_state()$id)
                 )
               })
               added_states(NULL)
@@ -440,12 +440,12 @@ FilterStates <- R6::R6Class( # nolint
             )
           })
 
-
           output$add_filter <- renderUI({
             logger::log_debug(
               "FilterStates$srv_add@1 updating available column choices, dataname: { private$dataname }"
             )
             if (length(avail_column_choices()) == 0) {
+              # because input UI is not rendered on this condition but shiny still holds latest selected value
               tags$span("No available columns to add.")
             } else {
               tags$div(
@@ -462,7 +462,7 @@ FilterStates <- R6::R6Class( # nolint
             }
           })
 
-          private$observers[[session$ns("var_to_add")]] <- observeEvent(
+          private$session_bindings[[session$ns("var_to_add")]] <- observeEvent(
             eventExpr = input$var_to_add,
             handlerExpr = {
               logger::log_debug(
@@ -477,13 +477,15 @@ FilterStates <- R6::R6Class( # nolint
                   teal_slice(dataname = private$dataname, varname = input$var_to_add)
                 )
               )
-              logger::log_debug(
-                sprintf(
-                  "FilterStates$srv_add@2 added FilterState of variable %s, dataname: %s",
-                  input$var_to_add,
-                  private$dataname
-                )
-              )
+            }
+          )
+
+          # Extra observer that clears all input values in session
+          private$session_bindings[[session$ns("inputs")]] <- list(
+            destroy = function() {
+              if (!session$isEnded()) {
+                lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+              }
             }
           )
 
@@ -495,13 +497,13 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Object cleanup.
     #'
-    #' - Destroy observers stored in `private$observers`
+    #' - Destroy inputs and observers stored in `private$session_bindings`
     #' - Clean `state_list`
     #'
     #' @return `NULL`, invisibly.
     #'
     finalize = function() {
-      .finalize_observers(self, private) # Remove all observers
+      .finalize_session_bindings(self, private) # Remove all inputs and observers
       private$state_list_empty(force = TRUE)
       isolate(private$state_list(NULL))
       invisible(NULL)
@@ -521,7 +523,7 @@ FilterStates <- R6::R6Class( # nolint
     fun = quote(subset), # function used to generate subset call
     keys = character(0),
     ns = NULL, # shiny ns()
-    observers = list(), # observers
+    session_bindings = list(), # inputs and observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
 
     # private methods ----
@@ -640,7 +642,6 @@ FilterStates <- R6::R6Class( # nolint
     state_list_remove = function(state_id, force = FALSE) {
       checkmate::assert_character(state_id)
       logger::log_debug("{ class(self)[1] } removing a filter, state_id: { toString(state_id) }")
-
       isolate({
         current_state_ids <- vapply(private$state_list(), function(x) x$get_state()$id, character(1))
         to_remove <- state_id %in% current_state_ids

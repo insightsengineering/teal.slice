@@ -412,7 +412,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_debug("ChoicesFilterState$server_inputs initializing, id: { private$get_id() }")
-
           # 1. renderUI is used here as an observer which triggers only if output is visible
           #  and if the reactive changes - reactive triggers only if the output is visible.
           # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
@@ -454,7 +453,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             })
           })
 
-          private$observers[[session$ns("selection")]] <- if (private$is_checkboxgroup()) {
+          private$session_bindings[[session$ns("selection")]] <- if (private$is_checkboxgroup()) {
             observeEvent(
               ignoreNULL = FALSE,
               ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
@@ -504,13 +503,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
             )
           }
 
-
           private$keep_na_srv("keep_na")
 
           # this observer is needed in the situation when teal_slice$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
-          private$observers[[session$ns("selection_api")]] <- observeEvent(private$get_selected(), {
+          private$session_bindings[[session$ns("selection_api")]] <- observeEvent(private$get_selected(), {
             # it's important to not retrigger when the input$selection is the same as reactive values
             # kept in the teal_slice$selected
             if (!setequal(input$selection, private$get_selected())) {

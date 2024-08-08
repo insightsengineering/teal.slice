@@ -610,7 +610,7 @@ FilteredData <- R6::R6Class( # nolint
 
         private$srv_available_filters("available_filters")
 
-        private$observers[[session$ns("minimise_filter_active")]] <- observeEvent(
+        private$session_bindings[[session$ns("minimise_filter_active")]] <- observeEvent(
           eventExpr = input$minimise_filter_active,
           handlerExpr = {
             shinyjs::toggle("filter_active_vars_contents")
@@ -640,7 +640,7 @@ FilteredData <- R6::R6Class( # nolint
           )
         })
 
-        private$observers[[session$ns("is_filter_removable")]] <- observeEvent(
+        private$session_bindings[[session$ns("is_filter_removable")]] <- observeEvent(
           eventExpr = is_filter_removable(),
           handlerExpr = {
             shinyjs::toggle("remove_all_filters", condition = is_filter_removable())
@@ -651,7 +651,7 @@ FilteredData <- R6::R6Class( # nolint
           }
         )
 
-        private$observers[[session$ns("active_datanames")]] <- observeEvent(
+        private$session_bindings[[session$ns("active_datanames")]] <- observeEvent(
           eventExpr = active_datanames(),
           handlerExpr = lapply(self$datanames(), function(dataname) {
             if (dataname %in% active_datanames()) {
@@ -682,12 +682,20 @@ FilteredData <- R6::R6Class( # nolint
           )
         })
 
-        private$observers[[session$ns("remove_all_filters")]] <- observeEvent(
+        private$session_bindings[[session$ns("remove_all_filters")]] <- observeEvent(
           eventExpr = input$remove_all_filters,
           handlerExpr = {
             logger::log_debug("FilteredData$srv_filter_panel@1 removing all non-anchored filters")
             self$clear_filter_states()
             logger::log_debug("FilteredData$srv_filter_panel@1 removed all non-anchored filters")
+          }
+        )
+
+        private$session_bindings[[session$ns("inputs")]] <- list(
+          destroy = function() {
+            if (!session$isEnded()) {
+              lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+            }
           }
         )
 
@@ -852,12 +860,12 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Object and dependencies cleanup.
     #'
-    #' - Destroy observers stored in `private$observers`
+    #' - Destroy inputs and observers stored in `private$session_bindings`
     #' - Finalize `FilteredData` stored in `private$filtered_datasets`
     #'
     #' @return `NULL`, invisibly.
     finalize = function() {
-      .finalize_observers(self, private)
+      .finalize_session_bindings(self, private)
       lapply(private$filtered_datasets, function(x) x$finalize())
       invisible(NULL)
     }
@@ -882,8 +890,8 @@ FilteredData <- R6::R6Class( # nolint
     # flag specifying whether the user may add filters
     allow_add = TRUE,
 
-    # observers list
-    observers = list(),
+    # observers and inputs list
+    session_bindings = list(),
 
     # private methods ----
 
@@ -1014,7 +1022,7 @@ FilteredData <- R6::R6Class( # nolint
           )
         })
 
-        private$observers[[session$ns("available_slices_id")]] <- observeEvent(
+        private$session_bindings[[session$ns("available_slices_id")]] <- observeEvent(
           eventExpr = input$available_slices_id,
           ignoreNULL = FALSE,
           ignoreInit = TRUE,
@@ -1039,7 +1047,7 @@ FilteredData <- R6::R6Class( # nolint
           }
         )
 
-        private$observers[[session$ns("available_teal_slices")]] <- observeEvent(
+        private$session_bindings[[session$ns("available_teal_slices")]] <- observeEvent(
           eventExpr = private$available_teal_slices(),
           ignoreNULL = FALSE,
           handlerExpr = {

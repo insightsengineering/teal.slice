@@ -194,7 +194,7 @@ SEFilterStates <- R6::R6Class( # nolint
             )
           })
 
-          private$observers[[session$ns("avail_row_data_choices")]] <- observeEvent(
+          private$session_bindings[[session$ns("avail_row_data_choices")]] <- observeEvent(
             avail_row_data_choices(),
             ignoreNULL = TRUE,
             handlerExpr = {
@@ -219,7 +219,7 @@ SEFilterStates <- R6::R6Class( # nolint
             }
           )
 
-          private$observers[[session$ns("avail_col_data_choices")]] <- observeEvent(
+          private$session_bindings[[session$ns("avail_col_data_choices")]] <- observeEvent(
             avail_col_data_choices(),
             ignoreNULL = TRUE,
             handlerExpr = {
@@ -244,7 +244,7 @@ SEFilterStates <- R6::R6Class( # nolint
             }
           )
 
-          private$observers[[session$ns("col_to_add")]] <- observeEvent(
+          private$session_bindings[[session$ns("col_to_add")]] <- observeEvent(
             eventExpr = input$col_to_add,
             handlerExpr = {
               logger::log_debug(
@@ -270,7 +270,7 @@ SEFilterStates <- R6::R6Class( # nolint
           )
 
 
-          private$observers[[session$ns("row_to_add")]] <- observeEvent(
+          private$session_bindings[[session$ns("row_to_add")]] <- observeEvent(
             eventExpr = input$row_to_add,
             handlerExpr = {
               logger::log_debug(
@@ -292,6 +292,15 @@ SEFilterStates <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
+            }
+          )
+
+          # Extra observer that clears all input values in session
+          private$session_bindings[[session$ns("inputs")]] <- list(
+            destroy = function() {
+              if (!session$isEnded()) {
+                lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+              }
             }
           )
 

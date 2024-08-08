@@ -348,7 +348,7 @@ Removing a filter variable adds it back to available choices.
 \subsection{Method \code{finalize()}}{
 Object cleanup.
 \itemize{
-\item Destroy observers stored in \code{private$observers}
+\item Destroy inputs and observers stored in \code{private$session_bindings}
 \item Clean \code{state_list}
 }
 \subsection{Usage}{
