@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.695461875143976" branch-rate="0" lines-covered="3019" lines-valid="4341" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-08-08 08:41:34.162446">
+<coverage line-rate="0.69532150265038" branch-rate="0" lines-covered="3017" lines-valid="4339" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-08-08 10:12:43.238776">
   <sources>
     <source>/__w/teal.slice/teal.slice/teal.slice</source>
   </sources>
   <packages>
-    <package name="teal.slice" line-rate="0.695461875143976" branch-rate="0" complexity="0">
+    <package name="teal.slice" line-rate="0.69532150265038" branch-rate="0" complexity="0">
       <classes>
         <class name="calls_combine_by.R" filename="R/calls_combine_by.R" line-rate="1" branch-rate="0" complexity="0">
           <methods>
@@ -377,7 +377,7 @@
             <line number="245" hits="160" branch="false"/>
           </lines>
         </class>
-        <class name="filter_panel_api.R" filename="R/filter_panel_api.R" line-rate="0.96551724137931" branch-rate="0" complexity="0">
+        <class name="filter_panel_api.R" filename="R/filter_panel_api.R" line-rate="0.962962962962963" branch-rate="0" complexity="0">
           <methods>
             <method name="set_filter_state" signature="" line-rate="0.895161290322581" branch-rate="0" complexity="0">
               <lines>
@@ -644,15 +644,13 @@
                 <line number="172" hits="2" branch="false"/>
                 <line number="173" hits="2" branch="false"/>
                 <line number="174" hits="2" branch="false"/>
+                <line number="175" hits="2" branch="false"/>
                 <line number="176" hits="2" branch="false"/>
                 <line number="177" hits="2" branch="false"/>
                 <line number="178" hits="2" branch="false"/>
                 <line number="179" hits="2" branch="false"/>
                 <line number="180" hits="2" branch="false"/>
                 <line number="181" hits="2" branch="false"/>
-                <line number="182" hits="2" branch="false"/>
-                <line number="183" hits="2" branch="false"/>
-                <line number="184" hits="2" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -677,15 +675,13 @@
             <line number="172" hits="2" branch="false"/>
             <line number="173" hits="2" branch="false"/>
             <line number="174" hits="2" branch="false"/>
+            <line number="175" hits="2" branch="false"/>
             <line number="176" hits="2" branch="false"/>
             <line number="177" hits="2" branch="false"/>
             <line number="178" hits="2" branch="false"/>
             <line number="179" hits="2" branch="false"/>
             <line number="180" hits="2" branch="false"/>
             <line number="181" hits="2" branch="false"/>
-            <line number="182" hits="2" branch="false"/>
-            <line number="183" hits="2" branch="false"/>
-            <line number="184" hits="2" branch="false"/>
           </lines>
         </class>
         <class name="FilteredData-utils.R" filename="R/FilteredData-utils.R" line-rate="0.632352941176471" branch-rate="0" complexity="0">
