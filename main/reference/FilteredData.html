@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1.9008</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,22 +24,6 @@
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
 <li class="nav-item dropdown">
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/release-candidate">release-candidate</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.5.1-rc1">v0.5.1-rc1</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.5.0-rc2">v0.5.0-rc2</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.5.0-rc1">v0.5.0-rc1</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.5.1">v0.5.1</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.5.0">v0.5.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-reports" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Reports</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-reports"><li><a class="dropdown-item" href="../coverage-report/">Coverage report</a></li>
     <li><a class="dropdown-item" href="../unit-test-report/">Unit test report</a></li>
@@ -116,10 +100,9 @@ Other variables cannot be used for filtering the data in this class.</p></li>
 <li><p><a href="#method-FilteredData-srv_filter_panel"><code>FilteredData$srv_filter_panel()</code></a></p></li>
 <li><p><a href="#method-FilteredData-ui_active"><code>FilteredData$ui_active()</code></a></p></li>
 <li><p><a href="#method-FilteredData-srv_active"><code>FilteredData$srv_active()</code></a></p></li>
-<li><p><a href="#method-FilteredData-ui_add"><code>FilteredData$ui_add()</code></a></p></li>
-<li><p><a href="#method-FilteredData-srv_add"><code>FilteredData$srv_add()</code></a></p></li>
 <li><p><a href="#method-FilteredData-ui_overview"><code>FilteredData$ui_overview()</code></a></p></li>
 <li><p><a href="#method-FilteredData-srv_overview"><code>FilteredData$srv_overview()</code></a></p></li>
+<li><p><a href="#method-FilteredData-finalize"><code>FilteredData$finalize()</code></a></p></li>
 <li><p><a href="#method-FilteredData-clone"><code>FilteredData$clone()</code></a></p></li>
 </ul></div><p></p><hr><a id="method-FilteredData-new"></a><div class="section">
 <h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
@@ -524,7 +507,7 @@ flag specifying whether to include anchored filter states.</p></dd>
 <p>top-level <code>shiny</code> module for the filter panel in the <code>teal</code> app.
 Contains 1) filter overview panel, 2) filter active panel, and 3) add filters panel.</p><div class="section">
 <h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">ui_filter_panel</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">ui_filter_panel</span><span class="op">(</span><span class="va">id</span>, active_datanames <span class="op">=</span> <span class="va">self</span><span class="op">$</span><span class="va">datanames</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -532,6 +515,11 @@ Contains 1) filter overview panel, 2) filter active panel, and 3) add filters pa
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)
 <code>shiny</code> module instance id.</p></dd>
+
+
+<dt><code>active_datanames</code></dt>
+<dd><p>(<code>reactive</code>)
+defining subset of <code>self$datanames()</code> to be displayed.</p></dd>
 
 
 </dl><p></p></div>
@@ -574,7 +562,7 @@ the filter panel will be hidden.</p></dd>
 <h3 id="method-ui-active-">Method <code>ui_active()</code><a class="anchor" aria-label="anchor" href="#method-ui-active-"></a></h3>
 <p>Server module responsible for displaying active filters.</p><div class="section">
 <h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">ui_active</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">ui_active</span><span class="op">(</span><span class="va">id</span>, active_datanames <span class="op">=</span> <span class="va">self</span><span class="op">$</span><span class="va">datanames</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -582,6 +570,11 @@ the filter panel will be hidden.</p></dd>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)
 <code>shiny</code> module instance id.</p></dd>
+
+
+<dt><code>active_datanames</code></dt>
+<dd><p>(<code>reactive</code>)
+defining subset of <code>self$datanames()</code> to be displayed.</p></dd>
 
 
 </dl><p></p></div>
@@ -617,53 +610,6 @@ defining subset of <code>self$datanames()</code> to be displayed.</p></dd>
 <p><code>NULL</code>.</p>
 </div>
 
-</div><p></p><hr><a id="method-FilteredData-ui_add"></a><div class="section">
-<h3 id="method-ui-add-">Method <code>ui_add()</code><a class="anchor" aria-label="anchor" href="#method-ui-add-"></a></h3>
-<p>Server module responsible for displaying drop-downs with variables to add a filter.</p><div class="section">
-<h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">ui_add</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-18">Arguments<a class="anchor" aria-label="anchor" href="#arguments-18"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)
-<code>shiny</code> module instance id.</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-20">Returns<a class="anchor" aria-label="anchor" href="#returns-20"></a></h4>
-<p><code>shiny.tag</code></p>
-</div>
-
-</div><p></p><hr><a id="method-FilteredData-srv_add"></a><div class="section">
-<h3 id="method-srv-add-">Method <code>srv_add()</code><a class="anchor" aria-label="anchor" href="#method-srv-add-"></a></h3>
-<p>Server module responsible for displaying drop-downs with variables to add a filter.</p><div class="section">
-<h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">srv_add</span><span class="op">(</span><span class="va">id</span>, active_datanames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">self</span><span class="op">$</span><span class="fu">datanames</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-19">Arguments<a class="anchor" aria-label="anchor" href="#arguments-19"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)
-<code>shiny</code> module instance id.</p></dd>
-
-
-<dt><code>active_datanames</code></dt>
-<dd><p>(<code>reactive</code>)
-defining subset of <code>self$datanames()</code> to be displayed.</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-21">Returns<a class="anchor" aria-label="anchor" href="#returns-21"></a></h4>
-<p><code>NULL</code>.</p>
-</div>
-
 </div><p></p><hr><a id="method-FilteredData-ui_overview"></a><div class="section">
 <h3 id="method-ui-overview-">Method <code>ui_overview()</code><a class="anchor" aria-label="anchor" href="#method-ui-overview-"></a></h3>
 <p>Creates the UI definition for the module showing counts for each dataset
@@ -671,12 +617,12 @@ contrasting the filtered to the full unfiltered dataset.</p>
 <p>Per dataset, it displays
 the number of rows/observations in each dataset,
 the number of unique subjects.</p><div class="section">
-<h4 id="usage-24">Usage<a class="anchor" aria-label="anchor" href="#usage-24"></a></h4>
+<h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">ui_overview</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-20">Arguments<a class="anchor" aria-label="anchor" href="#arguments-20"></a></h4>
+<h4 id="arguments-18">Arguments<a class="anchor" aria-label="anchor" href="#arguments-18"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)
 <code>shiny</code> module instance id.</p></dd>
@@ -689,12 +635,12 @@ the number of unique subjects.</p><div class="section">
 <h3 id="method-srv-overview-">Method <code>srv_overview()</code><a class="anchor" aria-label="anchor" href="#method-srv-overview-"></a></h3>
 <p>Server function to display the number of records in the filtered and unfiltered
 data.</p><div class="section">
-<h4 id="usage-25">Usage<a class="anchor" aria-label="anchor" href="#usage-25"></a></h4>
+<h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">srv_overview</span><span class="op">(</span><span class="va">id</span>, active_datanames <span class="op">=</span> <span class="va">self</span><span class="op">$</span><span class="va">datanames</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-21">Arguments<a class="anchor" aria-label="anchor" href="#arguments-21"></a></h4>
+<h4 id="arguments-19">Arguments<a class="anchor" aria-label="anchor" href="#arguments-19"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)
 <code>shiny</code> module instance id.</p></dd>
@@ -711,19 +657,33 @@ panel will be hidden.</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-22">Returns<a class="anchor" aria-label="anchor" href="#returns-22"></a></h4>
+<h4 id="returns-20">Returns<a class="anchor" aria-label="anchor" href="#returns-20"></a></h4>
 <p><code>NULL</code>.</p>
+</div>
+
+</div><p></p><hr><a id="method-FilteredData-finalize"></a><div class="section">
+<h3 id="method-finalize-">Method <code>finalize()</code><a class="anchor" aria-label="anchor" href="#method-finalize-"></a></h3>
+<p>Object and dependencies cleanup.</p><ul><li><p>Destroy inputs and observers stored in <code>private$session_bindings</code></p></li>
+<li><p>Finalize <code>FilteredData</code> stored in <code>private$filtered_datasets</code></p></li>
+</ul><div class="section">
+<h4 id="usage-24">Usage<a class="anchor" aria-label="anchor" href="#usage-24"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">finalize</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="returns-21">Returns<a class="anchor" aria-label="anchor" href="#returns-21"></a></h4>
+<p><code>NULL</code>, invisibly.</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-26">Usage<a class="anchor" aria-label="anchor" href="#usage-26"></a></h4>
+<h4 id="usage-25">Usage<a class="anchor" aria-label="anchor" href="#usage-25"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-22">Arguments<a class="anchor" aria-label="anchor" href="#arguments-22"></a></h4>
+<h4 id="arguments-20">Arguments<a class="anchor" aria-label="anchor" href="#arguments-20"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
