@@ -51,7 +51,7 @@ FilterStates <- R6::R6Class( # nolint
                           dataname,
                           datalabel = NULL) {
       checkmate::assert_string(dataname)
-      logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
+      logger::log_debug("Instantiating { class(self)[1] }, dataname: { dataname }")
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_string(datalabel, null.ok = TRUE)
 
@@ -61,8 +61,6 @@ FilterStates <- R6::R6Class( # nolint
       private$data <- data
       private$data_reactive <- data_reactive
       private$state_list <- reactiveVal()
-
-      logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
     },
 
@@ -124,8 +122,6 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `call` or `NULL`
     #'
     get_call = function(sid = "") {
-      logger::log_trace("FilterStates$get_call initializing")
-
       # `arg` must be the same as argument of the function where
       # predicate is passed to.
       # For unnamed arguments state_list should have `arg = NULL`
@@ -204,7 +200,7 @@ FilterStates <- R6::R6Class( # nolint
       checkmate::assert_class(state, "teal_slices")
       isolate({
         state_ids <- vapply(state, `[[`, character(1), "id")
-        logger::log_trace("{ class(self)[1] }$remove_filter_state removing filters, state_id: { toString(state_ids) }")
+        logger::log_debug("{ class(self)[1] }$remove_filter_state removing filters, state_id: { toString(state_ids) }")
         private$state_list_remove(state_ids)
       })
       invisible(NULL)
@@ -247,7 +243,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @return Function that raises an error.
     set_filter_state = function(state) {
       isolate({
-        logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+        logger::log_debug("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
         checkmate::assert_class(state, "teal_slices")
         lapply(state, function(x) {
           checkmate::assert_true(
@@ -280,7 +276,6 @@ FilterStates <- R6::R6Class( # nolint
             data_reactive = private$data_reactive
           )
         }
-        logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
       })
 
       invisible(NULL)
@@ -335,7 +330,7 @@ FilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("FilterState$srv_active initializing, dataname: { private$dataname }")
+          logger::log_debug("FilterState$srv_active initializing, dataname: { private$dataname }")
           current_state <- reactive(private$state_list_get())
           previous_state <- reactiveVal(NULL) # FilterState list
           added_states <- reactiveVal(NULL) # FilterState list
@@ -349,7 +344,7 @@ FilterStates <- R6::R6Class( # nolint
           output$trigger_visible_state_change <- renderUI({
             current_state()
             isolate({
-              logger::log_trace("FilterStates$srv_active@1 determining added and removed filter states")
+              logger::log_debug("FilterStates$srv_active@1 determining added and removed filter states")
               # Be aware this returns a list because `current_state` is a list and not `teal_slices`.
               added_states(setdiff_teal_slices(current_state(), previous_state()))
               previous_state(current_state())
@@ -368,19 +363,16 @@ FilterStates <- R6::R6Class( # nolint
             )
           })
 
-          observeEvent(
+          private$session_bindings[[session$ns("added_states")]] <- observeEvent(
             added_states(), # we want to call FilterState module only once when it's added
             ignoreNULL = TRUE,
             {
               added_state_names <- vapply(added_states(), function(x) x$get_state()$id, character(1L))
-              logger::log_trace("FilterStates$srv_active@2 triggered by added states: { toString(added_state_names) }")
+              logger::log_debug("FilterStates$srv_active@2 triggered by added states: { toString(added_state_names) }")
               lapply(added_states(), function(state) {
-                fs_callback <- state$server(id = fs_to_shiny_ns(state))
-                observeEvent(
-                  once = TRUE, # remove button can be called once, should be destroyed afterwards
-                  ignoreInit = TRUE, # ignoreInit: should not matter because we destroy the previous input set of the UI
-                  eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
-                  handlerExpr = private$state_list_remove(state$get_state()$id)
+                state$server(
+                  id = fs_to_shiny_ns(state),
+                  remove_callback = function() private$state_list_remove(state$get_state()$id)
                 )
               })
               added_states(NULL)
@@ -430,7 +422,7 @@ FilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("FilterStates$srv_add initializing, dataname: { private$dataname }")
+          logger::log_debug("FilterStates$srv_add initializing, dataname: { private$dataname }")
 
           # available choices to display
           avail_column_choices <- reactive({
@@ -448,12 +440,12 @@ FilterStates <- R6::R6Class( # nolint
             )
           })
 
-
           output$add_filter <- renderUI({
-            logger::log_trace(
+            logger::log_debug(
               "FilterStates$srv_add@1 updating available column choices, dataname: { private$dataname }"
             )
             if (length(avail_column_choices()) == 0) {
+              # because input UI is not rendered on this condition but shiny still holds latest selected value
               tags$span("No available columns to add.")
             } else {
               tags$div(
@@ -470,10 +462,10 @@ FilterStates <- R6::R6Class( # nolint
             }
           })
 
-          observeEvent(
+          private$session_bindings[[session$ns("var_to_add")]] <- observeEvent(
             eventExpr = input$var_to_add,
             handlerExpr = {
-              logger::log_trace(
+              logger::log_debug(
                 sprintf(
                   "FilterStates$srv_add@2 adding FilterState of variable %s, dataname: %s",
                   input$var_to_add,
@@ -485,20 +477,36 @@ FilterStates <- R6::R6Class( # nolint
                   teal_slice(dataname = private$dataname, varname = input$var_to_add)
                 )
               )
-              logger::log_trace(
-                sprintf(
-                  "FilterStates$srv_add@2 added FilterState of variable %s, dataname: %s",
-                  input$var_to_add,
-                  private$dataname
-                )
-              )
             }
           )
 
-          logger::log_trace("FilterStates$srv_add initialized, dataname: { private$dataname }")
+          # Extra observer that clears all input values in session
+          private$session_bindings[[session$ns("inputs")]] <- list(
+            destroy = function() {
+              if (!session$isEnded()) {
+                lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+              }
+            }
+          )
+
           NULL
         }
       )
+    },
+
+    #' @description
+    #' Object cleanup.
+    #'
+    #' - Destroy inputs and observers stored in `private$session_bindings`
+    #' - Clean `state_list`
+    #'
+    #' @return `NULL`, invisibly.
+    #'
+    finalize = function() {
+      .finalize_session_bindings(self, private) # Remove all inputs and observers
+      private$state_list_empty(force = TRUE)
+      isolate(private$state_list(NULL))
+      invisible(NULL)
     }
   ),
   private = list(
@@ -515,7 +523,7 @@ FilterStates <- R6::R6Class( # nolint
     fun = quote(subset), # function used to generate subset call
     keys = character(0),
     ns = NULL, # shiny ns()
-    observers = list(), # observers
+    session_bindings = list(), # inputs and observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
 
     # private methods ----
@@ -604,7 +612,7 @@ FilterStates <- R6::R6Class( # nolint
     # @return `NULL`.
     #
     state_list_push = function(x, state_id) {
-      logger::log_trace("{ class(self)[1] } pushing into state_list, dataname: { private$dataname }")
+      logger::log_debug("{ class(self)[1] } pushing into state_list, dataname: { private$dataname }")
       checkmate::assert_string(state_id)
       checkmate::assert_multi_class(x, c("FilterState", "FilterStateExpr"))
       state <- stats::setNames(list(x), state_id)
@@ -614,7 +622,7 @@ FilterStates <- R6::R6Class( # nolint
       )
       isolate(private$state_list(new_state_list))
 
-      logger::log_trace("{ class(self)[1] } pushed into queue, dataname: { private$dataname }")
+      logger::log_debug("{ class(self)[1] } pushed into queue, dataname: { private$dataname }")
       invisible(NULL)
     },
 
@@ -633,8 +641,7 @@ FilterStates <- R6::R6Class( # nolint
     #
     state_list_remove = function(state_id, force = FALSE) {
       checkmate::assert_character(state_id)
-      logger::log_trace("{ class(self)[1] } removing a filter, state_id: { toString(state_id) }")
-
+      logger::log_debug("{ class(self)[1] } removing a filter, state_id: { toString(state_id) }")
       isolate({
         current_state_ids <- vapply(private$state_list(), function(x) x$get_state()$id, character(1))
         to_remove <- state_id %in% current_state_ids
@@ -645,7 +652,7 @@ FilterStates <- R6::R6Class( # nolint
                 if (state$get_state()$anchored && !force) {
                   return(TRUE)
                 } else {
-                  state$destroy_observers()
+                  state$finalize()
                   FALSE
                 }
               } else {
@@ -671,7 +678,7 @@ FilterStates <- R6::R6Class( # nolint
     #
     state_list_empty = function(force = FALSE) {
       isolate({
-        logger::log_trace(
+        logger::log_debug(
           "{ class(self)[1] }$state_list_empty removing all non-anchored filters for dataname: { private$dataname }"
         )
 

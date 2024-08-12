@@ -82,9 +82,9 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
         private$data_filtered_fun <- function(sid = "") {
           checkmate::assert_character(sid)
           if (length(sid)) {
-            logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
+            logger::log_debug("filtering data dataname: { dataname }, sid: { sid }")
           } else {
-            logger::log_trace("filtering data dataname: { private$dataname }")
+            logger::log_debug("filtering data dataname: { private$dataname }")
           }
           env <- new.env(parent = parent.env(globalenv()))
           env[[dataname]] <- private$dataset
@@ -107,6 +107,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
 
       # todo: Should we make these defaults? It could be handled by the app developer
       if (!is.null(parent)) {
+        logger::log_debug("Excluding { parent_name } columns from possible teal_slices for dataname: { dataname }")
         fs <- teal_slices(
           exclude_varnames = structure(
             list(intersect(colnames(dataset), colnames(isolate(parent())))),
@@ -134,7 +135,6 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #'
     #' @return Either a `list` of length 1 containing a filter `call`, or `NULL`.
     get_call = function(sid = "") {
-      logger::log_trace("DataframeFilteredDataset$get_call initializing for dataname: { private$dataname }")
       filter_call <- super$get_call(sid)
       dataname <- private$dataname
       parent_dataname <- private$parent_name
@@ -177,7 +177,6 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
 
         filter_call <- c(filter_call, merge_call)
       }
-      logger::log_trace("DataframeFilteredDataset$get_call initializing for dataname: { private$dataname }")
       filter_call
     },
 
@@ -189,7 +188,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #'
     set_filter_state = function(state) {
       isolate({
-        logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+        logger::log_debug("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
         checkmate::assert_class(state, "teal_slices")
         lapply(state, function(slice) {
           checkmate::assert_true(slice$dataname == private$dataname)
@@ -212,12 +211,12 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
       checkmate::assert_class(state, "teal_slices")
 
       isolate({
-        logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
+        logger::log_debug("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
 
         varnames <- unique(unlist(lapply(state, "[[", "varname")))
         private$get_filter_states()[[1]]$remove_filter_state(state)
 
-        logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
+        logger::log_debug("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
       })
 
       invisible(NULL)
@@ -243,7 +242,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #' `dataname -- observations (remaining/total)` - data.frame
     #' @return A `data.frame`.
     get_filter_overview = function() {
-      logger::log_trace("FilteredDataset$srv_filter_overview initialized")
+      logger::log_debug("FilteredDataset$srv_filter_overview initializing")
       # Gets filter overview subjects number and returns a list
       # of the number of subjects of filtered/non-filtered datasets
       subject_keys <- if (length(private$parent_name) > 0) {

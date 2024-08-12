@@ -51,7 +51,7 @@ eval_expr_with_msg <- function(expr, env) {
         error = function(e) {
           stop(
             sprintf(
-              "Call execution failed:\n - call:\n   %s\n - message:\n   %s ",
+              "Filter call execution failed:\n - call:\n   %s\n - message:\n   %s ",
               deparse1(x, collapse = "\n"), e
             )
           )

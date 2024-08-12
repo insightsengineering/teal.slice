@@ -384,11 +384,11 @@ DatetimeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("DatetimeFilterState$server initializing, id: { private$get_id() }")
+          logger::log_debug("DatetimeFilterState$server initializing, id: { private$get_id() }")
           # this observer is needed in the situation when teal_slice$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
-          private$observers$selection_api <- observeEvent(
+          private$session_bindings[[session$ns("selection_api")]] <- observeEvent(
             ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE, # on init selected == default, so no need to trigger
             eventExpr = private$get_selected(),
@@ -396,7 +396,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
               start_date <- input$selection_start
               end_date <- input$selection_end
               if (!all(private$get_selected() == c(start_date, end_date))) {
-                logger::log_trace("DatetimeFilterState$server@1 state changed, id: { private$get_id() }")
+                logger::log_debug("DatetimeFilterState$server@1 state changed, id: { private$get_id() }")
                 if (private$get_selected()[1] != start_date) {
                   shinyWidgets::updateAirDateInput(
                     session = session,
@@ -417,12 +417,12 @@ DatetimeFilterState <- R6::R6Class( # nolint
           )
 
 
-          private$observers$selection_start <- observeEvent(
+          private$session_bindings[[session$ns("selection_start")]] <- observeEvent(
             ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection_start,
             handlerExpr = {
-              logger::log_trace("DatetimeFilterState$server@2 selection changed, id: { private$get_id() }")
+              logger::log_debug("DatetimeFilterState$server@2 selection changed, id: { private$get_id() }")
               start_date <- input$selection_start
               end_date <- private$get_selected()[[2]]
               tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$get_choices()), "tzone"))
@@ -445,7 +445,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observers$selection_end <- observeEvent(
+          private$session_bindings[[session$ns("selection_end")]] <- observeEvent(
             ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection_end,
@@ -469,13 +469,13 @@ DatetimeFilterState <- R6::R6Class( # nolint
               }
 
               private$set_selected(c(start_date, end_date))
-              logger::log_trace("DatetimeFilterState$server@2 selection changed, id: { private$get_id() }")
+              logger::log_debug("DatetimeFilterState$server@2 selection changed, id: { private$get_id() }")
             }
           )
 
           private$keep_na_srv("keep_na")
 
-          private$observers$reset1 <- observeEvent(
+          private$session_bindings[[session$ns("reset1")]] <- observeEvent(
             ignoreInit = TRUE, # reset button shouldn't be trigger on init
             ignoreNULL = TRUE, # it's impossible and wrong to set default to NULL
             input$start_date_reset,
@@ -485,10 +485,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
                 inputId = "selection_start",
                 value = private$get_choices()[1L]
               )
-              logger::log_trace("DatetimeFilterState$server@2 reset start date, id: { private$get_id() }")
+              logger::log_debug("DatetimeFilterState$server@2 reset start date, id: { private$get_id() }")
             }
           )
-          private$observers$reset2 <- observeEvent(
+          private$session_bindings[[session$ns("reset2")]] <- observeEvent(
             ignoreInit = TRUE, # reset button shouldn't be trigger on init
             ignoreNULL = TRUE, # it's impossible and wrong to set default to NULL
             input$end_date_reset,
@@ -498,11 +498,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
                 inputId = "selection_end",
                 value = private$get_choices()[2L]
               )
-              logger::log_trace("DatetimeFilterState$server@3 reset end date, id: { private$get_id() }")
+              logger::log_debug("DatetimeFilterState$server@3 reset end date, id: { private$get_id() }")
             }
           )
 
-          logger::log_trace("DatetimeFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )
@@ -511,7 +510,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("DatetimeFilterState$server initializing, id: { private$get_id() }")
+          logger::log_debug("DatetimeFilterState$server initializing, id: { private$get_id() }")
 
           output$selection <- renderUI({
             vals <- format(private$get_selected(), usetz = TRUE, nsmall = 3)
@@ -521,7 +520,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
             )
           })
 
-          logger::log_trace("DatetimeFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )

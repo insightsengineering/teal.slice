@@ -30,14 +30,10 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return Object of class `FilteredDataset`, invisibly.
     #'
     initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label", exact = TRUE)) {
-      logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
-
-      # dataset assertion in child classes
       check_simple_name(dataname)
+      logger::log_debug("Instantiating { class(self)[1] }, dataname: { dataname }")
       checkmate::assert_character(keys, any.missing = FALSE)
       checkmate::assert_character(label, null.ok = TRUE)
-
-      logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
       private$dataset <- dataset
       private$dataname <- dataname
       private$keys <- keys
@@ -47,9 +43,9 @@ FilteredDataset <- R6::R6Class( # nolint
       private$data_filtered_fun <- function(sid = "") {
         checkmate::assert_character(sid)
         if (length(sid)) {
-          logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
+          logger::log_debug("filtering data dataname: { dataname }, sid: { sid }")
         } else {
-          logger::log_trace("filtering data dataname: { private$dataname }")
+          logger::log_debug("filtering data dataname: { private$dataname }")
         }
         env <- new.env(parent = parent.env(globalenv()))
         env[[dataname]] <- private$dataset
@@ -59,7 +55,6 @@ FilteredDataset <- R6::R6Class( # nolint
       }
 
       private$data_filtered <- reactive(private$data_filtered_fun())
-      logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
     },
 
@@ -96,12 +91,12 @@ FilteredDataset <- R6::R6Class( # nolint
     #'
     #' @return `NULL`.
     clear_filter_states = function(force = FALSE) {
-      logger::log_trace("Removing filters from FilteredDataset: { deparse1(self$get_dataname()) }")
+      logger::log_debug("Removing filters from FilteredDataset: { deparse1(self$get_dataname()) }")
       lapply(
         private$get_filter_states(),
         function(filter_states) filter_states$clear_filter_states(force)
       )
-      logger::log_trace("Removed filters from FilteredDataset: { deparse1(self$get_dataname()) }")
+      logger::log_debug("Removed filters from FilteredDataset: { deparse1(self$get_dataname()) }")
       NULL
     },
 
@@ -150,13 +145,6 @@ FilteredDataset <- R6::R6Class( # nolint
     #'
     set_filter_state = function(state) {
       stop("set_filter_state is an abstract class method.")
-    },
-
-    #' @description
-    #' Gets the number of `FilterState` objects in all `FilterStates` in this `FilteredDataset`.
-    #' @return `integer(1)`
-    get_filter_count = function() {
-      length(self$get_filter_state())
     },
 
     #' @description
@@ -210,9 +198,11 @@ FilteredDataset <- R6::R6Class( # nolint
     #' `shiny` module containing active filters for a dataset, along with a title and a remove button.
     #' @param id (`character(1)`)
     #'   `shiny` module instance id.
+    #' @param allow_add (`logical(1)`)
+    #'   logical flag specifying whether the user will be able to add new filters
     #'
     #' @return `shiny.tag`
-    ui_active = function(id) {
+    ui_active = function(id, allow_add = TRUE) {
       dataname <- self$get_dataname()
       checkmate::assert_string(dataname)
 
@@ -221,38 +211,51 @@ FilteredDataset <- R6::R6Class( # nolint
       tags$span(
         id = id,
         include_css_files("filter-panel"),
+        include_js_files(pattern = "icons"),
         tags$div(
           id = ns("whole_ui"), # to hide it entirely
           fluidRow(
-            column(
-              width = 8,
-              tags$span(dataname, class = "filter_panel_dataname")
-            ),
-            column(
-              width = 4,
-              tagList(
-                actionLink(
-                  ns("remove_filters"),
-                  label = "",
-                  icon = icon("circle-xmark", lib = "font-awesome"),
-                  class = "remove pull-right"
-                ),
-                actionLink(
-                  ns("collapse"),
-                  label = "",
-                  icon = icon("angle-down", lib = "font-awesome"),
-                  class = "remove pull-right"
-                )
-              )
-            )
-          ),
-          shinyjs::hidden(
+            style = "padding: 0px 15px 0px 15px;",
             tags$div(
-              id = ns("filter_count_ui"),
-              tagList(
-                textOutput(ns("filter_count")),
-                tags$br()
+              style = "display: flex; align-items: center; justify-content: space-between;",
+              tags$div(
+                style = "display: flex;",
+                tags$span(dataname, class = "filter_panel_dataname"),
+                if (allow_add) {
+                  tags$a(
+                    class = "filter-icon add-filter",
+                    tags$i(
+                      id = ns("add_filter_icon"),
+                      class = "fa fa-plus",
+                      title = "fold/expand transform panel",
+                      onclick = sprintf(
+                        "togglePanelItems(this, '%s', 'fa-plus', 'fa-minus');",
+                        ns("add_panel")
+                      )
+                    )
+                  )
+                }
+              ),
+              tags$div(
+                style = "min-width: 40px; z-index: 1; display: flex; justify-content: flex-end;",
+                uiOutput(ns("collapse_ui")),
+                uiOutput(ns("remove_filters_ui"))
               )
+            ),
+            if (allow_add) {
+              tags$div(
+                id = ns("add_panel"),
+                class = "add-panel",
+                style = "display: none;",
+                self$ui_add(ns(private$dataname))
+              )
+            }
+          ),
+          tags$div(
+            id = ns("filter_count_ui"),
+            style = "display: none;",
+            tagList(
+              textOutput(ns("filter_count"))
             )
           ),
           tags$div(
@@ -284,13 +287,18 @@ FilteredDataset <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           dataname <- self$get_dataname()
-          logger::log_trace("FilteredDataset$srv_active initializing, dataname: { dataname }")
+          logger::log_debug("FilteredDataset$srv_active initializing, dataname: { dataname }")
           checkmate::assert_string(dataname)
+
+          filter_count <- reactive({
+            length(self$get_filter_state())
+          })
+
           output$filter_count <- renderText(
             sprintf(
               "%d filter%s applied",
-              self$get_filter_count(),
-              if (self$get_filter_count() != 1) "s" else ""
+              filter_count(),
+              if (filter_count() != 1) "s" else ""
             )
           )
 
@@ -301,26 +309,79 @@ FilteredDataset <- R6::R6Class( # nolint
             }
           )
 
-          observeEvent(self$get_filter_state(), {
-            shinyjs::hide("filter_count_ui")
-            shinyjs::show("filters")
-            shinyjs::toggle("remove_filters", condition = length(self$get_filter_state()) != 0)
-            shinyjs::toggle("collapse", condition = length(self$get_filter_state()) != 0)
+          is_filter_collapsible <- reactive({
+            filter_count() != 0
           })
 
-          observeEvent(input$collapse, {
-            shinyjs::toggle("filter_count_ui")
-            shinyjs::toggle("filters")
-            toggle_icon(session$ns("collapse"), c("fa-angle-right", "fa-angle-down"))
+          output$collapse_ui <- renderUI({
+            req(is_filter_collapsible())
+            tags$a(
+              id = session$ns("collapse"),
+              class = "filter-icon",
+              tags$i(
+                id = session$ns("collapse_icon"),
+                class = "fa fa-angle-down",
+                title = "fold/expand dataset filters",
+                # TODO: clickWhenClassPresent() is used to hide the add_ui pannel during a collapse of the UI.
+                # In the future, it should be completely handled by collapsing the UI by positioning.
+                onclick = sprintf(
+                  "togglePanelItems(this, ['%s', '%s'], 'fa-angle-down', 'fa-angle-right');
+                  clickWhenClassPresent('%s', 'fa-minus', this.classList.contains('fa-angle-right'));",
+                  session$ns("filter_count_ui"),
+                  session$ns("filters"),
+                  session$ns("add_filter_icon")
+                )
+              )
+            )
           })
 
-          observeEvent(input$remove_filters, {
-            logger::log_trace("FilteredDataset$srv_active@1 removing all non-anchored filters, dataname: { dataname }")
+          is_filter_removable <- reactive({
+            non_anchored <- Filter(function(x) !x$anchored, self$get_filter_state())
+            isTRUE(length(non_anchored) > 0)
+          })
+
+          private$session_bindings[[session$ns("get_filter_state")]] <- observeEvent(
+            self$get_filter_state(),
+            ignoreInit = TRUE,
+            {
+              shinyjs::hide("filter_count_ui")
+              shinyjs::show("filters")
+              shinyjs::toggle("remove_filters_ui", condition = is_filter_removable())
+              shinyjs::toggle("collapse_ui", condition = is_filter_collapsible())
+              shinyjs::runjs(
+                sprintf(
+                  "setAndRemoveClass('#%s', 'fa-angle-down', 'fa-angle-right')",
+                  session$ns("collapse_icon")
+                )
+              )
+            }
+          )
+
+          output$remove_filters_ui <- renderUI({
+            req(is_filter_removable())
+            actionLink(
+              session$ns("remove_filters"),
+              label = "",
+              icon = icon("circle-xmark", lib = "font-awesome"),
+              class = "filter-icon"
+            )
+          })
+
+          private$session_bindings[[session$ns("remove_filters")]] <- observeEvent(input$remove_filters, {
+            logger::log_debug("FilteredDataset$srv_active@1 removing all non-anchored filters, dataname: { dataname }")
             self$clear_filter_states()
-            logger::log_trace("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
+            logger::log_debug("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
           })
 
-          logger::log_trace("FilteredDataset$initialized, dataname: { dataname }")
+          private$session_bindings[[session$ns("inputs")]] <- list(
+            destroy = function() {
+              if (!session$isEnded()) {
+                lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+              }
+            }
+          )
+
+          self$srv_add(private$dataname)
 
           NULL
         }
@@ -352,17 +413,30 @@ FilteredDataset <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("MAEFilteredDataset$srv_add initializing, dataname: { deparse1(self$get_dataname()) }")
+          logger::log_debug("MAEFilteredDataset$srv_add initializing, dataname: { deparse1(self$get_dataname()) }")
           elems <- private$get_filter_states()
           elem_names <- names(private$get_filter_states())
           lapply(
             elem_names,
             function(elem_name) elems[[elem_name]]$srv_add(elem_name)
           )
-          logger::log_trace("MAEFilteredDataset$srv_add initialized, dataname: { deparse1(self$get_dataname()) }")
+
           NULL
         }
       )
+    },
+
+    #' @description
+    #' Object and dependencies cleanup.
+    #'
+    #' - Destroy inputs and observers stored in `private$session_bindings`
+    #' - Finalize `FilterStates` stored in `private$filter_states`
+    #'
+    #' @return `NULL`, invisibly.
+    finalize = function() {
+      .finalize_session_bindings(self, private)
+      lapply(private$filter_states, function(x) x$finalize())
+      invisible(NULL)
     }
   ),
   # private fields ----
@@ -374,6 +448,7 @@ FilteredDataset <- R6::R6Class( # nolint
     dataname = character(0),
     keys = character(0),
     label = character(0),
+    session_bindings = list(),
 
     # Adds `FilterStates` to the `private$filter_states`.
     # `FilterStates` is added once for each element of the dataset.

@@ -119,10 +119,9 @@ isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
 \item \href{#method-FilteredData-ui_active}{\code{FilteredData$ui_active()}}
 \item \href{#method-FilteredData-srv_active}{\code{FilteredData$srv_active()}}
-\item \href{#method-FilteredData-ui_add}{\code{FilteredData$ui_add()}}
-\item \href{#method-FilteredData-srv_add}{\code{FilteredData$srv_add()}}
 \item \href{#method-FilteredData-ui_overview}{\code{FilteredData$ui_overview()}}
 \item \href{#method-FilteredData-srv_overview}{\code{FilteredData$srv_overview()}}
+\item \href{#method-FilteredData-finalize}{\code{FilteredData$finalize()}}
 \item \href{#method-FilteredData-clone}{\code{FilteredData$clone()}}
 }
 }
@@ -527,7 +526,7 @@ flag specifying whether to include anchored filter states.}
 top-level \code{shiny} module for the filter panel in the \code{teal} app.
 Contains 1) filter overview panel, 2) filter active panel, and 3) add filters panel.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_filter_panel(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_filter_panel(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -535,6 +534,9 @@ Contains 1) filter overview panel, 2) filter active panel, and 3) add filters pa
 \describe{
 \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
+
+\item{\code{active_datanames}}{(\code{reactive})
+defining subset of \code{self$datanames()} to be displayed.}
 }
 \if{html}{\out{</div>}}
 }
@@ -575,28 +577,7 @@ the filter panel will be hidden.}
 \subsection{Method \code{ui_active()}}{
 Server module responsible for displaying active filters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_active(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{shiny.tag}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-srv_active"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-srv_active}{}}}
-\subsection{Method \code{srv_active()}}{
-Server module responsible for displaying active filters.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_active(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_active(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -611,37 +592,16 @@ defining subset of \code{self$datanames()} to be displayed.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-ui_add"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-ui_add}{}}}
-\subsection{Method \code{ui_add()}}{
-Server module responsible for displaying drop-downs with variables to add a filter.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_add(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
 \code{shiny.tag}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-srv_add"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-srv_add}{}}}
-\subsection{Method \code{srv_add()}}{
-Server module responsible for displaying drop-downs with variables to add a filter.
+\if{html}{\out{<a id="method-FilteredData-srv_active"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-srv_active}{}}}
+\subsection{Method \code{srv_active()}}{
+Server module responsible for displaying active filters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_add(id, active_datanames = reactive(self$datanames()))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_active(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -708,6 +668,23 @@ panel will be hidden.}
 }
 \subsection{Returns}{
 \code{NULL}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-finalize"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-finalize}{}}}
+\subsection{Method \code{finalize()}}{
+Object and dependencies cleanup.
+\itemize{
+\item Destroy inputs and observers stored in \code{private$session_bindings}
+\item Finalize \code{FilteredData} stored in \code{private$filtered_datasets}
+}
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$finalize()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
