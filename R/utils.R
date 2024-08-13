@@ -80,7 +80,7 @@ make_c_call <- function(choices) {
 .finalize_session_bindings <- function(self, private) {
   # Only finalize shiny session binding when there is an active session
   if (
-      !is.null(getDefaultReactiveDomain()) &&
+    !is.null(getDefaultReactiveDomain()) &&
       !getDefaultReactiveDomain()$isEnded()
   ) {
     lapply(private$session_bindings, function(x) x$destroy())
