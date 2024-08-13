@@ -78,6 +78,12 @@ make_c_call <- function(choices) {
 #' @return `NULL` invisibly
 #' @keywords internal
 .finalize_session_bindings <- function(self, private) {
-  if (length(private$session_bindings) > 0) lapply(private$session_bindings, function(x) x$destroy())
+  # Only finalize shiny session binding when there is an active session
+  if (
+      !is.null(getDefaultReactiveDomain()) &&
+      !getDefaultReactiveDomain()$isEnded()
+  ) {
+    lapply(private$session_bindings, function(x) x$destroy())
+  }
   invisible(NULL)
 }
