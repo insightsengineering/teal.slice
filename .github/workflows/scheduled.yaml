@@ -36,3 +36,5 @@ jobs:
       lookup-refs: |
         insightsengineering/teal.data
         insightsengineering/teal.logger
+    secrets:
+      REPO_GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
