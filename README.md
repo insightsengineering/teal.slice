@@ -33,26 +33,19 @@
 ## Installation
 
 ```r
-# stable versions
 install.packages('teal.slice')
-
-# install.packages("pak")
-pak::pak("insightsengineering/teal.slice@*release")
 ```
 
-Alternatively, you might want to use the development version available on [r-universe](https://r-universe.dev/).
+Alternatively, you might want to use the development version.
 
 ```r
-# beta versions
-install.packages('teal.slice', repos = c('https://pharmaverse.r-universe.dev', getOption('repos')))
-
 # install.packages("pak")
 pak::pak("insightsengineering/teal.slice")
 ```
 
 ## Usage
 
-To understand how to use this package, please refer to the [Introduction to teal.slice](https://insightsengineering.github.io/teal.slice/latest-tag/articles/teal-slice.html) article, which provides multiple examples of code implementation.
+To understand how to use this package, please refer to the [Introduction to `teal.slice`](https://insightsengineering.github.io/teal.slice/latest-tag/articles/teal-slice.html) article, which provides multiple examples of code implementation.
 
 ![Showcase](https://github.com/insightsengineering/teal.slice/blob/main/assets/img/showcase.gif)
 
