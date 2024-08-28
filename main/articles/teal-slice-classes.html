@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1.9008</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1.9010</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,22 +42,6 @@
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
 <li class="nav-item dropdown">
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/release-candidate">release-candidate</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.5.1-rc1">v0.5.1-rc1</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.5.0-rc2">v0.5.0-rc2</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.5.0-rc1">v0.5.0-rc1</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.5.1">v0.5.1</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.5.0">v0.5.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-reports" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Reports</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-reports">
 <li><a class="dropdown-item" href="../coverage-report/">Coverage report</a></li>
@@ -241,7 +225,7 @@ implemented:</p>
 <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code> to filter on columns.</li>
 <li>
 <code>MAEFilterStates</code> for<code>MultiAssayExperiment</code>;
-uses <code><a href="http://waldronlab.io/MultiAssayExperiment/reference/subsetBy.html" class="external-link">MultiAssayExperiment::subsetByColData</a></code> to filter on
+uses <code><a href="https://github.com/waldronlab/MultiAssayExperiment/reference/subsetBy.html" class="external-link">MultiAssayExperiment::subsetByColData</a></code> to filter on
 columns of the <code>DataFrame</code> in the <code>@colData</code>
 slot.</li>
 <li>
@@ -465,8 +449,8 @@ extracted using <code>MAE[["experiment name"]]</code>. Therefore,
 objects: one for subject data and one for each experiment.</p></li>
 <li><p>A <code>MAEFilterStates</code> object is initialized for subject
 data and for this object
-<code><a href="http://waldronlab.io/MultiAssayExperiment/reference/subsetBy.html" class="external-link">MultiAssayExperiment::subsetByColData</a></code> function is applied.
-<code><a href="http://waldronlab.io/MultiAssayExperiment/reference/subsetBy.html" class="external-link">MultiAssayExperiment::subsetByColData</a></code> has two arguments:
+<code><a href="https://github.com/waldronlab/MultiAssayExperiment/reference/subsetBy.html" class="external-link">MultiAssayExperiment::subsetByColData</a></code> function is applied.
+<code><a href="https://github.com/waldronlab/MultiAssayExperiment/reference/subsetBy.html" class="external-link">MultiAssayExperiment::subsetByColData</a></code> has two arguments:
 <code>x</code> (data) and <code>y</code> (conditions). Since all filter
 expressions are passed to one argument, <code>MAEFilterStates</code>
 only has one <code>state_list</code>, just like
