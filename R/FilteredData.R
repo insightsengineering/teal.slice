@@ -553,45 +553,61 @@ FilteredData <- R6::R6Class( # nolint
       ns <- NS(id)
       tags$div(
         id = id, # not used, can be used to customize CSS behavior
-        class = "well",
         include_js_files(pattern = "togglePanelItems"),
-        tags$div(
-          style = "display: flex; justify-content: space-between;",
-          tags$span("Active Filter Variables", class = "text-primary", style = "font-weight: 700;"),
-          tags$div(
-            style = "min-width: 60px;",
-            uiOutput(ns("remove_all_filters_ui")),
-            tags$a(
-              class = "remove_all",
-              tags$i(
-                class = "fa fa-angle-down",
-                title = "fold/expand ...",
-                onclick = sprintf(
-                  "togglePanelItems(this, ['%s', '%s'], 'fa-angle-down', 'fa-angle-right');",
-                  ns("filter_active_vars_contents"),
-                  ns("filters_active_count")
+        bslib::accordion(
+          id = ns("main_filter_accordian"),
+          bslib::accordion_panel(
+            "Filter Data",
+            icon = icon("fas fa-filter"),
+            tags$div(
+              div(
+                id = ns("available_filters_ui"),
+                style = "margin-left: -7rem; z-index: 100; display: flex; flex-direction: row-reverse; align-items: center; width: 4.5rem;",
+                private$ui_available_filters(ns("available_filters")),
+                uiOutput(ns("remove_all_filters_ui"))
+              ),
+              tags$div(
+                id = ns("filter_active_vars_contents"),
+                tagList(
+                  lapply(
+                    isolate(active_datanames()),
+                    function(dataname) {
+                      fdataset <- private$get_filtered_dataset(dataname)
+                      fdataset$ui_active(id = ns(dataname), allow_add = private$allow_add)
+                    }
+                  )
                 )
+              ),
+              tags$div(
+                id = ns("filters_active_count"),
+                style = "display: none;",
+                textOutput(ns("teal_filters_count"))
               )
-            ),
-            private$ui_available_filters(ns("available_filters"))
-          )
-        ),
-        tags$div(
-          id = ns("filter_active_vars_contents"),
-          tagList(
-            lapply(
-              isolate(active_datanames()),
-              function(dataname) {
-                fdataset <- private$get_filtered_dataset(dataname)
-                fdataset$ui_active(id = ns(dataname), allow_add = private$allow_add)
-              }
             )
           )
         ),
-        tags$div(
-          id = ns("filters_active_count"),
-          style = "display: none;",
-          textOutput(ns("teal_filters_count"))
+        tags$script(
+          HTML(
+            sprintf(
+              "
+            $(document).ready(function() {
+              $('#%s').appendTo('#%s > .accordion-item > .accordion-header');
+              $('#%s > .accordion-item > .accordion-header').css({
+                'display': 'flex'
+              });
+              $('#%s i').css({
+                'color': 'var(--bs-accordion-color)',
+                'font-size': '1.3rem',
+                'margin-bottom': '0.7rem'
+              });
+            });
+          ",
+              ns("available_filters_ui"),
+              ns("main_filter_accordian"),
+              ns("main_filter_accordian"),
+              ns("available_filters_ui")
+            )
+          )
         )
       )
     },
@@ -633,8 +649,7 @@ FilteredData <- R6::R6Class( # nolint
           req(is_filter_removable())
           actionLink(
             inputId = session$ns("remove_all_filters"),
-            label = "",
-            icon("circle-xmark", lib = "font-awesome"),
+            label = "Clear",
             title = "Remove active filters",
             class = "remove_all"
           )
@@ -927,7 +942,7 @@ FilteredData <- R6::R6Class( # nolint
           actionLink(
             ns("show"),
             label = NULL,
-            icon = icon("plus", lib = "font-awesome"),
+            icon = icon("far fa-square-check"),
             title = "Available filters",
             class = "remove pull-right"
           ),
