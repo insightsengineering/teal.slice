@@ -503,6 +503,7 @@ FilteredData <- R6::R6Class( # nolint
       ns <- NS(id)
       tags$div(
         id = ns(NULL), # used for hiding / showing
+        class = "teal-slice filter-panel",
         include_css_files(pattern = "filter-panel"),
         include_js_files(pattern = "togglePanelItems"),
         shinyjs::useShinyjs(),
@@ -731,35 +732,32 @@ FilteredData <- R6::R6Class( # nolint
     #'
     ui_overview = function(id) {
       ns <- NS(id)
-      tags$div(
-        id = id, # not used, can be used to customize CSS behavior
-        class = "well",
-        tags$div(
-          class = "row",
-          tags$div(
-            class = "col-sm-9",
-            tags$label("Active Filter Summary", class = "text-primary mb-4")
-          ),
-          tags$div(
-            class = "col-sm-3",
-            tags$a(
-              class = "filter-icon",
-              tags$i(
-                class = "fa fa-angle-down",
-                title = "fold/expand ...",
-                onclick = sprintf(
-                  "togglePanelItems(this, '%s', 'fa-angle-down', 'fa-angle-right');",
-                  ns("filters_overview_contents")
+      bslib::accordion(
+        id = ns("main_filter_accordian"),
+        bslib::accordion_panel(
+          title = "Active Filter Summary",
+          tagList(
+            tags$div(
+              class = "col-sm-3",
+              tags$a(
+                class = "filter-icon",
+                tags$i(
+                  class = "fa fa-angle-down",
+                  title = "fold/expand ...",
+                  onclick = sprintf(
+                    "togglePanelItems(this, '%s', 'fa-angle-down', 'fa-angle-right');",
+                    ns("filters_overview_contents")
+                  )
                 )
               )
+            ),
+            tags$div(
+              id = ns("filters_overview_contents"),
+              tags$div(
+                class = "teal_active_summary_filter_panel",
+                tableOutput(ns("table"))
+              )
             )
-          )
-        ),
-        tags$div(
-          id = ns("filters_overview_contents"),
-          tags$div(
-            class = "teal_active_summary_filter_panel",
-            tableOutput(ns("table"))
           )
         )
       )
