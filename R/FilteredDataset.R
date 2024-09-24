@@ -233,7 +233,9 @@ FilteredDataset <- R6::R6Class( # nolint
                       title = "fold/expand transform panel",
                       onclick = sprintf(
                         "togglePanelItems(this, '%s', 'fa-plus', 'fa-minus');
-                        $('#%s .accordion-button.collapsed').click()",
+                        if ($(this).hasClass('fa-minus')) {
+                          $('#%s .accordion-button.collapsed').click();
+                        }",
                         ns("add_panel"),
                         ns("dataset_filter_accordian")
                       )
