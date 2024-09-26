@@ -565,7 +565,7 @@ FilteredData <- R6::R6Class( # nolint
                 id = ns("available_filters_ui"),
                 style = "margin-left: -7rem; z-index: 100; display: flex; flex-direction: row-reverse; align-items: center; width: 4.5rem;",
                 private$ui_available_filters(ns("available_filters")),
-                  uiOutput(ns("remove_all_filters_ui"))
+                uiOutput(ns("remove_all_filters_ui"))
               ),
               tags$div(
                 id = ns("filter_active_vars_contents"),

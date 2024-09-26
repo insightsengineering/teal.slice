@@ -220,6 +220,7 @@ FilteredDataset <- R6::R6Class( # nolint
             icon = icon("fas fa-table"),
             tags$div(
               id = ns("whole_ui"), # to hide it entirely
+              uiOutput(ns("active_filter_badge")),
               div(
                 id = ns("filter_util_icons"),
                 style = "display: flex; flex-direction: row-reverse; align-items: center; width: 3.5rem; margin-left: -3.5rem; z-index: 99;",
@@ -288,10 +289,13 @@ FilteredDataset <- R6::R6Class( # nolint
               $('#%s > .accordion-item > .accordion-header').css({
                 'display': 'flex'
               });
+              $('#%s').appendTo('#%s .accordion-header .accordion-title');
             });
           ",
               ns("filter_util_icons"),
               ns("dataset_filter_accordian"),
+              ns("dataset_filter_accordian"),
+              ns("active_filter_badge"),
               ns("dataset_filter_accordian")
             )
           )
@@ -315,6 +319,17 @@ FilteredDataset <- R6::R6Class( # nolint
 
           filter_count <- reactive({
             length(self$get_filter_state())
+          })
+
+
+          output$active_filter_badge <- renderUI({
+            if (filter_count() == 0) {
+              return(NULL)
+            }
+            tags$span(
+              filter_count(),
+              class = "teal-slice data-filter-badge-count"
+            )
           })
 
           output$filter_count <- renderText(
