@@ -501,7 +501,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `shiny.tag`
     ui_filter_panel = function(id, active_datanames = self$datanames) {
       ns <- NS(id)
-      tags$div(
+      bslib::page_fluid(
         id = ns(NULL), # used for hiding / showing
         class = "teal-slice filter-panel",
         include_css_files(pattern = "filter-panel"),
@@ -565,7 +565,7 @@ FilteredData <- R6::R6Class( # nolint
                 id = ns("available_filters_ui"),
                 style = "margin-left: -7rem; z-index: 100; display: flex; flex-direction: row-reverse; align-items: center; width: 4.5rem;",
                 private$ui_available_filters(ns("available_filters")),
-                uiOutput(ns("remove_all_filters_ui"))
+                  uiOutput(ns("remove_all_filters_ui"))
               ),
               tags$div(
                 id = ns("filter_active_vars_contents"),
@@ -648,11 +648,14 @@ FilteredData <- R6::R6Class( # nolint
 
         output$remove_all_filters_ui <- renderUI({
           req(is_filter_removable())
-          actionLink(
-            inputId = session$ns("remove_all_filters"),
-            label = "Clear",
-            title = "Remove active filters",
-            class = "remove_all"
+          tags$div(
+            style = "display: flex;",
+            actionLink(
+              inputId = session$ns("remove_all_filters"),
+              label = "Clear",
+              title = "Remove active filters",
+              class = "remove_all"
+            )
           )
         })
 

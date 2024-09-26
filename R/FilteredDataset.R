@@ -355,12 +355,15 @@ FilteredDataset <- R6::R6Class( # nolint
 
           output$remove_filters_ui <- renderUI({
             req(is_filter_removable())
-            actionLink(
-              session$ns("remove_filters"),
-              label = "",
-              icon = icon("far fa-circle-xmark"),
-              class = "filter-icon",
-              style = "font-weight: 100; font-size: 1.3rem; color: black; padding: 0.2rem;",
+            tags$div(
+              style = "display: flex;",
+              actionLink(
+                session$ns("remove_filters"),
+                label = "",
+                icon = icon("far fa-circle-xmark"),
+                class = "filter-icon",
+                style = "font-weight: 100; font-size: 1.3rem; color: black; padding: 0.2rem;",
+              )
             )
           })
 
