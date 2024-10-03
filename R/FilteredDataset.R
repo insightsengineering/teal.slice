@@ -217,7 +217,6 @@ FilteredDataset <- R6::R6Class( # nolint
           class = "teal-slice-dataset-filter",
           bslib::accordion_panel(
             dataname,
-            icon = icon("fas fa-table"),
             tags$div(
               id = ns("whole_ui"), # to hide it entirely
               uiOutput(ns("active_filter_badge")),

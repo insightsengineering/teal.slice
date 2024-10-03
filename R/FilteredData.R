@@ -559,7 +559,6 @@ FilteredData <- R6::R6Class( # nolint
           id = ns("main_filter_accordian"),
           bslib::accordion_panel(
             "Filter Data",
-            icon = icon("fas fa-filter"),
             tags$div(
               div(
                 id = ns("available_filters_ui"),
@@ -599,7 +598,7 @@ FilteredData <- R6::R6Class( # nolint
               $('#%s i').css({
                 'color': 'var(--bs-accordion-color)',
                 'font-size': '1.3rem',
-                'margin-bottom': '0.7rem'
+                'margin-bottom': '0.3rem'
               });
             });
           ",
@@ -739,27 +738,11 @@ FilteredData <- R6::R6Class( # nolint
         id = ns("main_filter_accordian"),
         bslib::accordion_panel(
           title = "Active Filter Summary",
-          tagList(
+          tags$div(
+            id = ns("filters_overview_contents"),
             tags$div(
-              class = "col-sm-3",
-              tags$a(
-                class = "filter-icon",
-                tags$i(
-                  class = "fa fa-angle-down",
-                  title = "fold/expand ...",
-                  onclick = sprintf(
-                    "togglePanelItems(this, '%s', 'fa-angle-down', 'fa-angle-right');",
-                    ns("filters_overview_contents")
-                  )
-                )
-              )
-            ),
-            tags$div(
-              id = ns("filters_overview_contents"),
-              tags$div(
-                class = "teal_active_summary_filter_panel",
-                tableOutput(ns("table"))
-              )
+              class = "teal_active_summary_filter_panel",
+              tableOutput(ns("table"))
             )
           )
         )
