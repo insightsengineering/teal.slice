@@ -381,6 +381,26 @@ FilteredDataset <- R6::R6Class( # nolint
             )
           })
 
+          # If the accordion input is `NULL` it is being collapsed.
+          # It has the accordion panel label if it is expanded.
+          observeEvent(input$dataset_filter_accordian, ignoreNULL = FALSE, {
+            if (is.null(input$dataset_filter_accordian)) {
+              # Hiding the `add_panel` dropdown and changing the minus icon to plus
+              # TODO: simplify this implementation. This is done in multiple places
+              shinyjs::runjs(
+                sprintf(
+                  "var element = $('#%s.fa-minus');
+                  if (element.length) {
+                      element.click();
+                      $('#%s').hide();
+                  }",
+                  session$ns("add_filter_icon"),
+                  session$ns("add_panel")
+                )
+              )
+            }
+          })
+
           private$session_bindings[[session$ns("remove_filters")]] <- observeEvent(input$remove_filters, {
             logger::log_debug("FilteredDataset$srv_active@1 removing all non-anchored filters, dataname: { dataname }")
             self$clear_filter_states()
