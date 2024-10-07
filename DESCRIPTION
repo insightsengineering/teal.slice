@@ -35,6 +35,7 @@ Depends:
     R (>= 4.0)
 Imports:
     bslib (>= 0.8.0),
+    bsicons,
     checkmate (>= 2.1.0),
     dplyr (>= 1.0.5),
     grDevices,
