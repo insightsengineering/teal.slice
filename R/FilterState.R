@@ -359,7 +359,7 @@ FilterState <- R6::R6Class( # nolint
                   inputId = ns("remove"),
                   label = icon("far fa-circle-xmark"),
                   title = "Remove filter asdfasdfaksdfk",
-                  class = "filter-card-remove"
+                  class = "teal-slice filter-icon"
                 )
               }
             )

@@ -210,6 +210,7 @@ FilteredDataset <- R6::R6Class( # nolint
       if_multiple_filter_states <- length(private$get_filter_states()) > 1
       tags$span(
         id = id,
+        class = "teal-slice",
         include_css_files("filter-panel"),
         include_js_files(pattern = "icons"),
         bslib::accordion(
@@ -222,11 +223,10 @@ FilteredDataset <- R6::R6Class( # nolint
               uiOutput(ns("active_filter_badge")),
               div(
                 id = ns("filter_util_icons"),
-                style = "display: flex; flex-direction: row-reverse; align-items: center; width: 3.5rem; margin-left: -3.5rem; z-index: 99;",
+                class = "teal-slice filter-util-icons",
                 if (allow_add) {
                   tags$a(
-                    class = "filter-icon add-filter",
-                    style = "font-weight: 100; font-size: 1.3rem; color: black; padding: 0.2rem;",
+                    class = "teal-slice filter-icon",
                     tags$i(
                       id = ns("add_filter_icon"),
                       class = "fa fa-plus",
@@ -375,8 +375,7 @@ FilteredDataset <- R6::R6Class( # nolint
                 session$ns("remove_filters"),
                 label = "",
                 icon = icon("far fa-circle-xmark"),
-                class = "filter-icon",
-                style = "font-weight: 100; font-size: 1.3rem; color: black; padding: 0.2rem;",
+                class = "teal-slice filter-icon"
               )
             )
           })

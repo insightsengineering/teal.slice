@@ -555,14 +555,15 @@ FilteredData <- R6::R6Class( # nolint
       tags$div(
         id = id, # not used, can be used to customize CSS behavior
         include_js_files(pattern = "togglePanelItems"),
+        class = "teal-slice",
         bslib::accordion(
           id = ns("main_filter_accordian"),
           bslib::accordion_panel(
             "Filter Data",
             tags$div(
               div(
-                id = ns("available_filters_ui"),
-                style = "margin-left: -7rem; z-index: 100; display: flex; flex-direction: row-reverse; align-items: center; width: 4.5rem;",
+                id = ns("additional_filter_helpers"),
+                class = "teal-slice available-filters",
                 private$ui_available_filters(ns("available_filters")),
                 uiOutput(ns("remove_all_filters_ui"))
               ),
@@ -597,15 +598,14 @@ FilteredData <- R6::R6Class( # nolint
               });
               $('#%s i').css({
                 'color': 'var(--bs-accordion-color)',
-                'font-size': '1.3rem',
-                'margin-bottom': '0.3rem'
+                'font-size': '1rem'
               });
             });
           ",
-              ns("available_filters_ui"),
+              ns("additional_filter_helpers"),
               ns("main_filter_accordian"),
               ns("main_filter_accordian"),
-              ns("available_filters_ui")
+              ns("additional_filter_helpers")
             )
           )
         )
@@ -651,9 +651,10 @@ FilteredData <- R6::R6Class( # nolint
             style = "display: flex;",
             actionLink(
               inputId = session$ns("remove_all_filters"),
-              label = "Clear",
+              label = "",
               title = "Remove active filters",
-              class = "remove_all"
+              icon = icon("far fa-circle-xmark"),
+              class = "teal-slice filter-icon remove-all"
             )
           )
         })
@@ -734,15 +735,18 @@ FilteredData <- R6::R6Class( # nolint
     #'
     ui_overview = function(id) {
       ns <- NS(id)
-      bslib::accordion(
-        id = ns("main_filter_accordian"),
-        bslib::accordion_panel(
-          title = "Active Filter Summary",
-          tags$div(
-            id = ns("filters_overview_contents"),
+      tags$div(
+        class = "teal-slice",
+        bslib::accordion(
+          id = ns("main_filter_accordian"),
+          bslib::accordion_panel(
+            title = "Active Filter Summary",
             tags$div(
-              class = "teal_active_summary_filter_panel",
-              tableOutput(ns("table"))
+              id = ns("filters_overview_contents"),
+              tags$div(
+                class = "teal_active_summary_filter_panel",
+                tableOutput(ns("table"))
+              )
             )
           )
         )
@@ -923,12 +927,10 @@ FilteredData <- R6::R6Class( # nolint
       tags$div(
         id = ns("available_menu"),
         shinyWidgets::dropMenu(
-          actionLink(
-            ns("show"),
-            label = NULL,
-            icon = icon("far fa-square-check"),
-            title = "Available filters",
-            class = "remove pull-right"
+          tags$a(
+            id = ns("show"),
+            class = "available-menu",
+            bsicons::bs_icon("plus-square", size = "1.4rem", class = "teal-slice filter-icon"),
           ),
           tags$div(
             class = "menu-content",

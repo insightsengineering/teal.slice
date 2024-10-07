@@ -512,7 +512,6 @@ a.remove_all:hover {
 
 .teal-slice-dataset-filter .accordion i {
   font-size: 1rem;
-  margin-bottom: 0.5rem;
 }
 
 .teal-slice-dataset-filter .accordion .filter-card-back i {
@@ -549,4 +548,83 @@ a.remove_all:hover {
   margin-left: 0.2em;
   background: rgba(var(--bs-primary-rgb), 0.8);
   color: var(--bs-primary-bg-subtle);
+}
+
+.teal-slice.filter-util-icons {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  width: 3.5rem;
+  margin-left: -4rem;
+}
+
+.teal-slice.filter-util-icons a {
+  z-index: 100;
+}
+
+.teal-slice.filter-util-icons .filter-icon {
+  font-weight: 100;
+  font-size: 1rem;
+  color: black;
+  padding: 0.2rem;
+}
+
+.teal-slice.available-filters {
+  margin-left: -7rem;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  width: 4.5rem;
+  cursor: pointer;
+}
+
+.teal-slice.available-filters a {
+  position: relative;
+  display: flex;
+  z-index: 100;
+  opacity: 0.5;
+  transition: 0.1s;
+}
+
+.teal-slice.available-filters a:hover {
+  opacity: 1;
+}
+
+.teal-slice.available-filters .available-menu {
+  display: flex;
+  text-decoration: none;
+}
+
+.teal-slice.filter-icon {
+  cursor: pointer;
+  font-weight: 100;
+  font-size: 1rem;
+  color: black;
+  padding: 0.2rem;
+  opacity: 0.5;
+  transition: 0.1s;
+}
+
+.teal-slice.filter-icon {
+  display: flex;
+  text-decoration: none;
+}
+
+.teal-slice.filter-icon.remove-all i {
+  opacity: 0.5;
+  transition: 0.1s;
+  color: var(--bs-danger);
+}
+
+.teal-slice.filter-icon.remove-all i:hover {
+  opacity: 1;
+}
+
+.teal-slice.filter-icon:hover {
+  opacity: 1;
+}
+
+.teal-slice .accordion-button:not(.collapsed)::after,
+.accordion-button::after {
+  scale: 0.8;
 }
