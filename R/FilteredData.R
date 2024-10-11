@@ -693,9 +693,7 @@ FilteredData <- R6::R6Class( # nolint
 
         private$session_bindings[[session$ns("inputs")]] <- list(
           destroy = function() {
-            if (!session$isEnded()) {
-              lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
-            }
+            lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
           }
         )
 

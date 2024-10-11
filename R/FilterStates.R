@@ -61,6 +61,15 @@ FilterStates <- R6::R6Class( # nolint
       private$data <- data
       private$data_reactive <- data_reactive
       private$state_list <- reactiveVal()
+
+      # Clears state list when finalizing the object
+      private$session_bindings[["clear_state_list"]] <- list(
+        destroy = function() {
+          private$state_list_empty(force = TRUE)
+          isolate(private$state_list(NULL))
+        }
+      )
+
       invisible(self)
     },
 
@@ -483,9 +492,7 @@ FilterStates <- R6::R6Class( # nolint
           # Extra observer that clears all input values in session
           private$session_bindings[[session$ns("inputs")]] <- list(
             destroy = function() {
-              if (!session$isEnded()) {
-                lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
-              }
+              lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
             }
           )
 
@@ -503,9 +510,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `NULL`, invisibly.
     #'
     finalize = function() {
-      .finalize_session_bindings(self, private) # Remove all inputs and observers
-      private$state_list_empty(force = TRUE)
-      isolate(private$state_list(NULL))
+      .finalize_session_bindings(self, private)
       invisible(NULL)
     }
   ),
@@ -642,6 +647,7 @@ FilterStates <- R6::R6Class( # nolint
     state_list_remove = function(state_id, force = FALSE) {
       checkmate::assert_character(state_id)
       logger::log_debug("{ class(self)[1] } removing a filter, state_id: { toString(state_id) }")
+
       isolate({
         current_state_ids <- vapply(private$state_list(), function(x) x$get_state()$id, character(1))
         to_remove <- state_id %in% current_state_ids
