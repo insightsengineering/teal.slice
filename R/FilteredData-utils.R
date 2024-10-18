@@ -29,7 +29,10 @@ init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, chec
       "init_filtered_data(check = 'No longer supported')"
     )
   }
-  FilteredData$new(x, join_keys = join_keys)
+  FilteredData$new(
+    Filter(function(obj) inherits(obj, c("data.frame", "MultiAssayExperiment")), x),
+    join_keys = join_keys
+  )
 }
 
 #' Evaluate expression with meaningful message
