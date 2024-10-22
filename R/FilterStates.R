@@ -165,7 +165,12 @@ FilterStates <- R6::R6Class( # nolint
       )
       if (length(filter_items) > 0L) {
         filter_function <- private$fun
-        data_name <- str2lang(private$dataname_prefixed)
+        data_name <- tryCatch(
+          {
+            str2lang(private$dataname_prefixed)
+          },
+          error = function(e) str2lang(paste0("`", private$dataname_prefixed, "`"))
+        )
         substitute(
           env = list(
             lhs = data_name,

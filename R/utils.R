@@ -56,3 +56,49 @@ make_c_call <- function(choices) {
   if (length(private$session_bindings) > 0) lapply(private$session_bindings, function(x) x$destroy())
   invisible(NULL)
 }
+
+
+
+#' Encodes ids to be used in JavaScript and Shiny
+#'
+#' Replaces non-ASCII characters into a format that can be used in HTML,
+#' JavaScript and Shiny.
+#'
+#' Typically, the `%` symbol is used in this format, but we it is not allowed
+#' in this context..
+#' We replace `%` with `__html_XX__` where `XX` is the HTML representation of
+#' the character.
+#'
+#' @param id (`character(1)`) The id string.
+#'
+#' @return Sanitized string that removes special characters and spaces.
+#'
+#' @keywords internal
+js_encode <- function(id) {
+  gsub("%([0-9]{2})", "__html_\\1__", utils::URLencode(as.character(id)))
+}
+
+#' `NS` wrapper to sanitize ids for shiny
+#'
+#' Special characters and spaces are not allowed in shiny ids (in JS)
+#'
+#' @noRd
+NS <- function(namespace, id = NULL) { # nolint: object_name.
+  if (!missing(id)) {
+    return(shiny::NS(namespace, js_encode(id)))
+  }
+
+  function(id) {
+    shiny::NS(namespace, js_encode(id))
+  }
+}
+
+#' `moduleServer` wrapper to sanitize ids for shiny
+#'
+#' Special characters and spaces are not allowed in shiny ids (in JS)
+#'
+#' @noRd
+moduleServer <- function(id, module, session = getDefaultReactiveDomain()) { # nolint: object_name.
+  id <- js_encode(id)
+  shiny::moduleServer(id, module, session)
+}
