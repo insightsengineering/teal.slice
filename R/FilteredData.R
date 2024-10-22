@@ -306,6 +306,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     set_dataset = function(data, dataname) {
       checkmate::assert_string(dataname)
+      checkmate::assert_character(dataname, min.len = 1, any.missing = FALSE)
       logger::log_debug("FilteredData$set_dataset setting dataset, name: { dataname }")
 
       parent_dataname <- teal.data::parent(private$join_keys, dataname)
