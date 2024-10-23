@@ -75,7 +75,7 @@ make_c_call <- function(choices) {
 #'
 #' @keywords internal
 js_encode <- function(id) {
-  gsub("%([0-9]{2})", "__html_\\1__", utils::URLencode(as.character(id)))
+  gsub("%([0-9]{2})", "__u\\1__", utils::URLencode(as.character(id)))
 }
 
 #' `NS` wrapper to sanitize ids for shiny
