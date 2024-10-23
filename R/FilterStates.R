@@ -57,7 +57,11 @@ FilterStates <- R6::R6Class( # nolint
 
       private$dataname <- dataname
       private$datalabel <- datalabel
-      private$dataname_prefixed <- dataname
+      private$dataname_prefixed <- if (identical(dataname, make.names(dataname))) {
+        dataname
+      } else {
+        sprintf("`%s`", dataname)
+      }
       private$data <- data
       private$data_reactive <- data_reactive
       private$state_list <- reactiveVal()
