@@ -30,7 +30,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return Object of class `FilteredDataset`, invisibly.
     #'
     initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label", exact = TRUE)) {
-      checkmate::assert_character(dataname, min.len = 1, any.missing = FALSE)
+      checkmate::assert_string(dataname)
       logger::log_debug("Instantiating { class(self)[1] }, dataname: { dataname }")
       checkmate::assert_character(keys, any.missing = FALSE)
       checkmate::assert_character(label, null.ok = TRUE)
