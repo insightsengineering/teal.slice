@@ -8,6 +8,10 @@
 
 * Fix error while creating the filter choices when the data has a factor with a level containing an empty string ("").
 
+### Miscellaneous
+
+* `DefaultFilteredDataset` has been removed and filter panel no longer displays entries for non-filterable datasets. 
+
 ### Breaking changes
 
 * `ui_add` and `srv_add` no longer exist as adding new filters is a part of `ui_active` and `srv_active`.

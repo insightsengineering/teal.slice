@@ -377,15 +377,13 @@ FilteredData <- R6::R6Class( # nolint
     #'
     format = function(show_all = FALSE, trim_lines = TRUE) {
       datasets <- lapply(self$datanames(), private$get_filtered_dataset)
-      ind <- vapply(datasets, inherits, logical(1L), what = "DefaultFilteredDataset")
-      states <- do.call(c, lapply(datasets[!ind], function(ds) ds$get_filter_state()))
+      states <- do.call(c, lapply(datasets, function(ds) ds$get_filter_state()))
       states_fmt <- format(states, show_all = show_all, trim_lines = trim_lines)
-      holders_fmt <- vapply(datasets[ind], format, character(1L), show_all = show_all, trim_lines = trim_lines)
 
       sprintf(
         "%s:\n%s",
         class(self)[1],
-        paste(c(states_fmt, holders_fmt), collapse = "\n")
+        paste(states_fmt, collapse = "\n")
       )
     },
 

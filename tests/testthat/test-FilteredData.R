@@ -339,35 +339,6 @@ testthat::test_that("format returns properly formatted string representing `teal
   )
 })
 
-testthat::test_that("format lists unfiltered datasets at the end of the output", {
-  datasets <- FilteredData$new(list(iris = iris, letters = letters, mtcars = mtcars))
-
-  fs <- teal_slices(
-    teal_slice(
-      dataname = "iris", varname = "Species",
-      choices = c("setosa", "versicolor", "virginica"), multiple = TRUE, selected = c("setosa", "versicolor"),
-      keep_na = FALSE
-    ),
-    teal_slice(
-      dataname = "mtcars", varname = "cyl",
-      choices = c("4", "6", "8"), multiple = TRUE, selected = c("4", "6"),
-      keep_na = FALSE, keep_inf = FALSE
-    ),
-    count_type = "none",
-    include_varnames = list(mtcars = "cyl"),
-    exclude_varnames = list(iris = c("Petal.Length", "Petal.Width"))
-  )
-
-  datasets$set_filter_state(fs)
-
-  state_fmt <- shiny::isolate(format(datasets$get_filter_state()))
-
-  testthat::expect_identical(
-    shiny::isolate(datasets$format()),
-    paste0("FilteredData:\n", state_fmt, "\n - unfiltered dataset:\t\"letters\":   character")
-  )
-})
-
 # remove_filter_state ----
 testthat::test_that("remove_filter_state removes states specified by `teal_slices", {
   datasets <- FilteredData$new(list(iris = iris, mtcars = mtcars))

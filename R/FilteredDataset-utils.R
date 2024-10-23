@@ -141,9 +141,5 @@ init_filtered_dataset.default <- function(dataset,
                                           parent, # ignored
                                           join_keys, # ignored
                                           label = attr(dataset, "label", exact = TRUE)) {
-  DefaultFilteredDataset$new(
-    dataset = dataset,
-    dataname = dataname,
-    label = label
-  )
+  NULL
 }
