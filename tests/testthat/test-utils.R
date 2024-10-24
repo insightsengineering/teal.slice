@@ -4,11 +4,13 @@ testthat::test_that("make_c_call", {
   testthat::expect_identical(make_c_call(1), 1)
 })
 
+# sanitize_id ----
 testthat::describe("sanitize_id", {
   testthat::it("should replace non-ASCII characters in middle of id with `_`", {
     id <- "a$b"
+    ns <- NS("app")
     testthat::expect_identical(
-      NS("app", id),
+      ns(id),
       paste0("app-", substr(rlang::hash(id), 1, 4), "_a_b")
     )
   })
