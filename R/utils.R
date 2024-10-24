@@ -74,7 +74,6 @@ make_c_call <- function(choices) {
 #'
 #' @keywords internal
 sanitize_id <- function(id) {
-  id <- as.character(as.name(id))
   id_converted <- make.names(id)
   if (identical(make.names(id), id)) {
     return(id)
