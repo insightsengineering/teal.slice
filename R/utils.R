@@ -106,6 +106,6 @@ NS <- function(namespace, id = NULL) { # nolint: object_name.
 #'
 #' @noRd
 moduleServer <- function(id, module, session = getDefaultReactiveDomain()) { # nolint: object_name.
-  id <- js_encode(id)
+  id <- sanitize_id(id)
   shiny::moduleServer(id, module, session)
 }
