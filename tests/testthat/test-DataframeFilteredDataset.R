@@ -4,7 +4,9 @@ testthat::test_that("constructor accepts data.frame object with a dataname", {
   testthat::expect_error(DataframeFilteredDataset$new(dataset = head(iris)), "argument .+ missing, with no default")
   testthat::expect_error(DataframeFilteredDataset$new(dataname = "iris"), "argument .+ missing, with no default")
   testthat::expect_error(DataframeFilteredDataset$new(dataset = as.list(iris)), "Assertion on 'dataset' failed")
-  testthat::expect_error(DataframeFilteredDataset$new(dataset = iris, dataname = iris), "Assertion on 'name' failed")
+  testthat::expect_error(
+    DataframeFilteredDataset$new(dataset = iris, dataname = iris), "Assertion on 'dataname' failed"
+  )
 })
 
 testthat::test_that("filter_states list is initialized with single `FilterStates` element named filter", {
