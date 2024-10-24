@@ -74,14 +74,10 @@ make_c_call <- function(choices) {
 #'
 #' @keywords internal
 sanitize_id <- function(id) {
-  escape_characters <- " !\"#$%&'()*+,./:;<=>?@[\\]^`{|}~"
-  pattern <- paste(
-    sep = "", collapse = "|", "\\", strsplit(escape_characters, "")[[1]]
-  )
-  pattern <- gsub("\\<", "<", pattern, fixed = TRUE)
-  pattern <- gsub("\\>", ">", pattern, fixed = TRUE)
+  # Left square bracket needs to be first in the pattern to avoid errors with pattern
+  pattern_escape <- "[] !\"#$%&'()*+,./:;<=>?@[\\^`{|}~]"
 
-  id_new <- gsub(pattern, "_", id)
+  id_new <- gsub(pattern_escape, "_", id)
   hashes <- vapply(
     id[id != id_new],
     rlang::hash, character(1),
