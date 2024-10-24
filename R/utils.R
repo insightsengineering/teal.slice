@@ -61,21 +61,29 @@ make_c_call <- function(choices) {
 
 #' Encodes ids to be used in JavaScript and Shiny
 #'
+#' @description
 #' Replaces non-ASCII characters into a format that can be used in HTML,
 #' JavaScript and Shiny.
 #'
-#' Typically, the `%` symbol is used in this format, but we it is not allowed
-#' in this context..
-#' We replace `%` with `__html_XX__` where `XX` is the HTML representation of
-#' the character.
+#' When the id has a character that is not allowed, it is replaced with `"_"`
+#' and a hash of the original id is added to the beginning of the id.
 #'
 #' @param id (`character(1)`) The id string.
 #'
 #' @return Sanitized string that removes special characters and spaces.
 #'
 #' @keywords internal
-js_encode <- function(id) {
-  gsub("%([0-9]{2})", "__u\\1__", utils::URLencode(as.character(id)))
+sanitize_id <- function(id) {
+  id_converted <- make.names(id)
+  if (identical(make.names(id), id)) {
+    return(id)
+  }
+  id_converted <- gsub("\\.", "_", id_converted)
+  if (!grepl("^X", id)) {
+    id_converted <- gsub("^X", "", id_converted)
+  }
+
+  paste0(substr(rlang::hash(id), 1, 4), "_", id_converted)
 }
 
 #' `NS` wrapper to sanitize ids for shiny
@@ -85,11 +93,11 @@ js_encode <- function(id) {
 #' @noRd
 NS <- function(namespace, id = NULL) { # nolint: object_name.
   if (!missing(id)) {
-    return(shiny::NS(namespace, js_encode(id)))
+    return(shiny::NS(namespace, sanitize_id(id)))
   }
 
   function(id) {
-    shiny::NS(namespace, js_encode(id))
+    shiny::NS(namespace, sanitize_id(id))
   }
 }
 
