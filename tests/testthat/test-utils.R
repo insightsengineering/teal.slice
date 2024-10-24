@@ -11,15 +11,21 @@ testthat::describe("sanitize_id", {
     ns <- NS("app")
     testthat::expect_identical(
       ns(id),
-      paste0("app-", substr(rlang::hash(id), 1, 4), "_a_b")
+      paste0("app-h", substr(rlang::hash(id), 1, 4), "_a_b")
     )
   })
 
   testthat::it("should replace non-ASCII characters in the start/end of id with `_`", {
-    id <- "%a.b%c$"
+    id <- "%a bad symbol$"
+    id2 <- "a&b#"
+    id_from_module <- shiny::withReactiveDomain(
+      MockShinySession$new(),
+      moduleServer(id, function(input, output, session) session$ns("a_good_name"))
+    )
+
     testthat::expect_identical(
-      NS("app", id),
-      paste0("app-", substr(rlang::hash(id), 1, 4), "__a_b_c_")
+      id_from_module,
+      paste0("h", substr(rlang::hash(id), 1, 4), "__a_bad_symbol_-a_good_name")
     )
   })
 
@@ -27,7 +33,7 @@ testthat::describe("sanitize_id", {
     id <- " a.b.c\"d`e'j"
     testthat::expect_identical(
       NS("app", id),
-      paste0("app-", substr(rlang::hash(id), 1, 4), "__a_b_c_d_e_j")
+      paste0("app-h", substr(rlang::hash(id), 1, 4), "__a_b_c_d_e_j")
     )
   })
 
@@ -35,7 +41,7 @@ testthat::describe("sanitize_id", {
     id <- "a\U1F643"
     testthat::expect_identical(
       NS("app", id),
-      paste0("app-", substr(rlang::hash(id), 1, 4), "_a_")
+      paste0("app-h", substr(rlang::hash(id), 1, 4), "_a_")
     )
   })
 
@@ -44,7 +50,7 @@ testthat::describe("sanitize_id", {
     testthat::expect_identical(
       NS("app", forbidden),
       paste0(
-        "app-",
+        "app-h",
         substr(rlang::hash(forbidden), 1, 4),
         paste(rep("_", nchar(forbidden) + 1), collapse = "")
       )

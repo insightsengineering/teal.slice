@@ -82,7 +82,7 @@ sanitize_id <- function(id) {
   if (!grepl("^X", id)) {
     id_converted <- gsub("^X", "", id_converted)
   }
-  paste0(substr(rlang::hash(as.character(id)), 1, 4), "_", id_converted)
+  paste0("h", substr(rlang::hash(as.character(id)), 1, 4), "_", id_converted)
 }
 
 #' `NS` wrapper to sanitize ids for shiny
