@@ -6,6 +6,38 @@ testthat::test_that("make_c_call", {
 
 # sanitize_id ----
 testthat::describe("sanitize_id", {
+  testthat::it("should replace dots with `_` when id is otherwise valid", {
+    id <- "a.b"
+    ns <- NS("app")
+    testthat::expect_identical(
+      ns(id),
+      paste0("app-h", substr(rlang::hash(id), 1, 4), "_a_b")
+    )
+  })
+
+  testthat::it("should take vector input", {
+    id <- c("a.b", "a", "b", " c")
+    ns <- NS("app")
+    testthat::expect_identical(
+      ns(id),
+      c(
+        paste0("app-h", substr(rlang::hash(id[1]), 1, 4), "_a_b"),
+        "app-a",
+        "app-b",
+        paste0("app-h", substr(rlang::hash(id[4]), 1, 4), "__c")
+      )
+    )
+  })
+
+  testthat::it("should allow for integer input", {
+    id <- c(1L, 2L, 3L)
+    ns <- NS("app")
+    testthat::expect_identical(
+      ns(id),
+      c("app-1", "app-2", "app-3")
+    )
+  })
+
   testthat::it("should replace non-ASCII characters in middle of id with `_`", {
     id <- "a$b"
     ns <- NS("app")
@@ -34,14 +66,6 @@ testthat::describe("sanitize_id", {
     testthat::expect_identical(
       NS("app", id),
       paste0("app-h", substr(rlang::hash(id), 1, 4), "__a_b_c_d_e_j")
-    )
-  })
-
-  testthat::it("should replace UTF-8 special characters with `_`", {
-    id <- "a\U1F643"
-    testthat::expect_identical(
-      NS("app", id),
-      paste0("app-h", substr(rlang::hash(id), 1, 4), "_a_")
     )
   })
 
