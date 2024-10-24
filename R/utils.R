@@ -76,7 +76,7 @@ make_c_call <- function(choices) {
 sanitize_id <- function(id) {
   id_converted <- make.names(id)
   if (identical(make.names(id), id)) {
-    return(id)
+    return(gsub("\\.", "_", id))
   }
   id_converted <- gsub("\\.", "_", id_converted)
   if (!grepl("^X", id)) {
