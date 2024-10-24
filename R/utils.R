@@ -74,6 +74,7 @@ make_c_call <- function(choices) {
 #'
 #' @keywords internal
 sanitize_id <- function(id) {
+  id <- as.character(as.name(id))
   id_converted <- make.names(id)
   if (identical(make.names(id), id)) {
     return(id)
@@ -82,8 +83,7 @@ sanitize_id <- function(id) {
   if (!grepl("^X", id)) {
     id_converted <- gsub("^X", "", id_converted)
   }
-
-  paste0(substr(rlang::hash(id), 1, 4), "_", id_converted)
+  paste0(substr(rlang::hash(as.character(id)), 1, 4), "_", id_converted)
 }
 
 #' `NS` wrapper to sanitize ids for shiny
