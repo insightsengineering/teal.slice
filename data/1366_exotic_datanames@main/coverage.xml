@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.695841948081783" branch-rate="0" lines-covered="3029" lines-valid="4353" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-10-23 14:04:33.623893">
+<coverage line-rate="0.696350700022952" branch-rate="0" lines-covered="3034" lines-valid="4357" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-10-25 07:37:21.381108">
   <sources>
     <source>/__w/teal.slice/teal.slice/teal.slice</source>
   </sources>
   <packages>
-    <package name="teal.slice" line-rate="0.695841948081783" branch-rate="0" complexity="0">
+    <package name="teal.slice" line-rate="0.696350700022952" branch-rate="0" complexity="0">
       <classes>
         <class name="calls_combine_by.R" filename="R/calls_combine_by.R" line-rate="1" branch-rate="0" complexity="0">
           <methods>
@@ -29652,7 +29652,7 @@
             <line number="40" hits="12" branch="false"/>
           </lines>
         </class>
-        <class name="utils.R" filename="R/utils.R" line-rate="0.95" branch-rate="0" complexity="0">
+        <class name="utils.R" filename="R/utils.R" line-rate="1" branch-rate="0" complexity="0">
           <methods>
             <method name="include_js_files" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
@@ -29678,24 +29678,28 @@
                 <line number="57" hits="1416" branch="false"/>
               </lines>
             </method>
-            <method name="js_encode" signature="" line-rate="1" branch-rate="0" complexity="0">
+            <method name="sanitize_id" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="78" hits="384" branch="false"/>
+                <line number="79" hits="392" branch="false"/>
+                <line number="81" hits="392" branch="false"/>
+                <line number="82" hits="392" branch="false"/>
+                <line number="84" hits="392" branch="false"/>
+                <line number="85" hits="392" branch="false"/>
               </lines>
             </method>
-            <method name="NS" signature="" line-rate="0.8" branch-rate="0" complexity="0">
+            <method name="NS" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="87" hits="141" branch="false"/>
-                <line number="88" hits="0" branch="false"/>
-                <line number="91" hits="141" branch="false"/>
-                <line number="92" hits="141" branch="false"/>
-                <line number="93" hits="141" branch="false"/>
+                <line number="94" hits="148" branch="false"/>
+                <line number="95" hits="3" branch="false"/>
+                <line number="98" hits="145" branch="false"/>
+                <line number="99" hits="145" branch="false"/>
+                <line number="100" hits="145" branch="false"/>
               </lines>
             </method>
             <method name="moduleServer" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="102" hits="106" branch="false"/>
-                <line number="103" hits="106" branch="false"/>
+                <line number="109" hits="107" branch="false"/>
+                <line number="110" hits="107" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -29712,14 +29716,18 @@
             <line number="41" hits="28" branch="false"/>
             <line number="56" hits="76" branch="false"/>
             <line number="57" hits="1416" branch="false"/>
-            <line number="78" hits="384" branch="false"/>
-            <line number="87" hits="141" branch="false"/>
-            <line number="88" hits="0" branch="false"/>
-            <line number="91" hits="141" branch="false"/>
-            <line number="92" hits="141" branch="false"/>
-            <line number="93" hits="141" branch="false"/>
-            <line number="102" hits="106" branch="false"/>
-            <line number="103" hits="106" branch="false"/>
+            <line number="79" hits="392" branch="false"/>
+            <line number="81" hits="392" branch="false"/>
+            <line number="82" hits="392" branch="false"/>
+            <line number="84" hits="392" branch="false"/>
+            <line number="85" hits="392" branch="false"/>
+            <line number="94" hits="148" branch="false"/>
+            <line number="95" hits="3" branch="false"/>
+            <line number="98" hits="145" branch="false"/>
+            <line number="99" hits="145" branch="false"/>
+            <line number="100" hits="145" branch="false"/>
+            <line number="109" hits="107" branch="false"/>
+            <line number="110" hits="107" branch="false"/>
           </lines>
         </class>
         <class name="variable_types.R" filename="R/variable_types.R" line-rate="0.933333333333333" branch-rate="0" complexity="0">
