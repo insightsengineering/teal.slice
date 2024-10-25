@@ -39,7 +39,9 @@ SEFilterStates <- R6::R6Class( # nolint
       checkmate::assert_class(data, "SummarizedExperiment")
       super$initialize(data, data_reactive, dataname, datalabel)
       if (!is.null(datalabel)) {
-        private$dataname_prefixed <- sprintf("%s[['%s']]", dataname, datalabel)
+        private$dataname_prefixed <- sprintf(
+          "%s[['%s']]", private$dataname_prefixed, datalabel
+        )
       }
     },
 

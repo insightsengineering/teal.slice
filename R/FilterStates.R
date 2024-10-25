@@ -57,7 +57,11 @@ FilterStates <- R6::R6Class( # nolint
 
       private$dataname <- dataname
       private$datalabel <- datalabel
-      private$dataname_prefixed <- dataname
+      private$dataname_prefixed <- if (identical(dataname, make.names(dataname))) {
+        dataname
+      } else {
+        sprintf("`%s`", dataname)
+      }
       private$data <- data
       private$data_reactive <- data_reactive
       private$state_list <- reactiveVal()
@@ -165,7 +169,12 @@ FilterStates <- R6::R6Class( # nolint
       )
       if (length(filter_items) > 0L) {
         filter_function <- private$fun
-        data_name <- str2lang(private$dataname_prefixed)
+        data_name <- tryCatch(
+          {
+            str2lang(private$dataname_prefixed)
+          },
+          error = function(e) str2lang(paste0("`", private$dataname_prefixed, "`"))
+        )
         substitute(
           env = list(
             lhs = data_name,
