@@ -31,7 +31,6 @@
 <url><loc>https://insightsengineering.github.io/teal.slice/reference/RangeFilterState.html</loc></url>
 <url><loc>https://insightsengineering.github.io/teal.slice/reference/SEFilterStates.html</loc></url>
 <url><loc>https://insightsengineering.github.io/teal.slice/reference/calls_combine_by.html</loc></url>
-<url><loc>https://insightsengineering.github.io/teal.slice/reference/check_simple_name.html</loc></url>
 <url><loc>https://insightsengineering.github.io/teal.slice/reference/choices_labeled.html</loc></url>
 <url><loc>https://insightsengineering.github.io/teal.slice/reference/coalesce_r.html</loc></url>
 <url><loc>https://insightsengineering.github.io/teal.slice/reference/countBar.html</loc></url>
@@ -59,6 +58,7 @@
 <url><loc>https://insightsengineering.github.io/teal.slice/reference/make_c_call.html</loc></url>
 <url><loc>https://insightsengineering.github.io/teal.slice/reference/make_count_text.html</loc></url>
 <url><loc>https://insightsengineering.github.io/teal.slice/reference/pair_counts.html</loc></url>
+<url><loc>https://insightsengineering.github.io/teal.slice/reference/sanitize_id.html</loc></url>
 <url><loc>https://insightsengineering.github.io/teal.slice/reference/setdiff_teal_slices.html</loc></url>
 <url><loc>https://insightsengineering.github.io/teal.slice/reference/teal.slice-package.html</loc></url>
 <url><loc>https://insightsengineering.github.io/teal.slice/reference/teal_slice-utilities.html</loc></url>
