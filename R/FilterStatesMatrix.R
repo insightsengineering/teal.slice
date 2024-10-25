@@ -35,6 +35,11 @@ MatrixFilterStates <- R6::R6Class( # nolint
       checkmate::assert_matrix(data)
       super$initialize(data, data_reactive, dataname, datalabel)
       private$set_filterable_varnames(include_varnames = colnames(private$data))
+      if (!is.null(datalabel)) {
+        private$dataname_prefixed <- sprintf(
+          "%s[['%s']]", private$dataname_prefixed, datalabel
+        )
+      }
     }
   ),
   private = list(

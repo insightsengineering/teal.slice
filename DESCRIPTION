@@ -1,8 +1,8 @@
 Type: Package
 Package: teal.slice
 Title: Filter Module for 'teal' Applications
-Version: 0.5.1.9012
-Date: 2024-09-16
+Version: 0.5.1.9013
+Date: 2024-10-25
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9533-457X")),
@@ -45,6 +45,7 @@ Imports:
     methods,
     plotly (>= 4.9.2.2),
     R6 (>= 2.2.0),
+    rlang (>= 1.0.0),
     shiny (>= 1.6.0),
     shinycssloaders (>= 1.0.0),
     shinyjs,
