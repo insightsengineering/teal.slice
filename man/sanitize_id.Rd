@@ -17,6 +17,7 @@ Replaces non-ASCII characters into a format that can be used in HTML,
 JavaScript and Shiny.
 
 When the id has a character that is not allowed, it is replaced with \code{"_"}
-and a hash of the original id is added to the beginning of the id.
+and a 4 character hash of the original id is added to the start of the
+resulting id.
 }
 \keyword{internal}

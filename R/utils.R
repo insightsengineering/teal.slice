@@ -66,7 +66,9 @@ make_c_call <- function(choices) {
 #' JavaScript and Shiny.
 #'
 #' When the id has a character that is not allowed, it is replaced with `"_"`
-#' and a hash of the original id is added to the beginning of the id.
+#' and a 4 character hash of the original id is added to the start of the
+#' resulting id.
+#'
 #'
 #' @param id (`character(1)`) The id string.
 #'
@@ -74,15 +76,10 @@ make_c_call <- function(choices) {
 #'
 #' @keywords internal
 sanitize_id <- function(id) {
-  # Left square bracket needs to be first in the pattern to avoid errors with pattern
-  pattern_escape <- "[] !\"#$%&'()*+,./:;<=>?@[\\^`{|}~]"
+  pattern_escape <- "[^0-9A-Za-z_]"
 
   id_new <- gsub(pattern_escape, "_", id)
-  hashes <- vapply(
-    id[id != id_new],
-    rlang::hash, character(1),
-    USE.NAMES = FALSE
-  )
+  hashes <- vapply(id[id != id_new], rlang::hash, character(1), USE.NAMES = FALSE)
 
   id[id != id_new] <- paste0("h", substr(hashes, 1, 4), "_", id_new[id != id_new])
   id
