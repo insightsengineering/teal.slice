@@ -1,8 +1,9 @@
-# teal.slice 0.5.1.9012
+# teal.slice 0.5.1.9016
 
 ### Enhancements
 
 * Reduced the space of the filter panel by not displaying the "add filters" UI in a separate panel.
+* The deprecated parameters `code` and `check` were removed from `init_filtered_data()`.
 
 ### Bug fixes
 

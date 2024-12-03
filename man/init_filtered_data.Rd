@@ -4,16 +4,12 @@
 \alias{init_filtered_data}
 \title{Initialize \code{FilteredData}}
 \usage{
-init_filtered_data(x, join_keys = teal.data::join_keys(), code, check)
+init_filtered_data(x, join_keys = teal.data::join_keys())
 }
 \arguments{
 \item{x}{(\verb{named list}) of datasets.}
 
 \item{join_keys}{(\code{join_keys}) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
-
-\item{code}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
-
-\item{check}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 }
 \value{
 Object of class \code{FilteredData}.

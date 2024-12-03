@@ -4,8 +4,6 @@
 #'
 #' @param x (`named list`) of datasets.
 #' @param join_keys (`join_keys`) see [`teal.data::join_keys()`].
-#' @param code `r lifecycle::badge("deprecated")`
-#' @param check `r lifecycle::badge("deprecated")`
 #'
 #' @return Object of class `FilteredData`.
 #'
@@ -14,21 +12,9 @@
 #' datasets
 #'
 #' @export
-init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, check) { # nolint
+init_filtered_data <- function(x, join_keys = teal.data::join_keys()) { # nolint
   checkmate::assert_list(x, any.missing = FALSE, names = "unique")
   checkmate::assert_class(join_keys, "join_keys")
-  if (!missing(code)) {
-    lifecycle::deprecate_stop(
-      "0.5.0",
-      "init_filtered_data(code = 'No longer supported')"
-    )
-  }
-  if (!missing(check)) {
-    lifecycle::deprecate_stop(
-      "0.5.0",
-      "init_filtered_data(check = 'No longer supported')"
-    )
-  }
   FilteredData$new(x, join_keys = join_keys)
 }
 

@@ -1,28 +1,3 @@
-#' Test whether variable name can be used within `Show R Code`
-#'
-#' Variable names containing spaces are problematic and must be wrapped in backticks.
-#' Also, they should not start with a number as `R` may silently make it valid by changing it.
-#' Therefore, we only allow alphanumeric characters with underscores.
-#' The first character of the `name` must be an alphabetic character and can be followed by alphanumeric characters.
-#'
-#' @md
-#'
-#' @param name (`character`) vector of names to check
-#' @return Returns `NULL` or raises error.
-#' @keywords internal
-#'
-check_simple_name <- function(name) {
-  checkmate::assert_character(name, min.len = 1, any.missing = FALSE)
-  if (!grepl("^[[:alpha:]][a-zA-Z0-9_]*$", name, perl = TRUE)) {
-    stop(
-      "name '",
-      name,
-      "' must only contain alphanumeric characters (with underscores)",
-      " and the first character must be an alphabetic character"
-    )
-  }
-}
-
 #' Include `JS` files from `/inst/js/` package directory to application header
 #'
 #' `system.file` should not be used to access files in other packages, it does
@@ -86,4 +61,57 @@ make_c_call <- function(choices) {
     lapply(private$session_bindings, function(x) x$destroy())
   }
   invisible(NULL)
+}
+
+
+
+#' Encodes ids to be used in JavaScript and Shiny
+#'
+#' @description
+#' Replaces non-ASCII characters into a format that can be used in HTML,
+#' JavaScript and Shiny.
+#'
+#' When the id has a character that is not allowed, it is replaced with `"_"`
+#' and a 4 character hash of the original id is added to the start of the
+#' resulting id.
+#'
+#'
+#' @param id (`character(1)`) The id string.
+#'
+#' @return Sanitized string that removes special characters and spaces.
+#'
+#' @keywords internal
+sanitize_id <- function(id) {
+  pattern_escape <- "[^0-9A-Za-z_]"
+
+  id_new <- gsub(pattern_escape, "_", id)
+  hashes <- vapply(id[id != id_new], rlang::hash, character(1), USE.NAMES = FALSE)
+
+  id[id != id_new] <- paste0("h", substr(hashes, 1, 4), "_", id_new[id != id_new])
+  id
+}
+
+#' `NS` wrapper to sanitize ids for shiny
+#'
+#' Special characters and spaces are not allowed in shiny ids (in JS)
+#'
+#' @noRd
+NS <- function(namespace, id = NULL) { # nolint: object_name.
+  if (!missing(id)) {
+    return(shiny::NS(namespace, sanitize_id(id)))
+  }
+
+  function(id) {
+    shiny::NS(namespace, sanitize_id(id))
+  }
+}
+
+#' `moduleServer` wrapper to sanitize ids for shiny
+#'
+#' Special characters and spaces are not allowed in shiny ids (in JS)
+#'
+#' @noRd
+moduleServer <- function(id, module, session = getDefaultReactiveDomain()) { # nolint: object_name.
+  id <- sanitize_id(id)
+  shiny::moduleServer(id, module, session)
 }
