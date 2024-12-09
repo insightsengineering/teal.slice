@@ -58,6 +58,13 @@ jobs:
       )
     name: revdepcheck ↩️
     uses: insightsengineering/r.pkg.template/.github/workflows/revdepcheck.yaml@main
+    with:
+      lookup-refs: |
+        insightsengineering/teal.data
+        insightsengineering/teal.logger
+        insightsengineering/teal.widgets
+        insightsengineering/formatters
+        insightsengineering/rtables
   rhub:
     if: >
       github.event_name == 'schedule' || (
@@ -70,5 +77,8 @@ jobs:
       lookup-refs: |
         insightsengineering/teal.data
         insightsengineering/teal.logger
+        insightsengineering/teal.widgets
+        insightsengineering/formatters
+        insightsengineering/rtables
     secrets:
       REPO_GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
