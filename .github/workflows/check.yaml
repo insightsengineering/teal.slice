@@ -43,6 +43,7 @@ jobs:
         https://raw.githubusercontent.com/insightsengineering/hex-stickers/main/thumbs/teal.png
       deps-installation-method: setup-r-dependencies
       lookup-refs: |
+        insightsengineering/teal.code
         insightsengineering/teal.data
         insightsengineering/teal.logger
         insightsengineering/teal.widgets
@@ -71,6 +72,7 @@ jobs:
         checking top-level files .* NOTE
       deps-installation-method: setup-r-dependencies
       lookup-refs: |
+        insightsengineering/teal.code
         insightsengineering/teal.data
         insightsengineering/teal.logger
         insightsengineering/teal.widgets
@@ -86,6 +88,7 @@ jobs:
         NOT_CRAN=true
       deps-installation-method: setup-r-dependencies
       lookup-refs: |
+        insightsengineering/teal.code
         insightsengineering/teal.data
         insightsengineering/teal.logger
         insightsengineering/teal.widgets
@@ -104,6 +107,7 @@ jobs:
       auto-update: true
       deps-installation-method: setup-r-dependencies
       lookup-refs: |
+        insightsengineering/teal.code
         insightsengineering/teal.data
         insightsengineering/teal.logger
         insightsengineering/teal.widgets

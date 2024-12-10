@@ -18,6 +18,7 @@ jobs:
       default-landing-page: latest-tag
       deps-installation-method: setup-r-dependencies
       lookup-refs: |
+        insightsengineering/teal.code
         insightsengineering/teal.data
         insightsengineering/teal.logger
         insightsengineering/teal.widgets
@@ -32,6 +33,7 @@ jobs:
     with:
       deps-installation-method: setup-r-dependencies
       lookup-refs: |
+        insightsengineering/teal.code
         insightsengineering/teal.data
         insightsengineering/teal.logger
         insightsengineering/teal.widgets
@@ -63,6 +65,7 @@ jobs:
         https://raw.githubusercontent.com/insightsengineering/hex-stickers/main/thumbs/teal.png
       deps-installation-method: setup-r-dependencies
       lookup-refs: |
+        insightsengineering/teal.code
         insightsengineering/teal.data
         insightsengineering/teal.logger
         insightsengineering/teal.widgets
@@ -79,6 +82,7 @@ jobs:
         NOT_CRAN=true
       deps-installation-method: setup-r-dependencies
       lookup-refs: |
+        insightsengineering/teal.code
         insightsengineering/teal.data
         insightsengineering/teal.logger
         insightsengineering/teal.widgets
