@@ -84,7 +84,7 @@ make_c_call <- function(choices) {
 sanitize_id <- function(id) {
   pattern_escape <- "[^0-9A-Za-z_]"
 
-  id_new <- gsub(pattern_escape, "_", id)
+  id_new <- gsub(pattern_escape, "_", id, perl = TRUE)
   hashes <- vapply(id[id != id_new], rlang::hash, character(1), USE.NAMES = FALSE)
 
   id[id != id_new] <- paste0("h", substr(hashes, 1, 4), "_", id_new[id != id_new])
