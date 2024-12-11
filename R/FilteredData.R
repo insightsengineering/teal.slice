@@ -307,9 +307,6 @@ FilteredData <- R6::R6Class( # nolint
     set_dataset = function(data, dataname) {
       checkmate::assert_string(dataname)
       logger::log_debug("FilteredData$set_dataset setting dataset, name: { dataname }")
-      # to include it nicely in the Show R Code;
-      # the UI also uses `datanames` in ids, so no whitespaces allowed
-      check_simple_name(dataname)
 
       parent_dataname <- teal.data::parent(private$join_keys, dataname)
       keys <- private$join_keys[dataname, dataname]
@@ -712,9 +709,7 @@ FilteredData <- R6::R6Class( # nolint
 
         private$session_bindings[[session$ns("inputs")]] <- list(
           destroy = function() {
-            if (!session$isEnded()) {
-              lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
-            }
+            lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
           }
         )
 
