@@ -51,7 +51,7 @@ Imports:
     shinyjs,
     shinyWidgets (>= 0.6.2),
     teal.data (>= 0.4.0),
-    teal.logger (>= 0.1.3.9013),
+    teal.logger (>= 0.3.0.9003),
     teal.widgets (>= 0.4.2),
     utils
 Suggests:
