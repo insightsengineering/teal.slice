@@ -28,18 +28,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        test-strategy: ["min_cohort", "min_isolated", "release", "max"]
+        pair:
+          - { test-strategy: "min_cohort", repos: "" }
+          - { test-strategy: "min_isolated", repos: "" }
+          - { test-strategy: "release", repos: "" }
+          - { test-strategy: "max", repos: "https://pharmaverse.r-universe.dev" }
     uses: insightsengineering/r.pkg.template/.github/workflows/verdepcheck.yaml@main
-    name: Dependency Test - ${{ matrix.test-strategy }} 🔢
+    name: Dependency Test - ${{ matrix.pair.test-strategy }} 🔢
     secrets:
       REPO_GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
       GCHAT_WEBHOOK: ${{ secrets.GCHAT_WEBHOOK }}
     with:
-      strategy: ${{ matrix.test-strategy }}
+      strategy: ${{ matrix.pair.test-strategy }}
       additional-env-vars: |
         PKG_SYSREQS_DRY_RUN=true
-      extra-deps: |
-        insightsengineering/teal.code
+      additional-repos: ${{ matrix.pair.repos }}
   branch-cleanup:
     if: >
       github.event_name == 'schedule' || (
