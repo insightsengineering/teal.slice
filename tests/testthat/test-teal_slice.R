@@ -239,10 +239,7 @@ testthat::test_that(
   }
 )
 
-testthat::test_that("print.teal_slices returns argument", {
-  fs1 <- teal_slice("data", "var1")
-  fs2 <- teal_slice("data", "var2")
-  fs <- teal_slices(fs1, fs2)
-  testthat::expect_identical(print(fs1), fs1)
+testthat::test_that("print.teal_slice returns argument", {
+  fs <- teal_slice("data", "var")
   testthat::expect_identical(print(fs), fs)
 })
