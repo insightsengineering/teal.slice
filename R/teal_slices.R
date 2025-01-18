@@ -235,6 +235,7 @@ format.teal_slices <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
 #'
 print.teal_slices <- function(x, ...) {
   cat(format(x, ...), "\n")
+  invisible(x)
 }
 
 

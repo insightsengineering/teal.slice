@@ -238,3 +238,8 @@ testthat::test_that(
     testthat::expect_type(shiny::isolate(tss[[1]]$choices), "character")
   }
 )
+
+testthat::test_that("print.teal_slice returns argument", {
+  fs <- teal_slice("data", "var")
+  testthat::expect_identical(print(fs), fs)
+})

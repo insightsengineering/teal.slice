@@ -373,3 +373,10 @@ testthat::test_that("format.teal_slices prints count_type attribute if not empty
   ffs <- format(fs, show_all = TRUE)
   testthat::expect_true(!grepl("count_type", ffs))
 })
+
+testthat::test_that("print.teal_slices returns argument", {
+  fs1 <- teal_slice("data", "var1")
+  fs2 <- teal_slice("data", "var2")
+  fs <- teal_slices(fs1, fs2)
+  testthat::expect_identical(print(fs), fs)
+})
