@@ -13,6 +13,10 @@
 
 * `ui_add` and `srv_add` no longer exist as adding new filters is a part of `ui_active` and `srv_active`.
 
+### Miscellaneous
+
+* `print.teal_slice()` and `print.teal_slices()` now return object invisibly. 
+
 # teal.slice 0.5.1
 
 ### Bug fixes
