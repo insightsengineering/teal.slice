@@ -95,7 +95,7 @@ table.table-condensed {
   font-size: 11px;
 }</style>
   <div class="col-md-8 col-md-offset-2">
-    <h2>teal.slice coverage - 69.77%</h2>
+    <h2>teal.slice coverage - 69.84%</h2>
     <div class="tabbable">
       <ul class="nav nav-tabs" data-tabsetid="covr">
         <li class="active">
@@ -107,8 +107,8 @@ table.table-condensed {
       </ul>
       <div class="tab-content" data-tabsetid="covr">
         <div class="tab-pane active" title="Files" data-value="Files" id="tab-covr-1">
-          <div class="datatables html-widget html-fill-item" id="htmlwidget-af81c677d121e17e2a5b" style="width:100%;height:500px;"></div>
-          <script type="application/json" data-for="htmlwidget-af81c677d121e17e2a5b">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["<a href=\"#\">R/zzz.R<\/a>","<a href=\"#\">R/include_css_js.R<\/a>","<a href=\"#\">R/FilterStateExpr.R<\/a>","<a href=\"#\">R/FilterStateLogical.R<\/a>","<a href=\"#\">R/FilterStateDatettime.R<\/a>","<a href=\"#\">R/FilterStateDate.R<\/a>","<a href=\"#\">R/FilterStateEmpty.R<\/a>","<a href=\"#\">R/FilteredData.R<\/a>","<a href=\"#\">R/FilterStateChoices.R<\/a>","<a href=\"#\">R/choices_labeled.R<\/a>","<a href=\"#\">R/FilterStatesSE.R<\/a>","<a href=\"#\">R/FilteredDataset.R<\/a>","<a href=\"#\">R/FilteredDatasetMAE.R<\/a>","<a href=\"#\">R/FilteredData-utils.R<\/a>","<a href=\"#\">R/FilterStateRange.R<\/a>","<a href=\"#\">R/FilteredDatasetDefault.R<\/a>","<a href=\"#\">R/FilterState.R<\/a>","<a href=\"#\">R/FilterStates-utils.R<\/a>","<a href=\"#\">R/FilterStatesMAE.R<\/a>","<a href=\"#\">R/FilterStates.R<\/a>","<a href=\"#\">R/variable_types.R<\/a>","<a href=\"#\">R/FilteredDatasetDataframe.R<\/a>","<a href=\"#\">R/teal_slices.R<\/a>","<a href=\"#\">R/FilteredDataset-utils.R<\/a>","<a href=\"#\">R/teal_slice.R<\/a>","<a href=\"#\">R/filter_panel_api.R<\/a>","<a href=\"#\">R/FilterState-utils.R<\/a>","<a href=\"#\">R/count_labels.R<\/a>","<a href=\"#\">R/utils.R<\/a>","<a href=\"#\">R/test_utils.R<\/a>","<a href=\"#\">R/FilterPanelAPI.R<\/a>","<a href=\"#\">R/calls_combine_by.R<\/a>","<a href=\"#\">R/FilterStatesMatrix.R<\/a>","<a href=\"#\">R/FilterStatesDF.R<\/a>"],[51,17,281,407,550,440,172,1059,622,88,312,469,257,189,745,124,797,247,61,776,58,278,283,149,389,182,298,246,117,41,116,38,48,199],[17,4,63,151,240,168,40,416,263,45,159,180,105,43,330,18,289,60,10,285,13,96,78,20,93,24,89,90,24,14,10,6,6,5],[0,0,14,45,87,71,18,272,178,31,111,126,75,31,243,14,237,53,9,258,12,89,73,19,89,23,87,90,24,14,10,6,6,5],[17,4,49,106,153,97,22,144,85,14,48,54,30,12,87,4,52,7,1,27,1,7,5,1,4,1,2,0,0,0,0,0,0,0],["0","0","3","3","5","6","2","14","36","13","11","30","14","8","23","3","65","56","21","77","10","26","327","42","422","2","81","40","295","20","4","45","22","99"],["0.00%","0.00%","22.22%","29.80%","36.25%","42.26%","45.00%","65.38%","67.68%","68.89%","69.81%","70.00%","71.43%","72.09%","73.64%","77.78%","82.01%","88.33%","90.00%","90.53%","92.31%","92.71%","93.59%","95.00%","95.70%","95.83%","97.75%","100.00%","100.00%","100.00%","100.00%","100.00%","100.00%","100.00%"]],"container":"<table class=\"row-border\">\n  <thead>\n    <tr>\n      <th>File<\/th>\n      <th>Lines<\/th>\n      <th>Relevant<\/th>\n      <th>Covered<\/th>\n      <th>Missed<\/th>\n      <th>Hits / Line<\/th>\n      <th>Coverage<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"dom":"t","paging":false,"columnDefs":[{"targets":6,"createdCell":"function(td, cellData, rowData, row, col) {\n  var percent = cellData.replace(\"%\", \"\");\n  if (percent > 90) {\n    var grad = \"linear-gradient(90deg, #edfde7 \" + cellData + \", white \" + cellData + \")\";\n  } else if (percent > 75) {\n    var grad = \"linear-gradient(90deg, #f9ffe5 \" + cellData + \", white \" + cellData + \")\";\n  } else {\n    var grad = \"linear-gradient(90deg, #fcece9 \" + cellData + \", white \" + cellData + \")\";\n  }\n  $(td).css(\"background\", grad);\n}\n"},{"className":"dt-right","targets":[1,2,3,4]},{"name":"File","targets":0},{"name":"Lines","targets":1},{"name":"Relevant","targets":2},{"name":"Covered","targets":3},{"name":"Missed","targets":4},{"name":"Hits / Line","targets":5},{"name":"Coverage","targets":6}],"order":[],"autoWidth":false,"orderClasses":false},"callback":"function(table) {\ntable.on('click.dt', 'a', function() {\n  files = $('div#files div');\n  files.not('div.hidden').addClass('hidden');\n  id = $(this).text();\n  files.filter('div[id=\\'' + id + '\\']').removeClass('hidden');\n  $('ul.nav a[data-value=Source]').text(id).tab('show');\n});\n}"},"evals":["options.columnDefs.0.createdCell","callback"],"jsHooks":[]}</script>
+          <div class="datatables html-widget html-fill-item" id="htmlwidget-28ecd96ebaae61963f84" style="width:100%;height:500px;"></div>
+          <script type="application/json" data-for="htmlwidget-28ecd96ebaae61963f84">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["<a href=\"#\">R/zzz.R<\/a>","<a href=\"#\">R/include_css_js.R<\/a>","<a href=\"#\">R/FilterStateExpr.R<\/a>","<a href=\"#\">R/FilterStateLogical.R<\/a>","<a href=\"#\">R/FilterStateDatettime.R<\/a>","<a href=\"#\">R/FilterStateDate.R<\/a>","<a href=\"#\">R/FilterStateEmpty.R<\/a>","<a href=\"#\">R/FilteredData.R<\/a>","<a href=\"#\">R/FilterStateChoices.R<\/a>","<a href=\"#\">R/choices_labeled.R<\/a>","<a href=\"#\">R/FilterStatesSE.R<\/a>","<a href=\"#\">R/FilteredDataset.R<\/a>","<a href=\"#\">R/FilteredDatasetMAE.R<\/a>","<a href=\"#\">R/FilteredData-utils.R<\/a>","<a href=\"#\">R/FilterStateRange.R<\/a>","<a href=\"#\">R/FilteredDatasetDefault.R<\/a>","<a href=\"#\">R/FilterState.R<\/a>","<a href=\"#\">R/FilterStates-utils.R<\/a>","<a href=\"#\">R/FilterStatesMAE.R<\/a>","<a href=\"#\">R/FilterStates.R<\/a>","<a href=\"#\">R/variable_types.R<\/a>","<a href=\"#\">R/FilteredDatasetDataframe.R<\/a>","<a href=\"#\">R/teal_slices.R<\/a>","<a href=\"#\">R/FilteredDataset-utils.R<\/a>","<a href=\"#\">R/teal_slice.R<\/a>","<a href=\"#\">R/filter_panel_api.R<\/a>","<a href=\"#\">R/FilterState-utils.R<\/a>","<a href=\"#\">R/count_labels.R<\/a>","<a href=\"#\">R/utils.R<\/a>","<a href=\"#\">R/test_utils.R<\/a>","<a href=\"#\">R/FilterPanelAPI.R<\/a>","<a href=\"#\">R/calls_combine_by.R<\/a>","<a href=\"#\">R/FilterStatesMatrix.R<\/a>","<a href=\"#\">R/FilterStatesDF.R<\/a>"],[51,17,281,407,550,440,172,1059,622,88,312,469,257,189,745,124,797,247,61,776,58,278,283,149,389,182,298,246,117,41,116,38,48,199],[17,4,63,151,240,168,40,416,263,45,159,180,105,43,330,18,289,60,10,285,13,96,78,20,93,24,89,90,24,14,10,6,6,5],[0,0,14,45,87,71,18,273,178,31,111,127,75,31,243,14,237,53,9,259,12,89,73,19,89,23,87,90,24,14,10,6,6,5],[17,4,49,106,153,97,22,143,85,14,48,53,30,12,87,4,52,7,1,26,1,7,5,1,4,1,2,0,0,0,0,0,0,0],["0","0","2","3","5","6","2","14","36","13","11","30","14","8","23","3","65","56","21","76","10","26","327","42","422","2","81","40","292","20","4","45","22","99"],["0.00%","0.00%","22.22%","29.80%","36.25%","42.26%","45.00%","65.62%","67.68%","68.89%","69.81%","70.56%","71.43%","72.09%","73.64%","77.78%","82.01%","88.33%","90.00%","90.88%","92.31%","92.71%","93.59%","95.00%","95.70%","95.83%","97.75%","100.00%","100.00%","100.00%","100.00%","100.00%","100.00%","100.00%"]],"container":"<table class=\"row-border\">\n  <thead>\n    <tr>\n      <th>File<\/th>\n      <th>Lines<\/th>\n      <th>Relevant<\/th>\n      <th>Covered<\/th>\n      <th>Missed<\/th>\n      <th>Hits / Line<\/th>\n      <th>Coverage<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"dom":"t","paging":false,"columnDefs":[{"targets":6,"createdCell":"function(td, cellData, rowData, row, col) {\n  var percent = cellData.replace(\"%\", \"\");\n  if (percent > 90) {\n    var grad = \"linear-gradient(90deg, #edfde7 \" + cellData + \", white \" + cellData + \")\";\n  } else if (percent > 75) {\n    var grad = \"linear-gradient(90deg, #f9ffe5 \" + cellData + \", white \" + cellData + \")\";\n  } else {\n    var grad = \"linear-gradient(90deg, #fcece9 \" + cellData + \", white \" + cellData + \")\";\n  }\n  $(td).css(\"background\", grad);\n}\n"},{"className":"dt-right","targets":[1,2,3,4]},{"name":"File","targets":0},{"name":"Lines","targets":1},{"name":"Relevant","targets":2},{"name":"Covered","targets":3},{"name":"Missed","targets":4},{"name":"Hits / Line","targets":5},{"name":"Coverage","targets":6}],"order":[],"autoWidth":false,"orderClasses":false},"callback":"function(table) {\ntable.on('click.dt', 'a', function() {\n  files = $('div#files div');\n  files.not('div.hidden').addClass('hidden');\n  id = $(this).text();\n  files.filter('div[id=\\'' + id + '\\']').removeClass('hidden');\n  $('ul.nav a[data-value=Source]').text(id).tab('show');\n});\n}"},"evals":["options.columnDefs.0.createdCell","callback"],"jsHooks":[]}</script>
         </div>
         <div class="tab-pane" title="Source" data-value="Source" id="tab-covr-2">
           <div id="files">
@@ -1747,7 +1747,7 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">182</td>
-                    <td class="coverage">809<em>x</em></td>
+                    <td class="coverage">777<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      private$teal_slice</pre>
                     </td>
@@ -2433,14 +2433,14 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">280</td>
-                    <td class="coverage">8<em>x</em></td>
+                    <td class="coverage">20<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">              logger::log_debug("Destroying FilterState inputs and observers; id: { private$get_id() }")</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">281</td>
-                    <td class="coverage">8<em>x</em></td>
+                    <td class="coverage">20<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">              lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)</pre>
                     </td>
@@ -3210,14 +3210,14 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">391</td>
-                    <td class="coverage">422<em>x</em></td>
+                    <td class="coverage">414<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      .finalize_session_bindings(self, private)</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">392</td>
-                    <td class="coverage">422<em>x</em></td>
+                    <td class="coverage">414<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      invisible(NULL)</pre>
                     </td>
@@ -15798,9 +15798,9 @@ table.table-condensed {
                       <pre class="language-r">          destroy = function() {</pre>
                     </td>
                   </tr>
-                  <tr class="missed">
+                  <tr class="covered">
                     <td class="num">693</td>
-                    <td class="coverage">!</td>
+                    <td class="coverage">3<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">            lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)</pre>
                     </td>
@@ -26043,14 +26043,14 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">72</td>
-                    <td class="coverage">97<em>x</em></td>
+                    <td class="coverage">66<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">          private$state_list_empty(force = TRUE)</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">73</td>
-                    <td class="coverage">97<em>x</em></td>
+                    <td class="coverage">66<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">          isolate(private$state_list(NULL))</pre>
                     </td>
@@ -29065,9 +29065,9 @@ table.table-condensed {
                       <pre class="language-r">            destroy = function() {</pre>
                     </td>
                   </tr>
-                  <tr class="missed">
+                  <tr class="covered">
                     <td class="num">504</td>
-                    <td class="coverage">!</td>
+                    <td class="coverage">18<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">              lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)</pre>
                     </td>
@@ -30138,14 +30138,14 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">657</td>
-                    <td class="coverage">46<em>x</em></td>
+                    <td class="coverage">42<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      checkmate::assert_character(state_id)</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">658</td>
-                    <td class="coverage">46<em>x</em></td>
+                    <td class="coverage">42<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      logger::log_debug("{ class(self)[1] } removing a filter, state_id: { toString(state_id) }")</pre>
                     </td>
@@ -30159,56 +30159,56 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">660</td>
-                    <td class="coverage">46<em>x</em></td>
+                    <td class="coverage">42<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      isolate({</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">661</td>
-                    <td class="coverage">46<em>x</em></td>
+                    <td class="coverage">42<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">        current_state_ids &lt;- vapply(private$state_list(), function(x) x$get_state()$id, character(1))</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">662</td>
-                    <td class="coverage">46<em>x</em></td>
+                    <td class="coverage">42<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">        to_remove &lt;- state_id %in% current_state_ids</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">663</td>
-                    <td class="coverage">46<em>x</em></td>
+                    <td class="coverage">42<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">        if (any(to_remove)) {</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">664</td>
-                    <td class="coverage">45<em>x</em></td>
+                    <td class="coverage">41<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">          new_state_list &lt;- Filter(</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">665</td>
-                    <td class="coverage">45<em>x</em></td>
+                    <td class="coverage">41<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">            function(state) {</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">666</td>
-                    <td class="coverage">93<em>x</em></td>
+                    <td class="coverage">83<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">              if (state$get_state()$id %in% state_id) {</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">667</td>
-                    <td class="coverage">79<em>x</em></td>
+                    <td class="coverage">69<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">                if (state$get_state()$anchored &amp;&amp; !force) {</pre>
                     </td>
@@ -30229,14 +30229,14 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">670</td>
-                    <td class="coverage">72<em>x</em></td>
+                    <td class="coverage">62<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">                  state$finalize()</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">671</td>
-                    <td class="coverage">72<em>x</em></td>
+                    <td class="coverage">62<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">                  FALSE</pre>
                     </td>
@@ -30278,7 +30278,7 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">677</td>
-                    <td class="coverage">45<em>x</em></td>
+                    <td class="coverage">41<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">            private$state_list()</pre>
                     </td>
@@ -30292,7 +30292,7 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">679</td>
-                    <td class="coverage">45<em>x</em></td>
+                    <td class="coverage">41<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">          private$state_list(new_state_list)</pre>
                     </td>
@@ -30334,7 +30334,7 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">685</td>
-                    <td class="coverage">46<em>x</em></td>
+                    <td class="coverage">42<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      invisible(NULL)</pre>
                     </td>
@@ -30404,21 +30404,21 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">695</td>
-                    <td class="coverage">122<em>x</em></td>
+                    <td class="coverage">91<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      isolate({</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">696</td>
-                    <td class="coverage">122<em>x</em></td>
+                    <td class="coverage">91<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">        logger::log_debug(</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">697</td>
-                    <td class="coverage">122<em>x</em></td>
+                    <td class="coverage">91<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">          "{ class(self)[1] }$state_list_empty removing all non-anchored filters for dataname: { private$dataname }"</pre>
                     </td>
@@ -30439,28 +30439,28 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">700</td>
-                    <td class="coverage">122<em>x</em></td>
+                    <td class="coverage">91<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">        state_list &lt;- private$state_list()</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">701</td>
-                    <td class="coverage">122<em>x</em></td>
+                    <td class="coverage">91<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">        if (length(state_list)) {</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">702</td>
-                    <td class="coverage">29<em>x</em></td>
+                    <td class="coverage">25<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">          state_ids &lt;- vapply(state_list, function(x) x$get_state()$id, character(1))</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">703</td>
-                    <td class="coverage">29<em>x</em></td>
+                    <td class="coverage">25<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">          private$state_list_remove(state_ids, force)</pre>
                     </td>
@@ -30488,7 +30488,7 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">707</td>
-                    <td class="coverage">122<em>x</em></td>
+                    <td class="coverage">91<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      invisible(NULL)</pre>
                     </td>
@@ -51731,9 +51731,9 @@ table.table-condensed {
                       <pre class="language-r">            destroy = function() {</pre>
                     </td>
                   </tr>
-                  <tr class="missed">
+                  <tr class="covered">
                     <td class="num">378</td>
-                    <td class="coverage">!</td>
+                    <td class="coverage">12<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">              lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)</pre>
                     </td>
@@ -63843,7 +63843,7 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">112</td>
-                    <td class="coverage">34<em>x</em></td>
+                    <td class="coverage">26<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      private$teal_slice</pre>
                     </td>
@@ -64102,14 +64102,14 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">149</td>
-                    <td class="coverage">16<em>x</em></td>
+                    <td class="coverage">14<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      .finalize_session_bindings(self, private)</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">150</td>
-                    <td class="coverage">16<em>x</em></td>
+                    <td class="coverage">14<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      invisible(NULL)</pre>
                     </td>
@@ -69465,14 +69465,14 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">58</td>
-                    <td class="coverage">1313<em>x</em></td>
+                    <td class="coverage">1303<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">    !is.null(getDefaultReactiveDomain()) &amp;&amp;</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">59</td>
-                    <td class="coverage">1313<em>x</em></td>
+                    <td class="coverage">1303<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      !getDefaultReactiveDomain()$isEnded()</pre>
                     </td>
@@ -69486,7 +69486,7 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">61</td>
-                    <td class="coverage">200<em>x</em></td>
+                    <td class="coverage">173<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">    lapply(private$session_bindings, function(x) x$destroy())</pre>
                     </td>
@@ -69500,7 +69500,7 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">63</td>
-                    <td class="coverage">1313<em>x</em></td>
+                    <td class="coverage">1303<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">  invisible(NULL)</pre>
                     </td>
