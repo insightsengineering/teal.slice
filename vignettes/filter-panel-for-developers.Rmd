@@ -162,7 +162,7 @@ to allow the user to add new filters.
 
 All the instructions herein can be utilized to build a `shiny` app.
 
-```{r}
+```{r warning=FALSE}
 library(shiny)
 
 # initializing FilteredData
