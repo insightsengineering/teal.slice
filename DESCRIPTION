@@ -55,6 +55,7 @@ Imports:
     teal.widgets (>= 0.4.2),
     utils
 Suggests:
+    DT,
     knitr (>= 1.42),
     MultiAssayExperiment,
     rmarkdown (>= 2.23),
