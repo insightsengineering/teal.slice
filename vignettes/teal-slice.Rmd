@@ -61,8 +61,9 @@ To facilitate communication with `FilteredData`, we provide the filter panel API
 The example below uses the `set_filter_state` function to set state and the state is specified with `teal_slices` and `teal_slice` functions. 
 For details please see the *Filter panel for developers* vignette.
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 library(shiny)
+library(DT)
 library(teal.slice)
 
 # create a FilteredData object
