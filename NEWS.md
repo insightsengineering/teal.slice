@@ -1,4 +1,4 @@
-# teal.slice 0.5.1.9027
+# teal.slice 0.6.0
 
 ### Enhancements
 
@@ -15,7 +15,7 @@
 
 ### Miscellaneous
 
-* `print.teal_slice()` and `print.teal_slices()` now return object invisibly. 
+* `print.teal_slice()` and `print.teal_slices()` now return object invisibly.
 
 # teal.slice 0.5.1
 
