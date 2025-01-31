@@ -53,7 +53,6 @@ datasets$datanames()
 datasets$set_filter_state(
   teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "virginica"))
 )
-isolate(datasets$get_call("iris"))
 
 datasets$set_filter_state(
   teal_slices(teal_slice(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
