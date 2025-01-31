@@ -52,7 +52,7 @@
 #' )
 #'
 #' datasets$set_filter_state(
-#'   teal_slices(teal_slice(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
+#'   teal_slices(teal_slice(dataname = "mtcars", varname = "cyl", selected = 4))
 #' )
 #'
 #' isolate(datasets$get_filter_state())
