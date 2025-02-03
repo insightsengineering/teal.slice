@@ -53,17 +53,12 @@ It also contains `shiny` modules (both UI and server functions) that make up the
 
 In a `teal` application the `FilteredData` object (`datasets`) is created automatically by `teal`'s `init` function and filter panel components are automatically placed on the right-hand side of the page.
 
-Note that this example uses `shiny::dataTableOutput` and `shiny::renderDataTable`.
-This can lead to issues with Bootstrap, especially version 4.
-We recommend using `DT::dataTableOutput` and `DT::renderDataTable` if possible. See the `shiny` and `DT` documentation for more information.
-
 To facilitate communication with `FilteredData`, we provide the filter panel API.
 The example below uses the `set_filter_state` function to set state and the state is specified with `teal_slices` and `teal_slice` functions.
 For details please see the *Filter panel for developers* vignette.
 
-```{r warning=FALSE, message=FALSE, eval=requireNamespace("DT", quietly = TRUE)}
+```{r warning=FALSE, message=FALSE}
 library(shiny)
-library(DT)
 library(teal.slice)
 
 # create a FilteredData object
