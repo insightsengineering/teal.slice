@@ -52,7 +52,7 @@ Imports:
     shinyWidgets (>= 0.6.2),
     teal.data (>= 0.7.0),
     teal.logger (>= 0.3.1),
-    teal.widgets (>= 0.4.2),
+    teal.widgets (>= 0.4.3),
     utils
 Suggests:
     DT (>= 0.3.0),
