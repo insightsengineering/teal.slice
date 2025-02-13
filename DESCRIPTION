@@ -1,8 +1,8 @@
 Type: Package
 Package: teal.slice
 Title: Filter Module for 'teal' Applications
-Version: 0.5.1.9019
-Date: 2024-12-10
+Version: 0.6.0.9000
+Date: 2025-02-04
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9533-457X")),
@@ -51,17 +51,17 @@ Imports:
     shinycssloaders (>= 1.0.0),
     shinyjs,
     shinyWidgets (>= 0.6.2),
-    teal.data (>= 0.4.0),
-    teal.logger (>= 0.1.3.9013),
-    teal.widgets (>= 0.4.2),
+    teal.data (>= 0.7.0),
+    teal.logger (>= 0.3.1),
+    teal.widgets (>= 0.4.3),
     utils
 Suggests:
     knitr (>= 1.42),
     MultiAssayExperiment,
     rmarkdown (>= 2.23),
     SummarizedExperiment,
-    testthat (>= 3.1.8),
-    withr (>= 2.1.0)
+    testthat (>= 3.2.2),
+    withr (>= 3.0.2)
 VignetteBuilder:
     knitr,
     rmarkdown
@@ -73,7 +73,7 @@ Config/Needs/verdepcheck: rstudio/shiny, rstudio/bslib, mllg/checkmate,
     daattali/shinyjs, dreamRs/shinyWidgets, insightsengineering/teal.data,
     insightsengineering/teal.logger, insightsengineering/teal.widgets,
     yihui/knitr, bioc::MultiAssayExperiment, bioc::SummarizedExperiment,
-    rstudio/rmarkdown, r-lib/testthat, r-lib/withr
+    rstudio/rmarkdown, r-lib/testthat, r-lib/withr, bioc::matrixStats
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
 Language: en-US
