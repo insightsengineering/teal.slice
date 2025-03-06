@@ -218,8 +218,10 @@ FilteredDataset <- R6::R6Class( # nolint
           class = "teal-slice-dataset-filter",
           bslib::accordion_panel(
             dataname,
-            tags$div(
-              id = ns("whole_ui"), # to hide it entirely
+            style = "padding: 0; margin: 0;",
+            bslib::page_fluid(
+              id = ns("whole_ui"),
+              style = "margin: 0; padding: 0;",
               uiOutput(ns("active_filter_badge")),
               div(
                 id = ns("filter_util_icons"),
@@ -244,8 +246,8 @@ FilteredDataset <- R6::R6Class( # nolint
                 },
                 uiOutput(ns("remove_filters_ui"))
               ),
-              fluidRow(
-                style = "padding: 0px 15px 0px 15px;",
+              bslib::page_fluid(
+                style = "padding: 0px 15px 0px 15px; margin: 0;",
                 if (allow_add) {
                   tags$div(
                     id = ns("add_panel"),
