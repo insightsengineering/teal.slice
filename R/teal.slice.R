@@ -8,5 +8,6 @@
 # Fix R CMD check notes
 #' @import R6
 #' @import shiny
+#' @importFrom bsicons bs_icon
 #' @importFrom methods is
 NULL
