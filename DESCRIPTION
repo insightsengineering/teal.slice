@@ -1,8 +1,8 @@
 Type: Package
 Package: teal.slice
 Title: Filter Module for 'teal' Applications
-Version: 0.6.0.9000
-Date: 2025-02-04
+Version: 0.6.0.9001
+Date: 2025-03-11
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9533-457X")),
@@ -34,8 +34,8 @@ BugReports: https://github.com/insightsengineering/teal.slice/issues
 Depends:
     R (>= 4.0)
 Imports:
-    bslib (>= 0.8.0),
     bsicons,
+    bslib (>= 0.8.0),
     checkmate (>= 2.1.0),
     dplyr (>= 1.0.5),
     grDevices,
