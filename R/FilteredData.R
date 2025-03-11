@@ -497,8 +497,9 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `shiny.tag`
     ui_filter_panel = function(id, active_datanames = self$datanames) {
       ns <- NS(id)
-      tags$div(
+      bslib::page_fluid(
         id = ns(NULL), # used for hiding / showing
+        class = "teal-slice filter-panel",
         include_css_files(pattern = "filter-panel"),
         include_js_files(pattern = "togglePanelItems"),
         shinyjs::useShinyjs(),
@@ -549,45 +550,60 @@ FilteredData <- R6::R6Class( # nolint
       ns <- NS(id)
       tags$div(
         id = id, # not used, can be used to customize CSS behavior
-        class = "well",
         include_js_files(pattern = "togglePanelItems"),
-        tags$div(
-          style = "display: flex; justify-content: space-between;",
-          tags$span("Active Filter Variables", class = "text-primary", style = "font-weight: 700;"),
-          tags$div(
-            style = "min-width: 60px;",
-            uiOutput(ns("remove_all_filters_ui")),
-            tags$a(
-              class = "remove_all",
-              tags$i(
-                class = "fa fa-angle-down",
-                title = "fold/expand ...",
-                onclick = sprintf(
-                  "togglePanelItems(this, ['%s', '%s'], 'fa-angle-down', 'fa-angle-right');",
-                  ns("filter_active_vars_contents"),
-                  ns("filters_active_count")
+        class = "teal-slice",
+        bslib::accordion(
+          id = ns("main_filter_accordian"),
+          bslib::accordion_panel(
+            "Filter Data",
+            tags$div(
+              div(
+                id = ns("additional_filter_helpers"),
+                class = "teal-slice available-filters",
+                private$ui_available_filters(ns("available_filters")),
+                uiOutput(ns("remove_all_filters_ui"))
+              ),
+              tags$div(
+                id = ns("filter_active_vars_contents"),
+                tagList(
+                  lapply(
+                    isolate(active_datanames()),
+                    function(dataname) {
+                      fdataset <- private$get_filtered_dataset(dataname)
+                      fdataset$ui_active(id = ns(dataname), allow_add = private$allow_add)
+                    }
+                  )
                 )
+              ),
+              tags$div(
+                id = ns("filters_active_count"),
+                style = "display: none;",
+                textOutput(ns("teal_filters_count"))
               )
-            ),
-            private$ui_available_filters(ns("available_filters"))
-          )
-        ),
-        tags$div(
-          id = ns("filter_active_vars_contents"),
-          tagList(
-            lapply(
-              isolate(active_datanames()),
-              function(dataname) {
-                fdataset <- private$get_filtered_dataset(dataname)
-                fdataset$ui_active(id = ns(dataname), allow_add = private$allow_add)
-              }
             )
           )
         ),
-        tags$div(
-          id = ns("filters_active_count"),
-          style = "display: none;",
-          textOutput(ns("teal_filters_count"))
+        tags$script(
+          HTML(
+            sprintf(
+              "
+            $(document).ready(function() {
+              $('#%s').appendTo('#%s > .accordion-item > .accordion-header');
+              $('#%s > .accordion-item > .accordion-header').css({
+                'display': 'flex'
+              });
+              $('#%s i').css({
+                'color': 'var(--bs-accordion-color)',
+                'font-size': '1rem'
+              });
+            });
+          ",
+              ns("additional_filter_helpers"),
+              ns("main_filter_accordian"),
+              ns("main_filter_accordian"),
+              ns("additional_filter_helpers")
+            )
+          )
         )
       )
     },
@@ -627,12 +643,15 @@ FilteredData <- R6::R6Class( # nolint
 
         output$remove_all_filters_ui <- renderUI({
           req(is_filter_removable())
-          actionLink(
-            inputId = session$ns("remove_all_filters"),
-            label = "",
-            icon("circle-xmark", lib = "font-awesome"),
-            title = "Remove active filters",
-            class = "remove_all"
+          tags$div(
+            style = "display: flex;",
+            actionLink(
+              inputId = session$ns("remove_all_filters"),
+              label = "",
+              title = "Remove active filters",
+              icon = icon("far fa-circle-xmark"),
+              class = "teal-slice filter-icon remove-all"
+            )
           )
         })
 
@@ -711,34 +730,18 @@ FilteredData <- R6::R6Class( # nolint
     ui_overview = function(id) {
       ns <- NS(id)
       tags$div(
-        id = id, # not used, can be used to customize CSS behavior
-        class = "well",
-        tags$div(
-          class = "row",
-          tags$div(
-            class = "col-sm-9",
-            tags$label("Active Filter Summary", class = "text-primary mb-4")
-          ),
-          tags$div(
-            class = "col-sm-3",
-            tags$a(
-              class = "filter-icon",
-              tags$i(
-                class = "fa fa-angle-down",
-                title = "fold/expand ...",
-                onclick = sprintf(
-                  "togglePanelItems(this, '%s', 'fa-angle-down', 'fa-angle-right');",
-                  ns("filters_overview_contents")
-                )
+        class = "teal-slice",
+        bslib::accordion(
+          id = ns("main_filter_accordian"),
+          bslib::accordion_panel(
+            title = "Active Filter Summary",
+            tags$div(
+              id = ns("filters_overview_contents"),
+              tags$div(
+                class = "teal_active_summary_filter_panel",
+                tableOutput(ns("table"))
               )
             )
-          )
-        ),
-        tags$div(
-          id = ns("filters_overview_contents"),
-          tags$div(
-            class = "teal_active_summary_filter_panel",
-            tableOutput(ns("table"))
           )
         )
       )
@@ -918,12 +921,10 @@ FilteredData <- R6::R6Class( # nolint
       tags$div(
         id = ns("available_menu"),
         shinyWidgets::dropMenu(
-          actionLink(
-            ns("show"),
-            label = NULL,
-            icon = icon("plus", lib = "font-awesome"),
-            title = "Available filters",
-            class = "remove pull-right"
+          tags$a(
+            id = ns("show"),
+            class = "available-menu",
+            bsicons::bs_icon("plus-square", size = "1.4rem", class = "teal-slice filter-icon"),
           ),
           tags$div(
             class = "menu-content",

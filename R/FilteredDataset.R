@@ -210,66 +210,94 @@ FilteredDataset <- R6::R6Class( # nolint
       if_multiple_filter_states <- length(private$get_filter_states()) > 1
       tags$span(
         id = id,
+        class = "teal-slice",
         include_css_files("filter-panel"),
         include_js_files(pattern = "icons"),
-        tags$div(
-          id = ns("whole_ui"), # to hide it entirely
-          fluidRow(
-            style = "padding: 0px 15px 0px 15px;",
-            tags$div(
-              style = "display: flex; align-items: center; justify-content: space-between;",
-              tags$div(
-                style = "display: flex;",
-                tags$span(dataname, class = "filter_panel_dataname"),
+        bslib::accordion(
+          id = ns("dataset_filter_accordian"),
+          class = "teal-slice-dataset-filter",
+          bslib::accordion_panel(
+            dataname,
+            style = "padding: 0; margin: 0;",
+            bslib::page_fluid(
+              id = ns("whole_ui"),
+              style = "margin: 0; padding: 0;",
+              uiOutput(ns("active_filter_badge")),
+              div(
+                id = ns("filter_util_icons"),
+                class = "teal-slice filter-util-icons",
                 if (allow_add) {
                   tags$a(
-                    class = "filter-icon add-filter",
+                    class = "teal-slice filter-icon",
                     tags$i(
                       id = ns("add_filter_icon"),
                       class = "fa fa-plus",
                       title = "fold/expand transform panel",
                       onclick = sprintf(
-                        "togglePanelItems(this, '%s', 'fa-plus', 'fa-minus');",
-                        ns("add_panel")
+                        "togglePanelItems(this, '%s', 'fa-plus', 'fa-minus');
+                        if ($(this).hasClass('fa-minus')) {
+                          $('#%s .accordion-button.collapsed').click();
+                        }",
+                        ns("add_panel"),
+                        ns("dataset_filter_accordian")
                       )
                     )
+                  )
+                },
+                uiOutput(ns("remove_filters_ui"))
+              ),
+              bslib::page_fluid(
+                style = "padding: 0px 15px 0px 15px; margin: 0;",
+                if (allow_add) {
+                  tags$div(
+                    id = ns("add_panel"),
+                    class = "add-panel",
+                    style = "display: none;",
+                    self$ui_add(ns(private$dataname))
                   )
                 }
               ),
               tags$div(
-                style = "min-width: 40px; z-index: 1; display: flex; justify-content: flex-end;",
-                uiOutput(ns("collapse_ui")),
-                uiOutput(ns("remove_filters_ui"))
-              )
-            ),
-            if (allow_add) {
-              tags$div(
-                id = ns("add_panel"),
-                class = "add-panel",
+                id = ns("filter_count_ui"),
                 style = "display: none;",
-                self$ui_add(ns(private$dataname))
+                tagList(
+                  textOutput(ns("filter_count"))
+                )
+              ),
+              tags$div(
+                # id needed to insert and remove UI to filter single variable as needed
+                # it is currently also used by the above module to entirely hide this panel
+                id = ns("filters"),
+                class = "parent-hideable-list-group",
+                tagList(
+                  lapply(
+                    names(private$get_filter_states()),
+                    function(x) {
+                      tagList(private$get_filter_states()[[x]]$ui_active(id = ns(x)))
+                    }
+                  )
+                )
               )
-            }
-          ),
-          tags$div(
-            id = ns("filter_count_ui"),
-            style = "display: none;",
-            tagList(
-              textOutput(ns("filter_count"))
             )
-          ),
-          tags$div(
-            # id needed to insert and remove UI to filter single variable as needed
-            # it is currently also used by the above module to entirely hide this panel
-            id = ns("filters"),
-            class = "parent-hideable-list-group",
-            tagList(
-              lapply(
-                names(private$get_filter_states()),
-                function(x) {
-                  tagList(private$get_filter_states()[[x]]$ui_active(id = ns(x)))
-                }
-              )
+          )
+        ),
+        tags$script(
+          HTML(
+            sprintf(
+              "
+            $(document).ready(function() {
+              $('#%s').appendTo('#%s > .accordion-item > .accordion-header');
+              $('#%s > .accordion-item > .accordion-header').css({
+                'display': 'flex'
+              });
+              $('#%s').appendTo('#%s .accordion-header .accordion-title');
+            });
+          ",
+              ns("filter_util_icons"),
+              ns("dataset_filter_accordian"),
+              ns("dataset_filter_accordian"),
+              ns("active_filter_badge"),
+              ns("dataset_filter_accordian")
             )
           )
         )
@@ -294,6 +322,17 @@ FilteredDataset <- R6::R6Class( # nolint
             length(self$get_filter_state())
           })
 
+
+          output$active_filter_badge <- renderUI({
+            if (filter_count() == 0) {
+              return(NULL)
+            }
+            tags$span(
+              filter_count(),
+              class = "teal-slice data-filter-badge-count"
+            )
+          })
+
           output$filter_count <- renderText(
             sprintf(
               "%d filter%s applied",
@@ -309,32 +348,6 @@ FilteredDataset <- R6::R6Class( # nolint
             }
           )
 
-          is_filter_collapsible <- reactive({
-            filter_count() != 0
-          })
-
-          output$collapse_ui <- renderUI({
-            req(is_filter_collapsible())
-            tags$a(
-              id = session$ns("collapse"),
-              class = "filter-icon",
-              tags$i(
-                id = session$ns("collapse_icon"),
-                class = "fa fa-angle-down",
-                title = "fold/expand dataset filters",
-                # TODO: clickWhenClassPresent() is used to hide the add_ui pannel during a collapse of the UI.
-                # In the future, it should be completely handled by collapsing the UI by positioning.
-                onclick = sprintf(
-                  "togglePanelItems(this, ['%s', '%s'], 'fa-angle-down', 'fa-angle-right');
-                  clickWhenClassPresent('%s', 'fa-minus', this.classList.contains('fa-angle-right'));",
-                  session$ns("filter_count_ui"),
-                  session$ns("filters"),
-                  session$ns("add_filter_icon")
-                )
-              )
-            )
-          })
-
           is_filter_removable <- reactive({
             non_anchored <- Filter(function(x) !x$anchored, self$get_filter_state())
             isTRUE(length(non_anchored) > 0)
@@ -347,7 +360,6 @@ FilteredDataset <- R6::R6Class( # nolint
               shinyjs::hide("filter_count_ui")
               shinyjs::show("filters")
               shinyjs::toggle("remove_filters_ui", condition = is_filter_removable())
-              shinyjs::toggle("collapse_ui", condition = is_filter_collapsible())
               shinyjs::runjs(
                 sprintf(
                   "setAndRemoveClass('#%s', 'fa-angle-down', 'fa-angle-right')",
@@ -359,12 +371,35 @@ FilteredDataset <- R6::R6Class( # nolint
 
           output$remove_filters_ui <- renderUI({
             req(is_filter_removable())
-            actionLink(
-              session$ns("remove_filters"),
-              label = "",
-              icon = icon("circle-xmark", lib = "font-awesome"),
-              class = "filter-icon"
+            tags$div(
+              style = "display: flex;",
+              actionLink(
+                session$ns("remove_filters"),
+                label = "",
+                icon = icon("far fa-circle-xmark"),
+                class = "teal-slice filter-icon"
+              )
             )
+          })
+
+          # If the accordion input is `NULL` it is being collapsed.
+          # It has the accordion panel label if it is expanded.
+          observeEvent(input$dataset_filter_accordian, ignoreNULL = FALSE, {
+            if (is.null(input$dataset_filter_accordian)) {
+              # Hiding the `add_panel` dropdown and changing the minus icon to plus
+              # TODO: simplify this implementation. This is done in multiple places
+              shinyjs::runjs(
+                sprintf(
+                  "var element = $('#%s.fa-minus');
+                  if (element.length) {
+                      element.click();
+                      $('#%s').hide();
+                  }",
+                  session$ns("add_filter_icon"),
+                  session$ns("add_panel")
+                )
+              )
+            }
           })
 
           private$session_bindings[[session$ns("remove_filters")]] <- observeEvent(input$remove_filters, {

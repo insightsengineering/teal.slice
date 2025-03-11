@@ -232,7 +232,9 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     ui_add = function(id) {
       ns <- NS(id)
       tagList(
-        tags$label("Add", tags$code(self$get_dataname()), "filter"),
+        tags$div(
+          tags$label("Add", tags$code(self$get_dataname()), "filter")
+        ),
         private$get_filter_states()[["filter"]]$ui_add(id = ns("filter"))
       )
     },
