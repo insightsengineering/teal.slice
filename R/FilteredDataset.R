@@ -443,7 +443,7 @@ FilteredDataset <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_debug("MAEFilteredDataset$srv_add initializing, dataname: { private$dataname }")
+          logger::log_debug("FilteredDataset$srv_add initializing, dataname: { private$dataname }")
           elems <- private$get_filter_states()
           elem_names <- names(private$get_filter_states())
           lapply(
