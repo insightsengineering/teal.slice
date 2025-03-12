@@ -247,7 +247,7 @@ FilteredDataset <- R6::R6Class( # nolint
                 uiOutput(ns("remove_filters_ui"))
               ),
               bslib::page_fluid(
-                style = "padding: 0px 15px 0px 15px; margin: 0;",
+                style = "padding: 0px 5px 0px 5px; margin: 0;",
                 if (allow_add) {
                   tags$div(
                     id = ns("add_panel"),

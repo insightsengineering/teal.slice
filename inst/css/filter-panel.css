@@ -55,8 +55,8 @@ a.filter-icon_all:hover {
 
 .add-panel {
   background: white;
-  border-radius: 3px;
-  border: solid 1px #e3e3e3;
+  /* border-radius: 3px; */
+  /* border: solid 1px #e3e3e3; */
   margin-top: -1px;
   padding: 7px;
 }
