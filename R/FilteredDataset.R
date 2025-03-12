@@ -45,7 +45,7 @@ FilteredDataset <- R6::R6Class( # nolint
         if (length(sid)) {
           logger::log_debug("filtering data dataname: { dataname }, sid: { sid }")
         } else {
-          logger::log_debug("filtering data dataname: { private$dataname }")
+          logger::log_debug("filtering data dataname: { dataname }")
         }
         env <- new.env(parent = parent.env(globalenv()))
         env[[dataname]] <- private$dataset
@@ -91,12 +91,11 @@ FilteredDataset <- R6::R6Class( # nolint
     #'
     #' @return `NULL`.
     clear_filter_states = function(force = FALSE) {
-      logger::log_debug("Removing filters from FilteredDataset: { deparse1(self$get_dataname()) }")
+      logger::log_debug("Removing filters from FilteredDataset: { private$dataname }")
       lapply(
         private$get_filter_states(),
         function(filter_states) filter_states$clear_filter_states(force)
       )
-      logger::log_debug("Removed filters from FilteredDataset: { deparse1(self$get_dataname()) }")
       NULL
     },
 
@@ -322,7 +321,6 @@ FilteredDataset <- R6::R6Class( # nolint
             length(self$get_filter_state())
           })
 
-
           output$active_filter_badge <- renderUI({
             if (filter_count() == 0) {
               return(NULL)
@@ -405,7 +403,6 @@ FilteredDataset <- R6::R6Class( # nolint
           private$session_bindings[[session$ns("remove_filters")]] <- observeEvent(input$remove_filters, {
             logger::log_debug("FilteredDataset$srv_active@1 removing all non-anchored filters, dataname: { dataname }")
             self$clear_filter_states()
-            logger::log_debug("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
           })
 
           private$session_bindings[[session$ns("inputs")]] <- list(
@@ -446,7 +443,7 @@ FilteredDataset <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_debug("MAEFilteredDataset$srv_add initializing, dataname: { deparse1(self$get_dataname()) }")
+          logger::log_debug("MAEFilteredDataset$srv_add initializing, dataname: { private$dataname }")
           elems <- private$get_filter_states()
           elem_names <- names(private$get_filter_states())
           lapply(

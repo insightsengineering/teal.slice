@@ -432,21 +432,14 @@ FilteredData <- R6::R6Class( # nolint
     remove_filter_state = function(state) {
       isolate({
         checkmate::assert_class(state, "teal_slices")
+        state_ids <- unique(vapply(state, "[[", character(1L), "id"))
+        logger::log_debug("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { state_ids }")
         datanames <- unique(vapply(state, "[[", character(1L), "dataname"))
         checkmate::assert_subset(datanames, self$datanames())
-
-        logger::log_debug(
-          "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
-        )
-
         lapply(datanames, function(dataname) {
           slices <- Filter(function(x) identical(x$dataname, dataname), state)
           private$get_filtered_dataset(dataname)$remove_filter_state(slices)
         })
-
-        logger::log_debug(
-          "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
-        )
       })
 
       invisible(NULL)
@@ -464,22 +457,11 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `NULL`, invisibly.
     #'
     clear_filter_states = function(datanames = self$datanames(), force = FALSE) {
-      logger::log_debug(
-        "FilteredData$clear_filter_states called, datanames: { toString(datanames) }"
-      )
-
+      logger::log_debug("FilteredData$clear_filter_states called, datanames: { toString(datanames) }")
       for (dataname in datanames) {
         fdataset <- private$get_filtered_dataset(dataname = dataname)
         fdataset$clear_filter_states(force)
       }
-
-      logger::log_debug(
-        paste(
-          "FilteredData$clear_filter_states removed all non-anchored FilterStates,",
-          "datanames: { toString(datanames) }"
-        )
-      )
-
       invisible(NULL)
     },
 
@@ -521,22 +503,19 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `NULL`.
     srv_filter_panel = function(id, active_datanames = self$datanames) {
       checkmate::assert_function(active_datanames)
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_debug("FilteredData$srv_filter_panel initializing")
+      moduleServer(id = id, function(input, output, session) {
+        logger::log_debug("FilteredData$srv_filter_panel initializing")
 
-          active_datanames_resolved <- reactive({
-            checkmate::assert_subset(active_datanames(), self$datanames())
-            active_datanames()
-          })
+        active_datanames_resolved <- reactive({
+          checkmate::assert_subset(active_datanames(), self$datanames())
+          active_datanames()
+        })
 
-          self$srv_overview("overview", active_datanames_resolved)
-          self$srv_active("active", active_datanames_resolved)
+        self$srv_overview("overview", active_datanames_resolved)
+        self$srv_active("active", active_datanames_resolved)
 
-          NULL
-        }
-      )
+        NULL
+      })
     },
 
     #' @description
@@ -702,7 +681,6 @@ FilteredData <- R6::R6Class( # nolint
           handlerExpr = {
             logger::log_debug("FilteredData$srv_filter_panel@1 removing all non-anchored filters")
             self$clear_filter_states()
-            logger::log_debug("FilteredData$srv_filter_panel@1 removed all non-anchored filters")
           }
         )
 
@@ -845,7 +823,6 @@ FilteredData <- R6::R6Class( # nolint
               tags$thead(header_html),
               tags$tbody(body_html)
             )
-            logger::log_debug("FilteredData$srv_filter_overview@1 updated counts")
             table_html
           })
 

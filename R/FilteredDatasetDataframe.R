@@ -84,7 +84,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
           if (length(sid)) {
             logger::log_debug("filtering data dataname: { dataname }, sid: { sid }")
           } else {
-            logger::log_debug("filtering data dataname: { private$dataname }")
+            logger::log_debug("filtering data dataname: { dataname }")
           }
           env <- new.env(parent = parent.env(globalenv()))
           env[[dataname]] <- private$dataset
@@ -188,11 +188,10 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #'
     set_filter_state = function(state) {
       isolate({
-        logger::log_debug("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+        logger::log_debug("FilteredDatasetDataframe$set_filter_state initializing, dataname: { private$dataname }")
         checkmate::assert_class(state, "teal_slices")
-        lapply(state, function(slice) {
-          checkmate::assert_true(slice$dataname == private$dataname)
-        })
+        state_datanames <- unique(vapply(state, `[[`, character(1L), "dataname"))
+        checkmate::assert_subset(state_datanames, private$dataname)
         private$get_filter_states()[[1L]]$set_filter_state(state = state)
         invisible(NULL)
       })
@@ -211,12 +210,12 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
       checkmate::assert_class(state, "teal_slices")
 
       isolate({
-        logger::log_debug("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
+        logger::log_debug(
+          "FilteredDatasetDataframe$remove_filter_state removing filter(s), dataname: { private$dataname }"
+        )
 
         varnames <- unique(unlist(lapply(state, "[[", "varname")))
         private$get_filter_states()[[1]]$remove_filter_state(state)
-
-        logger::log_debug("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
       })
 
       invisible(NULL)
@@ -244,7 +243,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #' `dataname -- observations (remaining/total)` - data.frame
     #' @return A `data.frame`.
     get_filter_overview = function() {
-      logger::log_debug("FilteredDataset$srv_filter_overview initializing")
+      logger::log_debug("FilteredDataset$srv_filter_overview initializing for dataname: { private$dataname }")
       # Gets filter overview subjects number and returns a list
       # of the number of subjects of filtered/non-filtered datasets
       subject_keys <- if (length(private$parent_name) > 0) {

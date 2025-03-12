@@ -215,10 +215,10 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `NULL`, invisibly.
     #'
     remove_filter_state = function(state) {
-      checkmate::assert_class(state, "teal_slices")
       isolate({
-        state_ids <- vapply(state, `[[`, character(1), "id")
-        logger::log_debug("{ class(self)[1] }$remove_filter_state removing filters, state_id: { toString(state_ids) }")
+        logger::log_debug("{ class(self)[1] }$remove_filter_state removing filters, state_id: { private$dataname }")
+        checkmate::assert_class(state, "teal_slices")
+        state_ids <- vapply(state, `[[`, character(1L), "id")
         private$state_list_remove(state_ids)
       })
       invisible(NULL)
@@ -348,7 +348,7 @@ FilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_debug("FilterState$srv_active initializing, dataname: { private$dataname }")
+          logger::log_debug("{ class(self)[1] }$srv_active initializing, dataname: { private$dataname }")
           current_state <- reactive(private$state_list_get())
           previous_state <- reactiveVal(NULL) # FilterState list
           added_states <- reactiveVal(NULL) # FilterState list
@@ -362,7 +362,7 @@ FilterStates <- R6::R6Class( # nolint
           output$trigger_visible_state_change <- renderUI({
             current_state()
             isolate({
-              logger::log_debug("FilterStates$srv_active@1 determining added and removed filter states")
+              logger::log_debug("{ class(self)[1] }$srv_active@1 determining added and removed filter states")
               # Be aware this returns a list because `current_state` is a list and not `teal_slices`.
               added_states(setdiff_teal_slices(current_state(), previous_state()))
               previous_state(current_state())
@@ -386,7 +386,9 @@ FilterStates <- R6::R6Class( # nolint
             ignoreNULL = TRUE,
             {
               added_state_names <- vapply(added_states(), function(x) x$get_state()$id, character(1L))
-              logger::log_debug("FilterStates$srv_active@2 triggered by added states: { toString(added_state_names) }")
+              logger::log_debug(
+                "{ class(self)[1] }$srv_active@2 triggered by added states: { toString(added_state_names) }"
+              )
               lapply(added_states(), function(state) {
                 state$server(
                   id = fs_to_shiny_ns(state),
@@ -440,7 +442,7 @@ FilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_debug("FilterStates$srv_add initializing, dataname: { private$dataname }")
+          logger::log_debug("{ class(self)[1] }$srv_add initializing, dataname: { private$dataname }")
 
           # available choices to display
           avail_column_choices <- reactive({
@@ -460,7 +462,7 @@ FilterStates <- R6::R6Class( # nolint
 
           output$add_filter <- renderUI({
             logger::log_debug(
-              "FilterStates$srv_add@1 updating available column choices, dataname: { private$dataname }"
+              "{ class(self)[1] }$srv_add@1 updating available column choices, dataname: { private$dataname }"
             )
             if (length(avail_column_choices()) == 0) {
               # because input UI is not rendered on this condition but shiny still holds latest selected value
@@ -484,11 +486,8 @@ FilterStates <- R6::R6Class( # nolint
             eventExpr = input$var_to_add,
             handlerExpr = {
               logger::log_debug(
-                sprintf(
-                  "FilterStates$srv_add@2 adding FilterState of variable %s, dataname: %s",
-                  input$var_to_add,
-                  private$dataname
-                )
+                "{ class(self)[1] }$srv_add@2 adding FilterState for variable { input$var_to_add }, ",
+                "dataname {private$dataname}"
               )
               self$set_filter_state(
                 teal_slices(
@@ -626,18 +625,15 @@ FilterStates <- R6::R6Class( # nolint
     # @return `NULL`.
     #
     state_list_push = function(x, state_id) {
-      logger::log_debug("{ class(self)[1] } pushing into state_list, dataname: { private$dataname }")
-      checkmate::assert_string(state_id)
-      checkmate::assert_multi_class(x, c("FilterState", "FilterStateExpr"))
-      state <- stats::setNames(list(x), state_id)
-      new_state_list <- c(
-        isolate(private$state_list()),
-        state
-      )
-      isolate(private$state_list(new_state_list))
-
-      logger::log_debug("{ class(self)[1] } pushed into queue, dataname: { private$dataname }")
-      invisible(NULL)
+      isolate({
+        logger::log_debug("{ class(self)[1] }$state_list_push pushing into state_list, state_id: { state_id }")
+        checkmate::assert_string(state_id)
+        checkmate::assert_multi_class(x, c("FilterState", "FilterStateExpr"))
+        state <- stats::setNames(list(x), state_id)
+        new_state_list <- c(private$state_list(), state)
+        private$state_list(new_state_list)
+        invisible(NULL)
+      })
     },
 
     # @description
@@ -654,10 +650,9 @@ FilterStates <- R6::R6Class( # nolint
     # @return `NULL`, invisibly.
     #
     state_list_remove = function(state_id, force = FALSE) {
-      checkmate::assert_character(state_id)
-      logger::log_debug("{ class(self)[1] } removing a filter, state_id: { toString(state_id) }")
-
       isolate({
+        checkmate::assert_character(state_id)
+        logger::log_debug("{ class(self)[1] }$state_list_remove removing a filter, state_id: { toString(state_id) }")
         current_state_ids <- vapply(private$state_list(), function(x) x$get_state()$id, character(1))
         to_remove <- state_id %in% current_state_ids
         if (any(to_remove)) {
@@ -699,7 +694,7 @@ FilterStates <- R6::R6Class( # nolint
 
         state_list <- private$state_list()
         if (length(state_list)) {
-          state_ids <- vapply(state_list, function(x) x$get_state()$id, character(1))
+          state_ids <- vapply(state_list, function(x) x$get_state()$id, character(1L))
           private$state_list_remove(state_ids, force)
         }
       })
@@ -722,55 +717,57 @@ FilterStates <- R6::R6Class( # nolint
     set_filter_state_impl = function(state,
                                      data,
                                      data_reactive) {
-      checkmate::assert_class(state, "teal_slices")
-      checkmate::assert_multi_class(data, c("data.frame", "matrix", "DataFrame", "HermesData"))
-      checkmate::assert_function(data_reactive, args = "sid")
-      if (length(state) == 0L) {
-        return(invisible(NULL))
-      }
-
-      slices_hashed <- vapply(state, `[[`, character(1L), "id")
-      if (any(duplicated(slices_hashed))) {
-        stop(
-          "Some of the teal_slice objects refer to the same filter. ",
-          "Please specify different 'id' when calling teal_slice"
-        )
-      }
-
-      state_list <- isolate(private$state_list_get())
-      lapply(state, function(slice) {
-        state_id <- slice$id
-        if (state_id %in% names(state_list)) {
-          # Modify existing filter states.
-          state_list[[state_id]]$set_state(slice)
-        } else {
-          if (inherits(slice, "teal_slice_expr")) {
-            # create a new FilterStateExpr
-            fstate <- init_filter_state_expr(slice)
-          } else {
-            # create a new FilterState
-            fstate <- init_filter_state(
-              x = data[, slice$varname, drop = TRUE],
-              # data_reactive is a function which eventually calls get_call(sid).
-              # This chain of calls returns column from the data filtered by everything
-              # but filter identified by the sid argument. FilterState then get x_reactive
-              # and this no longer needs to be a function to pass sid. reactive in the FilterState
-              # is also beneficial as it can be cached and retriger filter counts only if
-              # returned vector is different.
-              x_reactive = if (private$count_type == "none") {
-                reactive(NULL)
-              } else {
-                reactive(data_reactive(state_id)[, slice$varname, drop = TRUE])
-              },
-              slice = slice,
-              extract_type = private$extract_type
-            )
-          }
-          private$state_list_push(x = fstate, state_id = state_id)
+      isolate({
+        checkmate::assert_class(state, "teal_slices")
+        checkmate::assert_multi_class(data, c("data.frame", "matrix", "DataFrame", "HermesData"))
+        checkmate::assert_function(data_reactive, args = "sid")
+        if (length(state) == 0L) {
+          return(invisible(NULL))
         }
-      })
 
-      invisible(NULL)
+        slices_hashed <- vapply(state, `[[`, character(1L), "id")
+        if (any(duplicated(slices_hashed))) {
+          stop(
+            "Some of the teal_slice objects refer to the same filter. ",
+            "Please specify different 'id' when calling teal_slice"
+          )
+        }
+
+        state_list <- private$state_list_get()
+        lapply(state, function(slice) {
+          state_id <- slice$id
+          if (state_id %in% names(state_list)) {
+            # Modify existing filter states.
+            state_list[[state_id]]$set_state(slice)
+          } else {
+            if (inherits(slice, "teal_slice_expr")) {
+              # create a new FilterStateExpr
+              fstate <- init_filter_state_expr(slice)
+            } else {
+              # create a new FilterState
+              fstate <- init_filter_state(
+                x = data[, slice$varname, drop = TRUE],
+                # data_reactive is a function which eventually calls get_call(sid).
+                # This chain of calls returns column from the data filtered by everything
+                # but filter identified by the sid argument. FilterState then get x_reactive
+                # and this no longer needs to be a function to pass sid. reactive in the FilterState
+                # is also beneficial as it can be cached and retriger filter counts only if
+                # returned vector is different.
+                x_reactive = if (private$count_type == "none") {
+                  reactive(NULL)
+                } else {
+                  reactive(data_reactive(state_id)[, slice$varname, drop = TRUE])
+                },
+                slice = slice,
+                extract_type = private$extract_type
+              )
+            }
+            private$state_list_push(x = fstate, state_id = state_id)
+          }
+        })
+
+        invisible(NULL)
+      })
     }
   )
 )

@@ -98,7 +98,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'
     set_filter_state = function(state) {
       isolate({
-        logger::log_debug("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+        logger::log_debug("FilteredDatasetMAE$set_filter_state initializing, dataname: { private$dataname }")
         checkmate::assert_class(state, "teal_slices")
         lapply(state, function(x) {
           checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
@@ -145,7 +145,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       checkmate::assert_class(state, "teal_slices")
 
       isolate({
-        logger::log_debug("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
+        logger::log_debug("FilteredDatasetMAE$remove_filter_state removing filter(s), dataname: { private$dataname }")
         # remove state on subjects
         subject_state <- Filter(function(x) is.null(x$experiment), state)
         private$get_filter_states()[["subjects"]]$remove_filter_state(subject_state)
@@ -168,9 +168,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
           slices <- Filter(function(x) identical(x$experiment, experiment), state)
           private$get_filter_states()[[experiment]]$remove_filter_state(slices)
         })
-
-
-        logger::log_debug("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
       })
 
       invisible(NULL)
