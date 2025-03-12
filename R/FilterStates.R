@@ -660,7 +660,7 @@ FilterStates <- R6::R6Class( # nolint
             function(state) {
               if (state$get_state()$id %in% state_id) {
                 if (state$get_state()$anchored && !force) {
-                  return(TRUE)
+                  TRUE
                 } else {
                   state$finalize()
                   FALSE
