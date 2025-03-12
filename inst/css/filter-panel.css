@@ -329,7 +329,7 @@ a.remove_all:hover {
   color: var(--bs-body-color, #333333);
   padding: 5px 10px;
   border: 1px solid var(--bs-gray-300, #dee2e6);
-  border-radius: 0.25em;
+  border-radius: 0em;
 
   display: flex;
   flex-direction: column;
@@ -427,8 +427,8 @@ a.remove_all:hover {
 .filter-card-body {
   border: 1px solid var(--bs-gray-300, #dee2e6);
   border-top: none;
-  border-bottom-left-radius: 0.25rem;
-  border-bottom-right-radius: 0.25rem;
+  /* border-bottom-left-radius: 0.25rem; */
+  /* border-bottom-right-radius: 0.25rem; */
   padding: 5px 10px;
 }
 
