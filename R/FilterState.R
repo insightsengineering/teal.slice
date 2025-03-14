@@ -72,42 +72,45 @@ FilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           slice,
                           extract_type = character(0)) {
-      checkmate::assert_class(x_reactive, "reactive")
-      checkmate::assert_class(slice, "teal_slice")
-      checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
-      if (length(extract_type) == 1) {
-        checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
-      }
-
-      # Set data properties.
-      private$x <- x
-      private$x_reactive <- x_reactive
-      # Set derived data properties.
-      private$na_count <- sum(is.na(x))
-      private$filtered_na_count <- reactive(
-        if (!is.null(private$x_reactive())) {
-          sum(is.na(private$x_reactive()))
+      isolate({
+        checkmate::assert_class(x_reactive, "reactive")
+        checkmate::assert_class(slice, "teal_slice")
+        checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
+        if (length(extract_type) == 1) {
+          checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
         }
-      )
-      # Set extract type.
-      private$extract_type <- extract_type
+        logger::log_debug("{ class(self)[1] } initializing for slice: { slice$id }")
 
-      # Set state properties.
-      if (is.null(isolate(slice$keep_na)) && anyNA(x)) slice$keep_na <- TRUE
-      private$teal_slice <- slice
-      # Obtain variable label.
-      varlabel <- attr(x, "label", exact = TRUE)
-      # Display only when different from varname.
-      private$varlabel <-
-        if (is.null(varlabel) || identical(varlabel, private$get_varname())) {
-          character(0)
-        } else {
-          varlabel
-        }
+        # Set data properties.
+        private$x <- x
+        private$x_reactive <- x_reactive
+        # Set derived data properties.
+        private$na_count <- sum(is.na(x))
+        private$filtered_na_count <- reactive(
+          if (!is.null(private$x_reactive())) {
+            sum(is.na(private$x_reactive()))
+          }
+        )
+        # Set extract type.
+        private$extract_type <- extract_type
 
-      private$state_history <- reactiveVal(list())
+        # Set state properties.
+        if (is.null(isolate(slice$keep_na)) && anyNA(x)) slice$keep_na <- TRUE
+        private$teal_slice <- slice
+        # Obtain variable label.
+        varlabel <- attr(x, "label", exact = TRUE)
+        # Display only when different from varname.
+        private$varlabel <-
+          if (is.null(varlabel) || identical(varlabel, private$get_varname())) {
+            character(0)
+          } else {
+            varlabel
+          }
 
-      invisible(self)
+        private$state_history <- reactiveVal(list())
+
+        invisible(self)
+      })
     },
 
     #' @description
@@ -145,12 +148,15 @@ FilterState <- R6::R6Class( # nolint
     #' @return `self` invisibly
     #'
     set_state = function(state) {
-      checkmate::assert_class(state, "teal_slice")
-      if (private$is_fixed()) {
-        warning("attempt to set state on fixed filter aborted id: ", private$get_id())
-      } else {
-        logger::log_debug("{ class(self)[1] }$set_state setting state of filter id: { private$get_id() }")
-        isolate({
+      if (identical(state, private$slice)) {
+        return(self)
+      }
+      isolate({
+        checkmate::assert_class(state, "teal_slice")
+        if (private$is_fixed()) {
+          warning("attempt to set state on fixed filter aborted id: ", private$get_id())
+        } else {
+          logger::log_debug("{ class(self)[1] }$set_state setting state of filter id: { private$get_id() }")
           if (!is.null(state$selected)) {
             private$set_selected(state$selected)
           }
@@ -166,10 +172,10 @@ FilterState <- R6::R6Class( # nolint
             private$get_keep_na(),
             private$get_keep_inf()
           )
-        })
-      }
+        }
 
-      invisible(self)
+        invisible(self)
+      })
     },
 
 
@@ -207,7 +213,7 @@ FilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_debug("FilterState$server initializing module for slice: { private$get_id() } ")
+          logger::log_debug("{ class(self)[1] }$server initializing module for slice: { private$get_id() } ")
           private$server_summary("summary")
           if (private$is_fixed()) {
             private$server_inputs_fixed("inputs")
@@ -277,7 +283,7 @@ FilterState <- R6::R6Class( # nolint
 
           private$session_bindings[[session$ns("inputs")]] <- list(
             destroy = function() {
-              logger::log_debug("Destroying FilterState inputs and observers; id: { private$get_id() }")
+              logger::log_debug("Destroying { class(self)[1] } inputs and observers; id: { private$get_id() }")
               lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
             }
           )
@@ -429,21 +435,16 @@ FilterState <- R6::R6Class( # nolint
     #
     # @return `NULL`, invisibly.
     set_selected = function(value) {
-      logger::log_debug(
-        sprintf(
-          "%s$set_selected setting selection of id: %s",
-          class(self)[1],
-          private$get_id()
-        )
-      )
       isolate({
         value <- private$cast_and_validate(value)
         value <- private$check_length(value)
         value <- private$remove_out_of_bounds_values(value)
-        private$teal_slice$selected <- value
+        if (!identical(value, private$teal_slice$selected)) {
+          logger::log_debug("{ class(self)[1] }$set_selected setting selection for id: { private$get_id() }")
+          private$teal_slice$selected <- value
+        }
+        invisible(NULL)
       })
-
-      invisible(NULL)
     },
 
     # @description
@@ -455,17 +456,14 @@ FilterState <- R6::R6Class( # nolint
     # @return `NULL`, invisibly.
     #
     set_keep_na = function(value) {
-      checkmate::assert_flag(value)
-      private$teal_slice$keep_na <- value
-      logger::log_debug(
-        sprintf(
-          "%s$set_keep_na set for filter %s to %s.",
-          class(self)[1],
-          private$get_id(),
-          value
-        )
-      )
-      invisible(NULL)
+      isolate({
+        checkmate::assert_flag(value)
+        logger::log_debug("{ class(self)[1] }$set_keep_na sets for filter { private$get_id() } to { value }.")
+        if (!identical(value, private$teal_slice$keep_na)) {
+          private$teal_slice$keep_na <- value
+        }
+        invisible(NULL)
+      })
     },
 
     # @description
@@ -477,18 +475,21 @@ FilterState <- R6::R6Class( # nolint
     # @return `NULL`, invisibly.
     #
     set_keep_inf = function(value) {
-      checkmate::assert_flag(value)
-      private$teal_slice$keep_inf <- value
-      logger::log_debug(
-        sprintf(
-          "%s$set_keep_inf of filter %s set to %s",
-          class(self)[1],
-          private$get_id(),
-          value
-        )
-      )
-
-      invisible(NULL)
+      isolate({
+        if (!identical(value, private$teal_slice$keep_inf)) {
+          checkmate::assert_flag(value)
+          logger::log_debug(
+            sprintf(
+              "%s$set_keep_inf of filter %s set to %s",
+              class(self)[1],
+              private$get_id(),
+              value
+            )
+          )
+          private$teal_slice$keep_inf <- value
+        }
+        invisible(NULL)
+      })
     },
 
     # getters for state features ----
@@ -767,7 +768,7 @@ FilterState <- R6::R6Class( # nolint
           eventExpr = private$get_keep_na(),
           handlerExpr = {
             if (!setequal(private$get_keep_na(), input$value)) {
-              logger::log_debug("FilterState$keep_na_srv@1 changed reactive value, id: { private$get_id() }")
+              logger::log_debug("{ class(self)[1] }$keep_na_srv@1 changed reactive value, id: { private$get_id() }")
               updateCheckboxInput(
                 inputId = "value",
                 label = sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
@@ -781,7 +782,7 @@ FilterState <- R6::R6Class( # nolint
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,
           handlerExpr = {
-            logger::log_debug("FilterState$keep_na_srv@2 changed input, id: { private$get_id() }")
+            logger::log_debug("{ class(self)[1] }$keep_na_srv@2 changed input, id: { private$get_id() }")
             keep_na <- if (is.null(input$value)) {
               FALSE
             } else {

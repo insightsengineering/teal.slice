@@ -55,7 +55,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     set_filter_state = function(state) {
       isolate({
-        logger::log_debug("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+        logger::log_debug("SEFilterState$set_filter_state initializing, dataname: { private$dataname }")
         checkmate::assert_class(state, "teal_slices")
         lapply(state, function(x) {
           checkmate::assert_choice(x$arg, choices = c("subset", "select"), null.ok = TRUE, .var.name = "teal_slice$arg")
@@ -200,10 +200,10 @@ SEFilterStates <- R6::R6Class( # nolint
             avail_row_data_choices(),
             ignoreNULL = TRUE,
             handlerExpr = {
-              logger::log_debug(paste(
+              logger::log_debug(
                 "SEFilterStates$srv_add@1 updating available row data choices,",
                 "dataname: { private$dataname }"
-              ))
+              )
               if (is.null(avail_row_data_choices())) {
                 shinyjs::hide("row_to_add")
               } else {
@@ -214,10 +214,6 @@ SEFilterStates <- R6::R6Class( # nolint
                 "row_to_add",
                 choices = avail_row_data_choices()
               )
-              logger::log_debug(paste(
-                "SEFilterStates$srv_add@1 updated available row data choices,",
-                "dataname: { private$dataname }"
-              ))
             }
           )
 
@@ -225,10 +221,10 @@ SEFilterStates <- R6::R6Class( # nolint
             avail_col_data_choices(),
             ignoreNULL = TRUE,
             handlerExpr = {
-              logger::log_debug(paste(
+              logger::log_debug(
                 "SEFilterStates$srv_add@2 updating available col data choices,",
                 "dataname: { private$dataname }"
-              ))
+              )
               if (is.null(avail_col_data_choices())) {
                 shinyjs::hide("col_to_add")
               } else {
@@ -239,10 +235,6 @@ SEFilterStates <- R6::R6Class( # nolint
                 "col_to_add",
                 choices = avail_col_data_choices()
               )
-              logger::log_debug(paste(
-                "SEFilterStates$srv_add@2 updated available col data choices,",
-                "dataname: { private$dataname }"
-              ))
             }
           )
 
@@ -250,24 +242,13 @@ SEFilterStates <- R6::R6Class( # nolint
             eventExpr = input$col_to_add,
             handlerExpr = {
               logger::log_debug(
-                sprintf(
-                  "SEFilterStates$srv_add@3 adding FilterState of column %s to col data, dataname: %s",
-                  deparse1(input$col_to_add),
-                  private$dataname
-                )
+                "SEFilterStates$srv_add@3 adding FilterState of column { input$col_to_add }",
+                " to col data, dataname: { private$dataname }"
               )
               varname <- input$col_to_add
               self$set_filter_state(teal_slices(
                 teal_slice(private$dataname, varname, experiment = private$datalabel, arg = "select")
               ))
-
-              logger::log_debug(
-                sprintf(
-                  "SEFilterStates$srv_add@3 added FilterState of column %s to col data, dataname: %s",
-                  deparse1(varname),
-                  private$dataname
-                )
-              )
             }
           )
 
@@ -276,24 +257,13 @@ SEFilterStates <- R6::R6Class( # nolint
             eventExpr = input$row_to_add,
             handlerExpr = {
               logger::log_debug(
-                sprintf(
-                  "SEFilterStates$srv_add@4 adding FilterState of variable %s to row data, dataname: %s",
-                  deparse1(input$row_to_add),
-                  private$dataname
-                )
+                "SEFilterStates$srv_add@4 adding FilterState of variable { input$row_to_add }",
+                " to row data, dataname: { private$dataname }"
               )
               varname <- input$row_to_add
               self$set_filter_state(teal_slices(
                 teal_slice(private$dataname, varname, experiment = private$datalabel, arg = "subset")
               ))
-
-              logger::log_debug(
-                sprintf(
-                  "SEFilterStates$srv_add@4 added FilterState of variable %s to row data, dataname: %s",
-                  deparse1(varname),
-                  private$dataname
-                )
-              )
             }
           )
 
