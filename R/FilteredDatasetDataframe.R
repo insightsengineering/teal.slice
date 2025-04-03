@@ -192,6 +192,7 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
         checkmate::assert_class(state, "teal_slices")
         state_datanames <- unique(vapply(state, `[[`, character(1L), "dataname"))
         checkmate::assert_subset(state_datanames, private$dataname)
+        super$set_filter_state(state = state)
         private$get_filter_states()[[1L]]$set_filter_state(state = state)
         invisible(NULL)
       })

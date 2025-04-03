@@ -103,6 +103,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         lapply(state, function(x) {
           checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
         })
+        super$set_filter_state(state = state)
 
         # set state on subjects
         subject_state <- Filter(function(x) is.null(x$experiment), state)

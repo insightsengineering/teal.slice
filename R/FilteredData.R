@@ -549,7 +549,7 @@ FilteredData <- R6::R6Class( # nolint
                     isolate(active_datanames()),
                     function(dataname) {
                       fdataset <- private$get_filtered_dataset(dataname)
-                      fdataset$ui_active(id = ns(dataname), allow_add = private$allow_add)
+                      fdataset$ui_active(id = ns(dataname))
                     }
                   )
                 )
