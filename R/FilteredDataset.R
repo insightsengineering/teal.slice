@@ -204,86 +204,85 @@ FilteredDataset <- R6::R6Class( # nolint
     ui_active = function(id, allow_add = TRUE) {
       dataname <- self$get_dataname()
       checkmate::assert_string(dataname)
-
       ns <- NS(id)
-      if_multiple_filter_states <- length(private$get_filter_states()) > 1
-      tags$span(
-        id = id,
-        class = "teal-slice",
-        include_css_files("filter-panel"),
-        include_js_files(pattern = "icons"),
-        bslib::accordion(
-          id = ns("dataset_filter_accordian"),
-          class = "teal-slice-dataset-filter",
-          bslib::accordion_panel(
-            dataname,
-            style = "padding: 0; margin: 0;",
-            bslib::page_fluid(
-              id = ns("whole_ui"),
-              style = "margin: 0; padding: 0;",
-              uiOutput(ns("active_filter_badge")),
-              div(
-                id = ns("filter_util_icons"),
-                class = "teal-slice filter-util-icons",
+      if (allow_add || length(self$get_filter_state())) {
+        tags$span(
+          id = id,
+          class = "teal-slice",
+          include_css_files("filter-panel"),
+          include_js_files(pattern = "icons"),
+          bslib::accordion(
+            id = ns("dataset_filter_accordian"),
+            class = "teal-slice-dataset-filter",
+            bslib::accordion_panel(
+              dataname,
+              style = "padding: 0; margin: 0;",
+              bslib::page_fluid(
+                id = ns("whole_ui"),
+                style = "margin: 0; padding: 0;",
+                uiOutput(ns("active_filter_badge")),
                 if (allow_add) {
-                  tags$a(
-                    class = "teal-slice filter-icon",
-                    tags$i(
-                      id = ns("add_filter_icon"),
-                      class = "fa fa-plus",
-                      title = "fold/expand transform panel",
-                      onclick = sprintf(
-                        "togglePanelItems(this, '%s', 'fa-plus', 'fa-minus');
+                  div(
+                    id = ns("filter_util_icons"),
+                    class = "teal-slice filter-util-icons",
+                    tags$a(
+                      class = "teal-slice filter-icon",
+                      tags$i(
+                        id = ns("add_filter_icon"),
+                        class = "fa fa-plus",
+                        title = "fold/expand transform panel",
+                        onclick = sprintf(
+                          "togglePanelItems(this, '%s', 'fa-plus', 'fa-minus');
                         if ($(this).hasClass('fa-minus')) {
                           $('#%s .accordion-button.collapsed').click();
                         }",
-                        ns("add_panel"),
-                        ns("dataset_filter_accordian")
+                          ns("add_panel"),
+                          ns("dataset_filter_accordian")
+                        )
                       )
+                    ),
+                    uiOutput(ns("remove_filters_ui"))
+                  )
+                },
+                if (allow_add) {
+                  bslib::page_fluid(
+                    style = "padding: 0px 15px 0px 15px; margin: 0;",
+                    tags$div(
+                      id = ns("add_panel"),
+                      class = "add-panel",
+                      style = "display: none;",
+                      self$ui_add(ns(private$dataname))
                     )
                   )
                 },
-                uiOutput(ns("remove_filters_ui"))
-              ),
-              bslib::page_fluid(
-                style = "padding: 0px 15px 0px 15px; margin: 0;",
-                if (allow_add) {
-                  tags$div(
-                    id = ns("add_panel"),
-                    class = "add-panel",
-                    style = "display: none;",
-                    self$ui_add(ns(private$dataname))
+                tags$div(
+                  id = ns("filter_count_ui"),
+                  style = "display: none;",
+                  tagList(
+                    textOutput(ns("filter_count"))
                   )
-                }
-              ),
-              tags$div(
-                id = ns("filter_count_ui"),
-                style = "display: none;",
-                tagList(
-                  textOutput(ns("filter_count"))
-                )
-              ),
-              tags$div(
-                # id needed to insert and remove UI to filter single variable as needed
-                # it is currently also used by the above module to entirely hide this panel
-                id = ns("filters"),
-                class = "parent-hideable-list-group",
-                tagList(
-                  lapply(
-                    names(private$get_filter_states()),
-                    function(x) {
-                      tagList(private$get_filter_states()[[x]]$ui_active(id = ns(x)))
-                    }
+                ),
+                tags$div(
+                  # id needed to insert and remove UI to filter single variable as needed
+                  # it is currently also used by the above module to entirely hide this panel
+                  id = ns("filters"),
+                  class = "parent-hideable-list-group",
+                  tagList(
+                    lapply(
+                      names(private$get_filter_states()),
+                      function(x) {
+                        tagList(private$get_filter_states()[[x]]$ui_active(id = ns(x)))
+                      }
+                    )
                   )
                 )
               )
             )
-          )
-        ),
-        tags$script(
-          HTML(
-            sprintf(
-              "
+          ),
+          tags$script(
+            HTML(
+              sprintf(
+                "
             $(document).ready(function() {
               $('#%s').appendTo('#%s > .accordion-item > .accordion-header');
               $('#%s > .accordion-item > .accordion-header').css({
@@ -292,15 +291,16 @@ FilteredDataset <- R6::R6Class( # nolint
               $('#%s').appendTo('#%s .accordion-header .accordion-title');
             });
           ",
-              ns("filter_util_icons"),
-              ns("dataset_filter_accordian"),
-              ns("dataset_filter_accordian"),
-              ns("active_filter_badge"),
-              ns("dataset_filter_accordian")
+                ns("filter_util_icons"),
+                ns("dataset_filter_accordian"),
+                ns("dataset_filter_accordian"),
+                ns("active_filter_badge"),
+                ns("dataset_filter_accordian")
+              )
             )
           )
         )
-      )
+      }
     },
 
     #' @description
