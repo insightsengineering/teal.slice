@@ -582,12 +582,6 @@ a.remove_all:hover {
   position: relative;
   display: flex;
   z-index: 100;
-  opacity: 0.5;
-  transition: 0.1s;
-}
-
-.teal-slice.available-filters a:hover {
-  opacity: 1;
 }
 
 .teal-slice.available-filters .available-menu {
@@ -611,7 +605,6 @@ a.remove_all:hover {
 }
 
 .teal-slice.filter-icon.remove-all i {
-  opacity: 0.5;
   transition: 0.1s;
   color: var(--bs-danger);
 }
@@ -627,4 +620,8 @@ a.remove_all:hover {
 .teal-slice .accordion-button:not(.collapsed)::after,
 .accordion-button::after {
   scale: 0.8;
+}
+
+.teal-slice .accordion-body {
+  padding: 0;
 }
