@@ -253,7 +253,7 @@ FilteredDataset <- R6::R6Class( # nolint
                         uiOutput(session$ns("active_filter_badge")),
                         uiOutput(session$ns("filter_util_icons")),
                         bslib::page_fluid(
-                          style = "padding: 0px 15px 0px 15px; margin: 0;",
+                          style = "padding: 0px; margin: 0;",
                           tags$div(
                             id = session$ns("add_panel"),
                             class = "add-panel",
