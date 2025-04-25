@@ -207,12 +207,8 @@ FilteredDataset <- R6::R6Class( # nolint
     #'
     #' @return `shiny.tag`
     ui_active = function(id) {
-      isolate({
-        dataname <- self$get_dataname()
-        checkmate::assert_string(dataname)
-        ns <- NS(id)
-        uiOutput(ns("container"))
-      })
+      ns <- NS(id)
+      uiOutput(ns("container"))
     },
     #' @description
     #' Server module for a dataset active filters.
@@ -226,11 +222,8 @@ FilteredDataset <- R6::R6Class( # nolint
         function(input, output, session) {
           dataname <- self$get_dataname()
           logger::log_debug("FilteredDataset$srv_active initializing, dataname: { dataname }")
-          checkmate::assert_string(dataname)
 
-          filter_count <- reactive({
-            length(self$get_filter_state())
-          })
+          filter_count <- reactive(length(self$get_filter_state()))
 
           is_displayed <- reactiveVal()
           private$session_bindings[[session$ns("is_displayed")]] <- observe({
