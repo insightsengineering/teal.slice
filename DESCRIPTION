@@ -44,7 +44,7 @@ Imports:
     lifecycle (>= 0.2.0),
     logger (>= 0.3.0),
     methods,
-    plotly (>= 4.9.2.2),
+    plotly (>= 4.10.4),
     R6 (>= 2.2.0),
     rlang (>= 1.0.0),
     shiny (>= 1.6.0),
