@@ -34,13 +34,13 @@ BugReports: https://github.com/insightsengineering/teal.slice/issues
 Depends:
     R (>= 4.0)
 Imports:
-    bsicons,
+    bsicons (>= 0.1.2),
     bslib (>= 0.8.0),
     checkmate (>= 2.1.0),
     dplyr (>= 1.0.5),
     grDevices,
     htmltools (>= 0.5.4),
-    jsonlite,
+    jsonlite (>= 2.0.0),
     lifecycle (>= 0.2.0),
     logger (>= 0.3.0),
     methods,
@@ -49,7 +49,7 @@ Imports:
     rlang (>= 1.0.0),
     shiny (>= 1.6.0),
     shinycssloaders (>= 1.0.0),
-    shinyjs,
+    shinyjs (>= 2.1.0),
     shinyWidgets (>= 0.6.2),
     teal.data (>= 0.7.0),
     teal.logger (>= 0.3.1),
