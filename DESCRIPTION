@@ -59,6 +59,7 @@ Suggests:
     knitr (>= 1.42),
     MultiAssayExperiment,
     rmarkdown (>= 2.23),
+    shinytest2 (>= 0.4.1),
     SummarizedExperiment,
     testthat (>= 3.2.2),
     withr (>= 3.0.2)
