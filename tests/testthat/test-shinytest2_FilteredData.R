@@ -83,7 +83,7 @@ test_that("filteredData removing filters", {
   app_driver$stop()
 })
 
-test_that("filterdData minimize one filters", {
+test_that("filterdData minimize one filter", {
   app_driver <- app()
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-filter-mtcars_mpg"))
   app_driver$click("filter_panel-active-mtcars-filter-mtcars_mpg-back")
@@ -160,46 +160,3 @@ test_that("Remove filters from all datasets", {
   testthat::expect_false(is_visible(app_driver, id_filters_mtcars))
   app_driver$stop()
 })
-
-# test_tahat("filterDatatoggle visibility of filters for a dataset", {
-#   app_driver <- app()
-#   app_driver$click("filter_panel-active-mtcars-filter-mtcars_mpg-reset")
-#   app_driver$click("filter_panel-active-mtcars-filter-mtcars_mpg-remove")
-#   app_driver$click("filter_panel-active-mtcars-filter-mtcars_mpg-inputs-plotly_info")
-  # # Update output value
-  # app_driver$set_inputs(`filter_panel-active-iris-filter-iris_Species-shinyjs-delay-b72e323805347c622fab8286f7f318b1` = 100, allow_no_input_binding_ = TRUE)
-  # app_driver$set_inputs(`filter_panel-active-iris-filter-iris_Species-shinyjs-delay-c39477bf135d7071b5164ffb266addf8` = 100, allow_no_input_binding_ = TRUE)
-  # # Update output value
-  # app_driver$set_inputs(`filter_panel-active-mtcars-filter-mtcars_mpg-shinyjs-delay-b4732a9feffeafc9e37c0d5547991c38` = 100, allow_no_input_binding_ = TRUE)
-  # app_driver$set_inputs(`filter_panel-active-mtcars-filter-mtcars_mpg-shinyjs-delay-ed744f9988d9bbd1d35226551bd73779` = 100, allow_no_input_binding_ = TRUE)
-  # app_driver$expect_values()
-  # app_driver$set_inputs(`filter_panel-overview-main_filter_accordian` = character(0))
-  # app_driver$set_inputs(`filter_panel-active-main_filter_accordian` = character(0))
-  # app_driver$set_inputs(`filter_panel-active-main_filter_accordian` = "Filter Data")
-  # # Update output value
-  # app_driver$set_inputs(`filter_panel-active-mtcars-mtcars-filter-var_to_add` = character(0))
-  # # Update output value
-  # app_driver$set_inputs(`filter_panel-overview-main_filter_accordian` = "Active Filter Summary")
-  # # Update output value
-  # app_driver$set_inputs(mtcars_table_rows_current = 1:5, allow_no_input_binding_ = TRUE)
-  # app_driver$set_inputs(mtcars_table_rows_all = 1:5, allow_no_input_binding_ = TRUE)
-  # app_driver$set_inputs(
-  #   mtcars_table_state = c(
-  #     1750239102719, 0, 10, "", TRUE, FALSE, TRUE,
-  #     c(TRUE, "", TRUE, FALSE, TRUE),
-  #     c(TRUE, "", TRUE, FALSE, TRUE),
-  #     c(TRUE, "", TRUE, FALSE, TRUE),
-  #     c(TRUE, "", TRUE, FALSE, TRUE),
-  #     c(TRUE, "", TRUE, FALSE, TRUE),
-  #     c(TRUE, "", TRUE, FALSE, TRUE),
-  #     c(TRUE, "", TRUE, FALSE, TRUE),
-  #     c(TRUE, "", TRUE, FALSE, TRUE),
-  #     c(TRUE, "", TRUE, FALSE, TRUE),
-  #     c(TRUE, "", TRUE, FALSE, TRUE),
-  #     c(TRUE, "", TRUE, FALSE, TRUE),
-  #     c(TRUE, "", TRUE, FALSE, TRUE)
-  #   ),
-  #   allow_no_input_binding_ = TRUE
-  # )
-#   app_driver$stop()
-# })
