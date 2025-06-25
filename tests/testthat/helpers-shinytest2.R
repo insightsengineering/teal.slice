@@ -18,23 +18,30 @@ is_visible <- function(app_driver, element) {
 
 # Write a js code to extract the classes
 get_class <- function(id) {
-  unlist(
-    app_driver$get_js(
-      sprintf(
-        "Array.from(document.querySelectorAll('%s')).map(el => el.checkVisibility())",
-        element
-      )
-    )
+  sprintf(
+    "Array.from(document.querySelectorAll('%s')).map(el => el.checkVisibility())",
+    id
   )
 }
 
 
 element_class_shown <- function(id) {
-  sprintf("const element = document.getElementById('%s');
+  sprintf("const element = document.querySelector('%s');
            element.classList.contains('show');", id)
 }
 
 element_expanded_attribute <- function(id) {
-  sprintf("const element = document.getElementById('%s');
+  sprintf("const element = document.querySelector('%s');
   element.getAttribute('aria-expanded');", id)
+}
+
+
+element_class <- function(id) {
+  sprintf("const element = document.querySelector('%s');
+           element.classList;", id)
+}
+
+element_class <- function(id) {
+  sprintf("const element = document.querySelector('%s');
+           element.classList;", id)
 }

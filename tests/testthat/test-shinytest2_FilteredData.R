@@ -62,15 +62,15 @@ app <- function(name = "filteredData", variant = paste0("app_driver_", name)) {
 test_that("filteredData initializes", {
   app_driver <- app()
   testthat::expect_true(is_visible(app_driver, "#filter_panel"))
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-main_filter_accordian"))
+  testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-main_filter_accordion"))
   testthat::expect_equal(app_driver$get_text("#filter_panel-overview-table > table > tbody > tr:nth-child(1) > td:nth-child(1)"),
                          "iris")
   testthat::expect_equal(app_driver$get_text("#filter_panel-overview-table > table > tbody > tr:nth-child(2) > td:nth-child(1)"),
                          "mtcars")
 
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active"))
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-dataset_filter_accordian"))
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-dataset_filter_accordian"))
+  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-dataset_filter_accordion"))
+  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-dataset_filter_accordion"))
 
 })
 
@@ -85,36 +85,59 @@ test_that("filteredData removing filters", {
 
 test_that("filterdData minimize one filter", {
   app_driver <- app()
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-filter-mtcars_mpg"))
-  app_driver$click("filter_panel-active-mtcars-filter-mtcars_mpg-back")
-  app_driver$wait_for_idle(timeout = default_idle_timeout, duration = default_idle_duration)
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-filter-mtcars_mpg"))
+
+  testthat::expect_true(
+    app_driver$get_js(
+      paste0(
+        "document.getElementById('filter_panel-active-mtcars-filter-mtcars_mpg-body')",
+        ".classList.contains('collapse')"
+      )
+    )
+  )
+
+  app_driver$click(selector = "#filter_panel-active-mtcars-filter-mtcars_mpg .filter-card-header")
+  testthat::expect_false(
+    app_driver$get_js(
+      paste0(
+        "document.getElementById('filter_panel-active-mtcars-filter-mtcars_mpg-body')",
+        ".classList.contains('collapse')"
+      )
+    )
+  )
+
   app_driver$stop()
 })
 
 test_that("filterData toggle visibility of Active Filter Summary", {
   app_driver <- app()
   testthat::expect_true(is_visible(app_driver, "#bslib-accordion-panel-4630"))
-  app_driver$set_inputs(`filter_panel-overview-main_filter_accordian` = character(0))
+
+  app_driver$set_inputs(`filter_panel-overview-main_filter_accordion` = character(0))
+
   testthat::expect_false(is_visible(app_driver, "#bslib-accordion-panel-4630"))
-  app_driver$set_inputs(`filter_panel-overview-main_filter_accordian` = "Active Filter Summary")
+
+  app_driver$set_inputs(`filter_panel-overview-main_filter_accordion` = "Active Filter Summary")
+
   testthat::expect_true(is_visible(app_driver, "#bslib-accordion-panel-4630"))
   testthat::expect_equal(app_driver$get_text(
-    paste0("#filter_panel-overview-main_filter_accordian > div >",
+    paste0("#filter_panel-overview-main_filter_accordion > div >",
            " div.accordion-header > button > div.accordion-title")),
     "Active Filter Summary")
+  #filter_panel-overview-main_filter_accordian > div > div.accordion-header > button > div.accordion-title
   app_driver$stop()
 })
 
 test_that("filterData toggle visibility of Filter Data", {
   app_driver <- app()
   testthat::expect_true(is_visible(app_driver, "#bslib-accordion-panel-2640"))
-  app_driver$set_inputs(`filter_panel-active-main_filter_accordian` = character(0))
+  app_driver$set_inputs(`filter_panel-active-main_filter_accordion` = character(0))
   testthat::expect_false(is_visible(app_driver, "#bslib-accordion-panel-2640"))
-  app_driver$set_inputs(`filter_panel-active-main_filter_accordian` = "Filter Data")
+
+  app_driver$set_inputs(`filter_panel-active-main_filter_accordion` = "Filter Data")
+
   testthat::expect_true(is_visible(app_driver, "#bslib-accordion-panel-2640"))
   testthat::expect_equal(
-    app_driver$get_text(paset0("#filter_panel-active-main_filter_accordian > div > ",
+    app_driver$get_text(paset0("#filter_panel-active-main_filter_accordion > div > ",
                                "div.accordion-header > button > div.accordion-title")),
     "Filter Data")
 
@@ -126,16 +149,16 @@ test_that("filterData toggle visibility of filters for a dataset", {
 
   element_id <- "filter_panel-active-iris-filter-iris_Species-body"
   before <- app_driver$get_js(paste0("document.getElementById('", element_id, "').className;"))
-  before2 <- app_driver$get_js(element_class_shown("bslib-accordion-panel-2150"))
+  before2 <- app_driver$get_js(element_class_shown("#bslib-accordion-panel-2150"))
 
   testthat::expect_equal(before, "collapse out")
   testthat::expect_true(before2, NULL)
 
   # Click to the right place
   # FIXME: click on the right id to toggle the visibility.
-  # app_driver$click("filter_panel-active-mtcars-dataset_filter_accordian")
+  # app_driver$click("filter_panel-active-mtcars-dataset_filter_accordion")
 
-  shown <- app_driver$get_js(element_class_shown("bslib-accordion-panel-2150"))
+  shown <- app_driver$get_js(element_class_shown("#bslib-accordion-panel-2150"))
   testthat::expect_false(after)
   app_driver$stop()
 })
