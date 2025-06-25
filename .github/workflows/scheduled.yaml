@@ -44,7 +44,7 @@ jobs:
         PKG_SYSREQS_DRY_RUN=true
       additional-repos: ${{ matrix.pair.repos }}
       extra-deps: |
-        matrixStats (>= 1.5.0)
+        matrixStats (>= 1.5.0); data.table (>= 1.17.6)
   branch-cleanup:
     if: >
       github.event_name == 'schedule' || (
