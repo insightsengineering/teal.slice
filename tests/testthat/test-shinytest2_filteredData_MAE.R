@@ -51,7 +51,8 @@ app <- function(name = "filteredData_MAE", variant = paste0("app_driver_", name)
     variant = variant,
     timeout = default_idle_timeout,
     load_timeout = default_idle_timeout,
-    wait = TRUE
+    wait = TRUE,
+    seed = 20250626
   )
   app_driver
 }

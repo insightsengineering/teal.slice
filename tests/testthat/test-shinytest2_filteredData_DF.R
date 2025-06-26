@@ -54,12 +54,13 @@ app <- function(name = "filteredData", variant = paste0("app_driver_", name)) {
     variant = variant,
     timeout = default_idle_timeout,
     load_timeout = default_idle_timeout,
-    wait = TRUE
+    wait = TRUE,
+    seed = 20250626
   )
   app_driver
 }
 
-test_that("filteredData initializes", {
+testthat::test_that("filteredData initializes", {
   app_driver <- app()
   testthat::expect_true(is_visible(app_driver, "#filter_panel"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-main_filter_accordion"))
@@ -74,7 +75,7 @@ test_that("filteredData initializes", {
 
 })
 
-test_that("filteredData removing filters", {
+testthat::test_that("filteredData removing filters", {
   app_driver <- app()
   expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-filter-4_cyl"))
   app_driver$click("filter_panel-active-mtcars-filter-4_cyl-remove")
@@ -83,7 +84,7 @@ test_that("filteredData removing filters", {
   app_driver$stop()
 })
 
-test_that("filterdData minimize one filter", {
+testthat::test_that("filterdData minimize one filter", {
   app_driver <- app()
 
   testthat::expect_true(
@@ -108,7 +109,7 @@ test_that("filterdData minimize one filter", {
   app_driver$stop()
 })
 
-test_that("filterData toggle visibility of Active Filter Summary", {
+testthat::test_that("filterData toggle visibility of Active Filter Summary", {
   app_driver <- app()
   testthat::expect_true(is_visible(app_driver, "#bslib-accordion-panel-4630"))
 
@@ -118,7 +119,7 @@ test_that("filterData toggle visibility of Active Filter Summary", {
 
   app_driver$set_inputs(`filter_panel-overview-main_filter_accordion` = "Active Filter Summary")
 
-  testthat::expect_true(is_visible(app_driver, "#bslib-accordion-panel-4630"))
+  testthat::expect_true(is_visible(app_driver, element_id))
   testthat::expect_equal(app_driver$get_text(
     paste0("#filter_panel-overview-main_filter_accordion > div >",
            " div.accordion-header > button > div.accordion-title")),
@@ -127,7 +128,7 @@ test_that("filterData toggle visibility of Active Filter Summary", {
   app_driver$stop()
 })
 
-test_that("filterData toggle visibility of Filter Data", {
+testthat::test_that("filterData toggle visibility of Filter Data", {
   app_driver <- app()
   testthat::expect_true(is_visible(app_driver, "#bslib-accordion-panel-2640"))
   app_driver$set_inputs(`filter_panel-active-main_filter_accordion` = character(0))
@@ -144,7 +145,7 @@ test_that("filterData toggle visibility of Filter Data", {
   app_driver$stop()
 })
 
-test_that("filterData toggle visibility of filters for a dataset", {
+testthat::test_that("filterData toggle visibility of filters for a dataset", {
   app_driver <- app()
 
   element_id <- "filter_panel-active-iris-filter-iris_Species-body"
@@ -163,7 +164,7 @@ test_that("filterData toggle visibility of filters for a dataset", {
   app_driver$stop()
 })
 
-test_that("Remove filters from a dataset", {
+testthat::test_that("Remove filters from a dataset", {
   app_driver <- app()
   id_filters <- "#filter_panel-active-iris-filter-iris_Species-summary-summary > span.filter-card-summary-value"
   testthat::expect_true(is_visible(app_driver, id_filters))
@@ -172,7 +173,7 @@ test_that("Remove filters from a dataset", {
   app_driver$stop()
 })
 
-test_that("Remove filters from all datasets", {
+testthat::test_that("Remove filters from all datasets", {
   app_driver <- app()
   id_filters_iris <- "#filter_panel-active-iris-filter-iris_Species-summary-summary > span.filter-card-summary-value"
   id_filters_mtcars <- "#filter_panel-active-mtcars-filter-4_cyl"
