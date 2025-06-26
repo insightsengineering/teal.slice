@@ -77,10 +77,10 @@ testthat::test_that("filteredData initializes", {
 
 testthat::test_that("filteredData removing filters", {
   app_driver <- app()
-  expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-filter-4_cyl"))
+  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-filter-4_cyl"))
   app_driver$click("filter_panel-active-mtcars-filter-4_cyl-remove")
   app_driver$wait_for_idle(timeout = default_idle_timeout, duration = default_idle_duration)
-  expect_false(is_visible(app_driver, "#filter_panel-active-mtcars-filter-4_cyl"))
+  testthat::expect_true(is.null(is_visible(app_driver, "#filter_panel-active-mtcars-filter-4_cyl")))
   app_driver$stop()
 })
 
@@ -111,12 +111,16 @@ testthat::test_that("filterdData minimize one filter", {
 
 testthat::test_that("filterData toggle visibility of Active Filter Summary", {
   app_driver <- app()
-  testthat::expect_true(is_visible(app_driver, "#bslib-accordion-panel-4630"))
+  element <- ".filter-panel > .teal-slice:nth-of-type(1) .accordion-button"
+
+  table_selector <- "thead td:nth-child(1) , tr+ tr td:nth-child(1)"
+  testthat::expect_true(is_visible(app_driver, table_selector))
 
   app_driver$set_inputs(`filter_panel-overview-main_filter_accordion` = character(0))
 
-  testthat::expect_false(is_visible(app_driver, "#bslib-accordion-panel-4630"))
+  testthat::expect_false(is_visible(app_driver, element))
 
+  testthat::expect_equal(is_expanded(app_driver, element), "true")
   app_driver$set_inputs(`filter_panel-overview-main_filter_accordion` = "Active Filter Summary")
 
   testthat::expect_true(is_visible(app_driver, element_id))
