@@ -23,3 +23,7 @@ get_class <- function(id) {
     id
   )
 }
+
+clean_text <- function(text){
+  strsplit(trimws(text), "\\s{2,}")[[1]]
+}

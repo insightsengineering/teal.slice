@@ -67,6 +67,7 @@ testthat::test_that("Initializes visible filters for MAE", {
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-MAE-dataset_filter_accordion"))
   app_driver$stop()
 })
+
 testthat::test_that("Toggle visibility of Active Filter Summary", {
   app_driver <- app()
 
@@ -86,6 +87,11 @@ testthat::test_that("Toggle visibility of Active Filter Summary", {
     paste0("#filter_panel-overview-main_filter_accordion > div >",
            " div.accordion-header > button > div.accordion-title")),
     "Active Filter Summary")
+
+
+  text <- app_driver$get_text("#filter_panel-active-MAE-subjects-MAE_vital_status-body")
+  expect_equal(clean_text(text), c("0 (58)", "1 (34)"))
+
   app_driver$stop()
 })
 
@@ -172,5 +178,16 @@ testthat::test_that("Remove filters from all datasets", {
   app_driver$click("filter_panel-active-remove_all_filters")
   app_driver$wait_for_idle()
   testthat::expect_false(is_visible(app_driver, id_filter_MAE))
+  app_driver$stop()
+})
+
+testthat::test_that("Add one filter", {
+  app_driver <- app()
+
+  app_driver$click(selector = "#filter_panel-active-MAE-add_filter_icon")
+  app_driver$wait_for_idle()
+  expect_true(is_visible(app_driver, "#filter_panel-active-MAE-add_panel"))
+  # FIXME: doesn't seem to be able to set up a filter
+
   app_driver$stop()
 })
