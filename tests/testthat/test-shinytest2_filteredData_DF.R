@@ -75,60 +75,35 @@ testthat::test_that("filteredData initializes", {
 
 })
 
-testthat::test_that("filteredData removing filters", {
+testthat::test_that("filteredData removing one filters", {
   app_driver <- app()
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-filter-4_cyl"))
   app_driver$click("filter_panel-active-mtcars-filter-4_cyl-remove")
   app_driver$wait_for_idle(timeout = default_idle_timeout, duration = default_idle_duration)
-  testthat::expect_true(is.null(is_visible(app_driver, "#filter_panel-active-mtcars-filter-4_cyl")))
-  app_driver$stop()
-})
-
-testthat::test_that("filterdData minimize one filter", {
-  app_driver <- app()
-
-  testthat::expect_true(
-    app_driver$get_js(
-      paste0(
-        "document.getElementById('filter_panel-active-mtcars-filter-mtcars_mpg-body')",
-        ".classList.contains('collapse')"
-      )
-    )
-  )
-
-  app_driver$click(selector = "#filter_panel-active-mtcars-filter-mtcars_mpg .filter-card-header")
-  testthat::expect_false(
-    app_driver$get_js(
-      paste0(
-        "document.getElementById('filter_panel-active-mtcars-filter-mtcars_mpg-body')",
-        ".classList.contains('collapse')"
-      )
-    )
-  )
-
+  testthat::expect_false(is_visible(app_driver, "#filter_panel-active-mtcars-filter-4_cyl"))
   app_driver$stop()
 })
 
 testthat::test_that("filterData toggle visibility of Active Filter Summary", {
   app_driver <- app()
-  element <- ".filter-panel > .teal-slice:nth-of-type(1) .accordion-button"
 
-  table_selector <- "thead td:nth-child(1) , tr+ tr td:nth-child(1)"
-  testthat::expect_true(is_visible(app_driver, table_selector))
+  selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
+  out <- app_driver$get_js(selector_collapsable)
+  testthat::expect_length(out, 4)
+  testthat::expect_true("show" %in% unlist(out[[1]]))
 
-  app_driver$set_inputs(`filter_panel-overview-main_filter_accordion` = character(0))
+  selector <- ".filter-panel > .teal-slice:nth-of-type(1) .accordion-button"
+  app_driver$click(selector = selector)
+  app_driver$wait_for_idle(duration = default_idle_duration,
+                           timeout = default_idle_timeout)
 
-  testthat::expect_false(is_visible(app_driver, element))
-
-  testthat::expect_equal(is_expanded(app_driver, element), "true")
-  app_driver$set_inputs(`filter_panel-overview-main_filter_accordion` = "Active Filter Summary")
-
-  testthat::expect_true(is_visible(app_driver, element_id))
+  out <- app_driver$get_js(selector_collapsable)
+  testthat::expect_length(out, 4L)
+  testthat::expect_true(!"show" %in% unlist(out[[1]]))
   testthat::expect_equal(app_driver$get_text(
     paste0("#filter_panel-overview-main_filter_accordion > div >",
            " div.accordion-header > button > div.accordion-title")),
     "Active Filter Summary")
-  #filter_panel-overview-main_filter_accordian > div > div.accordion-header > button > div.accordion-title
   app_driver$stop()
 })
 

@@ -19,7 +19,7 @@ is_visible <- function(app_driver, element) {
 # Write a js code to extract the classes
 get_class <- function(id) {
   sprintf(
-    "Array.from(document.querySelectorAll('%s')).map(el => el.checkVisibility())",
+    "Array.from(document.querySelectorAll('%s')).map(el => el.classList)",
     id
   )
 }
