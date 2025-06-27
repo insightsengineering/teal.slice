@@ -23,23 +23,3 @@ get_class <- function(id) {
     id
   )
 }
-
-
-element_class_shown <- function(id) {
-  sprintf("const element = document.querySelector('%s');
-           element.classList.contains('show');", id)
-}
-
-is_expanded <- function(app_driver, element) {
-  app_driver$get_js(element_expanded_attribute(element))
-}
-
-element_expanded_attribute <- function(id) {
-  sprintf("const element = document.querySelector('%s');
-  element.getAttribute('aria-expanded');", id)
-}
-
-element_class <- function(id) {
-  sprintf("const element = document.querySelector('%s');
-           element.classList;", id)
-}

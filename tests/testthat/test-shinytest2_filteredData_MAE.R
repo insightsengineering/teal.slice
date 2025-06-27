@@ -57,7 +57,7 @@ app <- function(name = "filteredData_MAE", variant = paste0("app_driver_", name)
   app_driver
 }
 
-testthat::test_that("initializes", {
+testthat::test_that("Initializes visible filters for MAE", {
   app_driver <- app()
   testthat::expect_true(is_visible(app_driver, "#filter_panel"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-main_filter_accordion"))
@@ -65,7 +65,7 @@ testthat::test_that("initializes", {
                          "MAE")
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-MAE-dataset_filter_accordion"))
-
+  app_driver$stop()
 })
 testthat::test_that("Toggle visibility of Active Filter Summary", {
   app_driver <- app()
@@ -73,7 +73,7 @@ testthat::test_that("Toggle visibility of Active Filter Summary", {
   selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
   out <- app_driver$get_js(selector_collapsable)
   testthat::expect_length(out, 3L)
-  testthat::expect_true("show" %in% unlist(out[[1]]))
+  testthat::expect_true("show" %in% unlist(out[[1L]]))
 
   selector <- ".filter-panel > .teal-slice:nth-of-type(1) .accordion-button"
   app_driver$click(selector = selector)
@@ -82,7 +82,7 @@ testthat::test_that("Toggle visibility of Active Filter Summary", {
 
   out <- app_driver$get_js(selector_collapsable)
   testthat::expect_length(out, 3L)
-  testthat::expect_true(!"show" %in% unlist(out[[1]]))
+  testthat::expect_false("show" %in% unlist(out[[1L]]))
   testthat::expect_equal(app_driver$get_text(
     paste0("#filter_panel-overview-main_filter_accordion > div >",
            " div.accordion-header > button > div.accordion-title")),
@@ -96,7 +96,7 @@ testthat::test_that("Toggle visibility of Filter Data", {
   selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
   out <- app_driver$get_js(selector_collapsable)
   testthat::expect_length(out, 3L)
-  testthat::expect_true("show" %in% unlist(out[[2]]))
+  testthat::expect_true("show" %in% unlist(out[[2L]]))
 
   selector <- ".filter-panel > #filter_panel-active.teal-slice > div > div > div > button"
   app_driver$click(selector = selector)
@@ -105,7 +105,7 @@ testthat::test_that("Toggle visibility of Filter Data", {
 
   out <- app_driver$get_js(selector_collapsable)
   testthat::expect_length(out, 3L)
-  testthat::expect_true(!"show" %in% unlist(out[[2]]))
+  testthat::expect_false("show" %in% unlist(out[[2L]]))
   testthat::expect_equal(
     app_driver$get_text(paste0("#filter_panel-active-main_filter_accordion > div > ",
                                "div.accordion-header > button > div.accordion-title")),
@@ -129,7 +129,7 @@ testthat::test_that("Toggle visibility of filters for a dataset", {
 
   out <- app_driver$get_js(selector_collapsable)
   testthat::expect_length(out, 3L)
-  testthat::expect_true(!"show" %in% unlist(out[[3L]]))
+  testthat::expect_false("show" %in% unlist(out[[3L]]))
   app_driver$stop()
 })
 
@@ -137,7 +137,7 @@ testthat::test_that("Toggle visibility of plot inside filter", {
   app_driver <- app()
   body_filter <- get_class("#filter_panel-active-MAE-subjects-MAE_years_to_birth-body")
   class_before <- app_driver$get_js(body_filter)
-  testthat::expect_true(!"show" %in% unlist(class_before))
+  testthat::expect_false("show" %in% unlist(class_before))
 
   selector <- "#filter_panel-active-MAE-subjects-MAE_years_to_birth > div.filter-card-header"
   app_driver$click(selector = selector)
