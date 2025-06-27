@@ -109,15 +109,22 @@ testthat::test_that("filterData toggle visibility of Active Filter Summary", {
 
 testthat::test_that("filterData toggle visibility of Filter Data", {
   app_driver <- app()
-  testthat::expect_true(is_visible(app_driver, "#bslib-accordion-panel-2640"))
-  app_driver$set_inputs(`filter_panel-active-main_filter_accordion` = character(0))
-  testthat::expect_false(is_visible(app_driver, "#bslib-accordion-panel-2640"))
 
-  app_driver$set_inputs(`filter_panel-active-main_filter_accordion` = "Filter Data")
+  selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
+  out <- app_driver$get_js(selector_collapsable)
+  testthat::expect_length(out, 4)
+  testthat::expect_true("show" %in% unlist(out[[2]]))
 
-  testthat::expect_true(is_visible(app_driver, "#bslib-accordion-panel-2640"))
+  selector <- ".filter-panel > #filter_panel-active.teal-slice > div > div > div > button"
+  app_driver$click(selector = selector)
+  app_driver$wait_for_idle(duration = default_idle_duration,
+                           timeout = default_idle_timeout)
+
+  out <- app_driver$get_js(selector_collapsable)
+  testthat::expect_length(out, 4L)
+  testthat::expect_true(!"show" %in% unlist(out[[2]]))
   testthat::expect_equal(
-    app_driver$get_text(paset0("#filter_panel-active-main_filter_accordion > div > ",
+    app_driver$get_text(paste0("#filter_panel-active-main_filter_accordion > div > ",
                                "div.accordion-header > button > div.accordion-title")),
     "Filter Data")
 
@@ -127,19 +134,19 @@ testthat::test_that("filterData toggle visibility of Filter Data", {
 testthat::test_that("filterData toggle visibility of filters for a dataset", {
   app_driver <- app()
 
-  element_id <- "filter_panel-active-iris-filter-iris_Species-body"
-  before <- app_driver$get_js(paste0("document.getElementById('", element_id, "').className;"))
-  before2 <- app_driver$get_js(element_class_shown("#bslib-accordion-panel-2150"))
+  selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
+  out <- app_driver$get_js(selector_collapsable)
+  testthat::expect_length(out, 4)
+  testthat::expect_true("show" %in% unlist(out[[3]]))
 
-  testthat::expect_equal(before, "collapse out")
-  testthat::expect_true(before2, NULL)
+  selector <- ".filter-panel > #filter_panel-active.teal-slice * #iris > div > div > div > button"
+  app_driver$click(selector = selector)
+  app_driver$wait_for_idle(duration = default_idle_duration,
+                           timeout = default_idle_timeout)
 
-  # Click to the right place
-  # FIXME: click on the right id to toggle the visibility.
-  # app_driver$click("filter_panel-active-mtcars-dataset_filter_accordion")
-
-  shown <- app_driver$get_js(element_class_shown("#bslib-accordion-panel-2150"))
-  testthat::expect_false(after)
+  out <- app_driver$get_js(selector_collapsable)
+  testthat::expect_length(out, 4L)
+  testthat::expect_true(!"show" %in% unlist(out[[3]]))
   app_driver$stop()
 })
 
