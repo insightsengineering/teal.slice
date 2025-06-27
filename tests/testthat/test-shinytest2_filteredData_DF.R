@@ -130,7 +130,7 @@ testthat::test_that("Toggle visibility of filters for a dataset", {
   testthat::expect_length(out, 4)
   testthat::expect_true("show" %in% unlist(out[[3]]))
 
-  selector <- ".filter-panel > #filter_panel-active.teal-slice * #iris > div > div > div > button"
+  selector <- "#iris * button"
   app_driver$click(selector = selector)
   app_driver$wait_for_idle(duration = default_idle_duration,
                            timeout = default_idle_timeout)
@@ -156,6 +156,8 @@ testthat::test_that("Remove filters from a dataset", {
   id_filters <- "#filter_panel-active-iris-filter-iris_Species-summary-summary > span.filter-card-summary-value"
   testthat::expect_true(is_visible(app_driver, id_filters))
   app_driver$click("filter_panel-active-iris-remove_filters")
+  app_driver$wait_for_idle(duration = default_idle_duration,
+                           timeout = default_idle_timeout)
   testthat::expect_false(is_visible(app_driver, id_filters))
   app_driver$stop()
 })
@@ -167,6 +169,8 @@ testthat::test_that("Remove filters from all datasets", {
   testthat::expect_true(is_visible(app_driver, id_filters_iris))
   testthat::expect_true(is_visible(app_driver, id_filters_mtcars))
   app_driver$click("filter_panel-active-remove_all_filters")
+  app_driver$wait_for_idle(duration = default_idle_duration,
+                           timeout = default_idle_timeout)
   testthat::expect_false(is_visible(app_driver, id_filters_iris))
   testthat::expect_false(is_visible(app_driver, id_filters_mtcars))
   app_driver$stop()
