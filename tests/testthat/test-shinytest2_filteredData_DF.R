@@ -60,7 +60,7 @@ app <- function(name = "filteredData", variant = paste0("app_driver_", name)) {
   app_driver
 }
 
-testthat::test_that("filteredData initializes", {
+testthat::test_that("initializes", {
   app_driver <- app()
   testthat::expect_true(is_visible(app_driver, "#filter_panel"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-main_filter_accordion"))
@@ -75,16 +75,7 @@ testthat::test_that("filteredData initializes", {
 
 })
 
-testthat::test_that("filteredData removing one filters", {
-  app_driver <- app()
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-filter-4_cyl"))
-  app_driver$click("filter_panel-active-mtcars-filter-4_cyl-remove")
-  app_driver$wait_for_idle(timeout = default_idle_timeout, duration = default_idle_duration)
-  testthat::expect_false(is_visible(app_driver, "#filter_panel-active-mtcars-filter-4_cyl"))
-  app_driver$stop()
-})
-
-testthat::test_that("filterData toggle visibility of Active Filter Summary", {
+testthat::test_that("Toggle visibility of Active Filter Summary", {
   app_driver <- app()
 
   selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
@@ -107,7 +98,7 @@ testthat::test_that("filterData toggle visibility of Active Filter Summary", {
   app_driver$stop()
 })
 
-testthat::test_that("filterData toggle visibility of Filter Data", {
+testthat::test_that("Toggle visibility of Filter Data", {
   app_driver <- app()
 
   selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
@@ -131,7 +122,7 @@ testthat::test_that("filterData toggle visibility of Filter Data", {
   app_driver$stop()
 })
 
-testthat::test_that("filterData toggle visibility of filters for a dataset", {
+testthat::test_that("Toggle visibility of filters for a dataset", {
   app_driver <- app()
 
   selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
@@ -149,6 +140,16 @@ testthat::test_that("filterData toggle visibility of filters for a dataset", {
   testthat::expect_true(!"show" %in% unlist(out[[3]]))
   app_driver$stop()
 })
+
+testthat::test_that("Remove one filter", {
+  app_driver <- app()
+  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-filter-4_cyl"))
+  app_driver$click("filter_panel-active-mtcars-filter-4_cyl-remove")
+  app_driver$wait_for_idle(timeout = default_idle_timeout, duration = default_idle_duration)
+  testthat::expect_false(is_visible(app_driver, "#filter_panel-active-mtcars-filter-4_cyl"))
+  app_driver$stop()
+})
+
 
 testthat::test_that("Remove filters from a dataset", {
   app_driver <- app()
