@@ -77,8 +77,7 @@ testthat::test_that("Toggle visibility of Active Filter Summary", {
 
   selector <- ".filter-panel > .teal-slice:nth-of-type(1) .accordion-button"
   app_driver$click(selector = selector)
-  app_driver$wait_for_idle(duration = default_idle_duration,
-                           timeout = default_idle_timeout)
+  app_driver$wait_for_idle()
 
   out <- app_driver$get_js(selector_collapsable)
   testthat::expect_length(out, 3L)
@@ -100,8 +99,7 @@ testthat::test_that("Toggle visibility of Filter Data", {
 
   selector <- ".filter-panel > #filter_panel-active.teal-slice > div > div > div > button"
   app_driver$click(selector = selector)
-  app_driver$wait_for_idle(duration = default_idle_duration,
-                           timeout = default_idle_timeout)
+  app_driver$wait_for_idle()
 
   out <- app_driver$get_js(selector_collapsable)
   testthat::expect_length(out, 3L)
@@ -124,8 +122,7 @@ testthat::test_that("Toggle visibility of filters for a dataset", {
 
   selector <- "#MAE * button"
   app_driver$click(selector = selector)
-  app_driver$wait_for_idle(duration = default_idle_duration,
-                           timeout = default_idle_timeout)
+  app_driver$wait_for_idle()
 
   out <- app_driver$get_js(selector_collapsable)
   testthat::expect_length(out, 3L)
@@ -152,7 +149,7 @@ testthat::test_that("Remove one filter", {
   app_driver <- app()
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-MAE-subjects-MAE_years_to_birth"))
   app_driver$click("filter_panel-active-MAE-subjects-MAE_years_to_birth-remove")
-  app_driver$wait_for_idle(timeout = default_idle_timeout, duration = default_idle_duration)
+  app_driver$wait_for_idle()
   testthat::expect_false(is_visible(app_driver, "#filter_panel-active-MAE-subjects-MAE_years_to_birth"))
   app_driver$stop()
 })
@@ -163,8 +160,7 @@ testthat::test_that("Remove filters from a dataset", {
   id_filters <- "#filter_panel-active-MAE-subjects-MAE_years_to_birth"
   testthat::expect_true(is_visible(app_driver, id_filters))
   app_driver$click("filter_panel-active-MAE-remove_filters")
-  app_driver$wait_for_idle(duration = default_idle_duration,
-                           timeout = default_idle_timeout)
+  app_driver$wait_for_idle()
   testthat::expect_false(is_visible(app_driver, id_filters))
   app_driver$stop()
 })
@@ -174,8 +170,7 @@ testthat::test_that("Remove filters from all datasets", {
   id_filter_MAE <- "#filter_panel-active-MAE-subjects-MAE_years_to_birth"
   testthat::expect_true(is_visible(app_driver, id_filter_MAE))
   app_driver$click("filter_panel-active-remove_all_filters")
-  app_driver$wait_for_idle(duration = default_idle_duration,
-                           timeout = default_idle_timeout)
+  app_driver$wait_for_idle()
   testthat::expect_false(is_visible(app_driver, id_filter_MAE))
   app_driver$stop()
 })
