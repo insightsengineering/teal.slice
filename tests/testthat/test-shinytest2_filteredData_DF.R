@@ -28,9 +28,11 @@ app <- function(name = "filteredData", variant = paste0("app_driver_", name)) {
         )
       ),
       # ui for the filter panel
-      column(width = 3,
-                    # What we want to test:
-                    datasets$ui_filter_panel("filter_panel"))
+      column(
+        width = 3,
+        # What we want to test:
+        datasets$ui_filter_panel("filter_panel")
+      )
     )
   )
 
@@ -64,10 +66,14 @@ testthat::test_that("Initializes visible filters for DF", {
   app_driver <- app()
   testthat::expect_true(is_visible(app_driver, "#filter_panel"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-main_filter_accordion"))
-  testthat::expect_equal(app_driver$get_text("#filter_panel-overview-table > table > tbody > tr:nth-child(1) > td:nth-child(1)"),
-                         "iris")
-  testthat::expect_equal(app_driver$get_text("#filter_panel-overview-table > table > tbody > tr:nth-child(2) > td:nth-child(1)"),
-                         "mtcars")
+  testthat::expect_equal(
+    app_driver$get_text("#filter_panel-overview-table > table > tbody > tr:nth-child(1) > td:nth-child(1)"),
+    "iris"
+  )
+  testthat::expect_equal(
+    app_driver$get_text("#filter_panel-overview-table > table > tbody > tr:nth-child(2) > td:nth-child(1)"),
+    "mtcars"
+  )
 
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-dataset_filter_accordion"))
@@ -90,16 +96,23 @@ testthat::test_that("Toggle visibility of Active Filter Summary", {
   out <- app_driver$get_js(selector_collapsable)
   testthat::expect_length(out, 4L)
   testthat::expect_false("show" %in% unlist(out[[1L]]))
-  testthat::expect_equal(app_driver$get_text(
-    paste0("#filter_panel-overview-main_filter_accordion > div >",
-           " div.accordion-header > button > div.accordion-title")),
-    "Active Filter Summary")
+  testthat::expect_equal(
+    app_driver$get_text(
+      paste0(
+        "#filter_panel-overview-main_filter_accordion > div >",
+        " div.accordion-header > button > div.accordion-title"
+      )
+    ),
+    "Active Filter Summary"
+  )
 
   table <- "#filter_panel-overview-table > table"
   text <- app_driver$get_text(table)
 
-  testthat::expect_equal(clean_text(text),
-                         c("Data Name", "Obs", "iris", "50/150", "mtcars", "5/32"))
+  testthat::expect_equal(
+    clean_text(text),
+    c("Data Name", "Obs", "iris", "50/150", "mtcars", "5/32")
+  )
   app_driver$stop()
 })
 
@@ -120,9 +133,13 @@ testthat::test_that("Toggle visibility of Filter Data", {
   testthat::expect_false("show" %in% unlist(out[[2L]]))
 
 
-  testthat::expect_equal(app_driver$get_text(paste0("#filter_panel-active-main_filter_accordion > div > ",
-                                             "div.accordion-header > button > div.accordion-title")),
-                                                    "Filter Data")
+  testthat::expect_equal(
+    app_driver$get_text(paste0(
+      "#filter_panel-active-main_filter_accordion > div > ",
+      "div.accordion-header > button > div.accordion-title"
+    )),
+    "Filter Data"
+  )
 
   app_driver$stop()
 })
@@ -144,10 +161,14 @@ testthat::test_that("Toggle visibility of filters for a dataset", {
   testthat::expect_false("show" %in% unlist(out[[3L]]))
 
   # Without the show class the text is still there
-  text <- app_driver$get_text(paste0("#filter_panel-active-main_filter_accordion > div > ",
-                                     "div.accordion-header > button > div.accordion-title"))
-  testthat::expect_equal(clean_text(text),
-                         c("setosa (50/50)", "versicolor (50/50)", "virginica (50/50)"))
+  text <- app_driver$get_text(paste0(
+    "#filter_panel-active-main_filter_accordion > div > ",
+    "div.accordion-header > button > div.accordion-title"
+  ))
+  testthat::expect_equal(
+    clean_text(text),
+    c("setosa (50/50)", "versicolor (50/50)", "virginica (50/50)")
+  )
   app_driver$stop()
 })
 
@@ -189,6 +210,7 @@ testthat::test_that("Add one filter", {
   app_driver <- app()
 
   app_driver$click(selector = "#filter_panel-active-iris-add_filter_icon")
+  app_driver$set_inputs(`filter_panel-active-iris-iris-filter-var_to_add_open` = TRUE)
   app_driver$wait_for_idle()
   expect_true(is_visible(app_driver, "#filter_panel-active-iris-add_panel"))
   # FIXME: doesn't seem to be able to set up a filter

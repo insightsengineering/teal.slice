@@ -29,9 +29,11 @@ app <- function(name = "filteredData_MAE", variant = paste0("app_driver_", name)
   ui <- fluidPage(
     fluidRow(
       # ui for the filter panel
-      column(width = 3,
-             # What we want to test:
-             datasets$ui_filter_panel("filter_panel"))
+      column(
+        width = 3,
+        # What we want to test:
+        datasets$ui_filter_panel("filter_panel")
+      )
     )
   )
 
@@ -39,9 +41,6 @@ app <- function(name = "filteredData_MAE", variant = paste0("app_driver_", name)
     # this is the shiny server function for the filter panel and the datasets
     # object can now be used inside the application
     datasets$srv_filter_panel("filter_panel")
-
-
-
   }
 
   app <- shinyApp(ui, server)
@@ -61,8 +60,10 @@ testthat::test_that("Initializes visible filters for MAE", {
   app_driver <- app()
   testthat::expect_true(is_visible(app_driver, "#filter_panel"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-main_filter_accordion"))
-  testthat::expect_equal(app_driver$get_text("#filter_panel-overview-table > table > tbody > tr:nth-child(1) > td:nth-child(1)"),
-                         "MAE")
+  testthat::expect_equal(
+    app_driver$get_text("#filter_panel-overview-table > table > tbody > tr:nth-child(1) > td:nth-child(1)"),
+    "MAE"
+  )
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-MAE-dataset_filter_accordion"))
   app_driver$stop()
@@ -83,10 +84,15 @@ testthat::test_that("Toggle visibility of Active Filter Summary", {
   out <- app_driver$get_js(selector_collapsable)
   testthat::expect_length(out, 3L)
   testthat::expect_false("show" %in% unlist(out[[1L]]))
-  testthat::expect_equal(app_driver$get_text(
-    paste0("#filter_panel-overview-main_filter_accordion > div >",
-           " div.accordion-header > button > div.accordion-title")),
-    "Active Filter Summary")
+  testthat::expect_equal(
+    app_driver$get_text(
+      paste0(
+        "#filter_panel-overview-main_filter_accordion > div >",
+        " div.accordion-header > button > div.accordion-title"
+      )
+    ),
+    "Active Filter Summary"
+  )
 
 
   text <- app_driver$get_text("#filter_panel-active-MAE-subjects-MAE_vital_status-body")
@@ -111,9 +117,12 @@ testthat::test_that("Toggle visibility of Filter Data", {
   testthat::expect_length(out, 3L)
   testthat::expect_false("show" %in% unlist(out[[2L]]))
   testthat::expect_equal(
-    app_driver$get_text(paste0("#filter_panel-active-main_filter_accordion > div > ",
-                               "div.accordion-header > button > div.accordion-title")),
-    "Filter Data")
+    app_driver$get_text(paste0(
+      "#filter_panel-active-main_filter_accordion > div > ",
+      "div.accordion-header > button > div.accordion-title"
+    )),
+    "Filter Data"
+  )
 
   app_driver$stop()
 })
@@ -144,8 +153,10 @@ testthat::test_that("Toggle visibility of plot inside filter", {
 
   selector <- "#filter_panel-active-MAE-subjects-MAE_years_to_birth > div.filter-card-header"
   app_driver$click(selector = selector)
-  app_driver$wait_for_idle(duration = default_idle_duration*2,
-                           timeout = default_idle_timeout)
+  app_driver$wait_for_idle(
+    duration = default_idle_duration * 2,
+    timeout = default_idle_timeout
+  )
   out <- app_driver$get_js(body_filter)
   testthat::expect_true("show" %in% unlist(out))
   app_driver$stop()
