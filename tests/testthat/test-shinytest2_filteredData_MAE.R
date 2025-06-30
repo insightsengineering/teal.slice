@@ -196,9 +196,20 @@ testthat::test_that("Add one filter", {
   app_driver <- app()
 
   app_driver$click(selector = "#filter_panel-active-MAE-add_filter_icon")
-  app_driver$wait_for_idle()
   expect_true(is_visible(app_driver, "#filter_panel-active-MAE-add_panel"))
-  # FIXME: doesn't seem to be able to set up a filter
+
+  # Select variable
+  testthat::expect_no_error(app_driver$set_inputs(`filter_panel-active-MAE-MAE-subjects-var_to_add` = "patientID"))
+
+  # Select options/limits
+  # FIXME: doesn't show up
+
+  # Check output
+  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-MAE-subjects-MAE_patientID"))
+  element <- "#filter_panel-active-MAE-subjects-MAE_patientID-summary-summary"
+  text <- app_driver$get_text(element)
+  testthat::expect_true(endsWith(clean_text(text), "levels selected"))
+
 
   app_driver$stop()
 })

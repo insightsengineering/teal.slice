@@ -205,15 +205,24 @@ testthat::test_that("Remove filters from all datasets", {
   app_driver$stop()
 })
 
-
 testthat::test_that("Add one filter", {
   app_driver <- app()
 
+  # Click to add filter
   app_driver$click(selector = "#filter_panel-active-iris-add_filter_icon")
-  app_driver$set_inputs(`filter_panel-active-iris-iris-filter-var_to_add_open` = TRUE)
-  app_driver$wait_for_idle()
-  expect_true(is_visible(app_driver, "#filter_panel-active-iris-add_panel"))
-  # FIXME: doesn't seem to be able to set up a filter
+  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-add_panel"))
+
+  # Select variable
+  testthat::expect_no_error(app_driver$set_inputs(`filter_panel-active-iris-iris-filter-var_to_add` = "Sepal.Length"))
+
+  # Select options/limits
+  # FIXME: doesn't show up
+
+  # Check output
+  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-filter-iris_Sepal_Length"))
+  element <- "#filter_panel-active-iris-filter-iris_Sepal_Length * div.filter-card-varname"
+  text <- app_driver$get_text(element)
+  testthat::expect_equal(clean_text(text), "Sepal.Length")
 
   app_driver$stop()
 })
