@@ -1,4 +1,6 @@
-app <- function(name = "filteredData", variant = paste0("app_driver_", name)) {
+local_app_driver <- function(name = "filteredData", 
+                             variant = sprintf("app_driver_%s", name),
+                             envir = parent.frame()) {
   testthat::skip_if_not_installed("shinytest2")
 
   # create a FilteredData object
@@ -23,8 +25,8 @@ app <- function(name = "filteredData", variant = paste0("app_driver_", name)) {
       column(
         width = 9,
         tabsetPanel(
-          tabPanel(title = "iris", dataTableOutput("iris_table")),
-          tabPanel(title = "mtcars", dataTableOutput("mtcars_table"))
+          tabPanel(title = "iris", DT::DTOutput("iris_table")),
+          tabPanel(title = "mtcars", DT::DTOutput("mtcars_table"))
         )
       ),
       # ui for the filter panel
@@ -45,8 +47,8 @@ app <- function(name = "filteredData", variant = paste0("app_driver_", name)) {
     iris_filtered_data <- reactive(datasets$get_data(dataname = "iris", filtered = TRUE))
     mtcars_filtered_data <- reactive(datasets$get_data(dataname = "mtcars", filtered = TRUE))
 
-    output$iris_table <- renderDataTable(iris_filtered_data())
-    output$mtcars_table <- renderDataTable(mtcars_filtered_data())
+    output$iris_table <- DT::renderDataTable(iris_filtered_data())
+    output$mtcars_table <- DT::renderDataTable(mtcars_filtered_data())
   }
 
   app <- shinyApp(ui, server)
@@ -59,11 +61,13 @@ app <- function(name = "filteredData", variant = paste0("app_driver_", name)) {
     wait = TRUE,
     seed = 20250626
   )
+
+  withr::defer(app_driver$stop(), envir = envir)
   app_driver
 }
 
 testthat::test_that("Initializes visible filters for DF", {
-  app_driver <- app()
+  app_driver <- local_app_driver()
   testthat::expect_true(is_visible(app_driver, "#filter_panel"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-main_filter_accordion"))
   testthat::expect_equal(
@@ -78,135 +82,136 @@ testthat::test_that("Initializes visible filters for DF", {
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-dataset_filter_accordion"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-dataset_filter_accordion"))
-  app_driver$stop()
 })
 
-testthat::test_that("Toggle visibility of Active Filter Summary", {
-  app_driver <- app()
+testthat::describe("Toggle visibility of ", {
+  it("Active Filter Summary", {
+    app_driver <- local_app_driver()
 
-  selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
-  out <- app_driver$get_js(selector_collapsable)
-  testthat::expect_length(out, 4L)
-  testthat::expect_true("show" %in% unlist(out[[1L]]))
+    selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 4L)
+    testthat::expect_true("show" %in% unlist(out[[1L]]))
 
-  selector <- ".filter-panel > .teal-slice:nth-of-type(1) .accordion-button"
-  app_driver$click(selector = selector)
-  app_driver$wait_for_idle()
+    selector <- ".filter-panel > .teal-slice:nth-of-type(1) .accordion-button"
+    app_driver$click(selector = selector)
+    app_driver$wait_for_idle()
 
-  out <- app_driver$get_js(selector_collapsable)
-  testthat::expect_length(out, 4L)
-  testthat::expect_false("show" %in% unlist(out[[1L]]))
-  testthat::expect_equal(
-    app_driver$get_text(
-      paste0(
-        "#filter_panel-overview-main_filter_accordion > div >",
-        " div.accordion-header > button > div.accordion-title"
-      )
-    ),
-    "Active Filter Summary"
-  )
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 4L)
+    testthat::expect_false("show" %in% unlist(out[[1L]]))
+    testthat::expect_equal(
+      app_driver$get_text(
+        paste(
+          "#filter_panel-overview-main_filter_accordion > div >",
+          "div.accordion-header > button > div.accordion-title"
+        )
+      ),
+      "Active Filter Summary"
+    )
 
-  table <- "#filter_panel-overview-table > table"
-  text <- app_driver$get_text(table)
+    table <- "#filter_panel-overview-table > table"
+    text <- app_driver$get_text(table)
 
-  testthat::expect_equal(
-    clean_text(text),
-    c("Data Name", "Obs", "iris", "50/150", "mtcars", "5/32")
-  )
-  app_driver$stop()
-})
+    testthat::expect_equal(
+      clean_text(text),
+      c("Data Name", "Obs", "iris", "50/150", "mtcars", "5/32")
+    )
+  })
 
-testthat::test_that("Toggle visibility of Filter Data", {
-  app_driver <- app()
+  it("Toggle visibility of Filter Data", {
+    app_driver <- local_app_driver()
 
-  selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
-  out <- app_driver$get_js(selector_collapsable)
-  testthat::expect_length(out, 4L)
-  testthat::expect_true("show" %in% unlist(out[[2L]]))
+    selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 4L)
+    testthat::expect_true("show" %in% unlist(out[[2L]]))
 
-  selector <- ".filter-panel > #filter_panel-active.teal-slice > div > div > div > button"
-  app_driver$click(selector = selector)
-  app_driver$wait_for_idle()
+    selector <- ".filter-panel > #filter_panel-active.teal-slice > div > div > div > button"
+    app_driver$click(selector = selector)
+    app_driver$wait_for_idle()
 
-  out <- app_driver$get_js(selector_collapsable)
-  testthat::expect_length(out, 4L)
-  testthat::expect_false("show" %in% unlist(out[[2L]]))
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 4L)
+    testthat::expect_false("show" %in% unlist(out[[2L]]))
 
 
-  testthat::expect_equal(
-    app_driver$get_text(paste0(
+    testthat::expect_equal(
+      app_driver$get_text(paste0(
+        "#filter_panel-active-main_filter_accordion > div > ",
+        "div.accordion-header > button > div.accordion-title"
+      )),
+      "Filter Data"
+    )
+  })
+
+  it("Toggle visibility of filters for a dataset", {
+    app_driver <- local_app_driver()
+
+    selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 4L)
+    testthat::expect_true("show" %in% unlist(out[[3L]]))
+
+    selector <- "#iris * button"
+    app_driver$click(selector = selector)
+    app_driver$wait_for_idle()
+
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 4L)
+    testthat::expect_false("show" %in% unlist(out[[3L]]))
+
+    # Without the show class the text is still there
+    text <- app_driver$get_text(paste0(
       "#filter_panel-active-main_filter_accordion > div > ",
       "div.accordion-header > button > div.accordion-title"
-    )),
-    "Filter Data"
-  )
-
-  app_driver$stop()
+    ))
+    testthat::expect_equal(
+      clean_text(text),
+      c("setosa (50/50)", "versicolor (50/50)", "virginica (50/50)")
+    )
+  })
 })
 
-testthat::test_that("Toggle visibility of filters for a dataset", {
-  app_driver <- app()
+testthat::describe("Remove", {
+  ns <- function(dataset, id) shiny::NS(sprintf("filter_panel-active-%s", dataset), id)
+  id_ns <- function(dataset, id) sprintf("#%s", ns(dataset, id))
 
-  selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
-  out <- app_driver$get_js(selector_collapsable)
-  testthat::expect_length(out, 4L)
-  testthat::expect_true("show" %in% unlist(out[[3L]]))
+  it("Remove one filter", {
+    app_driver <- local_app_driver()
+    testthat::expect_true(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
+    app_driver$click(ns("mtcars", "filter-4_cyl-remove"))
+    app_driver$wait_for_idle()
+    testthat::expect_false(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
+  })
 
-  selector <- "#iris * button"
-  app_driver$click(selector = selector)
-  app_driver$wait_for_idle()
+  it("Remove filters from a dataset", {
+    app_driver <- local_app_driver()
+    testthat::expect_true(is_visible(app_driver, id_ns("iris", "filter-iris_Species")))
+    testthat::expect_true(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
+    testthat::expect_true(is_visible(app_driver, id_ns("mtcars", "filter-mtcars_mpg")))
+    app_driver$click(ns("mtcars", "remove_filters"))
+    app_driver$wait_for_idle()
+    testthat::expect_true(is_visible(app_driver, id_ns("iris", "filter-iris_Species")))
+    testthat::expect_false(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
+    testthat::expect_false(is_visible(app_driver, id_ns("mtcars", "filter-mtcars_mpg")))
+  })
 
-  out <- app_driver$get_js(selector_collapsable)
-  testthat::expect_length(out, 4L)
-  testthat::expect_false("show" %in% unlist(out[[3L]]))
-
-  # Without the show class the text is still there
-  text <- app_driver$get_text(paste0(
-    "#filter_panel-active-main_filter_accordion > div > ",
-    "div.accordion-header > button > div.accordion-title"
-  ))
-  testthat::expect_equal(
-    clean_text(text),
-    c("setosa (50/50)", "versicolor (50/50)", "virginica (50/50)")
-  )
-  app_driver$stop()
-})
-
-testthat::test_that("Remove one filter", {
-  app_driver <- app()
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-filter-4_cyl"))
-  app_driver$click("filter_panel-active-mtcars-filter-4_cyl-remove")
-  app_driver$wait_for_idle()
-  testthat::expect_false(is_visible(app_driver, "#filter_panel-active-mtcars-filter-4_cyl"))
-  app_driver$stop()
-})
-
-
-testthat::test_that("Remove filters from a dataset", {
-  app_driver <- app()
-  id_filters <- "#filter_panel-active-iris-filter-iris_Species-summary-summary > span.filter-card-summary-value"
-  testthat::expect_true(is_visible(app_driver, id_filters))
-  app_driver$click("filter_panel-active-iris-remove_filters")
-  app_driver$wait_for_idle()
-  testthat::expect_false(is_visible(app_driver, id_filters))
-  app_driver$stop()
-})
-
-testthat::test_that("Remove filters from all datasets", {
-  app_driver <- app()
-  id_filters_iris <- "#filter_panel-active-iris-filter-iris_Species-summary-summary > span.filter-card-summary-value"
-  id_filters_mtcars <- "#filter_panel-active-mtcars-filter-4_cyl"
-  testthat::expect_true(is_visible(app_driver, id_filters_iris))
-  testthat::expect_true(is_visible(app_driver, id_filters_mtcars))
-  app_driver$click("filter_panel-active-remove_all_filters")
-  app_driver$wait_for_idle()
-  testthat::expect_false(is_visible(app_driver, id_filters_iris))
-  testthat::expect_false(is_visible(app_driver, id_filters_mtcars))
-  app_driver$stop()
+  it("Remove filters from all datasets", {
+    app_driver <- local_app_driver()
+    testthat::expect_true(is_visible(app_driver, id_ns("iris", "filter-iris_Species")))
+    testthat::expect_true(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
+    testthat::expect_true(is_visible(app_driver, id_ns("mtcars", "filter-mtcars_mpg")))
+    app_driver$click("filter_panel-active-remove_all_filters")
+    app_driver$wait_for_idle()
+    testthat::expect_false(is_visible(app_driver, id_ns("iris", "filter-iris_Species")))
+    testthat::expect_false(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
+    testthat::expect_false(is_visible(app_driver, id_ns("mtcars", "filter-mtcars_mpg")))
+  })
 })
 
 testthat::test_that("Add one filter", {
-  app_driver <- app()
+  app_driver <- local_app_driver()
 
   # Click to add filter
   app_driver$click(selector = "#filter_panel-active-iris-add_filter_icon")
@@ -223,6 +228,4 @@ testthat::test_that("Add one filter", {
   element <- "#filter_panel-active-iris-filter-iris_Sepal_Length * div.filter-card-varname"
   text <- app_driver$get_text(element)
   testthat::expect_equal(clean_text(text), "Sepal.Length")
-
-  app_driver$stop()
 })

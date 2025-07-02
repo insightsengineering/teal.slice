@@ -56,6 +56,7 @@ Imports:
     teal.widgets (>= 0.4.3),
     utils
 Suggests:
+    DT (>= 0.13),
     knitr (>= 1.42),
     MultiAssayExperiment,
     rmarkdown (>= 2.23),
@@ -73,7 +74,7 @@ Config/Needs/verdepcheck: rstudio/shiny, rstudio/bslib, mllg/checkmate,
     daroczig/logger, plotly/plotly, r-lib/R6, daattali/shinycssloaders,
     daattali/shinyjs, dreamRs/shinyWidgets, insightsengineering/teal.data,
     insightsengineering/teal.logger, insightsengineering/teal.widgets,
-    yihui/knitr, bioc::MultiAssayExperiment, bioc::SummarizedExperiment,
+    rstudio/DT, yihui/knitr, bioc::MultiAssayExperiment, bioc::SummarizedExperiment,
     rstudio/rmarkdown, r-lib/testthat, r-lib/withr, bioc::matrixStats
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8

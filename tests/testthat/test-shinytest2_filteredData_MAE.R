@@ -1,9 +1,12 @@
-app <- function(name = "filteredData_MAE", variant = paste0("app_driver_", name)) {
+local_app_driver <- function(name = "filteredData_MAE", 
+                             variant = sprintf("app_driver_%s", name), 
+                             envir = parent.frame()) {
   testthat::skip_if_not_installed("shinytest2")
   testthat::skip_if_not_installed("MultiAssayExperiment")
 
   data(miniACC, package = "MultiAssayExperiment")
   fs <- teal_slices(
+    teal_slice(dataname = "iris", varname = "Species", selected = "virginica", keep_na = FALSE),
     teal_slice(
       dataname = "MAE", varname = "years_to_birth", selected = c(30, 50),
       keep_na = TRUE, keep_inf = FALSE
@@ -23,7 +26,7 @@ app <- function(name = "filteredData_MAE", variant = paste0("app_driver_", name)
   )
 
   # create a FilteredData object
-  datasets <- init_filtered_data(list(MAE = miniACC))
+  datasets <- init_filtered_data(list(MAE = miniACC, iris = iris))
   datasets$set_filter_state(state = fs)
 
   ui <- fluidPage(
@@ -53,11 +56,12 @@ app <- function(name = "filteredData_MAE", variant = paste0("app_driver_", name)
     wait = TRUE,
     seed = 20250626
   )
+  withr::defer(app_driver$stop(), envir = envir)
   app_driver
 }
 
 testthat::test_that("Initializes visible filters for MAE", {
-  app_driver <- app()
+  app_driver <- local_app_driver()
   testthat::expect_true(is_visible(app_driver, "#filter_panel"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-main_filter_accordion"))
   testthat::expect_equal(
@@ -66,134 +70,140 @@ testthat::test_that("Initializes visible filters for MAE", {
   )
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-MAE-dataset_filter_accordion"))
-  app_driver$stop()
 })
 
-testthat::test_that("Toggle visibility of Active Filter Summary", {
-  app_driver <- app()
+testthat::describe("Toggle visibility", {
+  it("Toggle visibility of Active Filter Summary", {
+    app_driver <- local_app_driver()
 
-  selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
-  out <- app_driver$get_js(selector_collapsable)
-  testthat::expect_length(out, 3L)
-  testthat::expect_true("show" %in% unlist(out[[1L]]))
+    selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 3L)
+    testthat::expect_true("show" %in% unlist(out[[1L]]))
 
-  selector <- ".filter-panel > .teal-slice:nth-of-type(1) .accordion-button"
-  app_driver$click(selector = selector)
-  app_driver$wait_for_idle()
+    selector <- ".filter-panel > .teal-slice:nth-of-type(1) .accordion-button"
+    app_driver$click(selector = selector)
+    app_driver$wait_for_idle()
 
-  out <- app_driver$get_js(selector_collapsable)
-  testthat::expect_length(out, 3L)
-  testthat::expect_false("show" %in% unlist(out[[1L]]))
-  testthat::expect_equal(
-    app_driver$get_text(
-      paste0(
-        "#filter_panel-overview-main_filter_accordion > div >",
-        " div.accordion-header > button > div.accordion-title"
-      )
-    ),
-    "Active Filter Summary"
-  )
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 3L)
+    testthat::expect_false("show" %in% unlist(out[[1L]]))
+    testthat::expect_equal(
+      app_driver$get_text(
+        paste0(
+          "#filter_panel-overview-main_filter_accordion > div >",
+          " div.accordion-header > button > div.accordion-title"
+        )
+      ),
+      "Active Filter Summary"
+    )
 
+    text <- app_driver$get_text("#filter_panel-active-MAE-subjects-MAE_vital_status-body")
+    expect_equal(clean_text(text), c("0 (58)", "1 (34)"))
+  })
 
-  text <- app_driver$get_text("#filter_panel-active-MAE-subjects-MAE_vital_status-body")
-  expect_equal(clean_text(text), c("0 (58)", "1 (34)"))
+  it("Toggle visibility of Filter Data", {
+    app_driver <- local_app_driver()
 
-  app_driver$stop()
+    selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 3L)
+    testthat::expect_true("show" %in% unlist(out[[2L]]))
+
+    selector <- ".filter-panel > #filter_panel-active.teal-slice > div > div > div > button"
+    app_driver$click(selector = selector)
+    app_driver$wait_for_idle()
+
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 3L)
+    testthat::expect_false("show" %in% unlist(out[[2L]]))
+    testthat::expect_equal(
+      app_driver$get_text(paste0(
+        "#filter_panel-active-main_filter_accordion > div > ",
+        "div.accordion-header > button > div.accordion-title"
+      )),
+      "Filter Data"
+    )
+  })
+
+  it("Toggle visibility of filters for a dataset", {
+    app_driver <- local_app_driver()
+
+    selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 3L)
+    testthat::expect_true("show" %in% unlist(out[[3L]]))
+
+    selector <- "#MAE * button"
+    app_driver$click(selector = selector)
+    app_driver$wait_for_idle()
+
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 3L)
+    testthat::expect_false("show" %in% unlist(out[[3L]]))
+  })
+
+  it("Toggle visibility of plot inside filter", {
+    app_driver <- local_app_driver()
+    body_filter <- get_class("#filter_panel-active-MAE-subjects-MAE_years_to_birth-body")
+    class_before <- app_driver$get_js(body_filter)
+    testthat::expect_false("show" %in% unlist(class_before))
+
+    selector <- "#filter_panel-active-MAE-subjects-MAE_years_to_birth > div.filter-card-header"
+    app_driver$click(selector = selector)
+    app_driver$wait_for_idle(duration = default_idle_duration * 2)
+    out <- app_driver$get_js(body_filter)
+    testthat::expect_true("show" %in% unlist(out))
+  })
 })
 
-testthat::test_that("Toggle visibility of Filter Data", {
-  app_driver <- app()
+testthat::describe("Remove", {
+  ns <- shiny::NS("filter_panel-active-MAE")
+  id_ns <- shiny::NS(sprintf("#%s", ns(NULL)))
+  
+  it("has all filter are visible when app loads", {
+    app_driver <- local_app_driver()
+    testthat::expect_true(is_visible(app_driver, id_ns("subjects-MAE_years_to_birth")))
+    testthat::expect_true(is_visible(app_driver, id_ns("subjects-MAE_vital_status")))
+    testthat::expect_true(is_visible(app_driver, id_ns("subjects-MAE_gender")))
+    testthat::expect_true(is_visible(app_driver, id_ns("RPPAArray-MAE_ARRAY_TYPE_RPPAArray_subset")))
+    testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-filter-iris_Species"))
+  })
 
-  selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
-  out <- app_driver$get_js(selector_collapsable)
-  testthat::expect_length(out, 3L)
-  testthat::expect_true("show" %in% unlist(out[[2L]]))
+  it("one filter", {
+    app_driver <- local_app_driver()
+    app_driver$click(ns("subjects-MAE_years_to_birth-remove"))
+    app_driver$wait_for_idle(duration = default_idle_duration * 2)
+    testthat::expect_false(is_visible(app_driver, id_ns("subjects-MAE_years_to_birth")))
+    testthat::expect_true(is_visible(app_driver, id_ns("subjects-MAE_vital_status")))
+  })
 
-  selector <- ".filter-panel > #filter_panel-active.teal-slice > div > div > div > button"
-  app_driver$click(selector = selector)
-  app_driver$wait_for_idle()
+  it("all filters from a dataset", {
+    app_driver <- local_app_driver()
+    app_driver$click("filter_panel-active-MAE-remove_filters")
+    app_driver$wait_for_idle(duration = default_idle_duration * 2)
 
-  out <- app_driver$get_js(selector_collapsable)
-  testthat::expect_length(out, 3L)
-  testthat::expect_false("show" %in% unlist(out[[2L]]))
-  testthat::expect_equal(
-    app_driver$get_text(paste0(
-      "#filter_panel-active-main_filter_accordion > div > ",
-      "div.accordion-header > button > div.accordion-title"
-    )),
-    "Filter Data"
-  )
+    testthat::expect_false(is_visible(app_driver, id_ns("subjects-MAE_years_to_birth")))
+    testthat::expect_false(is_visible(app_driver, id_ns("subjects-MAE_vital_status")))
+    testthat::expect_false(is_visible(app_driver, id_ns("subjects-MAE_gender")))
+    testthat::expect_false(is_visible(app_driver, id_ns("RPPAArray-MAE_ARRAY_TYPE_RPPAArray_subset")))
+    testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-filter-iris_Species"))
+  })
 
-  app_driver$stop()
-})
-
-testthat::test_that("Toggle visibility of filters for a dataset", {
-  app_driver <- app()
-
-  selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
-  out <- app_driver$get_js(selector_collapsable)
-  testthat::expect_length(out, 3L)
-  testthat::expect_true("show" %in% unlist(out[[3L]]))
-
-  selector <- "#MAE * button"
-  app_driver$click(selector = selector)
-  app_driver$wait_for_idle()
-
-  out <- app_driver$get_js(selector_collapsable)
-  testthat::expect_length(out, 3L)
-  testthat::expect_false("show" %in% unlist(out[[3L]]))
-  app_driver$stop()
-})
-
-testthat::test_that("Toggle visibility of plot inside filter", {
-  app_driver <- app()
-  body_filter <- get_class("#filter_panel-active-MAE-subjects-MAE_years_to_birth-body")
-  class_before <- app_driver$get_js(body_filter)
-  testthat::expect_false("show" %in% unlist(class_before))
-
-  selector <- "#filter_panel-active-MAE-subjects-MAE_years_to_birth > div.filter-card-header"
-  app_driver$click(selector = selector)
-  app_driver$wait_for_idle(
-    duration = default_idle_duration * 2,
-    timeout = default_idle_timeout
-  )
-  out <- app_driver$get_js(body_filter)
-  testthat::expect_true("show" %in% unlist(out))
-  app_driver$stop()
-})
-
-testthat::test_that("Remove one filter", {
-  app_driver <- app()
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-MAE-subjects-MAE_years_to_birth"))
-  app_driver$click("filter_panel-active-MAE-subjects-MAE_years_to_birth-remove")
-  app_driver$wait_for_idle()
-  testthat::expect_false(is_visible(app_driver, "#filter_panel-active-MAE-subjects-MAE_years_to_birth"))
-  app_driver$stop()
-})
-
-
-testthat::test_that("Remove filters from a dataset", {
-  app_driver <- app()
-  id_filters <- "#filter_panel-active-MAE-subjects-MAE_years_to_birth"
-  testthat::expect_true(is_visible(app_driver, id_filters))
-  app_driver$click("filter_panel-active-MAE-remove_filters")
-  app_driver$wait_for_idle()
-  testthat::expect_false(is_visible(app_driver, id_filters))
-  app_driver$stop()
-})
-
-testthat::test_that("Remove filters from all datasets", {
-  app_driver <- app()
-  id_filter_MAE <- "#filter_panel-active-MAE-subjects-MAE_years_to_birth"
-  testthat::expect_true(is_visible(app_driver, id_filter_MAE))
-  app_driver$click("filter_panel-active-remove_all_filters")
-  app_driver$wait_for_idle()
-  testthat::expect_false(is_visible(app_driver, id_filter_MAE))
-  app_driver$stop()
+  it("all filters from all datasets", {
+    app_driver <- local_app_driver()
+    app_driver$click("filter_panel-active-remove_all_filters")
+    app_driver$wait_for_idle(duration = default_idle_duration * 2)
+    testthat::expect_false(is_visible(app_driver, id_ns("subjects-MAE_years_to_birth")))
+    testthat::expect_false(is_visible(app_driver, id_ns("subjects-MAE_vital_status")))
+    testthat::expect_false(is_visible(app_driver, id_ns("subjects-MAE_gender")))
+    testthat::expect_false(is_visible(app_driver, id_ns("RPPAArray-MAE_ARRAY_TYPE_RPPAArray_subset")))
+    testthat::expect_false(is_visible(app_driver, "#filter_panel-active-iris-filter-iris_Species"))
+  })
 })
 
 testthat::test_that("Add one filter", {
-  app_driver <- app()
+  app_driver <- local_app_driver()
 
   app_driver$click(selector = "#filter_panel-active-MAE-add_filter_icon")
   expect_true(is_visible(app_driver, "#filter_panel-active-MAE-add_panel"))
@@ -209,7 +219,4 @@ testthat::test_that("Add one filter", {
   element <- "#filter_panel-active-MAE-subjects-MAE_patientID-summary-summary"
   text <- app_driver$get_text(element)
   testthat::expect_true(endsWith(clean_text(text), "levels selected"))
-
-
-  app_driver$stop()
 })
