@@ -8,7 +8,7 @@ is_visible <- function(app_driver, element) {
       return el.checkVisibility() && (el.textContent.trim().length > 0 || el.children.length > 0);
     });
   ", element)
-  
+
   any(unlist(app_driver$get_js(js_script)))
 }
 

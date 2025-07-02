@@ -1,5 +1,5 @@
-local_app_driver <- function(name = "filteredData_MAE", 
-                             variant = sprintf("app_driver_%s", name), 
+local_app_driver <- function(name = "filteredData_MAE",
+                             variant = sprintf("app_driver_%s", name),
                              envir = parent.frame()) {
   testthat::skip_if_not_installed("shinytest2")
   testthat::skip_if_not_installed("MultiAssayExperiment")
@@ -162,7 +162,7 @@ testthat::describe("Toggle visibility of", {
 testthat::describe("Remove", {
   ns <- shiny::NS("filter_panel-active-MAE")
   id_ns <- shiny::NS(sprintf("#%s", ns(NULL)))
-  
+
   it("has all filter are visible when app loads", {
     app_driver <- local_app_driver()
     testthat::expect_true(is_visible(app_driver, id_ns("subjects-MAE_years_to_birth")))

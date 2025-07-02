@@ -1,4 +1,4 @@
-local_app_driver <- function(name = "filteredData", 
+local_app_driver <- function(name = "filteredData",
                              variant = sprintf("app_driver_%s", name),
                              envir = parent.frame()) {
   testthat::skip_if_not_installed("shinytest2")
@@ -210,7 +210,7 @@ testthat::describe("Remove", {
 
 testthat::test_that("Add one filter", {
   app_driver <- local_app_driver()
-  
+
   # Click to add filter
   app_driver$click(selector = "#filter_panel-active-iris-add_filter_icon")
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-add_panel"))
@@ -226,4 +226,3 @@ testthat::test_that("Add one filter", {
   text <- app_driver$get_text(element)
   testthat::expect_equal(clean_text(text), "Sepal.Length")
 })
-
