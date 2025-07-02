@@ -3,6 +3,7 @@ local_app_driver <- function(name = "filteredData_MAE",
                              envir = parent.frame()) {
   testthat::skip_if_not_installed("shinytest2")
   testthat::skip_if_not_installed("MultiAssayExperiment")
+  skip_if_too_deep(5)
 
   data(miniACC, package = "MultiAssayExperiment")
   fs <- teal_slices(

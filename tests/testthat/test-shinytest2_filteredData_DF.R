@@ -2,6 +2,7 @@ local_app_driver <- function(name = "filteredData",
                              variant = sprintf("app_driver_%s", name),
                              envir = parent.frame()) {
   testthat::skip_if_not_installed("shinytest2")
+  skip_if_too_deep(5)
 
   # create a FilteredData object
   datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
