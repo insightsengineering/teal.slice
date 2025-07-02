@@ -208,11 +208,12 @@ testthat::test_that("Add one filter", {
   app_driver <- local_app_driver()
 
   app_driver$click(selector = "#filter_panel-active-MAE-add_filter_icon")
+  app_driver$wait_for_idle(duration = default_idle_duration * 4) # Wait for the panel open animation
   expect_true(is_visible(app_driver, "#filter_panel-active-MAE-add_panel"))
 
   # Select variable
   testthat::expect_no_error(app_driver$set_inputs(`filter_panel-active-MAE-MAE-subjects-var_to_add` = "patientID"))
-  app_driver$wait_for_idle()
+  app_driver$wait_for_idle(duration = default_idle_duration * 4) # Wait for the panel open animation
   # Select options/limits
   # FIXME: doesn't show up
 
