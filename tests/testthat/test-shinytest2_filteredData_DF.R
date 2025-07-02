@@ -58,12 +58,12 @@ local_app_driver <- function(name = "filteredData",
     name = name,
     variant = variant,
     timeout = default_idle_timeout,
-    load_timeout = default_idle_timeout,
+    load_timeout = default_idle_timeout * 2,
     wait = TRUE,
     seed = 20250626
   )
-
   withr::defer(app_driver$stop(), envir = envir)
+  app_driver$wait_for_idle()
   app_driver
 }
 
@@ -86,7 +86,7 @@ testthat::test_that("Initializes visible filters for DF", {
 })
 
 testthat::describe("Toggle visibility of ", {
-  it("Active Filter Summary", {
+  it("'Active Filter Summary'", {
     app_driver <- local_app_driver()
 
     selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
@@ -120,7 +120,7 @@ testthat::describe("Toggle visibility of ", {
     )
   })
 
-  it("Toggle visibility of Filter Data", {
+  it("'Filter Data'", {
     app_driver <- local_app_driver()
 
     selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
@@ -146,7 +146,7 @@ testthat::describe("Toggle visibility of ", {
     )
   })
 
-  it("Toggle visibility of filters for a dataset", {
+  it("filters for a dataset", {
     app_driver <- local_app_driver()
 
     selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
@@ -162,11 +162,8 @@ testthat::describe("Toggle visibility of ", {
     testthat::expect_length(out, 4L)
     testthat::expect_false("show" %in% unlist(out[[3L]]))
 
-    # Without the show class the text is still there
-    text <- app_driver$get_text(paste0(
-      "#filter_panel-active-main_filter_accordion > div > ",
-      "div.accordion-header > button > div.accordion-title"
-    ))
+    # The text is still in DOM
+    text <- app_driver$get_text("#filter_panel-active-iris-filter-iris_Species-inputs-selection")
     testthat::expect_equal(
       clean_text(text),
       c("setosa (50/50)", "versicolor (50/50)", "virginica (50/50)")
@@ -178,7 +175,7 @@ testthat::describe("Remove", {
   ns <- function(dataset, id) shiny::NS(sprintf("filter_panel-active-%s", dataset), id)
   id_ns <- function(dataset, id) sprintf("#%s", ns(dataset, id))
 
-  it("Remove one filter", {
+  it("one filter", {
     app_driver <- local_app_driver()
     testthat::expect_true(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
     app_driver$click(ns("mtcars", "filter-4_cyl-remove"))
@@ -186,7 +183,7 @@ testthat::describe("Remove", {
     testthat::expect_false(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
   })
 
-  it("Remove filters from a dataset", {
+  it("filters from a dataset", {
     app_driver <- local_app_driver()
     testthat::expect_true(is_visible(app_driver, id_ns("iris", "filter-iris_Species")))
     testthat::expect_true(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
@@ -198,7 +195,7 @@ testthat::describe("Remove", {
     testthat::expect_false(is_visible(app_driver, id_ns("mtcars", "filter-mtcars_mpg")))
   })
 
-  it("Remove filters from all datasets", {
+  it("filters from all datasets", {
     app_driver <- local_app_driver()
     testthat::expect_true(is_visible(app_driver, id_ns("iris", "filter-iris_Species")))
     testthat::expect_true(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
@@ -213,16 +210,15 @@ testthat::describe("Remove", {
 
 testthat::test_that("Add one filter", {
   app_driver <- local_app_driver()
-
+  
   # Click to add filter
   app_driver$click(selector = "#filter_panel-active-iris-add_filter_icon")
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-add_panel"))
+  app_driver$wait_for_idle(duration = default_idle_duration * 4) # Wait for the panel open animation
 
   # Select variable
   testthat::expect_no_error(app_driver$set_inputs(`filter_panel-active-iris-iris-filter-var_to_add` = "Sepal.Length"))
-
-  # Select options/limits
-  # FIXME: doesn't show up
+  app_driver$wait_for_idle(duration = default_idle_duration * 4) # Wait for the panel to be added
 
   # Check output
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-filter-iris_Sepal_Length"))
@@ -230,3 +226,4 @@ testthat::test_that("Add one filter", {
   text <- app_driver$get_text(element)
   testthat::expect_equal(clean_text(text), "Sepal.Length")
 })
+

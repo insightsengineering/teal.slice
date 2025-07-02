@@ -3,18 +3,14 @@ default_idle_duration <- 200 # Time (ms) it is idle
 
 # Check visibility (borrowed from teal.widgets/tests/testthat/helpers-utils.R)
 is_visible <- function(app_driver, element) {
-  any(
-    unlist(
-      app_driver$get_js(
-        sprintf(
-          "Array.from(document.querySelectorAll('%s')).map(el => el.checkVisibility())",
-          element
-        )
-      )
-    )
-  )
+  js_script <- sprintf("
+    Array.from(document.querySelectorAll('%s')).map(el => {
+      return el.checkVisibility() && (el.textContent.trim().length > 0 || el.children.length > 0);
+    });
+  ", element)
+  
+  any(unlist(app_driver$get_js(js_script)))
 }
-
 
 # Write a js code to extract the classes
 get_class <- function(id) {

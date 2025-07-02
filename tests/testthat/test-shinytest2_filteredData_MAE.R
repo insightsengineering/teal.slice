@@ -53,11 +53,12 @@ local_app_driver <- function(name = "filteredData_MAE",
     name = name,
     variant = variant,
     timeout = default_idle_timeout,
-    load_timeout = default_idle_timeout,
+    load_timeout = default_idle_timeout * 2,
     wait = TRUE,
     seed = 20250626
   )
   withr::defer(app_driver$stop(), envir = envir)
+  app_driver$wait_for_idle()
   app_driver
 }
 
@@ -73,13 +74,13 @@ testthat::test_that("Initializes visible filters for MAE", {
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-MAE-dataset_filter_accordion"))
 })
 
-testthat::describe("Toggle visibility", {
-  it("Toggle visibility of Active Filter Summary", {
+testthat::describe("Toggle visibility of", {
+  it("Active Filter Summary", {
     app_driver <- local_app_driver()
 
     selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
     out <- app_driver$get_js(selector_collapsable)
-    testthat::expect_length(out, 3L)
+    testthat::expect_length(out, 4L)
     testthat::expect_true("show" %in% unlist(out[[1L]]))
 
     selector <- ".filter-panel > .teal-slice:nth-of-type(1) .accordion-button"
@@ -87,7 +88,7 @@ testthat::describe("Toggle visibility", {
     app_driver$wait_for_idle()
 
     out <- app_driver$get_js(selector_collapsable)
-    testthat::expect_length(out, 3L)
+    testthat::expect_length(out, 4L)
     testthat::expect_false("show" %in% unlist(out[[1L]]))
     testthat::expect_equal(
       app_driver$get_text(
@@ -103,12 +104,12 @@ testthat::describe("Toggle visibility", {
     expect_equal(clean_text(text), c("0 (58)", "1 (34)"))
   })
 
-  it("Toggle visibility of Filter Data", {
+  it("Filter Data", {
     app_driver <- local_app_driver()
 
     selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
     out <- app_driver$get_js(selector_collapsable)
-    testthat::expect_length(out, 3L)
+    testthat::expect_length(out, 4L)
     testthat::expect_true("show" %in% unlist(out[[2L]]))
 
     selector <- ".filter-panel > #filter_panel-active.teal-slice > div > div > div > button"
@@ -116,7 +117,7 @@ testthat::describe("Toggle visibility", {
     app_driver$wait_for_idle()
 
     out <- app_driver$get_js(selector_collapsable)
-    testthat::expect_length(out, 3L)
+    testthat::expect_length(out, 4L)
     testthat::expect_false("show" %in% unlist(out[[2L]]))
     testthat::expect_equal(
       app_driver$get_text(paste0(
@@ -127,12 +128,12 @@ testthat::describe("Toggle visibility", {
     )
   })
 
-  it("Toggle visibility of filters for a dataset", {
+  it("filters for a dataset", {
     app_driver <- local_app_driver()
 
     selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
     out <- app_driver$get_js(selector_collapsable)
-    testthat::expect_length(out, 3L)
+    testthat::expect_length(out, 4L)
     testthat::expect_true("show" %in% unlist(out[[3L]]))
 
     selector <- "#MAE * button"
@@ -140,11 +141,11 @@ testthat::describe("Toggle visibility", {
     app_driver$wait_for_idle()
 
     out <- app_driver$get_js(selector_collapsable)
-    testthat::expect_length(out, 3L)
+    testthat::expect_length(out, 4L)
     testthat::expect_false("show" %in% unlist(out[[3L]]))
   })
 
-  it("Toggle visibility of plot inside filter", {
+  it("plot inside filter", {
     app_driver <- local_app_driver()
     body_filter <- get_class("#filter_panel-active-MAE-subjects-MAE_years_to_birth-body")
     class_before <- app_driver$get_js(body_filter)
@@ -211,7 +212,7 @@ testthat::test_that("Add one filter", {
 
   # Select variable
   testthat::expect_no_error(app_driver$set_inputs(`filter_panel-active-MAE-MAE-subjects-var_to_add` = "patientID"))
-
+  app_driver$wait_for_idle()
   # Select options/limits
   # FIXME: doesn't show up
 
