@@ -67,7 +67,7 @@ local_app_driver <- function(name = "filteredData",
   app_driver
 }
 
-testthat::describe("Toggle visibility of ", {
+testthat::describe("Clicking toggle buttons show and hide (by removing the show class)", {
   it("'Active Filter Summary'", {
     app_driver <- local_app_driver()
 
@@ -153,7 +153,7 @@ testthat::describe("Toggle visibility of ", {
   })
 })
 
-testthat::describe("Remove", {
+testthat::describe("Clicking remove buttons removes the visibility of", {
   ns <- function(dataset, id) shiny::NS(sprintf("filter_panel-active-%s", dataset), id)
   id_ns <- function(dataset, id) sprintf("#%s", ns(dataset, id))
 
