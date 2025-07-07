@@ -191,7 +191,7 @@ testthat::describe("Remove", {
 })
 
 testthat::describe("exclude_varnames", {
-  it("locks the filter if set by the app developer", {
+  it("locks editing the filter if set by the app developer", {
     app_driver <- local_app_driver()
     testthat::expect_false(
       nzchar(
@@ -200,6 +200,8 @@ testthat::describe("exclude_varnames", {
         )
       )
     )
+    values <- app_driver$get_values()
+    testthat::expect_false(all(startsWith(names(values$input), "filter_panel-active-mtcars-filter-4_cyl-inputs")))
   })
 
   it("are dropped from the possible filter variable selection dropdown", {
