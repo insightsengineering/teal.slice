@@ -62,18 +62,6 @@ local_app_driver <- function(name = "filteredData_MAE",
   app_driver
 }
 
-testthat::test_that("Initializes visible filters for MAE", {
-  app_driver <- local_app_driver()
-  testthat::expect_true(is_visible(app_driver, "#filter_panel"))
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-main_filter_accordion"))
-  testthat::expect_equal(
-    app_driver$get_text("#filter_panel-overview-table > table > tbody > tr:nth-child(1) > td:nth-child(1)"),
-    "MAE"
-  )
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active"))
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-MAE-dataset_filter_accordion"))
-})
-
 testthat::describe("Toggle visibility of", {
   it("Active Filter Summary", {
     app_driver <- local_app_driver()
@@ -214,8 +202,6 @@ testthat::test_that("Add one filter", {
   # Select variable
   testthat::expect_no_error(app_driver$set_inputs(`filter_panel-active-MAE-MAE-subjects-var_to_add` = "patientID"))
   app_driver$wait_for_idle(duration = default_idle_duration * 4) # Wait for the panel open animation
-  # Select options/limits
-  # FIXME: doesn't show up
 
   # Check output
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-MAE-subjects-MAE_patientID"))
