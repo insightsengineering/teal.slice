@@ -209,17 +209,18 @@ testthat::describe("Remove", {
 })
 
 testthat::describe("exclude_varnames", {
-  testthat::it("locks the filter if set by the app developer", {
+  it("locks the filter if set by the app developer", {
     app_driver <- local_app_driver()
     testthat::expect_false(
       nzchar(
         app_driver$get_text(
-          "#filter_panel-active-mtcars-filter-4_cyl > div > div.filter-card-title > i.fa-lock")
+          "#filter_panel-active-mtcars-filter-4_cyl > div > div.filter-card-title > i.fa-lock"
         )
       )
+    )
   })
 
-  testthat::it("are dropped from the possible filter variable selection dropdown", {
+  it("are dropped from the possible filter variable selection dropdown", {
     app_driver <- local_app_driver()
     text <- app_driver$get_text("#filter_panel-active-mtcars-mtcars-filter-var_to_add > option")
     testthat::expect_false("cyl" %in% text)
@@ -231,8 +232,8 @@ testthat::test_that("Add one filter", {
 
   # Click to add filter
   app_driver$click(selector = "#filter_panel-active-iris-add_filter_icon")
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-add_panel"))
   app_driver$wait_for_idle(duration = default_idle_duration * 4) # Wait for the panel open animation
+  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-add_panel"))
 
   # Select variable
   testthat::expect_no_error(app_driver$set_inputs(`filter_panel-active-iris-iris-filter-var_to_add` = "Sepal.Length"))
