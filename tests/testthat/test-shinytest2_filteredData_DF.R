@@ -208,6 +208,24 @@ testthat::describe("Remove", {
   })
 })
 
+testthat::describe("exclude_varnames", {
+  testthat::it("locks the filter if set by the app developer", {
+    app_driver <- local_app_driver()
+    testthat::expect_false(
+      nzchar(
+        app_driver$get_text(
+          "#filter_panel-active-mtcars-filter-4_cyl > div > div.filter-card-title > i.fa-lock")
+        )
+      )
+  })
+
+  testthat::it("are dropped from the possible filter variable selection dropdown", {
+    app_driver <- local_app_driver()
+    text <- app_driver$get_text("#filter_panel-active-mtcars-mtcars-filter-var_to_add > option")
+    testthat::expect_false("cyl" %in% text)
+  })
+})
+
 testthat::test_that("Add one filter", {
   app_driver <- local_app_driver()
 
