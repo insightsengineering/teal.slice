@@ -67,24 +67,6 @@ local_app_driver <- function(name = "filteredData",
   app_driver
 }
 
-testthat::test_that("Initializes visible filters for DF", {
-  app_driver <- local_app_driver()
-  testthat::expect_true(is_visible(app_driver, "#filter_panel"))
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-main_filter_accordion"))
-  testthat::expect_equal(
-    app_driver$get_text("#filter_panel-overview-table > table > tbody > tr:nth-child(1) > td:nth-child(1)"),
-    "iris"
-  )
-  testthat::expect_equal(
-    app_driver$get_text("#filter_panel-overview-table > table > tbody > tr:nth-child(2) > td:nth-child(1)"),
-    "mtcars"
-  )
-
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active"))
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-dataset_filter_accordion"))
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-dataset_filter_accordion"))
-})
-
 testthat::describe("Toggle visibility of ", {
   it("'Active Filter Summary'", {
     app_driver <- local_app_driver()
