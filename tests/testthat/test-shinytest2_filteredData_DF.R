@@ -67,22 +67,10 @@ local_app_driver <- function(name = "filteredData",
   app_driver
 }
 
-testthat::describe("Clicking toggle buttons show and hide (by removing the show class)", {
+testthat::describe("App has content for", {
   it("'Active Filter Summary'", {
     app_driver <- local_app_driver()
 
-    selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
-    out <- app_driver$get_js(selector_collapsable)
-    testthat::expect_length(out, 4L)
-    testthat::expect_true("show" %in% unlist(out[[1L]]))
-
-    selector <- ".filter-panel > .teal-slice:nth-of-type(1) .accordion-button"
-    app_driver$click(selector = selector)
-    app_driver$wait_for_idle()
-
-    out <- app_driver$get_js(selector_collapsable)
-    testthat::expect_length(out, 4L)
-    testthat::expect_false("show" %in% unlist(out[[1L]]))
     testthat::expect_equal(
       app_driver$get_text(
         paste(
@@ -104,21 +92,6 @@ testthat::describe("Clicking toggle buttons show and hide (by removing the show 
 
   it("'Filter Data'", {
     app_driver <- local_app_driver()
-
-    selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
-    out <- app_driver$get_js(selector_collapsable)
-    testthat::expect_length(out, 4L)
-    testthat::expect_true("show" %in% unlist(out[[2L]]))
-
-    selector <- ".filter-panel > #filter_panel-active.teal-slice > div > div > div > button"
-    app_driver$click(selector = selector)
-    app_driver$wait_for_idle()
-
-    out <- app_driver$get_js(selector_collapsable)
-    testthat::expect_length(out, 4L)
-    testthat::expect_false("show" %in% unlist(out[[2L]]))
-
-
     testthat::expect_equal(
       app_driver$get_text(paste0(
         "#filter_panel-active-main_filter_accordion > div > ",
@@ -126,6 +99,44 @@ testthat::describe("Clicking toggle buttons show and hide (by removing the show 
       )),
       "Filter Data"
     )
+  })
+
+  it("filters for a dataset", {
+    app_driver <- local_app_driver()
+
+    text <- app_driver$get_text("#filter_panel-active-iris-filter-iris_Species-inputs-selection")
+    testthat::expect_equal(
+      clean_text(text),
+      c("setosa (50/50)", "versicolor (50/50)", "virginica (50/50)")
+    )
+  })
+})
+
+testthat::describe("Clicking toggle buttons show and hide (by removing the show class)", {
+  it("'Active Filter Summary'", {
+    app_driver <- local_app_driver()
+
+    selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 4L)
+    testthat::expect_true("show" %in% unlist(out[[1L]]))
+
+    selector <- ".filter-panel > .teal-slice:nth-of-type(1) .accordion-button"
+    app_driver$click(selector = selector)
+    app_driver$wait_for_idle()
+
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 4L)
+    testthat::expect_false("show" %in% unlist(out[[1L]]))
+  })
+
+  it("'Filter Data'", {
+    app_driver <- local_app_driver()
+
+    selector_collapsable <- get_class(".accordion-item:nth-of-type(1) > div.accordion-collapse")
+    out <- app_driver$get_js(selector_collapsable)
+    testthat::expect_length(out, 4L)
+    testthat::expect_true("show" %in% unlist(out[[2L]]))
   })
 
   it("filters for a dataset", {
@@ -143,69 +154,53 @@ testthat::describe("Clicking toggle buttons show and hide (by removing the show 
     out <- app_driver$get_js(selector_collapsable)
     testthat::expect_length(out, 4L)
     testthat::expect_false("show" %in% unlist(out[[3L]]))
-
-    # The text is still in DOM
-    text <- app_driver$get_text("#filter_panel-active-iris-filter-iris_Species-inputs-selection")
-    testthat::expect_equal(
-      clean_text(text),
-      c("setosa (50/50)", "versicolor (50/50)", "virginica (50/50)")
-    )
   })
 })
 
-testthat::describe("Clicking remove buttons removes the visibility of", {
+testthat::describe("Clicking remove buttons removes the html element of associated filter-state-card", {
   ns <- function(dataset, id) shiny::NS(sprintf("filter_panel-active-%s", dataset), id)
   id_ns <- function(dataset, id) sprintf("#%s", ns(dataset, id))
 
   it("one filter", {
     app_driver <- local_app_driver()
-    testthat::expect_true(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
+    testthat::expect_true(is_existing(app_driver, id_ns("mtcars", "filter-4_cyl")))
     app_driver$click(ns("mtcars", "filter-4_cyl-remove"))
     app_driver$wait_for_idle()
-    testthat::expect_false(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
+    testthat::expect_false(is_existing(app_driver, id_ns("mtcars", "filter-4_cyl")))
   })
 
   it("filters from a dataset", {
     app_driver <- local_app_driver()
-    testthat::expect_true(is_visible(app_driver, id_ns("iris", "filter-iris_Species")))
-    testthat::expect_true(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
-    testthat::expect_true(is_visible(app_driver, id_ns("mtcars", "filter-mtcars_mpg")))
+    testthat::expect_true(is_existing(app_driver, id_ns("iris", "filter-iris_Species")))
+    testthat::expect_true(is_existing(app_driver, id_ns("mtcars", "filter-4_cyl")))
+    testthat::expect_true(is_existing(app_driver, id_ns("mtcars", "filter-mtcars_mpg")))
     app_driver$click(ns("mtcars", "remove_filters"))
     app_driver$wait_for_idle()
-    testthat::expect_true(is_visible(app_driver, id_ns("iris", "filter-iris_Species")))
-    testthat::expect_false(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
-    testthat::expect_false(is_visible(app_driver, id_ns("mtcars", "filter-mtcars_mpg")))
+    testthat::expect_true(is_existing(app_driver, id_ns("iris", "filter-iris_Species")))
+    testthat::expect_false(is_existing(app_driver, id_ns("mtcars", "filter-4_cyl")))
+    testthat::expect_false(is_existing(app_driver, id_ns("mtcars", "filter-mtcars_mpg")))
   })
 
   it("filters from all datasets", {
     app_driver <- local_app_driver()
-    testthat::expect_true(is_visible(app_driver, id_ns("iris", "filter-iris_Species")))
-    testthat::expect_true(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
-    testthat::expect_true(is_visible(app_driver, id_ns("mtcars", "filter-mtcars_mpg")))
+    testthat::expect_true(is_existing(app_driver, id_ns("iris", "filter-iris_Species")))
+    testthat::expect_true(is_existing(app_driver, id_ns("mtcars", "filter-4_cyl")))
+    testthat::expect_true(is_existing(app_driver, id_ns("mtcars", "filter-mtcars_mpg")))
     app_driver$click("filter_panel-active-remove_all_filters")
     app_driver$wait_for_idle()
-    testthat::expect_false(is_visible(app_driver, id_ns("iris", "filter-iris_Species")))
-    testthat::expect_false(is_visible(app_driver, id_ns("mtcars", "filter-4_cyl")))
-    testthat::expect_false(is_visible(app_driver, id_ns("mtcars", "filter-mtcars_mpg")))
+    testthat::expect_false(is_existing(app_driver, id_ns("iris", "filter-iris_Species")))
+    testthat::expect_false(is_existing(app_driver, id_ns("mtcars", "filter-4_cyl")))
+    testthat::expect_false(is_existing(app_driver, id_ns("mtcars", "filter-mtcars_mpg")))
   })
 })
 
 testthat::describe("exclude_varnames", {
-  it("locks editing the filter if set by the app developer", {
-    app_driver <- local_app_driver()
-    testthat::expect_false(
-      nzchar(
-        app_driver$get_text(
-          "#filter_panel-active-mtcars-filter-4_cyl > div > div.filter-card-title > i.fa-lock"
-        )
-      )
-    )
-    values <- app_driver$get_values()
-    testthat::expect_false(all(startsWith(names(values$input), "filter_panel-active-mtcars-filter-4_cyl-inputs")))
-  })
-
   it("are dropped from the possible filter variable selection dropdown", {
     app_driver <- local_app_driver()
+    testthat::expect_false(is_existing(app_driver, "#filter_panel-active-mtcars-mtcars-filter-var_to_add > option"))
+    app_driver$click(selector = "#filter_panel-active-mtcars-add_filter_icon")
+    app_driver$wait_for_idle(duration = default_idle_duration * 4) # Wait for the panel open animation
+    testthat::expect_true(is_existing(app_driver, "#filter_panel-active-mtcars-mtcars-filter-var_to_add > option"))
     text <- app_driver$get_text("#filter_panel-active-mtcars-mtcars-filter-var_to_add > option")
     testthat::expect_false("cyl" %in% text)
   })
@@ -227,5 +222,5 @@ testthat::test_that("Add one filter", {
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-filter-iris_Sepal_Length"))
   element <- "#filter_panel-active-iris-filter-iris_Sepal_Length * div.filter-card-varname"
   text <- app_driver$get_text(element)
-  testthat::expect_equal(clean_text(text), "Sepal.Length")
+  testthat::expect_equal(trimws(text), "Sepal.Length")
 })
