@@ -23,3 +23,11 @@ get_class <- function(id) {
 clean_text <- function(text) {
   strsplit(trimws(text), "\\s{2,}")[[1]]
 }
+
+is_existing <- function(app_driver, element) {
+  js_script <- sprintf("
+      document.querySelectorAll('%s').length > 0;
+    ", element)
+
+  app_driver$get_js(js_script)
+}
