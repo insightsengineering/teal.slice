@@ -62,6 +62,42 @@ local_app_driver <- function(name = "filteredData_MAE",
   app_driver
 }
 
+testthat::describe("App has content for", {
+  it("Active Filter Summary", {
+    app_driver <- local_app_driver()
+    testthat::expect_equal(
+      app_driver$get_text(
+        paste0(
+          "#filter_panel-overview-main_filter_accordion > div >",
+          " div.accordion-header > button > div.accordion-title"
+        )
+      ),
+      "Active Filter Summary"
+    )
+
+    text <- app_driver$get_text("#filter_panel-active-MAE-subjects-MAE_vital_status-body")
+    expect_equal(clean_text(text), c("0 (58)", "1 (34)"))
+  })
+
+  it("Filter Data", {
+    app_driver <- local_app_driver()
+    testthat::expect_equal(
+      app_driver$get_text(paste0(
+        "#filter_panel-active-main_filter_accordion > div > ",
+        "div.accordion-header > button > div.accordion-title"
+      )),
+      "Filter Data"
+    )
+  })
+
+  it("filters for a dataset", {
+    app_driver <- local_app_driver()
+
+    text <- app_driver$get_text("#filter_panel-active-MAE-container * div.filter-card-varname")
+    testthat::expect_equal(trimws(text), c("years_to_birth", "vital_status", "gender", "ARRAY_TYPE"))
+  })
+})
+
 testthat::describe("Clicking toggle buttons show and hide (by removing the show class)", {
   it("Active Filter Summary", {
     app_driver <- local_app_driver()
@@ -78,18 +114,6 @@ testthat::describe("Clicking toggle buttons show and hide (by removing the show 
     out <- app_driver$get_js(selector_collapsable)
     testthat::expect_length(out, 4L)
     testthat::expect_false("show" %in% unlist(out[[1L]]))
-    testthat::expect_equal(
-      app_driver$get_text(
-        paste0(
-          "#filter_panel-overview-main_filter_accordion > div >",
-          " div.accordion-header > button > div.accordion-title"
-        )
-      ),
-      "Active Filter Summary"
-    )
-
-    text <- app_driver$get_text("#filter_panel-active-MAE-subjects-MAE_vital_status-body")
-    expect_equal(clean_text(text), c("0 (58)", "1 (34)"))
   })
 
   it("Filter Data", {
@@ -107,13 +131,6 @@ testthat::describe("Clicking toggle buttons show and hide (by removing the show 
     out <- app_driver$get_js(selector_collapsable)
     testthat::expect_length(out, 4L)
     testthat::expect_false("show" %in% unlist(out[[2L]]))
-    testthat::expect_equal(
-      app_driver$get_text(paste0(
-        "#filter_panel-active-main_filter_accordion > div > ",
-        "div.accordion-header > button > div.accordion-title"
-      )),
-      "Filter Data"
-    )
   })
 
   it("filters for a dataset", {
@@ -147,25 +164,25 @@ testthat::describe("Clicking toggle buttons show and hide (by removing the show 
   })
 })
 
-testthat::describe("clikcing remove buttons removes the visibility of ", {
+testthat::describe("clikcing remove buttons removes the html element of associated filter-state-card", {
   ns <- shiny::NS("filter_panel-active-MAE")
   id_ns <- shiny::NS(sprintf("#%s", ns(NULL)))
 
   it("has all filter are visible when app loads", {
     app_driver <- local_app_driver()
-    testthat::expect_true(is_visible(app_driver, id_ns("subjects-MAE_years_to_birth")))
-    testthat::expect_true(is_visible(app_driver, id_ns("subjects-MAE_vital_status")))
-    testthat::expect_true(is_visible(app_driver, id_ns("subjects-MAE_gender")))
-    testthat::expect_true(is_visible(app_driver, id_ns("RPPAArray-MAE_ARRAY_TYPE_RPPAArray_subset")))
-    testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-filter-iris_Species"))
+    testthat::expect_true(is_existing(app_driver, id_ns("subjects-MAE_years_to_birth")))
+    testthat::expect_true(is_existing(app_driver, id_ns("subjects-MAE_vital_status")))
+    testthat::expect_true(is_existing(app_driver, id_ns("subjects-MAE_gender")))
+    testthat::expect_true(is_existing(app_driver, id_ns("RPPAArray-MAE_ARRAY_TYPE_RPPAArray_subset")))
+    testthat::expect_true(is_existing(app_driver, "#filter_panel-active-iris-filter-iris_Species"))
   })
 
   it("one filter", {
     app_driver <- local_app_driver()
     app_driver$click(ns("subjects-MAE_years_to_birth-remove"))
     app_driver$wait_for_idle(duration = default_idle_duration * 2)
-    testthat::expect_false(is_visible(app_driver, id_ns("subjects-MAE_years_to_birth")))
-    testthat::expect_true(is_visible(app_driver, id_ns("subjects-MAE_vital_status")))
+    testthat::expect_false(is_existing(app_driver, id_ns("subjects-MAE_years_to_birth")))
+    testthat::expect_true(is_existing(app_driver, id_ns("subjects-MAE_vital_status")))
   })
 
   it("all filters from a dataset", {
@@ -173,22 +190,22 @@ testthat::describe("clikcing remove buttons removes the visibility of ", {
     app_driver$click("filter_panel-active-MAE-remove_filters")
     app_driver$wait_for_idle(duration = default_idle_duration * 2)
 
-    testthat::expect_false(is_visible(app_driver, id_ns("subjects-MAE_years_to_birth")))
-    testthat::expect_false(is_visible(app_driver, id_ns("subjects-MAE_vital_status")))
-    testthat::expect_false(is_visible(app_driver, id_ns("subjects-MAE_gender")))
-    testthat::expect_false(is_visible(app_driver, id_ns("RPPAArray-MAE_ARRAY_TYPE_RPPAArray_subset")))
-    testthat::expect_true(is_visible(app_driver, "#filter_panel-active-iris-filter-iris_Species"))
+    testthat::expect_false(is_existing(app_driver, id_ns("subjects-MAE_years_to_birth")))
+    testthat::expect_false(is_existing(app_driver, id_ns("subjects-MAE_vital_status")))
+    testthat::expect_false(is_existing(app_driver, id_ns("subjects-MAE_gender")))
+    testthat::expect_false(is_existing(app_driver, id_ns("RPPAArray-MAE_ARRAY_TYPE_RPPAArray_subset")))
+    testthat::expect_true(is_existing(app_driver, "#filter_panel-active-iris-filter-iris_Species"))
   })
 
   it("all filters from all datasets", {
     app_driver <- local_app_driver()
     app_driver$click("filter_panel-active-remove_all_filters")
     app_driver$wait_for_idle(duration = default_idle_duration * 2)
-    testthat::expect_false(is_visible(app_driver, id_ns("subjects-MAE_years_to_birth")))
-    testthat::expect_false(is_visible(app_driver, id_ns("subjects-MAE_vital_status")))
-    testthat::expect_false(is_visible(app_driver, id_ns("subjects-MAE_gender")))
-    testthat::expect_false(is_visible(app_driver, id_ns("RPPAArray-MAE_ARRAY_TYPE_RPPAArray_subset")))
-    testthat::expect_false(is_visible(app_driver, "#filter_panel-active-iris-filter-iris_Species"))
+    testthat::expect_false(is_existing(app_driver, id_ns("subjects-MAE_years_to_birth")))
+    testthat::expect_false(is_existing(app_driver, id_ns("subjects-MAE_vital_status")))
+    testthat::expect_false(is_existing(app_driver, id_ns("subjects-MAE_gender")))
+    testthat::expect_false(is_existing(app_driver, id_ns("RPPAArray-MAE_ARRAY_TYPE_RPPAArray_subset")))
+    testthat::expect_false(is_existing(app_driver, "#filter_panel-active-iris-filter-iris_Species"))
   })
 })
 
