@@ -1,5 +1,9 @@
 # teal.slice 0.6.0.9006
 
+### Miscellaneous
+
+* Move `finalize()` methods to private in R6 classes to avoid deprecation warnings.
+
 # teal.slice 0.6.0
 
 ### Enhancements

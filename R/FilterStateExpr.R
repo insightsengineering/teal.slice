@@ -140,16 +140,6 @@ FilterStateExpr <- R6::R6Class( # nolint
       isolate(str2lang(private$teal_slice$expr))
     },
 
-    #' @description
-    #' Destroy inputs and observers stored in `private$session_bindings`.
-    #'
-    #' @return `NULL`, invisibly.
-    #'
-    finalize = function() {
-      .finalize_session_bindings(self, private)
-      invisible(NULL)
-    },
-
     # public shiny modules ----
 
     #' @description
@@ -276,6 +266,16 @@ FilterStateExpr <- R6::R6Class( # nolint
     },
     content_summary = function() {
       isolate(private$teal_slice$expr)
+    },
+
+    #' @description
+    #' Destroy inputs and observers stored in `private$session_bindings`.
+    #'
+    #' @return `NULL`, invisibly.
+    #'
+    finalize = function() {
+      .finalize_session_bindings(self, private)
+      invisible(NULL)
     }
   )
 )

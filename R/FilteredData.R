@@ -829,19 +829,6 @@ FilteredData <- R6::R6Class( # nolint
           NULL
         }
       )
-    },
-
-    #' @description
-    #' Object and dependencies cleanup.
-    #'
-    #' - Destroy inputs and observers stored in `private$session_bindings`
-    #' - Finalize `FilteredData` stored in `private$filtered_datasets`
-    #'
-    #' @return `NULL`, invisibly.
-    finalize = function() {
-      .finalize_session_bindings(self, private)
-      lapply(private$filtered_datasets, function(x) x$finalize())
-      invisible(NULL)
     }
   ),
 
@@ -1031,6 +1018,19 @@ FilteredData <- R6::R6Class( # nolint
           }
         )
       })
+    },
+
+    #' @description
+    #' Object and dependencies cleanup.
+    #'
+    #' - Destroy inputs and observers stored in `private$session_bindings`
+    #' - Finalize `FilteredData` stored in `private$filtered_datasets`
+    #'
+    #' @return `NULL`, invisibly.
+    finalize = function() {
+      .finalize_session_bindings(self, private)
+      lapply(private$filtered_datasets, function(x) x$finalize())
+      invisible(NULL)
     }
   )
 )
