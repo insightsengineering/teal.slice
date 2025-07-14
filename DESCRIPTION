@@ -1,8 +1,8 @@
 Type: Package
 Package: teal.slice
 Title: Filter Module for 'teal' Applications
-Version: 0.6.0.9005
-Date: 2025-06-24
+Version: 0.6.0.9006
+Date: 2025-07-10
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9533-457X")),
@@ -42,7 +42,7 @@ Imports:
     htmltools (>= 0.5.4),
     jsonlite (>= 2.0.0),
     lifecycle (>= 0.2.0),
-    logger (>= 0.3.0),
+    logger (>= 0.4.0),
     methods,
     plotly (>= 4.10.4),
     R6 (>= 2.2.0),
@@ -52,7 +52,7 @@ Imports:
     shinyjs (>= 2.1.0),
     shinyWidgets (>= 0.6.2),
     teal.data (>= 0.7.0),
-    teal.logger (>= 0.3.1),
+    teal.logger (>= 0.4.0),
     teal.widgets (>= 0.4.3),
     utils
 Suggests:
