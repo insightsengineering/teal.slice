@@ -13,21 +13,14 @@ is_visible <- function(app_driver, element) {
 }
 
 # Write a js code to extract the classes
-get_class <- function(id) {
+get_attribute <- function(selector, attribute) {
   sprintf(
-    "Array.from(document.querySelectorAll('%s')).map(el => el.classList)",
-    id
+    "Array.from(document.querySelectorAll('%s')).map(el => el.getAttribute('%s'))",
+    selector, attribute
   )
 }
 
-clean_text <- function(text) {
-  strsplit(trimws(text), "\\s{2,}")[[1]]
-}
-
 is_existing <- function(app_driver, element) {
-  js_script <- sprintf("
-      document.querySelectorAll('%s').length > 0;
-    ", element)
-
+  js_script <- sprintf("document.querySelectorAll('%s').length > 0;", element)
   app_driver$get_js(js_script)
 }
