@@ -130,8 +130,6 @@ testthat::describe("teal_slice objects pass to filter data", {
 testthat::test_that("Clicking add button on the datasets shows add filter panel", {
   app_driver <- local_app_driver()
   testthat::expect_true(is_existing(app_driver, "#filter_panel-active-mtcars-add_filter_icon"))
-  # FIXME: button is not visible to the user
-  # testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-add_filter_icon"))
   app_driver$click(selector = "#filter_panel-active-mtcars-add_filter_icon")
   app_driver$wait_for_idle(duration = default_idle_duration * 4) # Wait for the panel open animation
   testthat::expect_true(is_existing(app_driver, "#filter_panel-active-mtcars-mtcars-filter-var_to_add > option"))
