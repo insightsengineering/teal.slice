@@ -69,23 +69,17 @@ local_app_driver <- function(...,
 testthat::describe("Toggle button shows and hide", {
   it("'Active Filter Summary' panel", {
     app_driver <- local_app_driver()
-
-    testthat::expect_true(is_visible(app_driver, paste(
-      "#filter_panel-overview-main_filter_accordion > div >",
-      "div.accordion-header > button > div.accordion-title"
-    )))
-
     testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-table"))
+    app_driver$click(selector = "#filter_panel-overview-main_filter_accordion * button")
+    app_driver$wait_for_idle(timeout = default_idle_timeout * 2)
+    testthat::expect_false(is_visible(app_driver, "#filter_panel-overview-table"))
   })
   it("'Filter Data' panel", {
     app_driver <- local_app_driver()
-    testthat::expect_equal(
-      app_driver$get_text(paste0(
-        "#filter_panel-active-main_filter_accordion > div > ",
-        "div.accordion-header > button > div.accordion-title"
-      )),
-      "Filter Data"
-    )
+    testthat::expect_true(is_visible(app_driver, "#filter_panel-active-filter_active_vars_contents"))
+    app_driver$click(selector = "#filter_panel-active-main_filter_accordion > div > div.accordion-header > button")
+    app_driver$wait_for_idle(timeout = default_idle_timeout * 2)
+    testthat::expect_false(is_visible(app_driver, "#filter_panel-active-filter_active_vars_contents"))
   })
 })
 
@@ -107,9 +101,9 @@ testthat::describe("datasets passed to filter data", {
 testthat::describe("teal_slice objects pass to filter data", {
   it("displays filter/unfiltered counts in Active Filter Summary", {
     app_driver <- local_app_driver(
-      teal_slice(dataname = "iris", varname = "Species", selected = "virginica", keep_na = FALSE),
+      teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
       teal_slice(dataname = "mtcars", id = "4 cyl", title = "4 Cylinders", expr = "cyl == 4"),
-      teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE)
+      teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0))
     )
     table <- "#filter_panel-overview-table > table > tbody * td:nth-child(2)"
     text <- app_driver$get_text(table)
@@ -118,9 +112,9 @@ testthat::describe("teal_slice objects pass to filter data", {
 
   it("initializes filter_cards for each teal_slice", {
     app_driver <- local_app_driver(
-      teal_slice(dataname = "iris", varname = "Species", selected = "virginica", keep_na = FALSE),
+      teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
       teal_slice(dataname = "mtcars", id = "4 cyl", title = "4 Cylinders", expr = "cyl == 4"),
-      teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE)
+      teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0))
     )
     text <- app_driver$get_text("div.filter-card-varname > strong")
     expect_equal(text, c("Species", "4 cyl", "mpg"))
@@ -135,14 +129,21 @@ testthat::test_that("Clicking add button on the datasets shows add filter panel"
   testthat::expect_true(is_existing(app_driver, "#filter_panel-active-mtcars-mtcars-filter-var_to_add > option"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-mtcars-filter-var_to_add > option"))
 })
+
 testthat::test_that("Clicking add and selecting a variable adds the card for a given variable", {
   app_driver <- local_app_driver()
   app_driver$click(selector = "#filter_panel-active-mtcars-add_filter_icon")
-  app_driver$wait_for_idle(duration = default_idle_duration * 4) # Wait for the panel open animation
-  app_driver$set_inputs(`filter_panel-active-mtcars-mtcars-filter-var_to_add` = "am")
-  app_driver$wait_for_idle(duration = default_idle_duration * 4) # Wait for the panel open animation
-  text <- app_driver$get_text("div.filter-card-varname > strong")
-  testthat::expect_equal(text, c("am"))
+  app_driver$wait_for_idle(duration = default_idle_duration * 4)
+  app_driver$click(selector = "#filter_panel-active-mtcars-mtcars-filter-var_to_add")
+  app_driver$wait_for_idle(duration = default_idle_duration * 4)
+  app_driver$click(selector = "#filter_panel-active-mtcars-mtcars-filter-var_to_add_input > div > div > button")
+  app_driver$wait_for_idle(duration = default_idle_duration * 4)
+  app_driver$click(selector = "#bs-select-1-8")
+  app_driver$wait_for_idle(duration = default_idle_duration * 4)
+  selector <- paste0("#filter_panel-active-mtcars-filter-mtcars_am > div.filter-card-header > div.filter-card-title",
+                     "> div.filter-card-varname > strong")
+  text <- app_driver$get_text(selector = selector)
+  testthat::expect_equal(text, "am")
 })
 
 testthat::test_that("include_varnames limits choices in add dropdown", {
@@ -177,9 +178,9 @@ testthat::test_that("exclude_varnames limits choices in add dropdown", {
 
 testthat::test_that("Remove filter button removes a specific filter card", {
   app_driver <- local_app_driver(
-    teal_slice(dataname = "iris", varname = "Species", selected = "virginica", keep_na = FALSE),
+    teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
     teal_slice(dataname = "mtcars", id = "4 cyl", title = "4 Cylinders", expr = "cyl == 4"),
-    teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE)
+    teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0))
   )
   selector <- "#filter_panel-active-mtcars-filter-mtcars_mpg-remove"
   testthat::expect_true(is_visible(app_driver, selector))
@@ -191,11 +192,11 @@ testthat::test_that("Remove filter button removes a specific filter card", {
   testthat::expect_equal(setdiff(filters_before, filters_after), "mpg")
 })
 
-testthat::test_that("Remove datasets filters removes all cards except the locked one.", {
+testthat::test_that("Remove datasets filters removes all cards.", {
   app_driver <- local_app_driver(
-    teal_slice(dataname = "iris", varname = "Species", selected = "virginica", keep_na = FALSE),
+    teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
     teal_slice(dataname = "mtcars", id = "4 cyl", title = "4 Cylinders", expr = "cyl == 4"),
-    teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE)
+    teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0))
   )
 
   selector <- "#filter_panel-active-mtcars-remove_filters"
@@ -209,9 +210,9 @@ testthat::test_that("Remove datasets filters removes all cards except the locked
 
 testthat::test_that("Remove all filters button removes all cards for all datasets.", {
   app_driver <- local_app_driver(
-    teal_slice(dataname = "iris", varname = "Species", selected = "virginica", keep_na = FALSE),
+    teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
     teal_slice(dataname = "mtcars", id = "4 cyl", title = "4 Cylinders", expr = "cyl == 4"),
-    teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE)
+    teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0))
   )
   selector <- "#filter_panel-active-remove_all_filters"
   testthat::expect_true(is_visible(app_driver, selector))
@@ -221,10 +222,10 @@ testthat::test_that("Remove all filters button removes all cards for all dataset
   testthat::expect_true(is.null(filters_after))
 })
 
-testthat::test_that("Expanding a card shows filter choices except the locked one.", {
+testthat::test_that("Expanding a card shows filter choices.", {
   app_driver <- local_app_driver(
     teal_slice(dataname = "mtcars", id = "4 cyl", title = "4 Cylinders", expr = "cyl == 4"),
-    teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE)
+    teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0))
   )
 
   select_4_cyl <- "#filter_panel-active-mtcars-filter-4_cyl  > div.filter-card-header"
