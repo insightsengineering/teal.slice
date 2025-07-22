@@ -140,8 +140,10 @@ testthat::test_that("Clicking add and selecting a variable adds the card for a g
   app_driver$wait_for_idle(duration = default_idle_duration * 4)
   app_driver$click(selector = "#bs-select-1-8")
   app_driver$wait_for_idle(duration = default_idle_duration * 4)
-  selector <- paste0("#filter_panel-active-mtcars-filter-mtcars_am > div.filter-card-header > div.filter-card-title",
-                     "> div.filter-card-varname > strong")
+  selector <- paste0(
+    "#filter_panel-active-mtcars-filter-mtcars_am > div.filter-card-header > div.filter-card-title",
+    "> div.filter-card-varname > strong"
+  )
   text <- app_driver$get_text(selector = selector)
   testthat::expect_equal(text, "am")
 })
