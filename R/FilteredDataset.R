@@ -59,6 +59,10 @@ FilteredDataset <- R6::R6Class( # nolint
       invisible(self)
     },
 
+    #' @description Destroys a `FilteredDataset` object.
+    destroy = function() private$finalize(),
+
+
     #' @description
     #' Returns a formatted string representing this `FilteredDataset` object.
     #'
@@ -500,7 +504,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return `NULL`, invisibly.
     finalize = function() {
       .finalize_session_bindings(self, private)
-      lapply(private$filter_states, function(x) x$finalize())
+      lapply(private$filter_states, function(x) x$destroy())
       invisible(NULL)
     }
   )

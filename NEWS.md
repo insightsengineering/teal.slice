@@ -3,6 +3,7 @@
 ### Miscellaneous
 
 * Move `finalize()` methods to private in R6 classes to avoid deprecation warnings.
+* New method `destroy()` replaces the public API.
 
 # teal.slice 0.6.0
 

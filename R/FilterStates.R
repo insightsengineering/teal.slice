@@ -77,6 +77,9 @@ FilterStates <- R6::R6Class( # nolint
       invisible(self)
     },
 
+    #' @description Destroys a `FilterStates` object.
+    destroy = function() private$finalize(),
+
     #' @description
     #' Returns a formatted string representing this `FilterStates` object.
     #'
@@ -649,7 +652,7 @@ FilterStates <- R6::R6Class( # nolint
                 if (state$get_state()$anchored && !force) {
                   TRUE
                 } else {
-                  state$finalize()
+                  state$destroy()
                   FALSE
                 }
               } else {

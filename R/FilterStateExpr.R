@@ -78,6 +78,9 @@ FilterStateExpr <- R6::R6Class( # nolint
       invisible(self)
     },
 
+    #' @description Destroys a `FilterStateExpr` object.
+    destroy = function() private$finalize(),
+
     #' @description
     #' Returns a formatted string representing this `FilterStateExpr` object.
     #'
