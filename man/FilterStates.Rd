@@ -24,6 +24,7 @@ Currently implemented for \code{data.frame}, \code{matrix},
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-FilterStates-new}{\code{FilterStates$new()}}
+\item \href{#method-FilterStates-destroy}{\code{FilterStates$destroy()}}
 \item \href{#method-FilterStates-format}{\code{FilterStates$format()}}
 \item \href{#method-FilterStates-get_call}{\code{FilterStates$get_call()}}
 \item \href{#method-FilterStates-print}{\code{FilterStates$print()}}
@@ -35,7 +36,6 @@ Currently implemented for \code{data.frame}, \code{matrix},
 \item \href{#method-FilterStates-srv_active}{\code{FilterStates$srv_active()}}
 \item \href{#method-FilterStates-ui_add}{\code{FilterStates$ui_add()}}
 \item \href{#method-FilterStates-srv_add}{\code{FilterStates$srv_add()}}
-\item \href{#method-FilterStates-finalize}{\code{FilterStates$finalize()}}
 \item \href{#method-FilterStates-clone}{\code{FilterStates$clone()}}
 }
 }
@@ -78,6 +78,16 @@ text label.}
 \subsection{Returns}{
 Object of class \code{FilterStates}, invisibly.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-destroy"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-destroy}{}}}
+\subsection{Method \code{destroy()}}{
+Destroys a \code{FilterStates} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$destroy()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStates-format"></a>}}
@@ -340,23 +350,6 @@ Removing a filter variable adds it back to available choices.
 }
 \subsection{Returns}{
 \code{NULL}.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-finalize"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-finalize}{}}}
-\subsection{Method \code{finalize()}}{
-Object cleanup.
-\itemize{
-\item Destroy inputs and observers stored in \code{private$session_bindings}
-\item Clean \code{state_list}
-}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$finalize()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

@@ -97,6 +97,7 @@ isolate(datasets$get_filter_state())
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-FilteredData-new}{\code{FilteredData$new()}}
+\item \href{#method-FilteredData-destroy}{\code{FilteredData$destroy()}}
 \item \href{#method-FilteredData-datanames}{\code{FilteredData$datanames()}}
 \item \href{#method-FilteredData-get_datalabel}{\code{FilteredData$get_datalabel()}}
 \item \href{#method-FilteredData-set_available_teal_slices}{\code{FilteredData$set_available_teal_slices()}}
@@ -120,7 +121,6 @@ isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-srv_active}{\code{FilteredData$srv_active()}}
 \item \href{#method-FilteredData-ui_overview}{\code{FilteredData$ui_overview()}}
 \item \href{#method-FilteredData-srv_overview}{\code{FilteredData$srv_overview()}}
-\item \href{#method-FilteredData-finalize}{\code{FilteredData$finalize()}}
 \item \href{#method-FilteredData-clone}{\code{FilteredData$clone()}}
 }
 }
@@ -144,6 +144,16 @@ Names of the list will be used as \code{dataname} for respective datasets.}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-destroy"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-destroy}{}}}
+\subsection{Method \code{destroy()}}{
+Destroys a \code{FilteredData} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$destroy()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-datanames"></a>}}
@@ -667,23 +677,6 @@ panel will be hidden.}
 }
 \subsection{Returns}{
 \code{NULL}.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-finalize"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-finalize}{}}}
-\subsection{Method \code{finalize()}}{
-Object and dependencies cleanup.
-\itemize{
-\item Destroy inputs and observers stored in \code{private$session_bindings}
-\item Finalize \code{FilteredData} stored in \code{private$filtered_datasets}
-}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$finalize()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
