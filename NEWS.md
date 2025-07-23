@@ -1,5 +1,9 @@
 # teal.slice 0.6.0.9008
 
+### Miscellaneous
+
+* In R6 classes `finalize()` method is moved to private and is replaced in public API by `destroy()` (#658).
+
 # teal.slice 0.6.0
 
 ### Enhancements

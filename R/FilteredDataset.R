@@ -59,6 +59,10 @@ FilteredDataset <- R6::R6Class( # nolint
       invisible(self)
     },
 
+    #' @description Destroys a `FilteredDataset` object.
+    destroy = function() private$finalize(),
+
+
     #' @description
     #' Returns a formatted string representing this `FilteredDataset` object.
     #'
@@ -459,19 +463,6 @@ FilteredDataset <- R6::R6Class( # nolint
           NULL
         }
       )
-    },
-
-    #' @description
-    #' Object and dependencies cleanup.
-    #'
-    #' - Destroy inputs and observers stored in `private$session_bindings`
-    #' - Finalize `FilterStates` stored in `private$filter_states`
-    #'
-    #' @return `NULL`, invisibly.
-    finalize = function() {
-      .finalize_session_bindings(self, private)
-      lapply(private$filter_states, function(x) x$finalize())
-      invisible(NULL)
     }
   ),
   # private fields ----
@@ -502,6 +493,19 @@ FilteredDataset <- R6::R6Class( # nolint
     # @return list of `FilterStates` objects.
     get_filter_states = function() {
       private$filter_states
+    },
+
+    #' @description
+    #' Object and dependencies cleanup.
+    #'
+    #' - Destroy inputs and observers stored in `private$session_bindings`
+    #' - Finalize `FilterStates` stored in `private$filter_states`
+    #'
+    #' @return `NULL`, invisibly.
+    finalize = function() {
+      .finalize_session_bindings(self, private)
+      lapply(private$filter_states, function(x) x$destroy())
+      invisible(NULL)
     }
   )
 )

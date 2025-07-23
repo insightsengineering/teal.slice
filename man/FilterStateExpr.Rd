@@ -67,12 +67,12 @@ if (interactive()) {
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-FilterStateExpr-new}{\code{FilterStateExpr$new()}}
+\item \href{#method-FilterStateExpr-destroy}{\code{FilterStateExpr$destroy()}}
 \item \href{#method-FilterStateExpr-format}{\code{FilterStateExpr$format()}}
 \item \href{#method-FilterStateExpr-print}{\code{FilterStateExpr$print()}}
 \item \href{#method-FilterStateExpr-get_state}{\code{FilterStateExpr$get_state()}}
 \item \href{#method-FilterStateExpr-set_state}{\code{FilterStateExpr$set_state()}}
 \item \href{#method-FilterStateExpr-get_call}{\code{FilterStateExpr$get_call()}}
-\item \href{#method-FilterStateExpr-finalize}{\code{FilterStateExpr$finalize()}}
 \item \href{#method-FilterStateExpr-server}{\code{FilterStateExpr$server()}}
 \item \href{#method-FilterStateExpr-ui}{\code{FilterStateExpr$ui()}}
 \item \href{#method-FilterStateExpr-clone}{\code{FilterStateExpr$clone()}}
@@ -97,6 +97,16 @@ Initialize a \code{FilterStateExpr} object.
 \subsection{Returns}{
 Object of class \code{FilterStateExpr}, invisibly.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStateExpr-destroy"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStateExpr-destroy}{}}}
+\subsection{Method \code{destroy()}}{
+Destroys a \code{FilterStateExpr} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$destroy()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStateExpr-format"></a>}}
@@ -196,19 +206,6 @@ and must be executed in reactive or isolated context.}
 }
 \subsection{Returns}{
 \code{call} or \code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStateExpr-finalize"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStateExpr-finalize}{}}}
-\subsection{Method \code{finalize()}}{
-Destroy inputs and observers stored in \code{private$session_bindings}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$finalize()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

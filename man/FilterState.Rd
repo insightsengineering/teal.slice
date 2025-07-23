@@ -47,6 +47,7 @@ Modifying a \code{FilterState} object is possible in three scenarios:
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-FilterState-new}{\code{FilterState$new()}}
+\item \href{#method-FilterState-destroy}{\code{FilterState$destroy()}}
 \item \href{#method-FilterState-format}{\code{FilterState$format()}}
 \item \href{#method-FilterState-print}{\code{FilterState$print()}}
 \item \href{#method-FilterState-set_state}{\code{FilterState$set_state()}}
@@ -54,7 +55,6 @@ Modifying a \code{FilterState} object is possible in three scenarios:
 \item \href{#method-FilterState-get_call}{\code{FilterState$get_call()}}
 \item \href{#method-FilterState-server}{\code{FilterState$server()}}
 \item \href{#method-FilterState-ui}{\code{FilterState$ui()}}
-\item \href{#method-FilterState-finalize}{\code{FilterState$finalize()}}
 \item \href{#method-FilterState-clone}{\code{FilterState$clone()}}
 }
 }
@@ -104,6 +104,16 @@ specifying whether condition calls should be prefixed by \code{dataname}. Possib
 \subsection{Returns}{
 Object of class \code{FilterState}, invisibly.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterState-destroy"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-destroy}{}}}
+\subsection{Method \code{destroy()}}{
+Destroys a \code{FilterState} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$destroy()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-format"></a>}}
@@ -237,19 +247,6 @@ The UI for this class contains simple message stating that it is not supported.
 \item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-finalize"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-finalize}{}}}
-\subsection{Method \code{finalize()}}{
-Destroy inputs and observers stored in \code{private$session_bindings}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$finalize()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

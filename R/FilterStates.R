@@ -77,6 +77,9 @@ FilterStates <- R6::R6Class( # nolint
       invisible(self)
     },
 
+    #' @description Destroys a `FilterStates` object.
+    destroy = function() private$finalize(),
+
     #' @description
     #' Returns a formatted string representing this `FilterStates` object.
     #'
@@ -507,19 +510,6 @@ FilterStates <- R6::R6Class( # nolint
           NULL
         }
       )
-    },
-
-    #' @description
-    #' Object cleanup.
-    #'
-    #' - Destroy inputs and observers stored in `private$session_bindings`
-    #' - Clean `state_list`
-    #'
-    #' @return `NULL`, invisibly.
-    #'
-    finalize = function() {
-      .finalize_session_bindings(self, private)
-      invisible(NULL)
     }
   ),
   private = list(
@@ -662,7 +652,7 @@ FilterStates <- R6::R6Class( # nolint
                 if (state$get_state()$anchored && !force) {
                   TRUE
                 } else {
-                  state$finalize()
+                  state$destroy()
                   FALSE
                 }
               } else {
@@ -768,6 +758,18 @@ FilterStates <- R6::R6Class( # nolint
 
         invisible(NULL)
       })
+    },
+
+    #' @description
+    #' Object cleanup.
+    #'
+    #' - Destroy inputs and observers stored in `private$session_bindings`
+    #' - Clean `state_list`
+    #'
+    #' @return `NULL`, invisibly.
+    #'
+    finalize = function() {
+      .finalize_session_bindings(self, private)
     }
   )
 )

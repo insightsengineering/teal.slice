@@ -113,6 +113,9 @@ FilterState <- R6::R6Class( # nolint
       })
     },
 
+    #' @description Destroys a `FilterState` object.
+    destroy = function() private$finalize(),
+
     #' @description
     #' Returns a formatted string representing this `FilterState` object.
     #'
@@ -385,17 +388,6 @@ FilterState <- R6::R6Class( # nolint
           )
         )
       )
-    },
-
-    #' @description
-    #' Destroy inputs and observers stored in `private$session_bindings`.
-    #'
-    #'
-    #' @return `NULL`, invisibly.
-    #'
-    finalize = function() {
-      .finalize_session_bindings(self, private)
-      invisible(NULL)
     }
   ),
 
@@ -793,6 +785,16 @@ FilterState <- R6::R6Class( # nolint
         )
         invisible(NULL)
       })
+    },
+
+    #' @description
+    #' Destroy inputs and observers stored in `private$session_bindings`.
+    #'
+    #'
+    #' @return `NULL`, invisibly.
+    #'
+    finalize = function() {
+      .finalize_session_bindings(self, private)
     }
   )
 )
