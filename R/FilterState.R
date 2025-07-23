@@ -795,7 +795,6 @@ FilterState <- R6::R6Class( # nolint
     #'
     finalize = function() {
       .finalize_session_bindings(self, private)
-      invisible(NULL)
     }
   )
 )
