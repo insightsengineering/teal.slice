@@ -532,7 +532,7 @@ FilteredData <- R6::R6Class( # nolint
         include_js_files(pattern = "togglePanelItems"),
         class = "teal-slice",
         bslib::accordion(
-          id = ns("main_filter_accordian"),
+          id = ns("main_filter_accordion"),
           bslib::accordion_panel(
             "Filter Data",
             tags$div(
@@ -578,8 +578,8 @@ FilteredData <- R6::R6Class( # nolint
             });
           ",
               ns("additional_filter_helpers"),
-              ns("main_filter_accordian"),
-              ns("main_filter_accordian"),
+              ns("main_filter_accordion"),
+              ns("main_filter_accordion"),
               ns("additional_filter_helpers")
             )
           )
@@ -710,7 +710,7 @@ FilteredData <- R6::R6Class( # nolint
       tags$div(
         class = "teal-slice",
         bslib::accordion(
-          id = ns("main_filter_accordian"),
+          id = ns("main_filter_accordion"),
           bslib::accordion_panel(
             title = "Active Filter Summary",
             tags$div(
