@@ -246,7 +246,7 @@ FilteredDataset <- R6::R6Class( # nolint
                   include_css_files("filter-panel"),
                   include_js_files(pattern = "icons"),
                   bslib::accordion(
-                    id = session$ns("dataset_filter_accordian"),
+                    id = session$ns("dataset_filter_accordion"),
                     class = "teal-slice-dataset-filter",
                     bslib::accordion_panel(
                       dataname,
@@ -302,10 +302,10 @@ FilteredDataset <- R6::R6Class( # nolint
             });
           ",
                         session$ns("filter_util_icons"),
-                        session$ns("dataset_filter_accordian"),
-                        session$ns("dataset_filter_accordian"),
+                        session$ns("dataset_filter_accordion"),
+                        session$ns("dataset_filter_accordion"),
                         session$ns("active_filter_badge"),
-                        session$ns("dataset_filter_accordian")
+                        session$ns("dataset_filter_accordion")
                       )
                     )
                   )
@@ -348,7 +348,7 @@ FilteredDataset <- R6::R6Class( # nolint
                         $('#%s .accordion-button.collapsed').click();
                       }",
                       session$ns("add_panel"),
-                      session$ns("dataset_filter_accordian")
+                      session$ns("dataset_filter_accordion")
                     )
                   )
                 ),
@@ -391,8 +391,8 @@ FilteredDataset <- R6::R6Class( # nolint
 
           # If the accordion input is `NULL` it is being collapsed.
           # It has the accordion panel label if it is expanded.
-          observeEvent(input$dataset_filter_accordian, ignoreNULL = FALSE, {
-            if (is.null(input$dataset_filter_accordian)) {
+          observeEvent(input$dataset_filter_accordion, ignoreNULL = FALSE, {
+            if (is.null(input$dataset_filter_accordion)) {
               # Hiding the `add_panel` dropdown and changing the minus icon to plus
               # TODO: simplify this implementation. This is done in multiple places
               shinyjs::runjs(
