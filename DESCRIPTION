@@ -47,7 +47,7 @@ Imports:
     plotly (>= 4.10.4),
     R6 (>= 2.2.0),
     rlang (>= 1.0.0),
-    shiny (>= 1.6.0),
+    shiny (>= 1.8.1),
     shinycssloaders (>= 1.0.0),
     shinyjs (>= 2.1.0),
     shinyWidgets (>= 0.6.2),
