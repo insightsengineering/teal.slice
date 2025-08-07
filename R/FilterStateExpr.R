@@ -32,7 +32,7 @@
 #' library(shiny)
 #' library(shinyjs)
 #'
-#' ui <- fluidPage(
+#' ui <- bslib::page_fluid(
 #'   useShinyjs(),
 #'   include_css_files(pattern = "filter-panel"),
 #'   include_js_files(pattern = "count-bar-labels"),
@@ -198,16 +198,16 @@ FilterStateExpr <- R6::R6Class( # nolint
           tags$div(
             class = "filter-card-header",
             tags$div(
-              class = "filter-card-title",
+              class = "teal-slice filter-card-title",
               if (private$is_anchored()) {
                 icon("anchor-lock", class = "filter-card-icon")
               } else {
                 icon("lock", class = "filter-card-icon")
               },
-              tags$div(class = "filter-card-varname", tags$strong(private$teal_slice$id)),
-              tags$div(class = "filter-card-varlabel", private$teal_slice$title),
+              tags$div(class = "teal-slice filter-card-varname", tags$strong(private$teal_slice$id)),
+              tags$div(class = "teal-slice filter-card-varlabel", private$teal_slice$title),
               tags$div(
-                class = "filter-card-controls",
+                class = "teal-slice filter-card-controls",
                 if (isFALSE(private$is_anchored())) {
                   actionLink(
                     inputId = ns("remove"),
@@ -219,7 +219,7 @@ FilterStateExpr <- R6::R6Class( # nolint
               )
             ),
             tags$div(
-              class = "filter-card-summary",
+              class = "teal-slice filter-card-summary",
               private$ui_summary(ns("summary"))
             )
           )
@@ -252,7 +252,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     # @param id `shiny` id parameter
     ui_summary = function(id) {
       ns <- NS(id)
-      uiOutput(ns("summary"), class = "filter-card-summary")
+      uiOutput(ns("summary"), class = "teal-slice filter-card-summary")
     },
 
     # @description

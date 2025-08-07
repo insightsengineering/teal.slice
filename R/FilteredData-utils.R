@@ -76,7 +76,7 @@ eval_expr_with_msg <- function(expr, env) {
 #' library(shiny)
 #' library(shinyjs)
 #'
-#' ui <- fluidPage(
+#' ui <- bslib::page_fluid(
 #'   useShinyjs(),
 #'   actionButton("hide_content", label = "hide", icon = icon("xmark")),
 #'   actionButton("show_content", label = "show", icon = icon("check")),

@@ -894,7 +894,7 @@ FilteredData <- R6::R6Class( # nolint
             bsicons::bs_icon("plus-square", size = "1.4rem", class = "teal-slice filter-icon", fill = "#fff"),
           ),
           tags$div(
-            class = "menu-content",
+            style = "min-width: 15em;",
             shinycssloaders::withSpinner(
               uiOutput(ns("checkbox")),
               type = 4,

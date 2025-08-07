@@ -42,7 +42,7 @@
 #'   )
 #' )
 #'
-#' ui <- fluidPage(
+#' ui <- bslib::page_fluid(
 #'   useShinyjs(),
 #'   include_css_files(pattern = "filter-panel"),
 #'   include_js_files(pattern = "count-bar-labels"),
@@ -354,7 +354,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             countsmax = countsmax
           )
           tags$div(
-            class = "choices_state",
+            class = "teal-slice choices-state",
             if (private$is_multiple()) {
               checkboxGroupInput(
                 inputId = ns("selection"),
@@ -585,13 +585,20 @@ ChoicesFilterState <- R6::R6Class( # nolint
         }
       tagList(
         tags$span(
-          class = "filter-card-summary-value",
+          class = "teal-slice filter-card-summary-value",
           selected_text
         ),
         tags$span(
-          class = "filter-card-summary-controls",
+          class = "teal-slice filter-card-summary-controls",
           if (private$na_count > 0) {
-            tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
+            tags$span(
+              "NA",
+              if (isTRUE(private$get_keep_na())) {
+                icon("check", class = "text-success")
+              } else {
+                icon("xmark", class = "text-danger")
+              }
+            )
           }
         )
       )

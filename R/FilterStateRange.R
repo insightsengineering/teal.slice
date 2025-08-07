@@ -46,7 +46,7 @@
 #'   )
 #' )
 #'
-#' ui <- fluidPage(
+#' ui <- bslib::page_fluid(
 #'   useShinyjs(),
 #'   include_css_files(pattern = "filter-panel"),
 #'   include_js_files(pattern = "count-bar-labels"),
@@ -418,7 +418,7 @@ RangeFilterState <- R6::R6Class( # nolint
         )
         tagList(
           tags$div(
-            class = "choices_state",
+            class = "teal-slice choices-state",
             tags$head(tags$script(
               # Inline JS code for popover functionality.
               # Adding the script inline because when added from a file with include_js_files(),
@@ -464,7 +464,7 @@ RangeFilterState <- R6::R6Class( # nolint
             ui_input
           ),
           tags$div(
-            class = "filter-card-body-keep-na-inf",
+            style = "display: flex; justify-content: space-evenly;",
             private$keep_inf_ui(ns("keep_inf")),
             private$keep_na_ui(ns("keep_na"))
           )
@@ -644,14 +644,28 @@ RangeFilterState <- R6::R6Class( # nolint
     content_summary = function() {
       selection <- private$get_selected()
       tagList(
-        tags$span(HTML(selection[1], "&ndash;", selection[2]), class = "filter-card-summary-value"),
+        tags$span(HTML(selection[1], "&ndash;", selection[2]), class = "teal-slice filter-card-summary-value"),
         tags$span(
-          class = "filter-card-summary-controls",
+          class = "teal-slice filter-card-summary-controls",
           if (private$na_count > 0) {
-            tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
+            tags$span(
+              "NA",
+              if (isTRUE(private$get_keep_na())) {
+                icon("check", class = "text-success")
+              } else {
+                icon("xmark", class = "text-danger")
+              }
+            )
           },
           if (private$inf_count > 0) {
-            tags$span("Inf", if (isTRUE(private$get_keep_inf())) icon("check") else icon("xmark"))
+            tags$span(
+              "Inf",
+              if (isTRUE(private$get_keep_inf())) {
+                icon("check", class = "text-success")
+              } else {
+                icon("xmark", class = "text-danger")
+              }
+            )
           }
         )
       )

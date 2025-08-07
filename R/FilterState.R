@@ -323,7 +323,7 @@ FilterState <- R6::R6Class( # nolint
           `data-bs-toggle` = "collapse",
           href = paste0("#", ns("body")),
           tags$div(
-            class = "filter-card-title",
+            class = "teal-slice filter-card-title",
             if (private$is_anchored() && private$is_fixed()) {
               icon("anchor-lock", class = "filter-card-icon")
             } else if (private$is_anchored() && !private$is_fixed()) {
@@ -331,10 +331,10 @@ FilterState <- R6::R6Class( # nolint
             } else if (!private$is_anchored() && private$is_fixed()) {
               icon("lock", class = "filter-card-icon")
             },
-            tags$div(class = "filter-card-varname", tags$strong(private$get_varname())),
-            tags$div(class = "filter-card-varlabel", private$get_varlabel()),
+            tags$div(class = "teal-slice filter-card-varname", tags$strong(private$get_varname())),
+            tags$div(class = "teal-slice filter-card-varlabel", private$get_varlabel()),
             tags$div(
-              class = "filter-card-controls",
+              class = "teal-slice filter-card-controls",
               # Suppress toggling body when clicking on this div.
               # This is for bootstrap 3 and 4. Causes page to scroll to top, prevented by setting href on buttons.
               onclick = "event.stopPropagation();event.preventDefault();",
@@ -345,7 +345,7 @@ FilterState <- R6::R6Class( # nolint
                 actionLink(
                   inputId = ns("back"),
                   label = NULL,
-                  icon = icon("far fa-circle-arrow-left"),
+                  icon = icon("fas fa-circle-arrow-left"),
                   title = "Rewind state",
                   class = "filter-card-back",
                   style = "display: none"
@@ -355,7 +355,7 @@ FilterState <- R6::R6Class( # nolint
                 actionLink(
                   inputId = ns("reset"),
                   label = NULL,
-                  icon = icon("far fa-circle-arrow-up"),
+                  icon = icon("fas fa-circle-arrow-up"),
                   title = "Restore original state",
                   class = "filter-card-back",
                   style = "display: none"
@@ -364,14 +364,14 @@ FilterState <- R6::R6Class( # nolint
               if (isFALSE(private$is_anchored())) {
                 actionLink(
                   inputId = ns("remove"),
-                  label = icon("far fa-circle-xmark"),
+                  label = icon("fas fa-circle-xmark"),
                   title = "Remove filter asdfasdfaksdfk",
                   class = "teal-slice filter-icon"
                 )
               }
             )
           ),
-          tags$div(class = "filter-card-summary", private$ui_summary(ns("summary")))
+          tags$div(class = "teal-slice filter-card-summary", private$ui_summary(ns("summary")))
         ),
         tags$div(
           id = ns("body"),
@@ -379,7 +379,7 @@ FilterState <- R6::R6Class( # nolint
           `data-parent` = paste0("#", parent_id),
           `data-bs-parent` = paste0("#", parent_id),
           tags$div(
-            class = "filter-card-body",
+            class = "teal-slice filter-card-body",
             if (private$is_fixed()) {
               private$ui_inputs_fixed(ns("inputs"))
             } else {
@@ -654,7 +654,7 @@ FilterState <- R6::R6Class( # nolint
     # @param id (`character(1)`) `shiny` module instance id.
     ui_summary = function(id) {
       ns <- NS(id)
-      uiOutput(ns("summary"), class = "filter-card-summary")
+      uiOutput(ns("summary"), class = "teal-slice filter-card-summary")
     },
 
     # @description
@@ -686,7 +686,7 @@ FilterState <- R6::R6Class( # nolint
     ui_inputs_fixed = function(id) {
       ns <- NS(id)
       tags$div(
-        class = "choices_state",
+        class = "teal-slice choices-state",
         uiOutput(ns("selection"))
       )
     },

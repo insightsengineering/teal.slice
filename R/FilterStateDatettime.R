@@ -43,7 +43,7 @@
 #'   )
 #' )
 #'
-#' ui <- fluidPage(
+#' ui <- bslib::page_fluid(
 #'   useShinyjs(),
 #'   include_css_files(pattern = "filter-panel"),
 #'   include_js_files(pattern = "count-bar-labels"),
@@ -341,13 +341,13 @@ DatetimeFilterState <- R6::R6Class( # nolint
           position = "bottom right"
         )
         ui_reset_1 <- actionButton(
-          class = "date_reset_button",
+          class = "teal-slice date-reset-button",
           inputId = ns("start_date_reset"),
           label = NULL,
           icon = icon("fas fa-undo")
         )
         ui_reset_2 <- actionButton(
-          class = "date_reset_button",
+          class = "teal-slice date-reset-button",
           inputId = ns("end_date_reset"),
           label = NULL,
           icon = icon("fas fa-undo")
@@ -357,17 +357,21 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
         tags$div(
           tags$div(
-            class = "flex",
+            style = "display: flex;",
             ui_reset_1,
             tags$div(
-              class = "flex w-80 filter_datelike_input",
-              tags$div(class = "w-45 text-center", ui_input_1),
+              class = "teal-slice filter_datelike_input",
+              style = "display: flex; width: 80%;",
+              tags$div(style = "width: 45%; text-align: center;", ui_input_1),
               tags$span(
-                class = "input-group-addon w-10",
-                tags$span(class = "input-group-text w-100 justify-content-center", "to"),
+                style = "width: 10%; height: 3rem !important;",
+                tags$span(
+                  style = "width: 100%; justify-content: center; height: 3rem !important;",
+                  "to"
+                ),
                 title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
               ),
-              tags$div(class = "w-45 text-center", ui_input_2)
+              tags$div(style = "width: 45%; text-align: center;", ui_input_2)
             ),
             ui_reset_2
           ),
@@ -535,13 +539,20 @@ DatetimeFilterState <- R6::R6Class( # nolint
       max <- selected[2]
       tagList(
         tags$span(
-          class = "filter-card-summary-value",
+          class = "teal-slice filter-card-summary-value",
           HTML(min, "&ndash;", max)
         ),
         tags$span(
-          class = "filter-card-summary-controls",
+          class = "teal-slice filter-card-summary-controls",
           if (private$na_count > 0) {
-            tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
+            tags$span(
+              "NA",
+              if (isTRUE(private$get_keep_na())) {
+                icon("check", class = "text-success")
+              } else {
+                icon("xmark", class = "text-danger")
+              }
+            )
           }
         )
       )
