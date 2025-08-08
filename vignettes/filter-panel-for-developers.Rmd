@@ -186,7 +186,7 @@ set_filter_state(
 ui <- bslib::page_fluid(
   shinyjs::useShinyjs(),
   bslib::layout_column_wrap(
-    style = css(grid_template_columns = "2fr 1fr"),
+    style = htmltools::css(grid_template_columns = "2fr 1fr"),
     tags$div(
       tags$div(
         actionButton("add_species_filter", "Set iris$Species filter"),
