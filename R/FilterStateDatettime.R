@@ -367,7 +367,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
               tags$span(
                 style = "width: 10%; height: 3rem !important;",
                 tags$span(
-                  style = "width: 100%; justify-content: center; height: 3rem !important;",
+                  style = "height: 3rem; display: flex; justify-content: center; align-items: center;",
                   "to"
                 ),
                 title = "Times are displayed in the local timezone and are converted to UTC in the analysis"

@@ -315,7 +315,7 @@ FilterState <- R6::R6Class( # nolint
 
       tags$div(
         id = id,
-        class = "panel filter-card",
+        class = "teal-slice filter-card",
         include_js_files("count-bar-labels.js"),
         tags$div(
           class = "filter-card-header",

@@ -719,7 +719,7 @@ FilteredData <- R6::R6Class( # nolint
             tags$div(
               id = ns("filters_overview_contents"),
               tags$div(
-                class = "teal_active_summary_filter_panel",
+                style = "overflow-x: auto;",
                 tableOutput(ns("table"))
               )
             )
@@ -822,7 +822,7 @@ FilteredData <- R6::R6Class( # nolint
             header_html <- tags$tr(tagList(lapply(header_labels, tags$td)))
 
             table_html <- tags$table(
-              class = "table custom-table",
+              class = "teal-slice table custom-table",
               tags$thead(header_html),
               tags$tbody(body_html)
             )

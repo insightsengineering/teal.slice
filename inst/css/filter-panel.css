@@ -33,34 +33,14 @@
   height: 3rem !important;
 }
 
-/* Make these actionLink styles more specific and namespaced */
-a.remove {
-  font-weight: normal;
-  float: right;
-  border: 0;
-  background-color: transparent;
-  color: rgba(0, 0, 0, 0.3);
-  font-weight: 100;
-  font-size: 0.9em;
-  padding: 2px 4px;
-  margin-top: 0;
+.teal-slice.filter-icon.remove-all i {
+  opacity: 0.5;
+  transition: 0.1s;
+  color: var(--bs-danger);
 }
 
-a.remove:hover {
-  color: #337ab7;
-}
-
-a.remove_all {
-  cursor: pointer;
-  color: rgb(136, 0, 0, 0.72);
-  font-size: 1rem;
-  margin: 0.5rem;
-  opacity: 50%;
-  text-decoration: none;
-}
-
-a.remove_all:hover {
-  color: #d40000;
+.teal-slice.filter-icon.remove-all i:hover {
+  opacity: 1;
 }
 
 .teal-slice.choices-state {
@@ -85,15 +65,9 @@ a.remove_all:hover {
   margin: 0em;
 }
 
-.checkbox label {
-  margin: 0em;
-}
-
-.irs.irs--shiny.js-irs-0.irs-with-grid * {
-  font-size: 0.85em;
-}
-
-.parent-hideable-list-group > .accordion:not([data-label=""]):before {
+.teal-slice
+  .parent-hideable-list-group
+  > .accordion:not([data-label=""]):before {
   padding: 2px 4px;
   font-size: 90%;
   color: #c7254e;
@@ -109,40 +83,24 @@ a.remove_all:hover {
   content: attr(data-label);
 }
 
-/* filter summary table */
-.custom-table td:nth-child(1),
-.custom-table thead {
+.teal-slice.custom-table td:nth-child(1),
+.teal-slice.custom-table thead {
   font-weight: bold;
 }
 
-.teal_active_summary_filter_panel {
-  overflow-x: auto;
-}
-
-/* .panel class needed for bs3 accordion to work properly
-  it's styles need to be overwritten to have consistent look
- */
-.panel {
-  background-color: transparent;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  margin: 0em;
-}
-
-.filter-card:has(> .filter-card-header[aria-expanded="true"]) {
+.teal-slice.filter-card:has(> .filter-card-header[aria-expanded="true"]) {
   transition-property: background-color;
   transition-duration: 150ms;
   background-color: var(--bs-gray-100, #f8f9fa);
 }
 
-.filter-card:has(> .filter-card-header[aria-expanded="true"]):hover {
+.teal-slice.filter-card:has(> .filter-card-header[aria-expanded="true"]):hover {
   transition-property: box-shadow;
   transition-duration: 150ms;
   box-shadow: 0 0 5px 2px var(--bs-gray-800, #343a40);
 }
 
-.filter-card-header {
+.teal-slice.filter-card .filter-card-header {
   color: var(--bs-body-color, #333333);
   padding: 5px 10px;
   border: 1px solid var(--bs-gray-300, #dee2e6);
@@ -152,16 +110,16 @@ a.remove_all:hover {
   flex-direction: column;
 }
 
-.filter-card-header:not(.collapsed) {
+.teal-slice.filter-card .filter-card-header:not(.collapsed) {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-.filter-card-header:hover {
+.teal-slice.filter-card .teal-slice.filter-card .filter-card-header:hover {
   background-color: var(--bs-gray-200, #e9ecef);
 }
 
-.filter-card-header[aria-expanded="true"]:hover {
+.teal-slice.filter-card .filter-card-header[aria-expanded="true"]:hover {
   transition-property: background-color;
   transition-duration: 150ms;
   background-color: var(--bs-gray-100, #f8f9fa);
@@ -235,9 +193,8 @@ a.remove_all:hover {
   width: 100%;
 }
 
-/* This is only used in the `FilterStateExpr` */
-.filter-card-remove,
-.filter-card-remove:hover {
+.teal-slice .filter-card-remove,
+.teal-slice .filter-card-remove:hover {
   color: var(--bs-body-color, var(--dark, #333333));
 }
 
@@ -299,7 +256,7 @@ a.remove_all:hover {
   color: var(--bs-body-color, #333333);
 }
 
-.progress-bar.state-count-bar-filtered {
+.teal-slice .progress-bar.state-count-bar-filtered {
   background-color: lightblue !important;
   color: var(--bs-body-color, var(--dark, #333333));
   overflow: visible;
@@ -308,7 +265,7 @@ a.remove_all:hover {
   font-size: small;
 }
 
-.progress-bar.state-count-bar-unfiltered {
+.teal-slice .progress-bar.state-count-bar-unfiltered {
   background-color: rgba(173, 216, 230, 0.439) !important;
 }
 
@@ -426,15 +383,6 @@ a.remove_all:hover {
 .teal-slice.filter-icon {
   display: flex;
   text-decoration: none;
-}
-
-.teal-slice.filter-icon.remove-all i {
-  transition: 0.1s;
-  color: var(--bs-danger);
-}
-
-.teal-slice.filter-icon.remove-all i:hover {
-  opacity: 1;
 }
 
 .teal-slice.filter-icon:hover {
