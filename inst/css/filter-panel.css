@@ -229,6 +229,12 @@ a.remove_all:hover {
   gap: 1em;
 }
 
+.teal-slice.filter-panel
+  .add-panel
+  .shiny-input-container:not(.shiny-input-container-inline) {
+  width: 100%;
+}
+
 /* This is only used in the `FilterStateExpr` */
 .filter-card-remove,
 .filter-card-remove:hover {
