@@ -419,39 +419,20 @@ RangeFilterState <- R6::R6Class( # nolint
         tagList(
           tags$div(
             class = "teal-slice choices-state",
-            tags$head(tags$script(
-              # Inline JS code for popover functionality.
-              # Adding the script inline because when added from a file with include_js_files(),
-              # it only works in the first info_button instance and not others.
-              HTML(
-                '$(document).ready(function() {
-                  $("[data-toggle=\'popover\']").popover();
-
-                  $(document).on("click", function (e) {
-                    if (!$("[data-toggle=\'popover\']").is(e.target) &&
-                        $("[data-toggle=\'popover\']").has(e.target).length === 0 &&
-                        $(".popover").has(e.target).length === 0) {
-                      $("[data-toggle=\'popover\']").popover("hide");
-                    }
-                  });
-                });'
-              )
-            )),
             tags$div(
-              actionLink(
-                ns("plotly_info"),
-                label = NULL,
-                icon = icon("question-circle"),
-                "data-toggle" = "popover",
-                "data-html" = "true",
-                "data-placement" = "left",
-                "data-trigger" = "click",
-                "data-title" = "Plot actions",
-                "data-content" = "<p>
-                                  Drag vertical lines to set selection.<br>
-                                  Drag across plot to zoom in.<br>
-                                  Drag axis to pan.<br>
-                                  Double click to zoom out."
+              bslib::tooltip(
+                trigger = actionLink(
+                  ns("plotly_info"),
+                  label = NULL,
+                  icon = icon("question-circle")
+                ),
+                HTML(
+                  "<p>
+                  Drag vertical lines to set selection.<br>
+                  Drag across plot to zoom in.<br>
+                  Drag axis to pan.<br>
+                  Double click to zoom out."
+                )
               ),
               style = "text-align: right; font-size: 0.7em; margin-bottom: -1em; position: relative; z-index: 9;"
             ),
