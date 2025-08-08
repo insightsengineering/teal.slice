@@ -381,13 +381,6 @@ FilteredDataset <- R6::R6Class( # nolint
             {
               shinyjs::hide("filter_count_ui")
               shinyjs::show("filters")
-              # TODO: `collapse_icon` is no longer created in the UI and we have to remove it. This produces a JS console error.
-              shinyjs::runjs(
-                sprintf(
-                  "setAndRemoveClass('#%s', 'fa-angle-down', 'fa-angle-right')",
-                  session$ns("collapse_icon")
-                )
-              )
             }
           )
 
