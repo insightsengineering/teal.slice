@@ -38,9 +38,9 @@
 #'   countsnow = unname(counts)
 #' )
 #'
-#' ui <- fluidPage(
+#' ui <- bslib::page_fluid(
 #'   tags$div(
-#'     class = "choices_state",
+#'     class = "teal-slice choices-state",
 #'     include_js_files("count-bar-labels.js"),
 #'     include_css_files(pattern = "filter-panel"),
 #'     checkboxGroupInput(
@@ -126,14 +126,17 @@ countBar <- function(inputId, label, countmax, countnow = NULL, counttotal = cou
   ns <- NS(inputId)
   if (is.null(countnow)) countnow <- 0
   tags$div(
-    class = "progress state-count-container",
+    class = "teal-slice progress state-count-container",
     # * .9 to not exceed width of the parent html element
     tags$div(
       id = ns("count_bar_filtered"),
-      class = "progress-bar state-count-bar-filtered",
-      style = sprintf("width: %s%%", countnow / counttotal * 100),
-      role = "progressbar",
-      label
+      class = "count-bar-filtered-container",
+      tags$span(
+        class = "progress-bar state-count-bar-filtered",
+        style = sprintf("width: %s%%", countnow / counttotal * 100),
+        role = "progressbar"
+      ),
+      tags$span(label, class = "count-bar-filtered-label")
     ),
     tags$div(
       id = ns("count_bar_unfiltered"),

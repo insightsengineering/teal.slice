@@ -60,9 +60,9 @@ labels <- countBars(
   countsnow = unname(counts)
 )
 
-ui <- fluidPage(
+ui <- bslib::page_fluid(
   tags$div(
-    class = "choices_state",
+    class = "teal-slice choices-state",
     include_js_files("count-bar-labels.js"),
     include_css_files(pattern = "filter-panel"),
     checkboxGroupInput(

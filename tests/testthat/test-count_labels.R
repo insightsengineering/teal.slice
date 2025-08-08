@@ -120,17 +120,36 @@ testthat::test_that("countBar returns a div with class and two progressbars", {
 
   expected <- list(
     name = "div",
-    attribs = list(class = "progress state-count-container"),
+    attribs = list(
+      class = "teal-slice progress state-count-container"
+    ),
     children = list(
       list(
         name = "div",
         attribs = list(
           id = "a-count_bar_filtered",
-          class = "progress-bar state-count-bar-filtered",
-          style = "width: 25%",
-          role = "progressbar"
+          class = "count-bar-filtered-container"
         ),
-        children = list("a (50/150)")
+        children = list(
+          list(
+            name = "span",
+            attribs = list(
+              class = "progress-bar state-count-bar-filtered",
+              style = "width: 25%",
+              role = "progressbar"
+            ),
+            children = list()
+          ),
+          list(
+            name = "span",
+            attribs = list(
+              class = "count-bar-filtered-label"
+            ),
+            children = list(
+              "a (50/150)"
+            )
+          )
+        )
       ),
       list(
         name = "div",

@@ -56,7 +56,7 @@ We recommend consulting the package maintainer before using it.
 library(shiny)
 
 iris_fd <- init_filtered_dataset(iris, dataname = "iris")
-ui <- fluidPage(
+ui <- bslib::page_fluid(
   iris_fd$ui_add(id = "add"),
   iris_fd$ui_active("dataset"),
   verbatimTextOutput("call")

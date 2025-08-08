@@ -62,7 +62,7 @@ isolate(filter_state$get_call())
 
 # working filter in an app
 
-ui <- fluidPage(
+ui <- bslib::page_fluid(
   filter_state$ui(id = "app"),
   verbatimTextOutput("call")
 )

@@ -54,7 +54,7 @@ rf <- init_filter_states(
 )
 
 library(shiny)
-ui <- fluidPage(
+ui <- bslib::page_fluid(
   actionButton("clear", tags$span(icon("xmark"), "Remove all filters")),
   rf$ui_add(id = "add"),
   rf$ui_active("states"),
