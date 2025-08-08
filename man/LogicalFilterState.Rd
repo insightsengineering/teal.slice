@@ -34,7 +34,7 @@ fs <- LogicalFilterState$new(
   slice = teal_slice(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
 )
 
-ui <- fluidPage(
+ui <- bslib::page_fluid(
   useShinyjs(),
   include_css_files(pattern = "filter-panel"),
   include_js_files(pattern = "count-bar-labels"),
