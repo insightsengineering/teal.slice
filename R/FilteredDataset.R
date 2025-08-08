@@ -255,7 +255,27 @@ FilteredDataset <- R6::R6Class( # nolint
                         id = session$ns("whole_ui"),
                         style = "margin: 0; padding: 0;",
                         uiOutput(session$ns("active_filter_badge")),
-                        uiOutput(session$ns("filter_util_icons")),
+                        div(
+                          id = session$ns("filter_util_icons"),
+                          class = "teal-slice filter-util-icons",
+                          tags$a(
+                            class = "teal-slice filter-icon",
+                            tags$i(
+                              id = session$ns("add_filter_icon"),
+                              class = "fa fa-plus",
+                              title = "fold/expand transform panel",
+                              onclick = sprintf(
+                                "togglePanelItems(this, '%s', 'fa-plus', 'fa-minus');
+                                if ($(this).hasClass('fa-minus')) {
+                                  $('#%s .accordion-button.collapsed').click();
+                                }",
+                                session$ns("add_panel"),
+                                session$ns("dataset_filter_accordion")
+                              )
+                            )
+                          ),
+                          uiOutput(session$ns("filter_util_remove_icons"))
+                        ),
                         bslib::page_fluid(
                           style = "padding: 0px; margin: 0;",
                           tags$div(
@@ -332,38 +352,19 @@ FilteredDataset <- R6::R6Class( # nolint
             )
           )
 
-          output$filter_util_icons <- renderUI({
+          output$filter_util_remove_icons <- renderUI({
             if (private$allow_add()) {
-              div(
-                class = "teal-slice filter-util-icons",
-                tags$a(
-                  class = "teal-slice filter-icon",
-                  tags$i(
-                    id = session$ns("add_filter_icon"),
-                    class = "fa fa-plus",
-                    title = "fold/expand transform panel",
-                    onclick = sprintf(
-                      "togglePanelItems(this, '%s', 'fa-plus', 'fa-minus');
-                      if ($(this).hasClass('fa-minus')) {
-                        $('#%s .accordion-button.collapsed').click();
-                      }",
-                      session$ns("add_panel"),
-                      session$ns("dataset_filter_accordion")
-                    )
+              if (length(Filter(function(x) !x$anchored, self$get_filter_state())) > 0) {
+                tags$div(
+                  style = "display: flex;",
+                  actionLink(
+                    session$ns("remove_filters"),
+                    label = "",
+                    icon = icon("far fa-circle-xmark"),
+                    class = "teal-slice filter-icon"
                   )
-                ),
-                if (length(Filter(function(x) !x$anchored, self$get_filter_state())) > 0) {
-                  tags$div(
-                    style = "display: flex;",
-                    actionLink(
-                      session$ns("remove_filters"),
-                      label = "",
-                      icon = icon("fas fa-circle-xmark"),
-                      class = "teal-slice filter-icon"
-                    )
-                  )
-                }
-              )
+                )
+              }
             }
           })
 

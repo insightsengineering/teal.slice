@@ -325,11 +325,11 @@ FilterState <- R6::R6Class( # nolint
           tags$div(
             class = "teal-slice filter-card-title",
             if (private$is_anchored() && private$is_fixed()) {
-              icon("anchor-lock", class = "filter-card-icon")
+              icon("anchor-lock", class = "teal-slice filter-card-icon")
             } else if (private$is_anchored() && !private$is_fixed()) {
-              icon("anchor", class = "filter-card-icon")
+              icon("anchor", class = "teal-slice filter-card-icon")
             } else if (!private$is_anchored() && private$is_fixed()) {
-              icon("lock", class = "filter-card-icon")
+              icon("lock", class = "teal-slice filter-card-icon")
             },
             tags$div(class = "teal-slice filter-card-varname", tags$strong(private$get_varname())),
             tags$div(class = "teal-slice filter-card-varlabel", private$get_varlabel()),
@@ -345,7 +345,7 @@ FilterState <- R6::R6Class( # nolint
                 actionLink(
                   inputId = ns("back"),
                   label = NULL,
-                  icon = icon("fas fa-circle-arrow-left"),
+                  icon = icon("far fa-circle-arrow-left"),
                   title = "Rewind state",
                   class = "filter-card-back",
                   style = "display: none"
@@ -355,7 +355,7 @@ FilterState <- R6::R6Class( # nolint
                 actionLink(
                   inputId = ns("reset"),
                   label = NULL,
-                  icon = icon("fas fa-circle-arrow-up"),
+                  icon = icon("far fa-circle-arrow-up"),
                   title = "Restore original state",
                   class = "filter-card-back",
                   style = "display: none"
@@ -364,7 +364,7 @@ FilterState <- R6::R6Class( # nolint
               if (isFALSE(private$is_anchored())) {
                 actionLink(
                   inputId = ns("remove"),
-                  label = icon("fas fa-circle-xmark"),
+                  label = icon("far fa-circle-xmark"),
                   title = "Remove filter asdfasdfaksdfk",
                   class = "teal-slice filter-icon"
                 )

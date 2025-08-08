@@ -200,9 +200,9 @@ FilterStateExpr <- R6::R6Class( # nolint
             tags$div(
               class = "teal-slice filter-card-title",
               if (private$is_anchored()) {
-                icon("anchor-lock", class = "filter-card-icon")
+                icon("anchor-lock", class = "teal-slice filter-card-icon")
               } else {
-                icon("lock", class = "filter-card-icon")
+                icon("lock", class = "teal-slice filter-card-icon")
               },
               tags$div(class = "teal-slice filter-card-varname", tags$strong(private$teal_slice$id)),
               tags$div(class = "teal-slice filter-card-varlabel", private$teal_slice$title),
