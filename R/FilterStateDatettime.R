@@ -326,8 +326,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
           minDate = private$get_choices()[1L],
           maxDate = private$get_choices()[2L],
           update_on = "close",
-          addon = "none",
-          position = "bottom right"
+          addon = "none"
         )
         ui_input_2 <- shinyWidgets::airDatepickerInput(
           inputId = ns("selection_end"),
@@ -337,8 +336,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
           minDate = private$get_choices()[1L],
           maxDate = private$get_choices()[2L],
           update_on = "close",
-          addon = "none",
-          position = "bottom right"
+          addon = "none"
         )
         ui_reset_1 <- actionButton(
           class = "teal-slice date-reset-button",
