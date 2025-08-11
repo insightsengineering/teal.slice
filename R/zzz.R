@@ -38,7 +38,6 @@
   dplyr::filter
   grDevices::rgb
   htmltools::tagInsertChildren
-  lifecycle::badge
   logger::log_debug
   plotly::plot_ly
   shinycssloaders::withSpinner
