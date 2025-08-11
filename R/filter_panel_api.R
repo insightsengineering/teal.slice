@@ -1,6 +1,6 @@
 #' Managing `FilteredData` states
 #'
-#' @description `r lifecycle::badge("experimental")`
+#' @description
 #'
 #' Set, get and remove filter states of `FilteredData` object.
 #'
