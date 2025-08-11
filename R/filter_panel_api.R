@@ -155,7 +155,7 @@ clear_filter_states <- function(datasets, force = FALSE) {
 
 #' Gets filter expression for multiple `datanames` taking into account its order.
 #'
-#' @description `r lifecycle::badge("stable")`
+#' @description
 #'
 #' To be used in `Show R Code` button.
 #'
