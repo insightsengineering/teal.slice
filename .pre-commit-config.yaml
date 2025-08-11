@@ -21,7 +21,6 @@ repos:
           - grDevices
           - htmltools
           - jsonlite
-          - lifecycle
           - logger
           - methods
           - plotly

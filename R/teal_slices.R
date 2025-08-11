@@ -17,7 +17,7 @@
 #' @param include_varnames,exclude_varnames (`named list`s of `character`) where list names
 #'  match names of data sets and vector elements match variable names in respective data sets;
 #'  specify which variables are allowed to be filtered; see `Details`.
-#' @param count_type `r lifecycle::badge("experimental")`
+#' @param count_type
 #' _This is a new feature. Do kindly share your opinions on
 #' [`teal.slice`'s GitHub repository](https://github.com/insightsengineering/teal.slice/)._
 #'
