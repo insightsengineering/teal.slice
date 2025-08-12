@@ -1,8 +1,8 @@
 Type: Package
 Package: teal.slice
 Title: Filter Module for 'teal' Applications
-Version: 0.6.0.9010
-Date: 2025-08-04
+Version: 0.6.0.9011
+Date: 2025-08-11
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9533-457X")),
@@ -41,7 +41,6 @@ Imports:
     grDevices,
     htmltools (>= 0.5.4),
     jsonlite (>= 2.0.0),
-    lifecycle (>= 0.2.0),
     logger (>= 0.4.0),
     methods,
     plotly (>= 4.10.4),
@@ -67,12 +66,10 @@ Suggests:
 VignetteBuilder:
     knitr,
     rmarkdown
-RdMacros:
-    lifecycle
 Config/Needs/verdepcheck: rstudio/shiny, rstudio/bslib, mllg/checkmate,
-    tidyverse/dplyr, rstudio/htmltools, jeroen/jsonlite, r-lib/lifecycle,
-    daroczig/logger, plotly/plotly, r-lib/R6, daattali/shinycssloaders,
-    daattali/shinyjs, dreamRs/shinyWidgets, insightsengineering/teal.data,
+    tidyverse/dplyr, rstudio/htmltools, jeroen/jsonlite, daroczig/logger,
+    plotly/plotly, r-lib/R6, daattali/shinycssloaders, daattali/shinyjs,
+    dreamRs/shinyWidgets, insightsengineering/teal.data,
     insightsengineering/teal.logger, insightsengineering/teal.widgets,
     rstudio/DT, yihui/knitr, bioc::MultiAssayExperiment,
     bioc::SummarizedExperiment, rstudio/rmarkdown, r-lib/testthat,
