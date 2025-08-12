@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.721094640820981" branch-rate="0" lines-covered="3162" lines-valid="4385" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2025-08-08 11:33:29.908723">
+<coverage line-rate="0.721259124087591" branch-rate="0" lines-covered="3162" lines-valid="4384" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2025-08-12 07:36:34.380242">
   <sources>
     <source>/__w/teal.slice/teal.slice/teal.slice</source>
   </sources>
   <packages>
-    <package name="teal.slice" line-rate="0.721094640820981" branch-rate="0" complexity="0">
+    <package name="teal.slice" line-rate="0.721259124087591" branch-rate="0" complexity="0">
       <classes>
         <class name="calls_combine_by.R" filename="R/calls_combine_by.R" line-rate="1" branch-rate="0" complexity="0">
           <methods>
@@ -30097,7 +30097,7 @@
                 <line number="57" hits="1298" branch="false"/>
                 <line number="58" hits="1298" branch="false"/>
                 <line number="59" hits="1298" branch="false"/>
-                <line number="60" hits="98" branch="false"/>
+                <line number="60" hits="96" branch="false"/>
                 <line number="61" hits="1298" branch="false"/>
                 <line number="62" hits="1298" branch="false"/>
                 <line number="63" hits="1298" branch="false"/>
@@ -30142,7 +30142,7 @@
             <line number="57" hits="1298" branch="false"/>
             <line number="58" hits="1298" branch="false"/>
             <line number="59" hits="1298" branch="false"/>
-            <line number="60" hits="98" branch="false"/>
+            <line number="60" hits="96" branch="false"/>
             <line number="61" hits="1298" branch="false"/>
             <line number="62" hits="1298" branch="false"/>
             <line number="63" hits="1298" branch="false"/>
@@ -30224,7 +30224,6 @@
                 <line number="44" hits="0" branch="false"/>
                 <line number="45" hits="0" branch="false"/>
                 <line number="46" hits="0" branch="false"/>
-                <line number="47" hits="0" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -30245,7 +30244,6 @@
             <line number="44" hits="0" branch="false"/>
             <line number="45" hits="0" branch="false"/>
             <line number="46" hits="0" branch="false"/>
-            <line number="47" hits="0" branch="false"/>
           </lines>
         </class>
       </classes>
