@@ -768,14 +768,14 @@ FilterStates <- R6::R6Class( # nolint
       })
     },
 
-    #' @description
-    #' Object cleanup.
-    #'
-    #' - Destroy inputs and observers stored in `private$session_bindings`
-    #' - Clean `state_list`
-    #'
-    #' @return `NULL`, invisibly.
-    #'
+    # @description
+    # Object cleanup.
+    #
+    # - Destroy inputs and observers stored in `private$session_bindings`
+    # - Clean `state_list`
+    #
+    # @return `NULL`, invisibly.
+    #
     finalize = function() {
       .finalize_session_bindings(self, private)
     }
