@@ -19,6 +19,7 @@
   width: 10%;
   height: 3rem;
 }
+
 .teal-slice.filter_datelike_input input {
   font-size: 1em !important;
 }
@@ -53,21 +54,19 @@
   align-items: center;
 }
 
-.teal-slice.choices-state label > input {
+.teal-slice.choices-state label>input {
   flex: none;
 }
 
-.teal-slice.choices-state label > span {
+.teal-slice.choices-state label>span {
   flex-grow: 1;
 }
 
-.teal-slice.choices-state > div.form-group {
+.teal-slice.choices-state>div.form-group {
   margin: 0em;
 }
 
-.teal-slice
-  .parent-hideable-list-group
-  > .accordion:not([data-label=""]):before {
+.teal-slice .parent-hideable-list-group>.accordion:not([data-label=""]):before {
   padding: 2px 4px;
   font-size: 90%;
   color: #c7254e;
@@ -130,15 +129,18 @@
   flex-direction: row;
   flex-wrap: nowrap;
 }
+
 .teal-slice.filter-card-icon {
   padding-right: 0.25em;
 }
+
 .teal-slice.filter-card-varname {
   flex: 0 0.4 auto;
   justify-self: flex-start;
 
   overflow: hidden;
 }
+
 .teal-slice.filter-card-varlabel {
   flex: 1 1 auto;
   justify-self: flex-start;
@@ -150,6 +152,7 @@
 
   color: var(--bs-gray-500, var(--gray, darkgray));
 }
+
 .teal-slice.filter-card-controls {
   flex: 0 0 auto;
   justify-self: flex-end;
@@ -187,9 +190,7 @@
   gap: 1em;
 }
 
-.teal-slice.filter-panel
-  .add-panel
-  .shiny-input-container:not(.shiny-input-container-inline) {
+.teal-slice.filter-panel .add-panel .shiny-input-container:not(.shiny-input-container-inline) {
   width: 100%;
 }
 
@@ -220,56 +221,7 @@
   border-radius: 0px;
 }
 
-.teal-slice.progress.state-count-container > .count-bar-filtered-container {
-  position: relative;
-  background-color: var(--bs-white);
-  display: flex;
-  flex: 1;
-  align-items: center;
-  padding: 2px 0;
-}
-
-.teal-slice.progress.state-count-container
-  > .count-bar-filtered-container
-  > .progress-bar.state-count-bar-filtered {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-}
-
-.teal-slice.progress.state-count-container
-  > .count-bar-filtered-container
-  > .count-bar-filtered-label {
-  position: relative;
-  z-index: 1;
-  flex: 1 1 auto;
-  width: 100%;
-  text-align: left;
-  padding: 0 0.5rem;
-
-  white-space: wrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  pointer-events: none;
-  color: var(--bs-body-color, #333333);
-}
-
-.teal-slice .progress-bar.state-count-bar-filtered {
-  background-color: lightblue !important;
-  color: var(--bs-body-color, var(--dark, #333333));
-  overflow: visible;
-  text-align: left;
-  white-space: normal;
-  font-size: small;
-}
-
-.teal-slice .progress-bar.state-count-bar-unfiltered {
-  background-color: rgba(173, 216, 230, 0.439) !important;
-}
-
-.input-daterange > input {
+.input-daterange>input {
   font-size: 1em !important;
 }
 
