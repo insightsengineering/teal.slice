@@ -47,7 +47,7 @@ updateCountText(
 \details{
 A progress bar is created to visualize the number of counts in a variable, with filling and a text label.
 \itemize{
-\item progress bar width is derived as a fraction of the container width: \code{style = "width: <countmax> / <counttotal>\%"},
+\item progress bar width is derived as a fraction of the container width equal to \verb{<countmax> / <counttotal>\%"},
 \item progress bar is filled up to the fraction \verb{<countnow> / <countmax>},
 \item text label is obtained by \verb{<label> (<countnow> / <countmax>)}.
 }
