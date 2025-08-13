@@ -164,6 +164,7 @@ All the instructions herein can be utilized to build a `shiny` app.
 
 ```{r warning=FALSE}
 library(shiny)
+library(bslib)
 
 # initializing FilteredData
 datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
@@ -182,25 +183,19 @@ set_filter_state(
   )
 )
 
-ui <- fluidPage(
-  shinyjs::useShinyjs(),
-  fluidRow(
-    column(
-      width = 9,
-      id = "teal_primary_col",
-      tagList(
+ui <- bslib::page_fluid(
+  bslib::layout_column_wrap(
+    style = htmltools::css(grid_template_columns = "2fr 1fr"),
+    tags$div(
+      tags$div(
         actionButton("add_species_filter", "Set iris$Species filter"),
         actionButton("remove_species_filter", "Remove iris$Species filter"),
-        actionButton("remove_all_filters", "Remove all filters"),
-        verbatimTextOutput("rcode"),
-        verbatimTextOutput("filter_state")
-      )
+        actionButton("remove_all_filters", "Remove all filters")
+      ),
+      verbatimTextOutput("rcode"),
+      verbatimTextOutput("filter_state")
     ),
-    column(
-      width = 3,
-      id = "teal_secondary_col",
-      datasets$ui_filter_panel("filter_panel")
-    )
+    datasets$ui_filter_panel("filter_panel")
   )
 )
 

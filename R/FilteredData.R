@@ -719,7 +719,7 @@ FilteredData <- R6::R6Class( # nolint
             tags$div(
               id = ns("filters_overview_contents"),
               tags$div(
-                class = "teal_active_summary_filter_panel",
+                style = "overflow-x: auto;",
                 tableOutput(ns("table"))
               )
             )
@@ -822,7 +822,7 @@ FilteredData <- R6::R6Class( # nolint
             header_html <- tags$tr(tagList(lapply(header_labels, tags$td)))
 
             table_html <- tags$table(
-              class = "table custom-table",
+              class = "teal-slice table custom-table",
               tags$thead(header_html),
               tags$tbody(body_html)
             )
@@ -894,7 +894,7 @@ FilteredData <- R6::R6Class( # nolint
             bsicons::bs_icon("plus-square", size = "1.4rem", class = "teal-slice filter-icon", fill = "#fff"),
           ),
           tags$div(
-            class = "menu-content",
+            style = "min-width: 15em;",
             shinycssloaders::withSpinner(
               uiOutput(ns("checkbox")),
               type = 4,
@@ -1023,13 +1023,13 @@ FilteredData <- R6::R6Class( # nolint
       })
     },
 
-    #' @description
-    #' Object and dependencies cleanup.
-    #'
-    #' - Destroy inputs and observers stored in `private$session_bindings`
-    #' - Finalize `FilteredData` stored in `private$filtered_datasets`
-    #'
-    #' @return `NULL`, invisibly.
+    # @description
+    # Object and dependencies cleanup.
+    #
+    # - Destroy inputs and observers stored in `private$session_bindings`
+    # - Finalize `FilteredData` stored in `private$filtered_datasets`
+    #
+    # @return `NULL`, invisibly.
     finalize = function() {
       .finalize_session_bindings(self, private)
       lapply(private$filtered_datasets, function(x) x$destroy())

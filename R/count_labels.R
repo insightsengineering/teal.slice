@@ -38,9 +38,9 @@
 #'   countsnow = unname(counts)
 #' )
 #'
-#' ui <- fluidPage(
+#' ui <- bslib::page_fluid(
 #'   tags$div(
-#'     class = "choices_state",
+#'     class = "teal-slice choices-state",
 #'     include_js_files("count-bar-labels.js"),
 #'     include_css_files(pattern = "filter-panel"),
 #'     checkboxGroupInput(
@@ -100,7 +100,7 @@ countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
 #' `shiny` element displaying a progress bar and observation count.
 #'
 #' A progress bar is created to visualize the number of counts in a variable, with filling and a text label.
-#' - progress bar width is derived as a fraction of the container width: `style = "width: <countmax> / <counttotal>%"`,
+#' - progress bar width is derived as a fraction of the container width equal to `<countmax> / <counttotal>%"`,
 #' - progress bar is filled up to the fraction `<countnow> / <countmax>`,
 #' - text label is obtained by `<label> (<countnow> / <countmax>)`.
 #'
@@ -126,20 +126,43 @@ countBar <- function(inputId, label, countmax, countnow = NULL, counttotal = cou
   ns <- NS(inputId)
   if (is.null(countnow)) countnow <- 0
   tags$div(
-    class = "progress state-count-container",
-    # * .9 to not exceed width of the parent html element
-    tags$div(
-      id = ns("count_bar_filtered"),
-      class = "progress-bar state-count-bar-filtered",
-      style = sprintf("width: %s%%", countnow / counttotal * 100),
-      role = "progressbar",
-      label
-    ),
-    tags$div(
-      id = ns("count_bar_unfiltered"),
-      class = "progress-bar state-count-bar-unfiltered",
-      style = sprintf("width: %s%%", (countmax - countnow) / counttotal * 100),
-      role = "progressbar"
+    class = "teal-slice state-count-container",
+    style = "margin-bottom: 5px; padding: 0; margin: 0;",
+    `data-bar-id` = inputId,
+    tags$svg(
+      width = "100%",
+      height = "20",
+      style = c(
+        "display: block;",
+        "margin: 0;",
+        "padding: 0;",
+        "background: white;",
+        "box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);"
+      ),
+      tags$rect(
+        id = ns("count_bar_unfiltered"),
+        x = sprintf("%.2f", countnow / counttotal * 100),
+        y = "0",
+        width = sprintf("%.2f", (countmax - countnow) / counttotal * 100),
+        height = "20",
+        fill = "#add8e670"
+      ),
+      tags$rect(
+        id = ns("count_bar_filtered"),
+        x = "0",
+        y = "0",
+        width = sprintf("%.2f", countnow / counttotal * 100),
+        height = "20",
+        fill = "#add8e6"
+      ),
+      tags$text(
+        id = ns("count_bar_label"),
+        x = "2",
+        y = "14",
+        fill = "#333",
+        `font-size` = "12",
+        label
+      )
     )
   )
 }

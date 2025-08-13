@@ -140,14 +140,11 @@ testthat::test_that("ui_input with filtered x_reactive outputs filtered counts",
     slice = teal_slice(dataname = "data", varname = "var")
   )
 
-  xx <- state$ui_inputs()
-  testthat::expect_identical(
-    gsub(
-      "^.+(\\(.+\\)).+(\\(.+\\)).+(\\(.+\\)).+$",
-      "\\1 \\2 \\3",
+  testthat::expect_true(
+    grepl(
+      "a \\(1/2\\).+b \\(1/1\\).+c \\(0/2\\)",
       as.character(state$ui_inputs())
-    ),
-    "(1/2) (1/1) (0/2)"
+    )
   )
 })
 

@@ -113,34 +113,71 @@ testthat::test_that("countBar requires countnow to be a numeric(1), NULL", {
   )
 })
 
-testthat::test_that("countBar returns a div with class and two progressbars", {
+testthat::test_that("countBar returns a div with SVG progress visualization", {
   countmax <- 150
   countnow <- 50
   counttotal <- 200
 
   expected <- list(
     name = "div",
-    attribs = list(class = "progress state-count-container"),
+    attribs = list(
+      class = "teal-slice state-count-container",
+      style = "margin-bottom: 5px; padding: 0; margin: 0;",
+      `data-bar-id` = "a"
+    ),
     children = list(
       list(
-        name = "div",
+        name = "svg",
         attribs = list(
-          id = "a-count_bar_filtered",
-          class = "progress-bar state-count-bar-filtered",
-          style = "width: 25%",
-          role = "progressbar"
+          width = "100%",
+          height = "20",
+          style = c(
+            "display: block;",
+            "margin: 0;",
+            "padding: 0;",
+            "background: white;",
+            "box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);"
+          )
         ),
-        children = list("a (50/150)")
-      ),
-      list(
-        name = "div",
-        attribs = list(
-          id = "a-count_bar_unfiltered",
-          class = "progress-bar state-count-bar-unfiltered",
-          style = "width: 50%",
-          role = "progressbar"
-        ),
-        children = list()
+        children = list(
+          list(
+            name = "rect",
+            attribs = list(
+              id = "a-count_bar_unfiltered",
+              x = "25.00",
+              y = "0",
+              width = "50.00",
+              height = "20",
+              fill = "#add8e670"
+            ),
+            children = list()
+          ),
+          list(
+            name = "rect",
+            attribs = list(
+              id = "a-count_bar_filtered",
+              x = "0",
+              y = "0",
+              width = "25.00",
+              height = "20",
+              fill = "#add8e6"
+            ),
+            children = list()
+          ),
+          list(
+            name = "text",
+            attribs = list(
+              id = "a-count_bar_label",
+              x = "2",
+              y = "14",
+              fill = "#333",
+              `font-size` = "12"
+            ),
+            children = list(
+              "a (50/150)"
+            )
+          )
+        )
       )
     )
   )

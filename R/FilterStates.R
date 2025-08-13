@@ -488,6 +488,14 @@ FilterStates <- R6::R6Class( # nolint
           private$session_bindings[[session$ns("var_to_add")]] <- observeEvent(
             eventExpr = input$var_to_add,
             handlerExpr = {
+              # We have to close the picker selection dropdown because it is re-rendered with new choices
+              # and if the old dropdown is still open, it gets unbinded and cannot be closed.
+              shinyjs::runjs(
+                sprintf(
+                  "document.querySelector('#%s .dropdown').click()",
+                  session$ns("var_to_add_input")
+                )
+              )
               logger::log_debug(
                 "{ class(self)[1] }$srv_add@2 adding FilterState for variable { input$var_to_add }, ",
                 "dataname {private$dataname}"
@@ -760,14 +768,14 @@ FilterStates <- R6::R6Class( # nolint
       })
     },
 
-    #' @description
-    #' Object cleanup.
-    #'
-    #' - Destroy inputs and observers stored in `private$session_bindings`
-    #' - Clean `state_list`
-    #'
-    #' @return `NULL`, invisibly.
-    #'
+    # @description
+    # Object cleanup.
+    #
+    # - Destroy inputs and observers stored in `private$session_bindings`
+    # - Clean `state_list`
+    #
+    # @return `NULL`, invisibly.
+    #
     finalize = function() {
       .finalize_session_bindings(self, private)
     }

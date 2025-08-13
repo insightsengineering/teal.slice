@@ -315,7 +315,7 @@ FilterState <- R6::R6Class( # nolint
 
       tags$div(
         id = id,
-        class = "panel filter-card",
+        class = "teal-slice filter-card",
         include_js_files("count-bar-labels.js"),
         tags$div(
           class = "filter-card-header",
@@ -323,18 +323,18 @@ FilterState <- R6::R6Class( # nolint
           `data-bs-toggle` = "collapse",
           href = paste0("#", ns("body")),
           tags$div(
-            class = "filter-card-title",
+            class = "teal-slice filter-card-title",
             if (private$is_anchored() && private$is_fixed()) {
-              icon("anchor-lock", class = "filter-card-icon")
+              icon("anchor-lock", class = "teal-slice filter-card-icon")
             } else if (private$is_anchored() && !private$is_fixed()) {
-              icon("anchor", class = "filter-card-icon")
+              icon("anchor", class = "teal-slice filter-card-icon")
             } else if (!private$is_anchored() && private$is_fixed()) {
-              icon("lock", class = "filter-card-icon")
+              icon("lock", class = "teal-slice filter-card-icon")
             },
-            tags$div(class = "filter-card-varname", tags$strong(private$get_varname())),
-            tags$div(class = "filter-card-varlabel", private$get_varlabel()),
+            tags$div(class = "teal-slice filter-card-varname", tags$strong(private$get_varname())),
+            tags$div(class = "teal-slice filter-card-varlabel", private$get_varlabel()),
             tags$div(
-              class = "filter-card-controls",
+              class = "teal-slice filter-card-controls",
               # Suppress toggling body when clicking on this div.
               # This is for bootstrap 3 and 4. Causes page to scroll to top, prevented by setting href on buttons.
               onclick = "event.stopPropagation();event.preventDefault();",
@@ -365,13 +365,13 @@ FilterState <- R6::R6Class( # nolint
                 actionLink(
                   inputId = ns("remove"),
                   label = icon("far fa-circle-xmark"),
-                  title = "Remove filter asdfasdfaksdfk",
+                  title = "Remove filter",
                   class = "teal-slice filter-icon"
                 )
               }
             )
           ),
-          tags$div(class = "filter-card-summary", private$ui_summary(ns("summary")))
+          tags$div(class = "teal-slice filter-card-summary", private$ui_summary(ns("summary")))
         ),
         tags$div(
           id = ns("body"),
@@ -379,7 +379,7 @@ FilterState <- R6::R6Class( # nolint
           `data-parent` = paste0("#", parent_id),
           `data-bs-parent` = paste0("#", parent_id),
           tags$div(
-            class = "filter-card-body",
+            class = "teal-slice filter-card-body",
             if (private$is_fixed()) {
               private$ui_inputs_fixed(ns("inputs"))
             } else {
@@ -654,7 +654,7 @@ FilterState <- R6::R6Class( # nolint
     # @param id (`character(1)`) `shiny` module instance id.
     ui_summary = function(id) {
       ns <- NS(id)
-      uiOutput(ns("summary"), class = "filter-card-summary")
+      uiOutput(ns("summary"), class = "teal-slice filter-card-summary")
     },
 
     # @description
@@ -686,7 +686,7 @@ FilterState <- R6::R6Class( # nolint
     ui_inputs_fixed = function(id) {
       ns <- NS(id)
       tags$div(
-        class = "choices_state",
+        class = "teal-slice choices-state",
         uiOutput(ns("selection"))
       )
     },
@@ -787,12 +787,12 @@ FilterState <- R6::R6Class( # nolint
       })
     },
 
-    #' @description
-    #' Destroy inputs and observers stored in `private$session_bindings`.
-    #'
-    #'
-    #' @return `NULL`, invisibly.
-    #'
+    # @description
+    # Destroy inputs and observers stored in `private$session_bindings`.
+    #
+    #
+    # @return `NULL`, invisibly.
+    #
     finalize = function() {
       .finalize_session_bindings(self, private)
     }

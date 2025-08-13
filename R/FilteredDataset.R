@@ -241,7 +241,7 @@ FilteredDataset <- R6::R6Class( # nolint
             if (is_displayed()) {
               isolate({
                 tags$span(
-                  id = id,
+                  id = session$ns(id),
                   class = "teal-slice",
                   include_css_files("filter-panel"),
                   include_js_files(pattern = "icons"),
@@ -255,7 +255,27 @@ FilteredDataset <- R6::R6Class( # nolint
                         id = session$ns("whole_ui"),
                         style = "margin: 0; padding: 0;",
                         uiOutput(session$ns("active_filter_badge")),
-                        uiOutput(session$ns("filter_util_icons")),
+                        div(
+                          id = session$ns("filter_util_icons"),
+                          class = "teal-slice filter-util-icons",
+                          tags$a(
+                            class = "teal-slice filter-icon",
+                            tags$i(
+                              id = session$ns("add_filter_icon"),
+                              class = "fa fa-plus",
+                              title = "fold/expand transform panel",
+                              onclick = sprintf(
+                                "togglePanelItems(this, '%s', 'fa-plus', 'fa-minus');
+                                if ($(this).hasClass('fa-minus')) {
+                                  $('#%s .accordion-button.collapsed').click();
+                                }",
+                                session$ns("add_panel"),
+                                session$ns("dataset_filter_accordion")
+                              )
+                            )
+                          ),
+                          uiOutput(session$ns("filter_util_remove_icons"))
+                        ),
                         bslib::page_fluid(
                           style = "padding: 0px; margin: 0;",
                           tags$div(
@@ -332,38 +352,19 @@ FilteredDataset <- R6::R6Class( # nolint
             )
           )
 
-          output$filter_util_icons <- renderUI({
+          output$filter_util_remove_icons <- renderUI({
             if (private$allow_add()) {
-              div(
-                class = "teal-slice filter-util-icons",
-                tags$a(
-                  class = "teal-slice filter-icon",
-                  tags$i(
-                    id = session$ns("add_filter_icon"),
-                    class = "fa fa-plus",
-                    title = "fold/expand transform panel",
-                    onclick = sprintf(
-                      "togglePanelItems(this, '%s', 'fa-plus', 'fa-minus');
-                      if ($(this).hasClass('fa-minus')) {
-                        $('#%s .accordion-button.collapsed').click();
-                      }",
-                      session$ns("add_panel"),
-                      session$ns("dataset_filter_accordion")
-                    )
+              if (length(Filter(function(x) !x$anchored, self$get_filter_state())) > 0) {
+                tags$div(
+                  style = "display: flex;",
+                  actionLink(
+                    session$ns("remove_filters"),
+                    label = "",
+                    icon = icon("far fa-circle-xmark"),
+                    class = "teal-slice filter-icon"
                   )
-                ),
-                if (length(Filter(function(x) !x$anchored, self$get_filter_state())) > 0) {
-                  tags$div(
-                    style = "display: flex;",
-                    actionLink(
-                      session$ns("remove_filters"),
-                      label = "",
-                      icon = icon("far fa-circle-xmark"),
-                      class = "teal-slice filter-icon"
-                    )
-                  )
-                }
-              )
+                )
+              }
             }
           })
 
@@ -380,12 +381,6 @@ FilteredDataset <- R6::R6Class( # nolint
             {
               shinyjs::hide("filter_count_ui")
               shinyjs::show("filters")
-              shinyjs::runjs(
-                sprintf(
-                  "setAndRemoveClass('#%s', 'fa-angle-down', 'fa-angle-right')",
-                  session$ns("collapse_icon")
-                )
-              )
             }
           )
 
@@ -495,13 +490,13 @@ FilteredDataset <- R6::R6Class( # nolint
       private$filter_states
     },
 
-    #' @description
-    #' Object and dependencies cleanup.
-    #'
-    #' - Destroy inputs and observers stored in `private$session_bindings`
-    #' - Finalize `FilterStates` stored in `private$filter_states`
-    #'
-    #' @return `NULL`, invisibly.
+    # @description
+    # Object and dependencies cleanup.
+    #
+    # - Destroy inputs and observers stored in `private$session_bindings`
+    # - Finalize `FilterStates` stored in `private$filter_states`
+    #
+    # @return `NULL`, invisibly.
     finalize = function() {
       .finalize_session_bindings(self, private)
       lapply(private$filter_states, function(x) x$destroy())

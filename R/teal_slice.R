@@ -319,7 +319,7 @@ format_time <- function(x) {
 justify_json <- function(json) {
   format_name <- function(name, name_width) {
     if (nchar(name) == 1 || nchar(gsub("\\s", "", name)) <= 2) {
-      return(name)
+      name
     } else if (grepl("slices|attributes", name)) {
       paste0(name, ":")
     } else {
