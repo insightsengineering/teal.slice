@@ -131,7 +131,13 @@ testthat::test_that("countBar returns a div with SVG progress visualization", {
         attribs = list(
           width = "100%",
           height = "20",
-          style = "display: block;\n               margin: 0;\n               padding: 0;\n               background: white;\n               box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);"
+          style = c(
+            "display: block;",
+            "margin: 0;",
+            "padding: 0;",
+            "background: white;",
+            "box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);"
+          )
         ),
         children = list(
           list(

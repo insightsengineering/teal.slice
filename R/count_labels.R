@@ -132,11 +132,13 @@ countBar <- function(inputId, label, countmax, countnow = NULL, counttotal = cou
     tags$svg(
       width = "100%",
       height = "20",
-      style = "display: block;
-               margin: 0;
-               padding: 0;
-               background: white;
-               box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);",
+      style = c(
+        "display: block;",
+        "margin: 0;",
+        "padding: 0;",
+        "background: white;",
+        "box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);"
+      ),
       tags$rect(
         id = ns("count_bar_unfiltered"),
         x = sprintf("%.2f", countnow / counttotal * 100),
