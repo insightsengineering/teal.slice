@@ -418,15 +418,13 @@ FilterStates <- R6::R6Class( # nolint
     ui_add = function(id) {
       checkmate::assert_string(id)
       data <- private$data
-
       ns <- NS(id)
-
       if (ncol(data) == 0) {
-        tags$div("no sample variables available")
+        tags$div("dataset has no columns")
       } else if (nrow(data) == 0) {
-        tags$div("no samples available")
+        tags$div("dataset has now rows")
       } else {
-        uiOutput(ns("add_filter"))
+        uiOutput(ns("var_to_add_container"))
       }
     },
 
@@ -463,7 +461,7 @@ FilterStates <- R6::R6Class( # nolint
             )
           })
 
-          output$add_filter <- renderUI({
+          output$var_to_add_container <- renderUI({
             logger::log_debug(
               "{ class(self)[1] }$srv_add@1 updating available column choices, dataname: { private$dataname }"
             )

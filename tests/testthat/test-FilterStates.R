@@ -364,7 +364,7 @@ testthat::test_that("ui_add returns a message inside a div when data has no colu
   filter_states <- FilterStates$new(data = data.frame(), dataname = "iris")
   testthat::expect_identical(
     filter_states$ui_add("id"),
-    shiny::div("no sample variables available")
+    shiny::div("dataset has no columns")
   )
 })
 
