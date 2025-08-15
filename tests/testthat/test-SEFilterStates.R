@@ -105,7 +105,7 @@ testthat::test_that("ui_add returns a message inside a div when data has no rows
   testthat::expect_identical(
     filter_states$ui_add("id"),
     shiny::div(
-      shiny::div("no sample variables available"),
+      shiny::div("no gene variables available"),
       shiny::div("no sample variables available")
     )
   )
@@ -114,7 +114,7 @@ testthat::test_that("ui_add returns a message inside a div when data has no rows
   testthat::expect_identical(
     filter_states$ui_add("id"),
     shiny::div(
-      shiny::div("no samples available"),
+      shiny::div("no genes available"),
       shiny::div("no samples available")
     )
   )
