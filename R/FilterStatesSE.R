@@ -102,19 +102,13 @@ SEFilterStates <- R6::R6Class( # nolint
       data <- private$data
       checkmate::assert_string(id)
       ns <- NS(id)
+
       row_input <- if (ncol(SummarizedExperiment::rowData(data)) == 0) {
-        tags$div("no sample variables available")
+        tags$div("no gene variables available")
       } else if (nrow(SummarizedExperiment::rowData(data)) == 0) {
-        tags$div("no samples available")
+        tags$div("no genes available")
       } else {
-        teal.widgets::optionalSelectInput(
-          ns("row_to_add"),
-          choices = NULL,
-          options = shinyWidgets::pickerOptions(
-            liveSearch = TRUE,
-            noneSelectedText = "Select gene variable"
-          )
-        )
+        uiOutput(ns("row_to_add_container"))
       }
 
       col_input <- if (ncol(SummarizedExperiment::colData(data)) == 0) {
@@ -122,20 +116,10 @@ SEFilterStates <- R6::R6Class( # nolint
       } else if (nrow(SummarizedExperiment::colData(data)) == 0) {
         tags$div("no samples available")
       } else {
-        teal.widgets::optionalSelectInput(
-          ns("col_to_add"),
-          choices = NULL,
-          options = shinyWidgets::pickerOptions(
-            liveSearch = TRUE,
-            noneSelectedText = "Select sample variable"
-          )
-        )
+        uiOutput(ns("col_to_add_container"))
       }
 
-      tags$div(
-        row_input,
-        col_input
-      )
+      tags$div(row_input, col_input)
     },
 
     #' @description
@@ -196,47 +180,49 @@ SEFilterStates <- R6::R6Class( # nolint
             )
           })
 
-          private$session_bindings[[session$ns("avail_row_data_choices")]] <- observeEvent(
-            avail_row_data_choices(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              logger::log_debug(
-                "SEFilterStates$srv_add@1 updating available row data choices,",
-                "dataname: { private$dataname }"
-              )
-              if (is.null(avail_row_data_choices())) {
-                shinyjs::hide("row_to_add")
-              } else {
-                shinyjs::show("row_to_add")
-              }
-              teal.widgets::updateOptionalSelectInput(
-                session,
-                "row_to_add",
-                choices = avail_row_data_choices()
+          output$row_to_add_container <- renderUI({
+            logger::log_debug(
+              "{ class(self)[1] }$srv_add@1 updating available row data choices, dataname: { private$dataname }"
+            )
+            if (length(avail_row_data_choices()) == 0) {
+              # because input UI is not rendered on this condition but shiny still holds latest selected value
+              tags$div("no gene variables available")
+            } else {
+              tags$div(
+                teal.widgets::optionalSelectInput(
+                  session$ns("row_to_add"),
+                  choices = avail_row_data_choices(),
+                  selected = NULL,
+                  options = shinyWidgets::pickerOptions(
+                    liveSearch = TRUE,
+                    noneSelectedText = "Select gene variable"
+                  )
+                )
               )
             }
-          )
+          })
 
-          private$session_bindings[[session$ns("avail_col_data_choices")]] <- observeEvent(
-            avail_col_data_choices(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              logger::log_debug(
-                "SEFilterStates$srv_add@2 updating available col data choices,",
-                "dataname: { private$dataname }"
-              )
-              if (is.null(avail_col_data_choices())) {
-                shinyjs::hide("col_to_add")
-              } else {
-                shinyjs::show("col_to_add")
-              }
-              teal.widgets::updateOptionalSelectInput(
-                session,
-                "col_to_add",
-                choices = avail_col_data_choices()
+          output$col_to_add_container <- renderUI({
+            logger::log_debug(
+              "{ class(self)[1] }$srv_add@1 updating available col data choices, dataname: { private$dataname }"
+            )
+            if (length(avail_col_data_choices()) == 0) {
+              # because input UI is not rendered on this condition but shiny still holds latest selected value
+              tags$div("no sample variables available")
+            } else {
+              tags$div(
+                teal.widgets::optionalSelectInput(
+                  session$ns("col_to_add"),
+                  choices = avail_col_data_choices(),
+                  selected = NULL,
+                  options = shinyWidgets::pickerOptions(
+                    liveSearch = TRUE,
+                    noneSelectedText = "Select sample variable"
+                  )
+                )
               )
             }
-          )
+          })
 
           private$session_bindings[[session$ns("col_to_add")]] <- observeEvent(
             eventExpr = input$col_to_add,
