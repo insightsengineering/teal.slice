@@ -186,7 +186,7 @@ SEFilterStates <- R6::R6Class( # nolint
             )
             if (length(avail_row_data_choices()) == 0) {
               # because input UI is not rendered on this condition but shiny still holds latest selected value
-              tags$span("No available columns to add.")
+              tags$div("no gene variables available")
             } else {
               tags$div(
                 teal.widgets::optionalSelectInput(
@@ -208,7 +208,7 @@ SEFilterStates <- R6::R6Class( # nolint
             )
             if (length(avail_col_data_choices()) == 0) {
               # because input UI is not rendered on this condition but shiny still holds latest selected value
-              tags$span("No available columns to add.")
+              tags$div("no sample variables available")
             } else {
               tags$div(
                 teal.widgets::optionalSelectInput(
