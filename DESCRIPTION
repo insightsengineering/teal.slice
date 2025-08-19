@@ -2,7 +2,7 @@ Type: Package
 Package: teal.slice
 Title: Filter Module for 'teal' Applications
 Version: 0.7.0
-Date: 2025-08-18
+Date: 2025-08-19
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9533-457X")),
