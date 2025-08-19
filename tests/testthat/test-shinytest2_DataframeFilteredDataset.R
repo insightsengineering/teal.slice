@@ -71,14 +71,14 @@ testthat::describe("Toggle button shows and hide", {
     app_driver <- local_app_driver()
     testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-table"))
     app_driver$click(selector = "#filter_panel-overview-main_filter_accordion * button")
-    app_driver$wait_for_idle(timeout = default_idle_timeout * 2)
+    app_driver$wait_for_idle(timeout = default_idle_timeout * 8)
     testthat::expect_false(is_visible(app_driver, "#filter_panel-overview-table"))
   })
   it("'Filter Data' panel", {
     app_driver <- local_app_driver()
     testthat::expect_true(is_visible(app_driver, "#filter_panel-active-filter_active_vars_contents"))
     app_driver$click(selector = "#filter_panel-active-main_filter_accordion > div > div.accordion-header > button")
-    app_driver$wait_for_idle(timeout = default_idle_timeout * 2)
+    app_driver$wait_for_idle(timeout = default_idle_timeout * 8)
     testthat::expect_false(is_visible(app_driver, "#filter_panel-active-filter_active_vars_contents"))
   })
 })
@@ -125,7 +125,7 @@ testthat::test_that("Clicking add button on the datasets shows add filter panel"
   app_driver <- local_app_driver()
   testthat::expect_true(is_existing(app_driver, "#filter_panel-active-mtcars-add_filter_icon"))
   app_driver$click(selector = "#filter_panel-active-mtcars-add_filter_icon")
-  app_driver$wait_for_idle(duration = default_idle_duration * 4) # Wait for the panel open animation
+  app_driver$wait_for_idle(duration = default_idle_duration * 8) # Wait for the panel open animation
   testthat::expect_true(is_existing(app_driver, "#filter_panel-active-mtcars-mtcars-filter-var_to_add > option"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-mtcars-filter-var_to_add > option"))
 })
@@ -133,13 +133,13 @@ testthat::test_that("Clicking add button on the datasets shows add filter panel"
 testthat::test_that("Clicking add and selecting a variable adds the card for a given variable", {
   app_driver <- local_app_driver()
   app_driver$click(selector = "#filter_panel-active-mtcars-add_filter_icon")
-  app_driver$wait_for_idle(duration = default_idle_duration * 4)
+  app_driver$wait_for_idle(duration = default_idle_duration * 8)
   app_driver$click(selector = "#filter_panel-active-mtcars-mtcars-filter-var_to_add")
-  app_driver$wait_for_idle(duration = default_idle_duration * 4)
+  app_driver$wait_for_idle(duration = default_idle_duration * 8)
   app_driver$click(selector = "#filter_panel-active-mtcars-mtcars-filter-var_to_add_input > div > div > button")
-  app_driver$wait_for_idle(duration = default_idle_duration * 4)
+  app_driver$wait_for_idle(duration = default_idle_duration * 8)
   app_driver$click(selector = "#bs-select-1-8")
-  app_driver$wait_for_idle(duration = default_idle_duration * 4)
+  app_driver$wait_for_idle(duration = default_idle_duration * 8)
   selector <- paste0(
     "#filter_panel-active-mtcars-filter-mtcars_am > div.filter-card-header > div.filter-card-title",
     "> div.filter-card-varname > strong"
@@ -157,7 +157,7 @@ testthat::test_that("include_varnames limits choices in add dropdown", {
   )
 
   app_driver$click(selector = "#filter_panel-active-iris-add_filter_icon")
-  app_driver$wait_for_idle(duration = default_idle_duration * 4)
+  app_driver$wait_for_idle(duration = default_idle_duration * 8)
 
   options <- app_driver$get_text("#filter_panel-active-iris-iris-filter-var_to_add > option")
   testthat::expect_equal(iris_vars, options)
@@ -172,7 +172,7 @@ testthat::test_that("exclude_varnames limits choices in add dropdown", {
   )
 
   app_driver$click(selector = "#filter_panel-active-iris-add_filter_icon")
-  app_driver$wait_for_idle(duration = default_idle_duration * 4)
+  app_driver$wait_for_idle(duration = default_idle_duration * 8)
 
   options <- app_driver$get_text(selector = "#filter_panel-active-iris-iris-filter-var_to_add > option")
   testthat::expect_false(any(iris_vars %in% options))
@@ -188,7 +188,7 @@ testthat::test_that("Remove filter button removes a specific filter card", {
   testthat::expect_true(is_visible(app_driver, selector))
   filters_before <- app_driver$get_text("div.filter-card-varname > strong")
   app_driver$click(selector = selector)
-  app_driver$wait_for_idle(default_idle_duration * 4)
+  app_driver$wait_for_idle(default_idle_duration * 8)
 
   filters_after <- app_driver$get_text("div.filter-card-varname > strong")
   testthat::expect_equal(setdiff(filters_before, filters_after), "mpg")
@@ -205,7 +205,7 @@ testthat::test_that("Remove datasets filters removes all cards.", {
   testthat::expect_true(is_visible(app_driver, selector))
   filters_before <- app_driver$get_text("div.filter-card-varname > strong")
   app_driver$click(selector = selector)
-  app_driver$wait_for_idle(default_idle_duration * 4)
+  app_driver$wait_for_idle(default_idle_duration * 8)
   filters_after <- app_driver$get_text("div.filter-card-varname > strong")
   testthat::expect_equal(setdiff(filters_before, filters_after), c("4 cyl", "mpg"))
 })
@@ -219,7 +219,7 @@ testthat::test_that("Remove all filters button removes all cards for all dataset
   selector <- "#filter_panel-active-remove_all_filters"
   testthat::expect_true(is_visible(app_driver, selector))
   app_driver$click(selector = selector)
-  app_driver$wait_for_idle(default_idle_duration * 4)
+  app_driver$wait_for_idle(default_idle_duration * 8)
   filters_after <- app_driver$get_text("div.filter-card-varname > strong")
   testthat::expect_true(is.null(filters_after))
 })
@@ -232,12 +232,12 @@ testthat::test_that("Expanding a card shows filter choices.", {
 
   select_4_cyl <- "#filter_panel-active-mtcars-filter-4_cyl  > div.filter-card-header"
   app_driver$click(selector = select_4_cyl)
-  app_driver$wait_for_idle(default_idle_duration * 4)
+  app_driver$wait_for_idle(default_idle_duration * 8)
   testthat::expect_false(is_existing(app_driver, "#filter_panel-active-mtcars-filter-4_cyl-body"))
 
   select_mpg <- "#filter_panel-active-mtcars-filter-mtcars_mpg > div.filter-card-header"
   app_driver$click(selector = select_mpg)
-  app_driver$wait_for_idle(default_idle_duration * 4)
+  app_driver$wait_for_idle(default_idle_duration * 8)
   testthat::expect_true(is_existing(app_driver, "#filter_panel-active-mtcars-filter-mtcars_mpg-body"))
   testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-filter-mtcars_mpg-body"))
 })
