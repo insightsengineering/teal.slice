@@ -1,4 +1,12 @@
-# teal.slice 0.6.0.9014
+# teal.slice 0.7.0
+
+### Enhancements
+
+* Improved the layout and appearance of the filter panel with new UI design.
+
+### Bug fixes
+
+* Fix bug where drop-down choices show no choices (#662).
 
 ### Miscellaneous
 
