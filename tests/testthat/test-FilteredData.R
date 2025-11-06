@@ -1140,3 +1140,130 @@ testthat::describe("test RangeFilterState", {
     )
   })
 })
+
+
+testthat::describe("test FilterStateExpr server", {
+  it("summary displays expression as text", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    filtered_data$set_filter_state(
+      teal_slices(
+        teal_slice(dataname = "iris", id = "test_expr", title = "Custom filter", expr = "Species == 'setosa'")
+      )
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive("iris")),
+      expr = {
+        session$flushReact()
+        testthat::expect_identical(
+          as.character(output$`iris-filter-test_expr-summary-summary`$html),
+          "Species == 'setosa'"
+        )
+      }
+    )
+  })
+
+  it("input$remove removes filter from states", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    filtered_data$set_filter_state(
+      teal_slices(
+        teal_slice(dataname = "iris", id = "test_expr", title = "Custom filter", expr = "Species == 'setosa'")
+      )
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive("iris")),
+      expr = {
+        session$flushReact()
+        testthat::expect_length(filtered_data$get_filter_state(), 1)
+        session$setInputs(`iris-filter-test_expr-remove` = 1L)
+        testthat::expect_length(filtered_data$get_filter_state(), 0)
+      }
+    )
+  })
+
+  it("input$remove has no effect when filter is anchored", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    filtered_data$set_filter_state(
+      teal_slices(
+        teal_slice(
+          dataname = "iris", id = "test_expr", title = "Custom filter",
+          expr = "Species == 'setosa'", anchored = TRUE
+        )
+      )
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive("iris")),
+      expr = {
+        session$flushReact()
+        testthat::expect_length(filtered_data$get_filter_state(), 1)
+        # The remove button should not exist for anchored filters, so this won't do anything
+        testthat::expect_length(filtered_data$get_filter_state(), 1)
+      }
+    )
+  })
+
+  it("multiple FilterStateExpr filters can coexist for the same varname", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    filtered_data$set_filter_state(
+      teal_slices(
+        teal_slice(dataname = "iris", id = "expr1", title = "Filter 1", expr = "Species == 'setosa'"),
+        teal_slice(
+          dataname = "iris", id = "expr2", title = "Filter 2",
+          expr = "Species %in% c('setosa', 'versicolor')"
+        )
+      )
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive("iris")),
+      expr = {
+        session$flushReact()
+        testthat::expect_length(filtered_data$get_filter_state(), 2)
+        testthat::expect_identical(filtered_data$get_filter_state()[[1]]$expr, "Species == 'setosa'")
+        testthat::expect_identical(
+          filtered_data$get_filter_state()[[2]]$expr, "Species %in% c('setosa', 'versicolor')"
+        )
+      }
+    )
+  })
+
+  it("FilterStateExpr can be mixed with other FilterState types", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    filtered_data$set_filter_state(
+      teal_slices(
+        teal_slice(dataname = "iris", varname = "Species", selected = "setosa"),
+        teal_slice(dataname = "iris", id = "expr1", title = "Custom", expr = "Sepal.Length > 5")
+      )
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive("iris")),
+      expr = {
+        session$flushReact()
+        testthat::expect_length(filtered_data$get_filter_state(), 2)
+        # First is ChoicesFilterState
+        testthat::expect_identical(filtered_data$get_filter_state()[[1]]$varname, "Species")
+        # Second is FilterStateExpr
+        testthat::expect_identical(filtered_data$get_filter_state()[[2]]$expr, "Sepal.Length > 5")
+      }
+    )
+  })
+
+  it("FilterStateExpr is executed and produces filtered data", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    filtered_data$set_filter_state(
+      teal_slices(teal_slice(dataname = "iris", id = "expr1", title = "Setosa only", expr = "Species == 'setosa'"))
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive("iris")),
+      expr = {
+        session$flushReact()
+        filtered_iris <- filtered_data$get_data("iris", filtered = TRUE)
+        testthat::expect_identical(filtered_iris, subset(iris, Species == "setosa"))
+      }
+    )
+  })
+})
