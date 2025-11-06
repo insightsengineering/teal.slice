@@ -741,7 +741,7 @@ FilteredData <- R6::R6Class( # nolint
     #'   panel will be hidden.
     #' @return `NULL`.
     srv_overview = function(id, active_datanames = self$datanames) {
-      checkmate::assert_class(active_datanames, "reactive")
+      checkmate::assert_function(active_datanames)
       moduleServer(
         id = id,
         function(input, output, session) {
