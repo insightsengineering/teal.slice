@@ -866,7 +866,7 @@ testthat::describe("test FilterState server", {
   })
 
   it("setting input$keep_na-value reflects in filter-state", {
-    filtered_data <- init_filtered_data(x = list(iris = within(iris, Species[1] <- NA)))
+    filtered_data <- init_filtered_data(x = list(iris = within(iris, Species[1] <- NA))) # nolint: object_name_linter
     set_filter_state(
       filtered_data,
       teal_slices(teal_slice(dataname = "iris", varname = "Species", keep_na = FALSE))
