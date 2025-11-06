@@ -10,7 +10,7 @@
 \code{MAEFilteredDataset} \code{R6} class
 }
 \examples{
-\dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("MultiAssayExperiment")) withAutoprint(\{ # examplesIf}
 # use non-exported function from teal.slice
 MAEFilteredDataset <- getFromNamespace("MAEFilteredDataset", "teal.slice")
 
