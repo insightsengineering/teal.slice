@@ -122,7 +122,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
   # public methods ----
 
   public = list(
-
     #' @description
     #' Initialize a `FilterState` object.
     #'
@@ -309,14 +308,15 @@ ChoicesFilterState <- R6::R6Class( # nolint
     },
     # If multiple forbidden but selected, restores previous selection with warning.
     check_length = function(values) {
-      if (!private$is_multiple() && length(values) > 1) {
+      if (!private$is_multiple() && length(values) != 1) {
         warning(
           sprintf("Selection: %s is not a vector of length one. ", toString(values, width = 360)),
           "Maintaining previous selection."
         )
-        values <- isolate(private$get_selected())
+        isolate(private$get_selected())
+      } else {
+        values
       }
-      values
     },
     remove_out_of_bounds_values = function(values) {
       in_choices_mask <- values %in% private$get_choices()
@@ -463,14 +463,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
               eventExpr = input$selection,
               handlerExpr = {
                 logger::log_debug("ChoicesFilterState$server_inputs@2 changed selection, id: { private$get_id() }")
-
-                selection <- if (is.null(input$selection) && private$is_multiple()) {
-                  character(0)
-                } else {
-                  input$selection
-                }
-
-                private$set_selected(selection)
+                private$set_selected(input$selection)
               }
             )
           } else {
@@ -482,11 +475,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 if (!isTRUE(input$selection_open)) { # only when the dropdown got closed
                   logger::log_debug("ChoicesFilterState$server_inputs@2 changed selection, id: { private$get_id() }")
 
-                  selection <- if (is.null(input$selection) && private$is_multiple()) {
-                    character(0)
-                  } else if (isTRUE(length(input$selection) != 1) && !private$is_multiple()) {
-                    # In optionalSelectInput user is able to select mutliple options. But if FilterState is not multiple
-                    # we should prevent this selection to be processed further.
+                  if (length(input$selection) != 1 && !private$is_multiple()) {
+                    # In optionalSelectInput user is able to select mutliple options.
+                    # But if FilterState is not multiple we should prevent this selection to be processed further.
                     # This is why notification is thrown and dropdown is changed back to latest selected.
                     showNotification(paste(
                       "This filter exclusively supports single selection.",
@@ -496,11 +487,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
                       session, "selection",
                       selected = private$get_selected()
                     )
-                    return(NULL)
-                  } else {
-                    input$selection
                   }
-                  private$set_selected(selection)
+
+                  private$set_selected(input$selection)
                 }
               }
             )
