@@ -550,6 +550,113 @@ testthat::test_that("get_filter_overview return counts based on reactive filteri
   )
 })
 
+testthat::describe("srv_overview", {
+  it("srv_overview produces table with filtered counts of non-relational datasets", {
+    filtered_data <- init_filtered_data(x = list(iris = iris, mtcars = mtcars))
+    filtered_data$set_filter_state(
+      teal_slices(
+        teal_slice(dataname = "iris", varname = "Species", selected = "setosa"),
+        teal_slice(dataname = "mtcars", varname = "cyl", selected = c(4, 6))
+      )
+    )
+    shiny::testServer(
+      filtered_data$srv_overview,
+      args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+      expr = {
+        testthat::expect_identical(
+          as.data.frame(
+            rvest::html_table(rvest::read_html(as.character(output$table$html)),
+              header = TRUE
+            ),
+            check.names = FALSE
+          ),
+          data.frame(
+            `Data Name` = c("iris", "mtcars"),
+            `Obs` = c("50/150", "18/32"),
+            check.names = FALSE
+          )
+        )
+      }
+    )
+  })
+
+  it("srv_overview produces table with filtered counts of relational datasets", {
+    parent <- data.frame(id = seq_len(5), a = letters[seq_len(5)])
+    child <- data.frame(id = seq_len(10), parent_id = rep(seq_len(5), each = 2), b = LETTERS[seq_len(10)])
+
+    filtered_data <- init_filtered_data(
+      x = list(parent = parent, child = child),
+      join_keys = teal.data::join_keys(
+        teal.data::join_key("parent", "parent", "id"),
+        teal.data::join_key("child", "child", "id"),
+        teal.data::join_key("parent", "child", c(id = "parent_id"))
+      )
+    )
+    filtered_data$set_filter_state(
+      teal_slices(
+        teal_slice(dataname = "parent", varname = "a", selected = c("a", "b", "c"))
+      )
+    )
+    shiny::testServer(
+      filtered_data$srv_overview,
+      args = list(id = "test", active_datanames = reactive(c("parent", "child"))),
+      expr = {
+        testthat::expect_identical(
+          as.data.frame(
+            rvest::html_table(rvest::read_html(as.character(output$table$html)),
+              header = TRUE
+            ),
+            check.names = FALSE
+          ),
+          data.frame(
+            `Data Name` = c("parent", "child"),
+            Obs = c("3/5", "6/10"),
+            Subjects = c("3/5", "3/5"),
+            check.names = FALSE
+          )
+        )
+      }
+    )
+  })
+
+  it("srv_overview produces table with popover information for unsupported dataset class", {
+    filtered_data <- init_filtered_data(x = list(iris = iris, test = structure(1L, class = "testing-class")))
+    shiny::testServer(
+      filtered_data$srv_overview,
+      args = list(id = "test", active_datanames = reactive(c("iris", "test"))),
+      expr = {
+        testthat::expect_identical(
+          trimws(rvest::html_text(
+            rvest::html_nodes(
+              rvest::read_html(as.character(output$table$html)),
+              xpath = "//td[i[@title='Unsupported dataset']]"
+            )
+          )),
+          "test"
+        )
+      }
+    )
+  })
+
+  it("srv_overview returns NULL when active_dataset returns nothing", {
+    filtered_data <- init_filtered_data(x = list(iris = iris, mtcars = mtcars))
+    filtered_data$set_filter_state(
+      teal_slices(
+        teal_slice(dataname = "iris", varname = "Species", selected = "setosa"),
+        teal_slice(dataname = "mtcars", varname = "cyl", selected = c(4, 6))
+      )
+    )
+    shiny::testServer(
+      filtered_data$srv_overview,
+      args = list(id = "test", active_datanames = reactive(character(0))),
+      expr = {
+        testthat::expect_null(output$table)
+      }
+    )
+  })
+})
+
+
 # active_datanames ----
 testthat::test_that("active_datanames fails if returns dataname which isn't a subset of available datanames", {
   filtered_data <- FilteredData$new(list(iris = iris, mtcars = mtcars))
@@ -678,3 +785,358 @@ shiny::testServer(
     )
   }
 )
+
+
+testthat::describe("test FilterState server", {
+  it("input$back restores previous filter selection", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+      expr = {
+        set_filter_state(
+          filtered_data,
+          teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "versicolor"))
+        )
+        session$flushReact()
+        set_filter_state(
+          filtered_data,
+          teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "setosa"))
+        )
+        session$flushReact()
+        testthat::expect_identical(
+          get_filter_state(filtered_data)[[1]]$selected,
+          "setosa"
+        )
+        session$setInputs(`iris-filter-iris_Species-back` = 1L)
+        testthat::expect_identical(
+          get_filter_state(filtered_data)[[1]]$selected,
+          "versicolor"
+        )
+      }
+    )
+  })
+
+  it("input$reset restores initial filter selection", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+      expr = {
+        set_filter_state(
+          filtered_data,
+          teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "versicolor"))
+        )
+        session$flushReact()
+        set_filter_state(
+          filtered_data,
+          teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "setosa"))
+        )
+        session$flushReact()
+        set_filter_state(
+          filtered_data,
+          teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "virginica"))
+        )
+        session$flushReact()
+
+        session$setInputs(`iris-filter-iris_Species-reset` = 1L)
+        testthat::expect_identical(
+          get_filter_state(filtered_data)[[1]]$selected,
+          "versicolor"
+        )
+      }
+    )
+  })
+
+  it("input$remove removes filter from states", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    set_filter_state(
+      filtered_data,
+      teal_slices(teal_slice(dataname = "iris", varname = "Species"))
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+      expr = {
+        session$flushReact()
+        session$setInputs(`iris-filter-iris_Species-remove` = 1L)
+        testthat::expect_length(get_filter_state(filtered_data), 0)
+      }
+    )
+  })
+
+  it("setting input$keep_na-value reflects in filter-state", {
+    filtered_data <- init_filtered_data(x = list(iris = within(iris, Species[1] <- NA)))
+    set_filter_state(
+      filtered_data,
+      teal_slices(teal_slice(dataname = "iris", varname = "Species", keep_na = FALSE))
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+      expr = {
+        session$flushReact()
+        session$setInputs(`iris-filter-iris_Species-inputs-keep_na-value` = FALSE)
+        testthat::expect_false(get_filter_state(filtered_data)[[1]]$keep_na)
+      }
+    )
+  })
+})
+
+
+testthat::describe("test ChoicesFilterState server", {
+  it("summary displays selected choices as text", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    set_filter_state(
+      filtered_data,
+      teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")))
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+      expr = {
+        session$flushReact()
+        testthat::expect_identical(
+          trimws(rvest::html_text(
+            rvest::read_html(as.character(output$`iris-filter-iris_Species-summary-summary`$html))
+          )),
+          "setosa, versicolor"
+        )
+      }
+    )
+  })
+
+  it("summary displays 'n levels selected' when selected exceeds 40 characters", {
+    filtered_data <- init_filtered_data(x = list(mtcars = within(mtcars, model <- rownames(mtcars))))
+    set_filter_state(
+      filtered_data,
+      teal_slices(teal_slice(dataname = "mtcars", varname = "model"))
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+      expr = {
+        session$flushReact()
+        testthat::expect_identical(
+          trimws(rvest::html_text(
+            rvest::read_html(as.character(output$`mtcars-filter-mtcars_model-summary-summary`$html))
+          )),
+          "32 levels selected"
+        )
+      }
+    )
+  })
+
+  it("summary displays 'no selection' when nothing is selected", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    set_filter_state(
+      filtered_data,
+      teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = character(0), multiple = TRUE))
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+      expr = {
+        session$flushReact()
+        testthat::expect_identical(
+          trimws(rvest::html_text(
+            rvest::read_html(as.character(output$`iris-filter-iris_Species-summary-summary`$html))
+          )),
+          "no selection"
+        )
+      }
+    )
+  })
+
+  it("setting input$selection changes filter state (radioButton)", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    set_filter_state(
+      filtered_data,
+      teal_slices(teal_slice(dataname = "iris", varname = "Species"))
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+      expr = {
+        session$flushReact()
+        session$setInputs(`iris-filter-iris_Species-inputs-selection` = "setosa")
+        session$setInputs(`iris-filter-iris_Species-inputs-selection_open` = FALSE)
+
+        testthat::expect_identical(
+          get_filter_state(filtered_data)[[1]]$selected,
+          "setosa"
+        )
+      }
+    )
+  })
+
+  it("setting input$selection changes filter state (pickerInput)", {
+    withr::with_options(
+      list("teal.threshold_slider_vs_checkboxgroup" = 1L), # when length(choices) < 1 then radio-button
+      {
+        filtered_data <- init_filtered_data(x = list(iris = iris))
+        set_filter_state(
+          filtered_data,
+          teal_slices(teal_slice(dataname = "iris", varname = "Species"))
+        )
+        shiny::testServer(
+          filtered_data$srv_active,
+          args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+          expr = {
+            session$flushReact()
+            session$setInputs(`iris-filter-iris_Species-inputs-selection` = c("setosa", "versicolor"))
+            session$setInputs(`iris-filter-iris_Species-inputs-selection_open` = FALSE)
+
+            testthat::expect_identical(
+              get_filter_state(filtered_data)[[1]]$selected,
+              c("setosa", "versicolor")
+            )
+          }
+        )
+      }
+    )
+  })
+
+  it("setting input$selection has no effect on filter state when fixed = TRUE", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    set_filter_state(
+      filtered_data,
+      teal_slices(teal_slice(dataname = "iris", varname = "Species", fixed = TRUE))
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+      expr = {
+        session$flushReact()
+        session$setInputs(`iris-filter-iris_Species-inputs-selection` = c("setosa", "versicolor", "virginica"))
+        session$setInputs(`iris-filter-iris_Species-inputs-selection_open` = FALSE)
+
+        testthat::expect_identical(
+          get_filter_state(filtered_data)[[1]]$selected,
+          c("setosa", "versicolor", "virginica")
+        )
+      }
+    )
+  })
+
+  it("setting many input$selection when multiple = FALSE is ignored with warning (radioInput)", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    set_filter_state(
+      filtered_data,
+      teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "setosa", multiple = FALSE))
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+      expr = {
+        session$flushReact()
+        testthat::expect_warning(
+          session$setInputs(`iris-filter-iris_Species-inputs-selection` = c("setosa", "versicolor", "virginica")),
+          "is not a vector of length one. Maintaining previous selection."
+        )
+        testthat::expect_identical(
+          get_filter_state(filtered_data)[[1]]$selected,
+          "setosa"
+        )
+      }
+    )
+  })
+
+  it("setting many input$selection when multiple = FALSE is ignored with warning (pickerInput)", {
+    withr::with_options(
+      list("teal.threshold_slider_vs_checkboxgroup" = 1L), # when length(choices) < 1 then radio-button
+      {
+        filtered_data <- init_filtered_data(x = list(iris = iris))
+        set_filter_state(
+          filtered_data,
+          teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "setosa", multiple = FALSE))
+        )
+        shiny::testServer(
+          filtered_data$srv_active,
+          args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+          expr = {
+            session$flushReact()
+            session$setInputs(`iris-filter-iris_Species-inputs-selection` = c("setosa", "versicolor", "virginica"))
+            testthat::expect_warning(
+              session$setInputs(`iris-filter-iris_Species-inputs-selection_open` = FALSE),
+              "is not a vector of length one. Maintaining previous selection."
+            )
+            testthat::expect_identical(
+              get_filter_state(filtered_data)[[1]]$selected,
+              "setosa"
+            )
+          }
+        )
+      }
+    )
+  })
+})
+
+
+testthat::describe("test DateFilterState server", {
+  it("summary displays selected date-range as text", {
+    filtered_data <- init_filtered_data(x = list(iris = within(iris, date <- as.Date(seq_len(150)))))
+    set_filter_state(
+      filtered_data,
+      teal_slices(teal_slice(dataname = "iris", varname = "date", selected = c("1970-01-02", "1970-01-30")))
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+      expr = {
+        session$flushReact()
+        testthat::expect_match(
+          trimws(rvest::html_text(
+            rvest::read_html(as.character(output$`iris-filter-iris_date-summary-summary`$html))
+          )),
+          "1970-01-02.+1970-01-30"
+        )
+      }
+    )
+  })
+
+  it("setting input changes filter state $selected", {
+    filtered_data <- init_filtered_data(x = list(iris = within(iris, date <- as.Date(seq_len(150)))))
+    set_filter_state(
+      filtered_data,
+      teal_slices(teal_slice(dataname = "iris", varname = "date"))
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
+      expr = {
+        session$flushReact()
+
+        session$setInputs(`iris-filter-iris_date-inputs-selection` = c("1970-01-02", "1970-01-30"))
+        testthat::expect_identical(
+          get_filter_state(filtered_data)[[1]]$selected,
+          as.Date(c("1970-01-02", "1970-01-30"))
+        )
+      }
+    )
+  })
+})
+
+
+testthat::describe("test RangeFilterState", {
+  it("summary displays selected numeric-range as text", {
+    filtered_data <- init_filtered_data(x = list(iris = iris))
+    set_filter_state(
+      filtered_data,
+      teal_slices(teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.0, 6.0)))
+    )
+    shiny::testServer(
+      filtered_data$srv_active,
+      args = list(id = "test", active_datanames = reactive("iris")),
+      expr = {
+        session$flushReact()
+        testthat::expect_match(
+          trimws(rvest::html_text(
+            rvest::read_html(as.character(output$`iris-filter-iris_Sepal_Length-summary-summary`$html))
+          )),
+          "^5.+6$"
+        )
+      }
+    )
+  })
+})

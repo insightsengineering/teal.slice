@@ -98,6 +98,11 @@ testthat::test_that("teal_slice checks arguments", {
     teal_slice(dataname = "data", varname = "var", id = 1L),
     "Assertion on 'id' failed"
   )
+
+  testthat::expect_error(
+    teal_slice(dataname = "data", varname = "var", expr = "a > 1"),
+    "Must provide either `expr` or `varname`"
+  )
 })
 
 testthat::test_that("teal_slice returns `teal_slice`", {
