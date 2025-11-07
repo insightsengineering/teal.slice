@@ -564,12 +564,10 @@ testthat::describe("srv_overview", {
       args = list(id = "test", active_datanames = reactive(c("iris", "mtcars"))),
       expr = {
         testthat::expect_identical(
-          as.data.frame(
-            rvest::html_table(rvest::read_html(as.character(output$table$html)),
-              header = TRUE
-            ),
-            check.names = FALSE
-          ),
+          as.character(output$table$html) %>%
+            rvest::read_html() %>%
+            rvest::html_table(header = TRUE) %>%
+            as.data.frame(check.names = FALSE),
           data.frame(
             `Data Name` = c("iris", "mtcars"),
             `Obs` = c("50/150", "18/32"),
@@ -602,12 +600,10 @@ testthat::describe("srv_overview", {
       args = list(id = "test", active_datanames = reactive(c("parent", "child"))),
       expr = {
         testthat::expect_identical(
-          as.data.frame(
-            rvest::html_table(rvest::read_html(as.character(output$table$html)),
-              header = TRUE
-            ),
-            check.names = FALSE
-          ),
+          as.character(output$table$html) %>%
+            rvest::read_html() %>%
+            rvest::html_table(header = TRUE) %>%
+            as.data.frame(check.names = FALSE),
           data.frame(
             `Data Name` = c("parent", "child"),
             Obs = c("3/5", "6/10"),
@@ -626,12 +622,11 @@ testthat::describe("srv_overview", {
       args = list(id = "test", active_datanames = reactive(c("iris", "test"))),
       expr = {
         testthat::expect_identical(
-          trimws(rvest::html_text(
-            rvest::html_nodes(
-              rvest::read_html(as.character(output$table$html)),
-              xpath = "//td[i[@title='Unsupported dataset']]"
-            )
-          )),
+          as.character(output$table$html) %>%
+            rvest::read_html() %>%
+            rvest::html_nodes(xpath = "//td[i[@title='Unsupported dataset']]") %>%
+            rvest::html_text() %>%
+            trimws(),
           "test"
         )
       }
@@ -897,9 +892,10 @@ testthat::describe("test ChoicesFilterState server", {
       expr = {
         session$flushReact()
         testthat::expect_identical(
-          trimws(rvest::html_text(
-            rvest::read_html(as.character(output$`iris-filter-iris_Species-summary-summary`$html))
-          )),
+          as.character(output$`iris-filter-iris_Species-summary-summary`$html) %>%
+            rvest::read_html() %>%
+            rvest::html_text() %>%
+            trimws(),
           "setosa, versicolor"
         )
       }
@@ -918,9 +914,10 @@ testthat::describe("test ChoicesFilterState server", {
       expr = {
         session$flushReact()
         testthat::expect_identical(
-          trimws(rvest::html_text(
-            rvest::read_html(as.character(output$`mtcars-filter-mtcars_model-summary-summary`$html))
-          )),
+          as.character(output$`mtcars-filter-mtcars_model-summary-summary`$html) %>%
+            rvest::read_html() %>%
+            rvest::html_text() %>%
+            trimws(),
           "32 levels selected"
         )
       }
@@ -939,9 +936,10 @@ testthat::describe("test ChoicesFilterState server", {
       expr = {
         session$flushReact()
         testthat::expect_identical(
-          trimws(rvest::html_text(
-            rvest::read_html(as.character(output$`iris-filter-iris_Species-summary-summary`$html))
-          )),
+          as.character(output$`iris-filter-iris_Species-summary-summary`$html) %>%
+            rvest::read_html() %>%
+            rvest::html_text() %>%
+            trimws(),
           "no selection"
         )
       }
@@ -1086,9 +1084,10 @@ testthat::describe("test DateFilterState server", {
       expr = {
         session$flushReact()
         testthat::expect_match(
-          trimws(rvest::html_text(
-            rvest::read_html(as.character(output$`iris-filter-iris_date-summary-summary`$html))
-          )),
+          as.character(output$`iris-filter-iris_date-summary-summary`$html) %>%
+            rvest::read_html() %>%
+            rvest::html_text() %>%
+            trimws(),
           "1970-01-02.+1970-01-30"
         )
       }
@@ -1131,9 +1130,10 @@ testthat::describe("test RangeFilterState", {
       expr = {
         session$flushReact()
         testthat::expect_match(
-          trimws(rvest::html_text(
-            rvest::read_html(as.character(output$`iris-filter-iris_Sepal_Length-summary-summary`$html))
-          )),
+          as.character(output$`iris-filter-iris_Sepal_Length-summary-summary`$html) %>%
+            rvest::read_html() %>%
+            rvest::html_text() %>%
+            trimws(),
           "^5.+6$"
         )
       }
