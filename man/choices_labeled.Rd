@@ -4,17 +4,13 @@
 \alias{choices_labeled}
 \title{Set "\verb{<choice>:<label>}" type of names}
 \usage{
-choices_labeled(choices, labels, subset = NULL, types = NULL)
+choices_labeled(choices, labels, types = NULL)
 }
 \arguments{
 \item{choices}{(\code{character} or \code{numeric} or \code{logical}) vector}
 
 \item{labels}{(\code{character}) vector containing labels to be applied to \code{choices}. If \code{NA} then
 "Label Missing" will be used.}
-
-\item{subset}{a vector that is a subset of \code{choices}. This is useful if
-only a few variables need to be named. If this argument is used, the returned vector will
-match its order.}
 
 \item{types}{vector containing the types of the columns.}
 }

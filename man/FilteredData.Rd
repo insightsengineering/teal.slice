@@ -62,7 +62,7 @@ isolate(datasets$get_filter_state())
 isolate(datasets$get_call("iris"))
 isolate(datasets$get_call("mtcars"))
 
-\dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("MultiAssayExperiment")) withAutoprint(\{ # examplesIf}
 ### set_filter_state
 library(shiny)
 
