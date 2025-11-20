@@ -1,4 +1,4 @@
-default_idle_timeout <- 40000 # Wait (ms) at most until idle
+default_idle_timeout <- 20000 # Wait (ms) at most until idle
 default_idle_duration <- 200 # Time (ms) it is idle
 
 # Check visibility (borrowed from teal.widgets/tests/testthat/helpers-utils.R)
