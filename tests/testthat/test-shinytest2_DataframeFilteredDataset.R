@@ -87,12 +87,14 @@ testthat::describe("datasets passed to filter data", {
   it("creates Active Filter Summary panel for all of them", {
     app_driver <- local_app_driver()
     selector <- "#filter_panel-active * div.accordion-body * button.accordion-button > div.accordion-title"
+    app_driver$wait_for_idle(timeout = default_idle_timeout)
     text <- app_driver$get_text(selector)
     testthat::expect_equal(text, c("iris", "mtcars"))
   })
   it("creates Filter Data panel for all of them", {
     app_driver <- local_app_driver()
     table <- "#filter_panel-overview-table > table > tbody * td:first-child"
+    app_driver$wait_for_idle(timeout = default_idle_timeout)
     text <- app_driver$get_text(table)
     testthat::expect_equal(text, c("iris", "mtcars"))
   })

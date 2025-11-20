@@ -66,6 +66,7 @@ testthat::test_that("Active filter summary has all the experiments.", {
   app_driver <- local_app_driver()
 
   selector <- "#filter_panel-active-MAE-filters > div.shiny-html-output.accordion.shiny-bound-output"
+  app_driver$wait_for_idle(timeout = default_idle_timeout)
   text <- app_driver$get_js(get_attribute(selector, "data-label"))
   clean_text <- gsub(pattern = "> ", replacement = "", unlist(text))
   testthat::expect_equal(clean_text, c(
