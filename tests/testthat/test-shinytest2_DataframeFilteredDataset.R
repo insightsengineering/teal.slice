@@ -71,14 +71,14 @@ testthat::describe("Toggle button shows and hide", {
     app_driver <- local_app_driver()
     testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-table"))
     app_driver$click(selector = "#filter_panel-overview-main_filter_accordion * button")
-    app_driver$wait_for_idle(timeout = default_idle_timeout * 8)
+    app_driver$wait_for_idle(timeout = default_idle_timeout)
     testthat::expect_false(is_visible(app_driver, "#filter_panel-overview-table"))
   })
   it("'Filter Data' panel", {
     app_driver <- local_app_driver()
     testthat::expect_true(is_visible(app_driver, "#filter_panel-active-filter_active_vars_contents"))
     app_driver$click(selector = "#filter_panel-active-main_filter_accordion > div > div.accordion-header > button")
-    app_driver$wait_for_idle(timeout = default_idle_timeout * 8)
+    app_driver$wait_for_idle(timeout = default_idle_timeout)
     testthat::expect_false(is_visible(app_driver, "#filter_panel-active-filter_active_vars_contents"))
   })
 })
@@ -87,12 +87,14 @@ testthat::describe("datasets passed to filter data", {
   it("creates Active Filter Summary panel for all of them", {
     app_driver <- local_app_driver()
     selector <- "#filter_panel-active * div.accordion-body * button.accordion-button > div.accordion-title"
+    app_driver$wait_for_idle(timeout = default_idle_timeout)
     text <- app_driver$get_text(selector)
     testthat::expect_equal(text, c("iris", "mtcars"))
   })
   it("creates Filter Data panel for all of them", {
     app_driver <- local_app_driver()
     table <- "#filter_panel-overview-table > table > tbody * td:first-child"
+    app_driver$wait_for_idle(timeout = default_idle_timeout)
     text <- app_driver$get_text(table)
     testthat::expect_equal(text, c("iris", "mtcars"))
   })
