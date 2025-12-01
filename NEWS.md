@@ -1,4 +1,8 @@
-# teal.slice 0.7.0.9002
+# teal.slice 0.7.1
+
+### Miscellaneous
+
+* Improve unit test coverage (#666).
 
 # teal.slice 0.7.0
 
