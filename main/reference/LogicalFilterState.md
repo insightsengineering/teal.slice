@@ -1,0 +1,213 @@
+# `FilterState` object for logical data
+
+Manages choosing a logical state.
+
+## Super class
+
+[`teal.slice::FilterState`](https://insightsengineering.github.io/teal.slice/reference/FilterState.md)
+-\> `LogicalFilterState`
+
+## Methods
+
+### Public methods
+
+- [`LogicalFilterState$new()`](#method-LogicalFilterState-new)
+
+- [`LogicalFilterState$get_call()`](#method-LogicalFilterState-get_call)
+
+- [`LogicalFilterState$clone()`](#method-LogicalFilterState-clone)
+
+Inherited methods
+
+- [`teal.slice::FilterState$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-destroy)
+- [`teal.slice::FilterState$format()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-format)
+- [`teal.slice::FilterState$get_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-get_state)
+- [`teal.slice::FilterState$print()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-print)
+- [`teal.slice::FilterState$server()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-server)
+- [`teal.slice::FilterState$set_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-set_state)
+- [`teal.slice::FilterState$ui()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-ui)
+
+------------------------------------------------------------------------
+
+### Method [`new()`](https://rdrr.io/r/methods/new.html)
+
+Initialize a `FilterState` object.
+
+#### Usage
+
+    LogicalFilterState$new(
+      x,
+      x_reactive = reactive(NULL),
+      extract_type = character(0),
+      slice
+    )
+
+#### Arguments
+
+- `x`:
+
+  (`logical`) variable to be filtered.
+
+- `x_reactive`:
+
+  (`reactive`) returning vector of the same type as `x`. Is used to
+  update counts following the change in values of the filtered dataset.
+  If it is set to `reactive(NULL)` then counts based on filtered dataset
+  are not shown.
+
+- `extract_type`:
+
+  (`character`) specifying whether condition calls should be prefixed by
+  `dataname`. Possible values:
+
+  - `character(0)` (default) `varname` in the condition call will not be
+    prefixed
+
+  - `"list"` `varname` in the condition call will be returned as
+    `<dataname>$<varname>`
+
+  - `"matrix"` `varname` in the condition call will be returned as
+    `<dataname>[, <varname>]`
+
+- `slice`:
+
+  (`teal_slice`) specification of this filter state. `teal_slice` is
+  stored in the object and `set_state` directly manipulates values
+  within `teal_slice`. `get_state` returns `teal_slice` object which can
+  be reused in other places. Note that `teal_slice` is a
+  `reactiveValues`, which means it has reference semantics, i.e. changes
+  made to an object are automatically reflected in all places that refer
+  to the same `teal_slice`.
+
+#### Returns
+
+Object of class `LogicalFilterState`, invisibly.
+
+------------------------------------------------------------------------
+
+### Method `get_call()`
+
+Returns reproducible condition call for current selection. For
+`LogicalFilterState` it's a `!<varname>` or `<varname>` and optionally
+`is.na(<varname>)`
+
+#### Usage
+
+    LogicalFilterState$get_call(dataname)
+
+#### Arguments
+
+- `dataname`:
+
+  name of data set; defaults to `private$get_dataname()`
+
+#### Returns
+
+`call`
+
+------------------------------------------------------------------------
+
+### Method `clone()`
+
+The objects of this class are cloneable with this method.
+
+#### Usage
+
+    LogicalFilterState$clone(deep = FALSE)
+
+#### Arguments
+
+- `deep`:
+
+  Whether to make a deep clone.
+
+## Examples
+
+``` r
+# use non-exported function from teal.slice
+include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+LogicalFilterState <- getFromNamespace("LogicalFilterState", "teal.slice")
+
+library(shiny)
+
+filter_state <- LogicalFilterState$new(
+  x = sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
+  slice = teal_slice(varname = "x", dataname = "data")
+)
+isolate(filter_state$get_call())
+#> is.na(x) | x %in% c(TRUE, FALSE)
+filter_state$set_state(
+  teal_slice(dataname = "data", varname = "x", selected = TRUE, keep_na = TRUE)
+)
+isolate(filter_state$get_call())
+#> is.na(x) | x
+
+# working filter in an app
+library(shinyjs)
+
+data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
+fs <- LogicalFilterState$new(
+  x = data_logical,
+  slice = teal_slice(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
+)
+
+ui <- bslib::page_fluid(
+  useShinyjs(),
+  include_css_files(pattern = "filter-panel"),
+  include_js_files(pattern = "count-bar-labels"),
+  bslib::layout_column_wrap(
+    width = 1 / 3,
+    tags$div(
+      tags$h4("LogicalFilterState"),
+      fs$ui("fs")
+    ),
+    tags$div(
+      id = "outputs", # div id is needed for toggling the element
+      tags$h4("Condition (i.e. call)"), # display the condition call generated by this FilterState
+      textOutput("condition_logical"), tags$br(),
+      tags$h4("Unformatted state"), # display raw filter state
+      textOutput("unformatted_logical"), tags$br(),
+      tags$h4("Formatted state"), # display human readable filter state
+      textOutput("formatted_logical"), tags$br()
+    ),
+    tags$div(
+      tags$h4("Programmatic filter control"),
+      actionButton("button1_logical", "set drop NA", width = "100%"), tags$br(),
+      actionButton("button2_logical", "set keep NA", width = "100%"), tags$br(),
+      actionButton("button3_logical", "set a selection", width = "100%"), tags$br(),
+      actionButton("button0_logical", "set initial state", width = "100%"), tags$br()
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  fs$server("fs")
+  output$condition_logical <- renderPrint(fs$get_call())
+  output$formatted_logical <- renderText(fs$format())
+  output$unformatted_logical <- renderPrint(fs$get_state())
+  # modify filter state programmatically
+  observeEvent(
+    input$button1_logical,
+    fs$set_state(teal_slice(dataname = "data", varname = "x", keep_na = FALSE))
+  )
+  observeEvent(
+    input$button2_logical,
+    fs$set_state(teal_slice(dataname = "data", varname = "x", keep_na = TRUE))
+  )
+  observeEvent(
+    input$button3_logical,
+    fs$set_state(teal_slice(dataname = "data", varname = "x", selected = TRUE))
+  )
+  observeEvent(
+    input$button0_logical,
+    fs$set_state(
+      teal_slice(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
+    )
+  )
+}
+
+if (interactive()) {
+  shinyApp(ui, server)
+}
+```
