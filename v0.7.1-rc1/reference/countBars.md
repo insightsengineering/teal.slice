@@ -1,0 +1,113 @@
+# Progress bars with labels
+
+`shiny` element displaying a series of progress bars and observation
+counts.
+
+## Usage
+
+``` r
+countBars(inputId, choices, countsmax, countsnow = NULL)
+
+updateCountBars(
+  session = getDefaultReactiveDomain(),
+  inputId,
+  choices,
+  countsmax,
+  countsnow = NULL
+)
+```
+
+## Arguments
+
+- inputId:
+
+  (`character(1)`) `shiny` id of the parent element (e.g. a check-box
+  group input).
+
+- choices:
+
+  (`vector`) Available values. Used to determine label text.
+
+- countsmax:
+
+  (`numeric`) Maximum counts of each element. Must be the same length
+  `choices`.
+
+- countsnow:
+
+  (`numeric`) Current counts of each element. Must be the same length
+  `choices`.
+
+- session:
+
+  (`session`) `shiny` `session` object passed to function given to
+  `shinyServer`.
+
+## Value
+
+List of `shiny.tag`s.
+
+Creates a number of progress bar elements, one for each value of
+`choices`. The widths of all progress bars add up to the full width of
+the container. Each progress bar has a text label that contains the name
+of the value and the number of counts.
+
+If the filter panel is used with `count_type = "all"`, the progress bars
+will be filled according to the number of counts remaining in the
+current selection and the label will show both the current and the total
+number of counts.
+
+Each child element can have a unique `id` attribute to be used
+independently.
+
+## Examples
+
+``` r
+# use non-exported function from teal.slice
+include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+countBars <- getFromNamespace("countBars", "teal.slice")
+updateCountBars <- getFromNamespace("updateCountBars", "teal.slice")
+
+library(shiny)
+
+choices <- sample(as.factor(c("a", "b", "c")), size = 20, replace = TRUE)
+counts <- table(choices)
+labels <- countBars(
+  inputId = "counts",
+  choices = c("a", "b", "c"),
+  countsmax = counts,
+  countsnow = unname(counts)
+)
+
+ui <- bslib::page_fluid(
+  tags$div(
+    class = "teal-slice choices-state",
+    include_js_files("count-bar-labels.js"),
+    include_css_files(pattern = "filter-panel"),
+    checkboxGroupInput(
+      inputId = "choices",
+      selected = levels(choices),
+      choiceNames = labels,
+      choiceValues = levels(choices),
+      label = NULL
+    )
+  )
+)
+server <- function(input, output, session) {
+  observeEvent(input$choices, {
+    new_counts <- counts
+    new_counts[!names(new_counts) %in% input$choices] <- 0
+    updateCountBars(
+      inputId = "counts",
+      choices = levels(choices),
+      countsmax = counts,
+      countsnow = unname(new_counts)
+    )
+  })
+}
+
+if (interactive()) {
+  shinyApp(ui, server)
+}
+```
