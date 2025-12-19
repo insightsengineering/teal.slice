@@ -69,17 +69,17 @@ local_app_driver <- function(...,
 testthat::describe("Toggle button shows and hide", {
   it("'Active Filter Summary' panel", {
     app_driver <- local_app_driver()
-    testthat::expect_true(is_visible(app_driver, "#filter_panel-overview-table"))
+    expect_visible("#filter_panel-overview-table", app_driver)
     app_driver$click(selector = "#filter_panel-overview-main_filter_accordion * button")
     app_driver$wait_for_idle(timeout = default_idle_timeout * 8)
-    testthat::expect_false(is_visible(app_driver, "#filter_panel-overview-table"))
+    expect_hidden("#filter_panel-overview-table", app_driver)
   })
   it("'Filter Data' panel", {
     app_driver <- local_app_driver()
-    testthat::expect_true(is_visible(app_driver, "#filter_panel-active-filter_active_vars_contents"))
+    expect_visible("#filter_panel-active-filter_active_vars_contents", app_driver)
     app_driver$click(selector = "#filter_panel-active-main_filter_accordion > div > div.accordion-header > button")
     app_driver$wait_for_idle(timeout = default_idle_timeout * 8)
-    testthat::expect_false(is_visible(app_driver, "#filter_panel-active-filter_active_vars_contents"))
+    expect_hidden("#filter_panel-active-filter_active_vars_contents", app_driver)
   })
 })
 
@@ -129,7 +129,7 @@ testthat::test_that("Clicking add button on the datasets shows add filter panel"
   app_driver$click(selector = "#filter_panel-active-mtcars-add_filter_icon")
   app_driver$wait_for_idle(duration = default_idle_duration * 8) # Wait for the panel open animation
   testthat::expect_true(is_existing(app_driver, "#filter_panel-active-mtcars-mtcars-filter-var_to_add > option"))
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-mtcars-filter-var_to_add > option"))
+  expect_visible("#filter_panel-active-mtcars-mtcars-filter-var_to_add > option", app_driver)
 })
 
 testthat::test_that("Clicking add and selecting a variable adds the card for a given variable", {
@@ -187,7 +187,7 @@ testthat::test_that("Remove filter button removes a specific filter card", {
     teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0))
   )
   selector <- "#filter_panel-active-mtcars-filter-mtcars_mpg-remove"
-  testthat::expect_true(is_visible(app_driver, selector))
+  expect_visible(selector, app_driver)
   filters_before <- app_driver$get_text("div.filter-card-varname > strong")
   app_driver$click(selector = selector)
   app_driver$wait_for_idle(default_idle_duration * 8)
@@ -204,7 +204,7 @@ testthat::test_that("Remove datasets filters removes all cards.", {
   )
 
   selector <- "#filter_panel-active-mtcars-remove_filters"
-  testthat::expect_true(is_visible(app_driver, selector))
+  expect_visible(selector, app_driver)
   filters_before <- app_driver$get_text("div.filter-card-varname > strong")
   app_driver$click(selector = selector)
   app_driver$wait_for_idle(default_idle_duration * 8)
@@ -219,7 +219,7 @@ testthat::test_that("Remove all filters button removes all cards for all dataset
     teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0))
   )
   selector <- "#filter_panel-active-remove_all_filters"
-  testthat::expect_true(is_visible(app_driver, selector))
+  expect_visible(selector, app_driver)
   app_driver$click(selector = selector)
   app_driver$wait_for_idle(default_idle_duration * 8)
   filters_after <- app_driver$get_text("div.filter-card-varname > strong")
@@ -241,5 +241,5 @@ testthat::test_that("Expanding a card shows filter choices.", {
   app_driver$click(selector = select_mpg)
   app_driver$wait_for_idle(default_idle_duration * 8)
   testthat::expect_true(is_existing(app_driver, "#filter_panel-active-mtcars-filter-mtcars_mpg-body"))
-  testthat::expect_true(is_visible(app_driver, "#filter_panel-active-mtcars-filter-mtcars_mpg-body"))
+  expect_visible("#filter_panel-active-mtcars-filter-mtcars_mpg-body", app_driver)
 })
