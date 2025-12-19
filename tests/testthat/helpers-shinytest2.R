@@ -33,7 +33,7 @@ expect_visible <- function(selector, app_driver, timeout) {
         ),
         timeout
       )
-      testthat::pass()
+      testthat::succeed()
     },
     error = function(err) {
       testthat::fail(sprintf("CSS selector '%s' does not produce any visible elements.", selector))
@@ -54,7 +54,7 @@ expect_hidden <- function(selector, app_driver, timeout) {
         ),
         timeout
       )
-      testthat::pass()
+      testthat::succeed()
     },
     error = function(err) testthat::fail(sprintf("CSS selector '%s' produces visible elements.", selector))
   )
