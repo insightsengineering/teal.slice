@@ -125,10 +125,10 @@ testthat::describe("teal_slice objects pass to filter data", {
 
 testthat::test_that("Clicking add button on the datasets shows add filter panel", {
   app_driver <- local_app_driver()
-  testthat::expect_true(is_existing(app_driver, "#filter_panel-active-mtcars-add_filter_icon"))
+  expect_existing(app_driver, "#filter_panel-active-mtcars-add_filter_icon")
   app_driver$click(selector = "#filter_panel-active-mtcars-add_filter_icon")
   app_driver$wait_for_idle(duration = default_idle_duration * 8) # Wait for the panel open animation
-  testthat::expect_true(is_existing(app_driver, "#filter_panel-active-mtcars-mtcars-filter-var_to_add > option"))
+  expect_existing(app_driver, "#filter_panel-active-mtcars-mtcars-filter-var_to_add > option")
   expect_visible("#filter_panel-active-mtcars-mtcars-filter-var_to_add > option", app_driver)
 })
 
@@ -235,11 +235,11 @@ testthat::test_that("Expanding a card shows filter choices.", {
   select_4_cyl <- "#filter_panel-active-mtcars-filter-4_cyl  > div.filter-card-header"
   app_driver$click(selector = select_4_cyl)
   app_driver$wait_for_idle(default_idle_duration * 8)
-  testthat::expect_false(is_existing(app_driver, "#filter_panel-active-mtcars-filter-4_cyl-body"))
+  expect_not_existing(app_driver, "#filter_panel-active-mtcars-filter-4_cyl-body")
 
   select_mpg <- "#filter_panel-active-mtcars-filter-mtcars_mpg > div.filter-card-header"
   app_driver$click(selector = select_mpg)
   app_driver$wait_for_idle(default_idle_duration * 8)
-  testthat::expect_true(is_existing(app_driver, "#filter_panel-active-mtcars-filter-mtcars_mpg-body"))
+  expect_existing(app_driver, "#filter_panel-active-mtcars-filter-mtcars_mpg-body")
   expect_visible("#filter_panel-active-mtcars-filter-mtcars_mpg-body", app_driver)
 })

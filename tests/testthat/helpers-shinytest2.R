@@ -16,19 +16,15 @@ default_idle_duration <- 200 # Time (ms) it is idle
 #' @return `logical(1)` whether the selector is visible.
 #' @keywords internal
 expect_visible <- function(selector, app_driver, timeout) {
-  checkmate::assert(
-    .var.name = "selector",
-    combine = "and",
-    checkmate::check_string(selector),
-    if (grepl("[\"]", selector)) "Cannot contain double quotes (\") in CSS selectors" else TRUE
-  )
+  checkmate::assert_string(selector)
+  selector <- jsonlite::toJSON(selector, auto_unbox = TRUE)
   checkmate::assert_r6(app_driver, "AppDriver")
 
   tryCatch(
     {
       app_driver$wait_for_js(
         sprintf(
-          "Array.from(document.querySelectorAll(\"%s\")).map(el => el.checkVisibility() && (el.textContent.trim().length > 0 || el.children.length > 0)).some(Boolean)",
+          "Array.from(document.querySelectorAll(%s)).map(el => el.checkVisibility() && (el.textContent.trim().length > 0 || el.children.length > 0)).some(Boolean)",
           selector
         ),
         timeout
@@ -44,31 +40,44 @@ expect_visible <- function(selector, app_driver, timeout) {
 #' @describeIn expect_visible Check if an selector is hidden for a given timeout.
 expect_hidden <- function(selector, app_driver, timeout) {
   checkmate::assert_string(selector)
+  selector <- jsonlite::toJSON(selector, auto_unbox = TRUE)
   checkmate::assert_r6(app_driver, "AppDriver")
   tryCatch(
     {
       app_driver$wait_for_js(
         sprintf(
-          "!Array.from(document.querySelectorAll('%s')).map(el => el.checkVisibility() && (el.textContent.trim().length > 0 || el.children.length > 0)).some(Boolean)",
+          "!Array.from(document.querySelectorAll(%s)).map(el => el.checkVisibility() && (el.textContent.trim().length > 0 || el.children.length > 0)).some(Boolean)",
           selector
         ),
         timeout
       )
       testthat::succeed()
     },
-    error = function(err) testthat::fail(sprintf("CSS selector '%s' produces visible elements.", selector))
+    error = function(err) {
+      testthat::fail(sprintf("CSS selector '%s' produces visible elements.", selector))
+    }
   )
 }
 
 # Write a js code to extract the classes
 get_attribute <- function(selector, attribute) {
+  checkmate::assert_string(selector)
+  checkmate::assert_string(attribute)
+  selector <- jsonlite::toJSON(selector, auto_unbox = TRUE)
   sprintf(
-    "Array.from(document.querySelectorAll('%s')).map(el => el.getAttribute('%s'))",
+    "Array.from(document.querySelectorAll(%s)).map(el => el.getAttribute(\"%s\"))",
     selector, attribute
   )
 }
 
-is_existing <- function(app_driver, element) {
-  js_script <- sprintf("document.querySelectorAll('%s').length > 0;", element)
-  app_driver$get_js(js_script)
+expect_existing <- function(app_driver, selector) {
+  checkmate::assert_string(selector)
+  selector <- jsonlite::toJSON(selector, auto_unbox = TRUE)
+  app_driver$wait_for_js(sprintf("document.querySelectorAll(%s).length > 0", selector))
+}
+
+expect_not_existing <- function(app_driver, selector) {
+  checkmate::assert_string(selector)
+  selector <- jsonlite::toJSON(selector, auto_unbox = TRUE)
+  app_driver$wait_for_js(sprintf("document.querySelectorAll(%s).length == 0", selector))
 }
