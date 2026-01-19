@@ -24,7 +24,11 @@ expect_visible <- function(selector, app_driver, timeout) {
     {
       app_driver$wait_for_js(
         sprintf(
-          "Array.from(document.querySelectorAll(%s)).map(el => el.checkVisibility() && (el.textContent.trim().length > 0 || el.children.length > 0)).some(Boolean)",
+          paste0(
+            "Array.from(document.querySelectorAll(%s))",
+            ".map(el => el.checkVisibility() && (el.textContent.trim().length > 0 || el.children.length > 0))",
+            ".some(Boolean)"
+          ),
           selector
         ),
         timeout
@@ -46,7 +50,11 @@ expect_hidden <- function(selector, app_driver, timeout) {
     {
       app_driver$wait_for_js(
         sprintf(
-          "!Array.from(document.querySelectorAll(%s)).map(el => el.checkVisibility() && (el.textContent.trim().length > 0 || el.children.length > 0)).some(Boolean)",
+          paste0(
+            "!Array.from(document.querySelectorAll(%s))",
+            ".map(el => el.checkVisibility() && (el.textContent.trim().length > 0 || el.children.length > 0))",
+            ".some(Boolean)"
+          ),
           selector
         ),
         timeout
