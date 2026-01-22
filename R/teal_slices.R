@@ -199,11 +199,12 @@ c.teal_slices <- function(...) {
   all_attributes <- lapply(x, attributes)
   all_attributes <- coalesce_r(all_attributes)
   all_attributes <- all_attributes[names(all_attributes) != "class"]
-
+  slices <- unlist(x, recursive = FALSE)
+  hashes <- vapply(slices, function(x) rlang::hash(isolate(as.list(x))), character(1))
   do.call(
     teal_slices,
     c(
-      unique(unlist(x, recursive = FALSE)),
+      slices[!duplicated(hashes)],
       all_attributes
     )
   )

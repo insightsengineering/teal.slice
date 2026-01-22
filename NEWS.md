@@ -1,5 +1,9 @@
 # teal.slice 0.7.1.9003
 
+### Enhancements
+
+* Relaxed assertions on `teal_slices` in `c.teal_slices()` to ignore duplicated elements.
+
 # teal.slice 0.7.1
 
 ### Miscellaneous

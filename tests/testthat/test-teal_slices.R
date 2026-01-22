@@ -266,6 +266,23 @@ testthat::test_that("c.teal_slices concatenates `teal_slices` objects", {
   testthat::expect_length(c(fss1, fss2), length(fss1) + length(fss2))
 })
 
+testthat::test_that("c.teal_slices ignores duplicated slices", {
+  ts1 <- teal_slice(dataname = "ds1", varname = "var1", id = "slice1")
+  ts2 <- teal_slice(dataname = "ds1", varname = "var1", id = "slice1")
+
+  testthat::expect_identical(
+    c(teal_slices(ts1), teal_slices(ts2)),
+    teal_slices(ts1)
+  )
+})
+
+testthat::test_that("c.teal_slices throws when non-identical slices with the same id", {
+  ts1 <- teal_slice(dataname = "ds1", varname = "var1", id = "slice1")
+  ts2 <- teal_slice(dataname = "ds1", varname = "var2", id = "slice1")
+
+  testthat::expect_error(c(teal_slices(ts1), teal_slices(ts2)), "slice1")
+})
+
 testthat::test_that("c.teal_slices coalesces attributes", {
   fs1 <- teal_slice("data1", "var1")
   fs2 <- teal_slice("data1", "var2")
