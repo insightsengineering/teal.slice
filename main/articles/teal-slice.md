@@ -69,6 +69,7 @@ functions. For details please see the *Filter panel for developers*
 vignette.
 
 ``` r
+
 library(shiny)
 library(teal.slice)
 

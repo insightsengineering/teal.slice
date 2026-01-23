@@ -53,12 +53,14 @@ modules. It provides:
 ## Installation
 
 ``` r
+
 install.packages('teal.slice')
 ```
 
 Alternatively, you might want to use the development version.
 
 ``` r
+
 # install.packages("pak")
 pak::pak("insightsengineering/teal.slice")
 ```

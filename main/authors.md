@@ -40,14 +40,14 @@ Source:
 [`DESCRIPTION`](https://github.com/insightsengineering/teal.slice/blob/main/DESCRIPTION)
 
 Kaledkowski D, Rucki P, Chlebowski A, Verissimo A, Kirar K, Kosinski M,
-Bates A, Hallal M, Burkoff N, Nasinski M, Pagacz K, Zhao J (2025).
+Bates A, Hallal M, Burkoff N, Nasinski M, Pagacz K, Zhao J (2026).
 *teal.slice: Filter Module for 'teal' Applications*. R package version
-0.7.1, <https://insightsengineering.github.io/teal.slice/>.
+0.7.1.9004, <https://insightsengineering.github.io/teal.slice/>.
 
     @Manual{,
       title = {teal.slice: Filter Module for 'teal' Applications},
       author = {Dawid Kaledkowski and Pawel Rucki and Aleksander Chlebowski and Andre Verissimo and Kartikeya Kirar and Marcin Kosinski and Andrew Bates and Mahmoud Hallal and Nikolas Burkoff and Maciej Nasinski and Konrad Pagacz and Junlue Zhao},
-      year = {2025},
-      note = {R package version 0.7.1},
+      year = {2026},
+      note = {R package version 0.7.1.9004},
       url = {https://insightsengineering.github.io/teal.slice/},
     }

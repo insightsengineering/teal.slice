@@ -1,5 +1,12 @@
 # Changelog
 
+## teal.slice 0.7.1.9004
+
+#### Enhancements
+
+- Relaxed assertions on `teal_slices` to ignore duplicated `teal_slice`
+  elements.
+
 ## teal.slice 0.7.1
 
 CRAN release: 2025-12-02
