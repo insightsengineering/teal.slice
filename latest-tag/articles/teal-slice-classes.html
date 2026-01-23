@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.1</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,6 +56,7 @@
     <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/release-candidate">release-candidate</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
+<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.7.1">v0.7.1</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.7.1-rc1">v0.7.1-rc1</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.7.0">v0.7.0</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.6.0">v0.6.0</a>
@@ -94,7 +95,7 @@
 CoreDev</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.slice/blob/v0.7.0/vignettes/teal-slice-classes.Rmd" class="external-link"><code>vignettes/teal-slice-classes.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.slice/blob/v0.7.1/vignettes/teal-slice-classes.Rmd" class="external-link"><code>vignettes/teal-slice-classes.Rmd</code></a></small>
       <div class="d-none name"><code>teal-slice-classes.Rmd</code></div>
     </div>
 
@@ -113,7 +114,7 @@ managing and displaying filters. The top class in the structure is
 <code>FilteredData</code>. Other modules in the app can interact with
 <code>FilteredData</code> to make filter calls and obtain filtered
 data.</p>
-<p><img src="images/filter_panel/filter_panel_uml_all.jpg" width="100%"></p>
+<p><img src="images/filter_panel/filter_panel_uml_all.jpg" class="r-plt" width="100%"></p>
 <p>The <code>FilteredData</code> object contains one or more
 <code>FilteredDataset</code> objects. While <code>FilteredData</code>
 manages the entire filter panel, each <code>FilteredDataset</code> is
@@ -144,7 +145,7 @@ to store filter information.</p>
 <div class="section level2">
 <h2 id="initialization">Initialization<a class="anchor" aria-label="anchor" href="#initialization"></a>
 </h2>
-<p><img src="images/filter_panel/filtered_data_init.jpg" width="100%"></p>
+<p><img src="images/filter_panel/filtered_data_init.jpg" class="r-plt" width="100%"></p>
 <p>As part of the <code>teal</code> workflow, <code>FilteredData</code>,
 <code>FilteredDataset</code>, and <code>FilterStates</code> are created
 instantly when the data is loaded and remain unchanged. One
@@ -183,7 +184,7 @@ up the filter panel structure.</p>
 <h3 id="filtereddata">
 <code>FilteredData</code><a class="anchor" aria-label="anchor" href="#filtereddata"></a>
 </h3>
-<p><img src="images/filter_panel/class_details_filtered_data.jpg" width="33%"></p>
+<p><img src="images/filter_panel/class_details_filtered_data.jpg" class="r-plt" width="33%"></p>
 <p><code>FilteredData</code> is an object responsible for managing the
 filter panel. It sits on top of the class structure and handles the
 <code>shiny</code> modules of the subclasses.</p>
@@ -198,7 +199,7 @@ functions such as <code>get_filter_state</code>,
 <h3 id="filtereddataset">
 <code>FilteredDataset</code><a class="anchor" aria-label="anchor" href="#filtereddataset"></a>
 </h3>
-<p><img src="images/filter_panel/class_details_filtered_dataset.jpg" width="33%"></p>
+<p><img src="images/filter_panel/class_details_filtered_dataset.jpg" class="r-plt" width="33%"></p>
 <p><code>FilteredDataset</code> is a class that keeps unfiltered data
 and returns filtered data based on the filter call derived from the
 contained <code>FilterStates</code>. <code>FilteredDataset</code> class
@@ -228,7 +229,7 @@ for which filtering is not supported.</li>
 <h3 id="filterstates">
 <code>FilterStates</code><a class="anchor" aria-label="anchor" href="#filterstates"></a>
 </h3>
-<p><img src="images/filter_panel/class_details_filter_states.jpg" width="33%"></p>
+<p><img src="images/filter_panel/class_details_filter_states.jpg" class="r-plt" width="33%"></p>
 <p>When the app starts, <code>FilteredDataset</code> initializes one or
 more <code>FilterStates</code> objects, one for each component of the
 underlying data set. Every <code>FilterStates</code> object is
@@ -283,7 +284,7 @@ this <code>FilterStates</code>.</p></li>
 <h3 id="filterstate">
 <code>FilterState</code><a class="anchor" aria-label="anchor" href="#filterstate"></a>
 </h3>
-<p><img src="images/filter_panel/class_details_filter_state.jpg" width="33%"></p>
+<p><img src="images/filter_panel/class_details_filter_state.jpg" class="r-plt" width="33%"></p>
 <p>This class controls a single filter card and returns a condition call
 that depends on the selection state. A <code>FilterState</code> is
 initialized each time <code>FilterStates</code> adds a new filter.
@@ -361,7 +362,7 @@ for <code>"matrix"</code> it would be
 <h3 id="filterstateexpr">
 <code>FilterStateExpr</code><a class="anchor" aria-label="anchor" href="#filterstateexpr"></a>
 </h3>
-<p><img src="images/filter_panel/class_details_filter_state_expr.jpg" width="33%"></p>
+<p><img src="images/filter_panel/class_details_filter_state_expr.jpg" class="r-plt" width="33%"></p>
 <p>Similarly to <code>FilterState</code>, <code>FilterStateExpr</code>
 controls a single filter card and returns logical expression. However,
 while <code>FilterState</code> generates the call based on the selection
@@ -372,7 +373,7 @@ manually and it must be a valid R expression.</p>
 <h3 id="teal_slice">
 <code>teal_slice</code><a class="anchor" aria-label="anchor" href="#teal_slice"></a>
 </h3>
-<p><img src="images/filter_panel/class_details_teal_slice.jpg" width="33%"></p>
+<p><img src="images/filter_panel/class_details_teal_slice.jpg" class="r-plt" width="33%"></p>
 <p><code>teal_slice</code> is a simple object for storing filter
 information. It can be thought of as a quantum of information. A
 <code>teal_slice</code> object is passed directly to
@@ -396,7 +397,7 @@ does not encode any behaviors, it is implemented around a
 <div class="section level3">
 <h3 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h3>
-<p><img src="images/filter_panel/get_call_overview.jpg" width="100%"></p>
+<p><img src="images/filter_panel/get_call_overview.jpg" class="r-plt" width="100%"></p>
 <p>The diagram above presents the filter panel classes and their
 responsibilities when composing filter calls. Code is generated by
 nested execution of <code>get_call</code> methods.</p>
@@ -418,7 +419,7 @@ of calls extracted from the specified <code>FilteredDataset</code>.</p>
 <div class="section level3">
 <h3 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h3>
-<p><img src="images/filter_panel/get_call_example.jpg" width="100%"></p>
+<p><img src="images/filter_panel/get_call_example.jpg" class="r-plt" width="100%"></p>
 <p>Calling <code>datasets$get_call(&lt;dataname&gt;)</code> in
 <code>teal</code> modules executes a chain of calls in all filter panel
 classes. Consider the following scenario:</p>
@@ -529,7 +530,7 @@ initialized and added to <code>private$state_list</code>.
 and when the state of the list changes (a filter is added or removed),
 it calls <code>FilterState$server</code> and uses <code>renderUI</code>
 to display <code>FilterState$ui</code>.</p>
-<p><img src="images/filter_panel/filter_panel_modules_call.jpg" width="33%"></p>
+<p><img src="images/filter_panel/filter_panel_modules_call.jpg" class="r-plt" width="33%"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
