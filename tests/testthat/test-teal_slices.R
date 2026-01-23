@@ -21,8 +21,6 @@ testthat::test_that("teal_slices checks arguments", {
   testthat::expect_error(teal_slices(fs1, fs2, count_type = c("all", "none")))
 
   testthat::expect_error(teal_slices(fs1, fs2, allow_add = NULL), "Assertion on 'allow_add' failed")
-
-  testthat::expect_error(teal_slices(fs1, fs1, fs2), "Some teal_slice objects have the same id")
 })
 
 testthat::test_that("teal_slices returns `teal_slices`", {
@@ -44,6 +42,24 @@ testthat::test_that("teal_slices returns `teal_slices`", {
 
   testthat::expect_length(teal_slices(fs1, fs2), 2L)
 })
+
+testthat::test_that("teal_slices accepts duplicated elements if they have identical values", {
+  ts1 <- teal_slice(dataname = "ds1", varname = "var1", id = "slice1")
+  ts2 <- teal_slice(dataname = "ds1", varname = "var1", id = "slice1")
+
+  testthat::expect_no_error(teal_slices(ts1, ts2))
+})
+
+testthat::test_that("teal_slices throw an error if elements with duplicated id have different settings", {
+  ts1 <- teal_slice(dataname = "ds1", varname = "var1", id = "slice1")
+  ts2 <- teal_slice(dataname = "ds1", varname = "var2", id = "slice1")
+
+  testthat::expect_error(
+    teal_slices(ts1, ts2),
+    "Conflicting `teal_slice` objects id. Items have the same id but their settings differ:\nslice1"
+  )
+})
+
 
 testthat::test_that("teal_slices raises error when include_varnames and exclude_varnames specified same dataset", {
   testthat::expect_error(
@@ -265,6 +281,7 @@ testthat::test_that("c.teal_slices concatenates `teal_slices` objects", {
   testthat::expect_s3_class(c(fss1, fss2), "teal_slices")
   testthat::expect_length(c(fss1, fss2), length(fss1) + length(fss2))
 })
+
 
 testthat::test_that("c.teal_slices coalesces attributes", {
   fs1 <- teal_slice("data1", "var1")

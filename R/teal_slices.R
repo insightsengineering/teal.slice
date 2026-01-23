@@ -94,10 +94,12 @@ teal_slices <- function(...,
                         allow_add = TRUE) {
   slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
+  hashes <- vapply(slices, function(x) rlang::hash(isolate(as.list(x))), character(1))
+  slices <- slices[!duplicated(hashes)]
   slices_id <- isolate(vapply(slices, `[[`, character(1L), "id"))
   if (any(duplicated(slices_id))) {
     stop(
-      "Some teal_slice objects have the same id:\n",
+      "Conflicting `teal_slice` objects id. Items have the same id but their settings differ:\n",
       toString(unique(slices_id[duplicated(slices_id)]))
     )
   }
@@ -199,11 +201,11 @@ c.teal_slices <- function(...) {
   all_attributes <- lapply(x, attributes)
   all_attributes <- coalesce_r(all_attributes)
   all_attributes <- all_attributes[names(all_attributes) != "class"]
-
+  slices <- unlist(x, recursive = FALSE)
   do.call(
     teal_slices,
     c(
-      unique(unlist(x, recursive = FALSE)),
+      slices,
       all_attributes
     )
   )
