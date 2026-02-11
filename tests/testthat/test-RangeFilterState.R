@@ -42,7 +42,7 @@ testthat::describe("constructor", {
 
   it("throws error on any complex values", {
     testthat::expect_error(
-      RangeFilterState$new(c(nums, 1+0i), slice = teal_slice(dataname = "data", varname = "var")),
+      RangeFilterState$new(c(nums, 1 + 0i), slice = teal_slice(dataname = "data", varname = "var")),
       "not 'complex'"
     )
   })
