@@ -282,43 +282,45 @@ RangeFilterState <- R6::R6Class( # nolint
 
     set_choices = function(choices) {
       x <- private$x[is.finite(private$x)]
-      if (is.null(choices)) {
-        choices <- range(x)
+      new_choices <- if (is.null(choices)) {
+        range(x)
       } else {
         choices_adjusted <- c(max(choices[1L], min(x)), min(choices[2L], max(x)))
-        if (any(choices != choices_adjusted)) {
-          warning(sprintf(
-            "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
-            private$get_varname(), private$get_dataname()
-          ))
-          choices <- choices_adjusted
-        }
-        if (choices[1L] > choices[2L]) {
+        if (choices_adjusted[1L] > choices_adjusted[2L]) {
           warning(sprintf(
             "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
             Setting defaults. Varname: %s, dataname: %s.",
             private$get_varname(), private$get_dataname()
           ))
-          choices <- range(x)
+          choices_adjusted <- range(x)
         }
+        choices_adjusted
       }
 
-      private$set_is_choice_limited(private$x, choices)
+      private$set_is_choice_limited(private$x, new_choices)
       private$x <- private$x[
-        (private$x >= choices[1L] & private$x <= choices[2L]) | is.na(private$x) | !is.finite(private$x)
+        (private$x >= new_choices[1L] & private$x <= new_choices[2L]) | is.na(private$x) | !is.finite(private$x)
       ]
 
       x_range <- range(private$x, finite = TRUE)
 
       # Required for displaying ticks on the slider, can modify choices!
       if (identical(diff(x_range), 0)) {
-        choices <- x_range
+        new_choices <- x_range
       } else {
         x_pretty <- pretty(x_range, 100L)
-        choices <- range(x_pretty)
+        new_choices <- range(x_pretty)
         private$numeric_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
       }
-      private$teal_slice$choices <- choices
+      private$teal_slice$choices <- new_choices
+      # Only throw warning if pretty choices are different
+      if (!is.null(choices) && !identical(choices, new_choices)) {
+        warning(sprintf(
+          "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
+          private$get_varname(), private$get_dataname()
+        ))
+      }
+
       invisible(NULL)
     },
 
