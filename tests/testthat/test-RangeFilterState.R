@@ -17,9 +17,9 @@ testthat::describe("constructor", {
     )
   })
 
-  it("accepts NA values as part of numeric", {
+  it("accepts NA / NaN values as part of numeric", {
     lapply(
-      list(NA, NA_integer_, NA_real_),
+      list(NA, NA_integer_, NA_real_, NaN),
       function(x) {
         testthat::expect_no_error(
           RangeFilterState$new(c(nums, x), slice = teal_slice(dataname = "data", varname = "var"))
@@ -56,7 +56,7 @@ testthat::describe("constructor", {
 
   it("throws error on only NA values", {
     lapply(
-      list(NA, NA_character_, NA_complex_, NA_integer_, NA_real_),
+      list(NaN, NA, NA_character_, NA_complex_, NA_integer_, NA_real_),
       function(x) {
         testthat::expect_error(
           RangeFilterState$new(x, slice = teal_slice(dataname = "data", varname = "var")),
