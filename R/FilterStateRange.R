@@ -298,7 +298,7 @@ RangeFilterState <- R6::R6Class( # nolint
 
       private$set_is_choice_limited(private$x, new_choices)
       valid_range_index <- (private$x >= new_choices[1L] & private$x <= new_choices[2L])
-      private$x <- private$x[valid_range_index | is.na(private$x) | !is.finite(private$x)]
+      private$x <- private$x[valid_range_index | !is.finite(private$x)]
       x_range <- range(private$x, finite = TRUE)
 
       # Required for displaying ticks on the slider, can modify choices!

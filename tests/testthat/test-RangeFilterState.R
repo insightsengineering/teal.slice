@@ -9,18 +9,69 @@ testthat::test_that("constructor accepts numerical values", {
   )
 })
 
-testthat::test_that("constructor accepts infinite values but not infinite only", {
-  testthat::expect_no_error(
-    RangeFilterState$new(c(nums, Inf, -Inf), slice = teal_slice(dataname = "data", varname = "var"))
-  )
-  testthat::expect_error(
-    RangeFilterState$new(Inf, slice = teal_slice(dataname = "data", varname = "var")),
-    "\"x\" contains no finite values"
-  )
-  testthat::expect_error(
-    RangeFilterState$new(c(Inf, NA), slice = teal_slice(dataname = "data", varname = "var")),
-    "\"x\" contains no finite values"
-  )
+testthat::describe("constructor", {
+  nums <- 1:10
+  it("accepts infinite values as part of numeric", {
+    testthat::expect_no_error(
+      RangeFilterState$new(c(nums, Inf, -Inf), slice = teal_slice(dataname = "data", varname = "var"))
+    )
+  })
+
+  it("accepts NA values as part of numeric", {
+    lapply(
+      list(NA, NA_integer_, NA_real_),
+      function(x) {
+        testthat::expect_no_error(
+          RangeFilterState$new(c(nums, x), slice = teal_slice(dataname = "data", varname = "var"))
+        )
+      }
+    )
+  })
+
+  it("throws error with non-numeric NA", {
+    lapply(
+      list(NA_character_, NA_complex_),
+      function(x) {
+        testthat::expect_error(
+          RangeFilterState$new(c(nums, x), slice = teal_slice(dataname = "data", varname = "var")),
+          "not '(character|complex)'"
+        )
+      }
+    )
+  })
+
+  it("throws error on any complex values", {
+    testthat::expect_error(
+      RangeFilterState$new(c(nums, 1+0i), slice = teal_slice(dataname = "data", varname = "var")),
+      "not 'complex'"
+    )
+  })
+
+  it("throws error on only infinite values", {
+    testthat::expect_error(
+      RangeFilterState$new(Inf, slice = teal_slice(dataname = "data", varname = "var")),
+      "\"x\" contains no finite values"
+    )
+  })
+
+  it("throws error on only NA values", {
+    lapply(
+      list(NA, NA_character_, NA_complex_, NA_integer_, NA_real_),
+      function(x) {
+        testthat::expect_error(
+          RangeFilterState$new(x, slice = teal_slice(dataname = "data", varname = "var")),
+          "Contains only missing values"
+        )
+      }
+    )
+  })
+
+  it("throws error when no finite values are present", {
+    testthat::expect_error(
+      RangeFilterState$new(c(Inf, NA), slice = teal_slice(dataname = "data", varname = "var")),
+      "\"x\" contains no finite values"
+    )
+  })
 })
 
 testthat::test_that("constructor initializes keep_inf = TRUE by default if x contains Infs", {
