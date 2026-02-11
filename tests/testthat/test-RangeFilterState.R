@@ -51,14 +51,24 @@ testthat::test_that("constructor raises error when selection is not numeric or c
 
 testthat::describe("constructor modifies choices", {
   local_nums <- c(seq(1.2, 1.9, .1), 1.905)
-  it("to better fit the tick on the slider", {
+  it("that are automatically calculated to better fit the tick on the slider", {
     range <- RangeFilterState$new(local_nums, slice = teal_slice(dataname = "data", varname = "var"))
     testthat::expect_failure(
       testthat::expect_identical(shiny::isolate(range$get_state()[["choices"]]), range(local_nums))
     )
   })
 
-  it("and does not throw error when re-used", {
+  it("and throws warning when manually calculated with range(x)", {
+    testthat::expect_warning(
+      RangeFilterState$new(
+        local_nums,
+        slice = teal_slice(dataname = "data", varname = "var", choices = range(local_nums))
+      ),
+      "Choices adjusted"
+    )
+  })
+
+  it("and does not throw error when re-used", { # use case in teal when slice is used across modules
     range <- RangeFilterState$new(local_nums, slice = teal_slice(dataname = "data", varname = "var"))
     testthat::expect_no_condition(
       RangeFilterState$new(local_nums, slice = range$get_state())
