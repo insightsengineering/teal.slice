@@ -129,7 +129,6 @@ RangeFilterState <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
-
     #' @description
     #' Initialize a `FilterState` object for range selection.
     #' @param x (`numeric`)
