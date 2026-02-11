@@ -311,7 +311,7 @@ RangeFilterState <- R6::R6Class( # nolint
       }
       private$teal_slice$choices <- new_choices
       # Only throw warning if pretty choices are different
-      if (!is.null(choices) && !identical(choices, new_choices)) {
+      if (!is.null(choices) && any(choices != new_choices)) {
         warning(sprintf(
           "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
           private$get_varname(), private$get_dataname()
