@@ -51,7 +51,7 @@ Initialize `MAEFilterStates` object.
 - `data`:
 
   (`MultiAssayExperiment`) the `R` object which
-  [`MultiAssayExperiment::subsetByColData`](https://github.com/waldronlab/MultiAssayExperiment/reference/subsetBy.html)
+  [`MultiAssayExperiment::subsetByColData`](https://rdrr.io/pkg/MultiAssayExperiment/man/subsetBy.html)
   function is applied on.
 
 - `data_reactive`:

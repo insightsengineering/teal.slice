@@ -1,6 +1,6 @@
 # Changelog
 
-## teal.slice 0.7.1.9004
+## teal.slice 0.7.1.9005
 
 #### Enhancements
 
@@ -15,6 +15,9 @@ CRAN release: 2025-12-02
 
 - Improve unit test coverage
   ([\#666](https://github.com/insightsengineering/teal.slice/issues/666)).
+- Re-setting choices for slice only shows warning of modified choices if
+  the post-processed range is different
+  ([\#676](https://github.com/insightsengineering/teal.slice/issues/676)).
 
 ## teal.slice 0.7.0
 
