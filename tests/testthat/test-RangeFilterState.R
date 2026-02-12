@@ -17,6 +17,16 @@ testthat::describe("constructor", {
     )
   })
 
+  it("accepts dates", {
+    range <- RangeFilterState$new(Sys.Date() + seq(0, 5, 1), slice = teal_slice(dataname = "data", varname = "var"))
+    checkmate::expect_date(shiny::isolate(range$get_state()$choices))
+  })
+
+  it("accepts POSIXt", {
+    range <- RangeFilterState$new(Sys.time() + seq(0, 5, 1), slice = teal_slice(dataname = "data", varname = "var"))
+    checkmate::expect_posixct(shiny::isolate(range$get_state()$choices))
+  })
+
   it("accepts NA / NaN values as part of numeric", {
     lapply(
       list(NA, NA_integer_, NA_real_, NaN),
