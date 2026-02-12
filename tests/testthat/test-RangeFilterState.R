@@ -9,18 +9,79 @@ testthat::test_that("constructor accepts numerical values", {
   )
 })
 
-testthat::test_that("constructor accepts infinite values but not infinite only", {
-  testthat::expect_no_error(
-    RangeFilterState$new(c(nums, Inf, -Inf), slice = teal_slice(dataname = "data", varname = "var"))
-  )
-  testthat::expect_error(
-    RangeFilterState$new(Inf, slice = teal_slice(dataname = "data", varname = "var")),
-    "\"x\" contains no finite values"
-  )
-  testthat::expect_error(
-    RangeFilterState$new(c(Inf, NA), slice = teal_slice(dataname = "data", varname = "var")),
-    "\"x\" contains no finite values"
-  )
+testthat::describe("constructor", {
+  nums <- 1:10
+  it("accepts infinite values as part of numeric", {
+    testthat::expect_no_error(
+      RangeFilterState$new(c(nums, Inf, -Inf), slice = teal_slice(dataname = "data", varname = "var"))
+    )
+  })
+
+  it("accepts dates", {
+    range <- RangeFilterState$new(Sys.Date() + seq(0, 5, 1), slice = teal_slice(dataname = "data", varname = "var"))
+    checkmate::expect_date(shiny::isolate(range$get_state()$choices))
+  })
+
+  it("accepts POSIXt", {
+    range <- RangeFilterState$new(Sys.time() + seq(0, 5, 1), slice = teal_slice(dataname = "data", varname = "var"))
+    checkmate::expect_posixct(shiny::isolate(range$get_state()$choices))
+  })
+
+  it("accepts NA / NaN values as part of numeric", {
+    lapply(
+      list(NA, NA_integer_, NA_real_, NaN),
+      function(x) {
+        testthat::expect_no_error(
+          RangeFilterState$new(c(nums, x), slice = teal_slice(dataname = "data", varname = "var"))
+        )
+      }
+    )
+  })
+
+  it("throws error with non-numeric NA", {
+    lapply(
+      list(NA_character_, NA_complex_),
+      function(x) {
+        testthat::expect_error(
+          RangeFilterState$new(c(nums, x), slice = teal_slice(dataname = "data", varname = "var")),
+          "not '(character|complex)'"
+        )
+      }
+    )
+  })
+
+  it("throws error on any complex values", {
+    testthat::expect_error(
+      RangeFilterState$new(c(nums, 1 + 0i), slice = teal_slice(dataname = "data", varname = "var")),
+      "not 'complex'"
+    )
+  })
+
+  it("throws error on only infinite values", {
+    testthat::expect_error(
+      RangeFilterState$new(Inf, slice = teal_slice(dataname = "data", varname = "var")),
+      "\"x\" contains no finite values"
+    )
+  })
+
+  it("throws error on only NA values", {
+    lapply(
+      list(NaN, NA, NA_character_, NA_complex_, NA_integer_, NA_real_),
+      function(x) {
+        testthat::expect_error(
+          RangeFilterState$new(x, slice = teal_slice(dataname = "data", varname = "var")),
+          "Contains only missing values"
+        )
+      }
+    )
+  })
+
+  it("throws error when no finite values are present", {
+    testthat::expect_error(
+      RangeFilterState$new(c(Inf, NA), slice = teal_slice(dataname = "data", varname = "var")),
+      "\"x\" contains no finite values"
+    )
+  })
 })
 
 testthat::test_that("constructor initializes keep_inf = TRUE by default if x contains Infs", {
@@ -47,6 +108,33 @@ testthat::test_that("constructor raises error when selection is not numeric or c
     ),
     "Vector of set values must contain values coercible to numeric"
   )
+})
+
+testthat::describe("constructor modifies choices", {
+  local_nums <- c(seq(1.2, 1.9, .1), 1.905)
+  it("that are automatically calculated to better fit the tick on the slider", {
+    range <- RangeFilterState$new(local_nums, slice = teal_slice(dataname = "data", varname = "var"))
+    testthat::expect_failure(
+      testthat::expect_identical(shiny::isolate(range$get_state()[["choices"]]), range(local_nums))
+    )
+  })
+
+  it("and throws warning when manually calculated with range(x)", {
+    testthat::expect_warning(
+      RangeFilterState$new(
+        local_nums,
+        slice = teal_slice(dataname = "data", varname = "var", choices = range(local_nums))
+      ),
+      "Choices adjusted"
+    )
+  })
+
+  it("and does not throw error when re-used", { # use case in teal when slice is used across modules
+    range <- RangeFilterState$new(local_nums, slice = teal_slice(dataname = "data", varname = "var"))
+    testthat::expect_no_condition(
+      RangeFilterState$new(local_nums, slice = range$get_state())
+    )
+  })
 })
 
 testthat::test_that("constructor raises error when choices is out of range", {

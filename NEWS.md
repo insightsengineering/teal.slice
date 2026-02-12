@@ -9,6 +9,7 @@
 ### Miscellaneous
 
 * Improve unit test coverage (#666).
+* Re-setting choices for slice only shows warning of modified choices if the post-processed range is different (#676).
 
 # teal.slice 0.7.0
 
