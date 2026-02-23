@@ -158,7 +158,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
           combine = "or"
         )
         if (is.factor(x)) {
-          # Preserve label attribute before droplevels (which strips all attributes except levels and class)
           label_attr <- attr(x, "label", exact = TRUE)
           x <- droplevels(x)
           if (!is.null(label_attr)) {
