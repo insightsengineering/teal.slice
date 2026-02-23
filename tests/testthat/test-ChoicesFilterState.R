@@ -706,3 +706,87 @@ testthat::test_that("get_call works for various combinations", {
     quote(!x %in% c("a", "b", "c", "d", "e", "f", "g", "h"))
   )
 })
+
+# Helper function to check label in UI
+check_label_in_ui <- function(x, varname, expected_label = NULL, label_should_appear = TRUE) {
+  filter_state <- init_filter_state(
+    x = x,
+    slice = teal_slice(dataname = "data", varname = varname)
+  )
+
+  ui_output <- as.character(filter_state$ui(id = "test"))
+
+  if (label_should_appear && !is.null(expected_label)) {
+    testthat::expect_true(
+      grepl(expected_label, ui_output),
+      info = sprintf("Expected label '%s' to appear in UI", expected_label)
+    )
+    testthat::expect_true(
+      grepl('class="teal-slice filter-card-varlabel"', ui_output),
+      info = "UI should contain varlabel div"
+    )
+  } else {
+    # The varlabel div exists but should be empty
+    testthat::expect_true(
+      grepl('class="teal-slice filter-card-varlabel"></div>', ui_output),
+      info = "Varlabel div should be empty"
+    )
+  }
+}
+
+testthat::test_that("Factor with label attribute displays label in UI", {
+  factor_with_label <- factor(c("a", "b", "c", "a", "b"))
+  attr(factor_with_label, "label") <- "Category Label"
+
+  check_label_in_ui(
+    x = factor_with_label,
+    varname = "category",
+    expected_label = "Category Label",
+    label_should_appear = TRUE
+  )
+})
+
+testthat::test_that("Factor without label attribute has empty varlabel in UI", {
+  factor_without_label <- factor(c("a", "b", "c", "a", "b"))
+
+  check_label_in_ui(
+    x = factor_without_label,
+    varname = "category",
+    label_should_appear = FALSE
+  )
+})
+
+testthat::test_that("Character variable with label attribute displays label in UI", {
+  char_with_label <- c("a", "b", "c", "a", "b")
+  attr(char_with_label, "label") <- "Character Label"
+
+  check_label_in_ui(
+    x = char_with_label,
+    varname = "char_var",
+    expected_label = "Character Label",
+    label_should_appear = TRUE
+  )
+})
+
+testthat::test_that("Factor with label same as varname has empty varlabel in UI", {
+  factor_same_label <- factor(c("a", "b", "c", "a", "b"))
+  attr(factor_same_label, "label") <- "category"
+
+  check_label_in_ui(
+    x = factor_same_label,
+    varname = "category",
+    label_should_appear = FALSE
+  )
+})
+
+testthat::test_that("Numeric variable with label attribute displays label in UI", {
+  numeric_with_label <- c(1, 2, 3, 2, 1)
+  attr(numeric_with_label, "label") <- "Numeric Label"
+
+  check_label_in_ui(
+    x = numeric_with_label,
+    varname = "numeric_var",
+    expected_label = "Numeric Label",
+    label_should_appear = TRUE
+  )
+})
