@@ -158,7 +158,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
           combine = "or"
         )
         if (is.factor(x)) {
+          x_attributes <- attributes(x)
           x <- droplevels(x)
+          attributes(x) <- x_attributes
         }
         super$initialize(
           x = x,
