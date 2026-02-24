@@ -707,33 +707,6 @@ testthat::test_that("get_call works for various combinations", {
   )
 })
 
-# Helper function to check label in UI
-check_label_in_ui <- function(x, varname, expected_label = NULL, label_should_appear = TRUE) {
-  filter_state <- init_filter_state(
-    x = x,
-    slice = teal_slice(dataname = "data", varname = varname)
-  )
-
-  ui_output <- as.character(filter_state$ui(id = "test"))
-
-  if (label_should_appear && !is.null(expected_label)) {
-    testthat::expect_true(
-      grepl(expected_label, ui_output),
-      info = sprintf("Expected label '%s' to appear in UI", expected_label)
-    )
-    testthat::expect_true(
-      grepl('class="teal-slice filter-card-varlabel"', ui_output),
-      info = "UI should contain varlabel div"
-    )
-  } else {
-    # The varlabel div exists but should be empty
-    testthat::expect_true(
-      grepl('class="teal-slice filter-card-varlabel"></div>', ui_output),
-      info = "Varlabel div should be empty"
-    )
-  }
-}
-
 testthat::test_that("Factor with label attribute displays label in UI", {
   factor_with_label <- factor(c("a", "b", "c", "a", "b"))
   varlabel <- "Category Label"
