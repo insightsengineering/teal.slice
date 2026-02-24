@@ -736,57 +736,88 @@ check_label_in_ui <- function(x, varname, expected_label = NULL, label_should_ap
 
 testthat::test_that("Factor with label attribute displays label in UI", {
   factor_with_label <- factor(c("a", "b", "c", "a", "b"))
-  attr(factor_with_label, "label") <- "Category Label"
-
-  check_label_in_ui(
-    x = factor_with_label,
-    varname = "category",
-    expected_label = "Category Label",
-    label_should_appear = TRUE
+  varlabel <- "Category Label"
+  varname <- "category"
+  attr(factor_with_label, "label") <- varlabel
+  filter_state <- init_filter_state(
+    factor_with_label,
+    slice = teal_slice(
+      dataname = "data",
+      varname = varname
+    )
   )
+  ui_character <- as.character(filter_state$ui(id = "test"))
+
+  testthat::expect_true(grepl(varlabel, ui_character))
 })
 
 testthat::test_that("Factor without label attribute has empty varlabel in UI", {
   factor_without_label <- factor(c("a", "b", "c", "a", "b"))
-
-  check_label_in_ui(
-    x = factor_without_label,
-    varname = "category",
-    label_should_appear = FALSE
+  varlabel <- "Category Label"
+  varname <- "category"
+  filter_state <- init_filter_state(
+    factor_without_label,
+    slice = teal_slice(
+      dataname = "data",
+      varname = varname
+    )
   )
+  ui_character <- as.character(filter_state$ui(id = "test"))
+
+  testthat::expect_true(grepl("teal-slice filter-card-varlabel", ui_character)) # class is here
+  testthat::expect_false(grepl(varlabel, ui_character)) # with empty varlabel
 })
 
 testthat::test_that("Character variable with label attribute displays label in UI", {
   char_with_label <- c("a", "b", "c", "a", "b")
-  attr(char_with_label, "label") <- "Character Label"
+  varlabel <- "Character Label"
+  varname <- "my_character"
+  attr(char_with_label, "label") <- varlabel
 
-  check_label_in_ui(
-    x = char_with_label,
-    varname = "char_var",
-    expected_label = "Character Label",
-    label_should_appear = TRUE
+  filter_state <- init_filter_state(
+    char_with_label,
+    slice = teal_slice(
+      dataname = "data",
+      varname = varname
+    )
   )
+  ui_character <- as.character(filter_state$ui(id = "test"))
+
+  testthat::expect_true(grepl(varlabel, ui_character))
 })
 
-testthat::test_that("Factor with label same as varname has empty varlabel in UI", {
+testthat::test_that("Factor with same label as varname has empty varlabel in UI", {
   factor_same_label <- factor(c("a", "b", "c", "a", "b"))
-  attr(factor_same_label, "label") <- "category"
-
-  check_label_in_ui(
-    x = factor_same_label,
-    varname = "category",
-    label_should_appear = FALSE
+  varname <- "category"
+  varlabel <- varname
+  attr(factor_same_label, "label") <- varlabel
+  filter_state <- init_filter_state(
+    factor_same_label,
+    slice = teal_slice(
+      dataname = "data",
+      varname = varname
+    )
   )
+  ui_character <- as.character(filter_state$ui(id = "test"))
+
+  # class with empty varlabel
+  testthat::expect_true(grepl('class="teal-slice filter-card-varlabel"></div>', ui_character))
 })
 
 testthat::test_that("Numeric variable with label attribute displays label in UI", {
   numeric_with_label <- c(1, 2, 3, 2, 1)
-  attr(numeric_with_label, "label") <- "Numeric Label"
+  varlabel <- "Numeric Label"
+  varname <- "my_number"
+  attr(numeric_with_label, "label") <- varlabel
 
-  check_label_in_ui(
-    x = numeric_with_label,
-    varname = "numeric_var",
-    expected_label = "Numeric Label",
-    label_should_appear = TRUE
+  filter_state <- init_filter_state(
+    numeric_with_label,
+    slice = teal_slice(
+      dataname = "data",
+      varname = varname
+    )
   )
+  ui_character <- as.character(filter_state$ui(id = "test"))
+
+  testthat::expect_true(grepl(varlabel, ui_character))
 })
