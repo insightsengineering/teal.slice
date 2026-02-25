@@ -706,3 +706,91 @@ testthat::test_that("get_call works for various combinations", {
     quote(!x %in% c("a", "b", "c", "d", "e", "f", "g", "h"))
   )
 })
+
+testthat::test_that("Factor with label attribute displays label in UI", {
+  factor_with_label <- factor(c("a", "b", "c", "a", "b"))
+  varlabel <- "Category Label"
+  varname <- "category"
+  attr(factor_with_label, "label") <- varlabel
+  filter_state <- init_filter_state(
+    factor_with_label,
+    slice = teal_slice(
+      dataname = "data",
+      varname = varname
+    )
+  )
+  ui_character <- as.character(filter_state$ui(id = "test"))
+
+  testthat::expect_true(grepl(varlabel, ui_character))
+})
+
+testthat::test_that("Factor without label attribute has empty varlabel in UI", {
+  factor_without_label <- factor(c("a", "b", "c", "a", "b"))
+  varlabel <- "Category Label"
+  varname <- "category"
+  filter_state <- init_filter_state(
+    factor_without_label,
+    slice = teal_slice(
+      dataname = "data",
+      varname = varname
+    )
+  )
+  ui_character <- as.character(filter_state$ui(id = "test"))
+
+  testthat::expect_true(grepl("teal-slice filter-card-varlabel", ui_character)) # class is here
+  testthat::expect_false(grepl(varlabel, ui_character)) # with empty varlabel
+})
+
+testthat::test_that("Character variable with label attribute displays label in UI", {
+  char_with_label <- c("a", "b", "c", "a", "b")
+  varlabel <- "Character Label"
+  varname <- "my_character"
+  attr(char_with_label, "label") <- varlabel
+
+  filter_state <- init_filter_state(
+    char_with_label,
+    slice = teal_slice(
+      dataname = "data",
+      varname = varname
+    )
+  )
+  ui_character <- as.character(filter_state$ui(id = "test"))
+
+  testthat::expect_true(grepl(varlabel, ui_character))
+})
+
+testthat::test_that("Factor with same label as varname has empty varlabel in UI", {
+  factor_same_label <- factor(c("a", "b", "c", "a", "b"))
+  varname <- "category"
+  varlabel <- varname
+  attr(factor_same_label, "label") <- varlabel
+  filter_state <- init_filter_state(
+    factor_same_label,
+    slice = teal_slice(
+      dataname = "data",
+      varname = varname
+    )
+  )
+  ui_character <- as.character(filter_state$ui(id = "test"))
+
+  # class with empty varlabel
+  testthat::expect_true(grepl('class="teal-slice filter-card-varlabel"></div>', ui_character))
+})
+
+testthat::test_that("Numeric variable with label attribute displays label in UI", {
+  numeric_with_label <- c(1, 2, 3, 2, 1)
+  varlabel <- "Numeric Label"
+  varname <- "my_number"
+  attr(numeric_with_label, "label") <- varlabel
+
+  filter_state <- init_filter_state(
+    numeric_with_label,
+    slice = teal_slice(
+      dataname = "data",
+      varname = varname
+    )
+  )
+  ui_character <- as.character(filter_state$ui(id = "test"))
+
+  testthat::expect_true(grepl(varlabel, ui_character))
+})

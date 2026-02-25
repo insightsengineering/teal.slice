@@ -1,5 +1,27 @@
 # ChoicesFilterState ------
 
+#' Drop unused factor levels while preserving label attribute
+#'
+#' @description
+#' Helper function to drop unused levels from a factor variable while preserving
+#' the `label` attribute. The base R `droplevels()` function strips all attributes
+#' except `levels` and `class`, which causes the loss of variable labels that are
+#' commonly used in clinical trial datasets.
+#'
+#' @param x (`factor`) A factor variable, potentially with a `label` attribute.
+#'
+#' @return The input factor with unused levels dropped and the `label` attribute preserved.
+#'
+#' @keywords internal
+.drop_levels_keep_label <- function(x) {
+  label_attr <- attr(x, "label", exact = TRUE)
+  x <- droplevels(x)
+  if (!is.null(label_attr)) {
+    attr(x, "label") <- label_attr
+  }
+  x
+}
+
 #' @name ChoicesFilterState
 #' @docType class
 #'
@@ -158,7 +180,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           combine = "or"
         )
         if (is.factor(x)) {
-          x <- droplevels(x)
+          x <- .drop_levels_keep_label(x)
         }
         super$initialize(
           x = x,
