@@ -46,7 +46,7 @@ teal_slice(
   (`character(1)`) string providing a logical expression. Must be a
   valid `R` expression which can be evaluated in the context of the data
   set. For a `data.frame` `var == "x"` is sufficient, but
-  [`MultiAssayExperiment::subsetByColData`](https://rdrr.io/pkg/MultiAssayExperiment/man/subsetBy.html)
+  [`MultiAssayExperiment::subsetByColData`](https://github.com/waldronlab/MultiAssayExperiment/reference/subsetBy.html)
   requires `dataname` prefix, *e.g.* `data$var == "x"`.
 
 - choices:

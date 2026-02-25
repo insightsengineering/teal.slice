@@ -144,8 +144,8 @@ filter_state <- DatetimeFilterState$new(
   extract_type = character(0)
 )
 isolate(filter_state$get_call())
-#> is.na(x) | x >= as.POSIXct("2026-02-12 12:40:04", tz = "Etc/UTC") & 
-#>     x < as.POSIXct("2026-02-12 21:40:05", tz = "Etc/UTC")
+#> is.na(x) | x >= as.POSIXct("2026-02-25 06:31:01", tz = "Etc/UTC") & 
+#>     x < as.POSIXct("2026-02-25 15:31:02", tz = "Etc/UTC")
 filter_state$set_state(
   teal_slice(
     dataname = "data",
@@ -155,8 +155,8 @@ filter_state$set_state(
   )
 )
 isolate(filter_state$get_call())
-#> is.na(x) | x >= as.POSIXct("2026-02-12 12:40:07.47033", tz = "Etc/UTC") & 
-#>     x < as.POSIXct("2026-02-12 12:40:13.470371", tz = "Etc/UTC")
+#> is.na(x) | x >= as.POSIXct("2026-02-25 06:31:04.770657", tz = "Etc/UTC") & 
+#>     x < as.POSIXct("2026-02-25 06:31:10.7707", tz = "Etc/UTC")
 
 # working filter in an app
 library(shinyjs)

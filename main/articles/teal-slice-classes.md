@@ -130,7 +130,7 @@ The following `FilteredStates` child classes are currently implemented:
   [`dplyr::filter`](https://dplyr.tidyverse.org/reference/filter.html)
   to filter on columns.
 - `MAEFilterStates` for`MultiAssayExperiment`; uses
-  [`MultiAssayExperiment::subsetByColData`](https://rdrr.io/pkg/MultiAssayExperiment/man/subsetBy.html)
+  [`MultiAssayExperiment::subsetByColData`](https://github.com/waldronlab/MultiAssayExperiment/reference/subsetBy.html)
   to filter on columns of the `DataFrame` in the `@colData` slot.
 - `SEFilterStates` for `SummarizedExperiment`; uses the `subset` method
   for `SummarizedExperiment` to filter on columns of `DataFrames` in the
@@ -325,9 +325,9 @@ scenario:
 
 8.  A `MAEFilterStates` object is initialized for subject data and for
     this object
-    [`MultiAssayExperiment::subsetByColData`](https://rdrr.io/pkg/MultiAssayExperiment/man/subsetBy.html)
+    [`MultiAssayExperiment::subsetByColData`](https://github.com/waldronlab/MultiAssayExperiment/reference/subsetBy.html)
     function is applied.
-    [`MultiAssayExperiment::subsetByColData`](https://rdrr.io/pkg/MultiAssayExperiment/man/subsetBy.html)
+    [`MultiAssayExperiment::subsetByColData`](https://github.com/waldronlab/MultiAssayExperiment/reference/subsetBy.html)
     has two arguments: `x` (data) and `y` (conditions). Since all filter
     expressions are passed to one argument, `MAEFilterStates` only has
     one `state_list`, just like `DFFilterStates`. Adding new filters
