@@ -1267,3 +1267,102 @@ testthat::describe("test FilterStateExpr server", {
     )
   })
 })
+
+# ui_active ----
+testthat::test_that("ui_active renders an accordion panel titled 'Filter Data'", {
+  filtered_data <- FilteredData$new(list(iris = iris))
+  ui_html <- as.character(
+    shiny::isolate(filtered_data$ui_active("test"))
+  )
+  testthat::expect_match(ui_html, "Filter Data", fixed = TRUE)
+})
+
+testthat::test_that("ui_active renders the filter_active_vars_contents container", {
+  filtered_data <- FilteredData$new(list(iris = iris))
+  ui_html <- as.character(
+    shiny::isolate(filtered_data$ui_active("test"))
+  )
+  testthat::expect_match(
+    ui_html, 'id="test-filter_active_vars_contents"', fixed = TRUE
+  )
+})
+
+testthat::test_that("ui_active renders the remove_all_filters_ui output placeholder", {
+  filtered_data <- FilteredData$new(list(iris = iris))
+  ui_html <- as.character(
+    shiny::isolate(filtered_data$ui_active("test"))
+  )
+  testthat::expect_match(
+    ui_html, 'id="test-remove_all_filters_ui"', fixed = TRUE
+  )
+})
+
+testthat::test_that("ui_active renders the filters_active_count container hidden", {
+  filtered_data <- FilteredData$new(list(iris = iris))
+  ui_html <- as.character(
+    shiny::isolate(filtered_data$ui_active("test"))
+  )
+  testthat::expect_match(
+    ui_html, 'filters_active_count.*display: none'
+  )
+})
+
+testthat::test_that("ui_active renders a dataset-level active filter panel for each dataname", {
+  filtered_data <- FilteredData$new(list(iris = iris, mtcars = mtcars))
+  ui_html <- as.character(
+    shiny::isolate(filtered_data$ui_active("test", active_datanames = function() c("iris", "mtcars")))
+  )
+  testthat::expect_match(ui_html, 'id="test-iris-container"', fixed = TRUE)
+  testthat::expect_match(ui_html, 'id="test-mtcars-container"', fixed = TRUE)
+})
+
+# ui_overview ----
+testthat::test_that("ui_overview renders an accordion panel titled 'Active Filter Summary'", {
+  filtered_data <- FilteredData$new(list(iris = iris))
+  ui_html <- as.character(
+    shiny::isolate(filtered_data$ui_overview("test"))
+  )
+  testthat::expect_match(ui_html, "Active Filter Summary", fixed = TRUE)
+})
+
+testthat::test_that("ui_overview renders the main_filter_accordion container", {
+  filtered_data <- FilteredData$new(list(iris = iris))
+  ui_html <- as.character(
+    shiny::isolate(filtered_data$ui_overview("test"))
+  )
+  testthat::expect_match(
+    ui_html, 'id="test-main_filter_accordion"', fixed = TRUE
+  )
+})
+
+testthat::test_that("ui_overview renders the filters_overview_contents container", {
+  filtered_data <- FilteredData$new(list(iris = iris))
+  ui_html <- as.character(
+    shiny::isolate(filtered_data$ui_overview("test"))
+  )
+  testthat::expect_match(
+    ui_html, 'id="test-filters_overview_contents"', fixed = TRUE
+  )
+})
+
+testthat::test_that("ui_overview renders the table output placeholder", {
+  filtered_data <- FilteredData$new(list(iris = iris))
+  ui_html <- as.character(
+    shiny::isolate(filtered_data$ui_overview("test"))
+  )
+  testthat::expect_match(ui_html, 'id="test-table"', fixed = TRUE)
+})
+
+# ui_available_filters ----
+testthat::test_that("ui_available_filters renders the expected structural elements", {
+  filtered_data <- FilteredData$new(list(iris = iris))
+  ui_html <- as.character(
+    shiny::isolate(
+      filtered_data$.__enclos_env__$private$ui_available_filters("test")
+    )
+  )
+  testthat::expect_match(ui_html, 'id="test-available_menu"', fixed = TRUE)
+  testthat::expect_match(ui_html, "bi-plus-square", fixed = TRUE)
+  testthat::expect_match(ui_html, 'id="test-checkbox"', fixed = TRUE)
+  testthat::expect_match(ui_html, 'id="test-show".*available-menu')
+})

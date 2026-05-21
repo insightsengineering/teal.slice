@@ -1,3 +1,4 @@
+# nocov start
 .onLoad <- function(libname, pkgname) { # nolint
   # adapted from https://github.com/r-lib/devtools/blob/master/R/zzz.R
   teal_default_options <- list(teal.threshold_slider_vs_checkboxgroup = 5)
@@ -45,6 +46,7 @@
   teal.data::datanames
   teal.widgets::optionalSelectInput
 }
+# nocov end
 
 
 ### END ENSURE CHECK PASSES

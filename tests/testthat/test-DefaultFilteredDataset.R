@@ -58,6 +58,20 @@ testthat::test_that("clear_filter_state returns NULL", {
   fds <- DefaultFilteredDataset$new(letters, "character")
   testthat::expect_null(fds$clear_filter_states())
 })
+# ui_active ----
+testthat::test_that("ui_active returns an empty div", {
+  fds <- DefaultFilteredDataset$new(letters, "character")
+  ui_html <- as.character(shiny::isolate(fds$ui_active("test")))
+  testthat::expect_identical(ui_html, "<div></div>")
+})
+
+# ui_add ----
+testthat::test_that("ui_add returns an empty div", {
+  fds <- DefaultFilteredDataset$new(letters, "character")
+  ui_html <- as.character(shiny::isolate(fds$ui_add("test")))
+  testthat::expect_identical(ui_html, "<div></div>")
+})
+
 # get_filter_overview ----
 testthat::test_that("get_filter_overview returns NULL", {
   fds <- DefaultFilteredDataset$new(letters, "character")
