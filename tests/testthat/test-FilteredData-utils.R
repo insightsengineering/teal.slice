@@ -41,7 +41,6 @@ capture_runjs_output <- function(fn, ...) {
 
 # toggle_icon (two-way branch) ----
 testthat::describe("toggle_icon two-way JS expression", {
-
   testthat::it("produces JS targeting the <i> child of the button", {
     generated_js <- capture_runjs_output(
       teal.slice:::toggle_icon, "panel_toggle", c("fa-angle-down", "fa-angle-right")

@@ -1283,7 +1283,8 @@ testthat::test_that("ui_active renders the filter_active_vars_contents container
     shiny::isolate(filtered_data$ui_active("test"))
   )
   testthat::expect_match(
-    ui_html, 'id="test-filter_active_vars_contents"', fixed = TRUE
+    ui_html, 'id="test-filter_active_vars_contents"',
+    fixed = TRUE
   )
 })
 
@@ -1293,7 +1294,8 @@ testthat::test_that("ui_active renders the remove_all_filters_ui output placehol
     shiny::isolate(filtered_data$ui_active("test"))
   )
   testthat::expect_match(
-    ui_html, 'id="test-remove_all_filters_ui"', fixed = TRUE
+    ui_html, 'id="test-remove_all_filters_ui"',
+    fixed = TRUE
   )
 })
 
@@ -1303,7 +1305,7 @@ testthat::test_that("ui_active renders the filters_active_count container hidden
     shiny::isolate(filtered_data$ui_active("test"))
   )
   testthat::expect_match(
-    ui_html, 'filters_active_count.*display: none'
+    ui_html, "filters_active_count.*display: none"
   )
 })
 
@@ -1331,7 +1333,8 @@ testthat::test_that("ui_overview renders the main_filter_accordion container", {
     shiny::isolate(filtered_data$ui_overview("test"))
   )
   testthat::expect_match(
-    ui_html, 'id="test-main_filter_accordion"', fixed = TRUE
+    ui_html, 'id="test-main_filter_accordion"',
+    fixed = TRUE
   )
 })
 
@@ -1341,7 +1344,8 @@ testthat::test_that("ui_overview renders the filters_overview_contents container
     shiny::isolate(filtered_data$ui_overview("test"))
   )
   testthat::expect_match(
-    ui_html, 'id="test-filters_overview_contents"', fixed = TRUE
+    ui_html, 'id="test-filters_overview_contents"',
+    fixed = TRUE
   )
 })
 
