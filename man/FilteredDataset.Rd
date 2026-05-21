@@ -14,365 +14,397 @@ components of the dataset.
 \keyword{internal}
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-FilteredDataset-new}{\code{FilteredDataset$new()}}
-\item \href{#method-FilteredDataset-destroy}{\code{FilteredDataset$destroy()}}
-\item \href{#method-FilteredDataset-format}{\code{FilteredDataset$format()}}
-\item \href{#method-FilteredDataset-print}{\code{FilteredDataset$print()}}
-\item \href{#method-FilteredDataset-clear_filter_states}{\code{FilteredDataset$clear_filter_states()}}
-\item \href{#method-FilteredDataset-get_call}{\code{FilteredDataset$get_call()}}
-\item \href{#method-FilteredDataset-get_filter_state}{\code{FilteredDataset$get_filter_state()}}
-\item \href{#method-FilteredDataset-set_filter_state}{\code{FilteredDataset$set_filter_state()}}
-\item \href{#method-FilteredDataset-get_dataname}{\code{FilteredDataset$get_dataname()}}
-\item \href{#method-FilteredDataset-get_dataset}{\code{FilteredDataset$get_dataset()}}
-\item \href{#method-FilteredDataset-get_filter_overview}{\code{FilteredDataset$get_filter_overview()}}
-\item \href{#method-FilteredDataset-get_keys}{\code{FilteredDataset$get_keys()}}
-\item \href{#method-FilteredDataset-get_dataset_label}{\code{FilteredDataset$get_dataset_label()}}
-\item \href{#method-FilteredDataset-ui_active}{\code{FilteredDataset$ui_active()}}
-\item \href{#method-FilteredDataset-srv_active}{\code{FilteredDataset$srv_active()}}
-\item \href{#method-FilteredDataset-ui_add}{\code{FilteredDataset$ui_add()}}
-\item \href{#method-FilteredDataset-srv_add}{\code{FilteredDataset$srv_add()}}
-\item \href{#method-FilteredDataset-clone}{\code{FilteredDataset$clone()}}
-}
+  \itemize{
+    \item \href{#method-FilteredDataset-initialize}{\code{FilteredDataset$new()}}
+    \item \href{#method-FilteredDataset-destroy}{\code{FilteredDataset$destroy()}}
+    \item \href{#method-FilteredDataset-format}{\code{FilteredDataset$format()}}
+    \item \href{#method-FilteredDataset-print}{\code{FilteredDataset$print()}}
+    \item \href{#method-FilteredDataset-clear_filter_states}{\code{FilteredDataset$clear_filter_states()}}
+    \item \href{#method-FilteredDataset-get_call}{\code{FilteredDataset$get_call()}}
+    \item \href{#method-FilteredDataset-get_filter_state}{\code{FilteredDataset$get_filter_state()}}
+    \item \href{#method-FilteredDataset-set_filter_state}{\code{FilteredDataset$set_filter_state()}}
+    \item \href{#method-FilteredDataset-get_dataname}{\code{FilteredDataset$get_dataname()}}
+    \item \href{#method-FilteredDataset-get_dataset}{\code{FilteredDataset$get_dataset()}}
+    \item \href{#method-FilteredDataset-get_filter_overview}{\code{FilteredDataset$get_filter_overview()}}
+    \item \href{#method-FilteredDataset-get_keys}{\code{FilteredDataset$get_keys()}}
+    \item \href{#method-FilteredDataset-get_dataset_label}{\code{FilteredDataset$get_dataset_label()}}
+    \item \href{#method-FilteredDataset-ui_active}{\code{FilteredDataset$ui_active()}}
+    \item \href{#method-FilteredDataset-srv_active}{\code{FilteredDataset$srv_active()}}
+    \item \href{#method-FilteredDataset-ui_add}{\code{FilteredDataset$ui_add()}}
+    \item \href{#method-FilteredDataset-srv_add}{\code{FilteredDataset$srv_add()}}
+    \item \href{#method-FilteredDataset-clone}{\code{FilteredDataset$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-new"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-new}{}}}
-\subsection{Method \code{new()}}{
-Initializes this \code{FilteredDataset} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$new(
+\if{html}{\out{<a id="method-FilteredDataset-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-initialize}{}}}
+\subsection{\code{FilteredDataset$new()}}{
+  Initializes this \code{FilteredDataset} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$new(
   dataset,
   dataname,
   keys = character(0),
   label = attr(dataset, "label", exact = TRUE)
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataset}}{any object}
-
-\item{\code{dataname}}{(\code{character(1)})
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{dataset}}{any object}
+      \item{\code{dataname}}{(\code{character(1)})
 syntactically valid name given to the dataset.}
-
-\item{\code{keys}}{(\code{character}) optional
+      \item{\code{keys}}{(\code{character}) optional
 vector of primary key column names.}
-
-\item{\code{label}}{(\code{character(1)})
+      \item{\code{label}}{(\code{character(1)})
 label to describe the dataset.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Object of class \code{FilteredDataset}, invisibly.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Object of class \code{FilteredDataset}, invisibly.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-destroy"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-destroy}{}}}
-\subsection{Method \code{destroy()}}{
-Destroys a \code{FilteredDataset} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$destroy()}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$destroy()}}{
+  Destroys a \code{FilteredDataset} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$destroy()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-format"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-format}{}}}
-\subsection{Method \code{format()}}{
-Returns a formatted string representing this \code{FilteredDataset} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$format(show_all = FALSE, trim_lines = TRUE)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$format()}}{
+  Returns a formatted string representing this \code{FilteredDataset} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$format(show_all = FALSE, trim_lines = TRUE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slice}.}
+      \item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slice}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The formatted character string.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slice}.}
-
-\item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slice}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The formatted character string.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-print"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-print}{}}}
-\subsection{Method \code{print()}}{
-Prints this \code{FilteredDataset} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$print(...)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$print()}}{
+  Prints this \code{FilteredDataset} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$print(...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{additional arguments passed to \code{format}.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{additional arguments passed to \code{format}.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-clear_filter_states"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-clear_filter_states}{}}}
-\subsection{Method \code{clear_filter_states()}}{
-Removes all filter items applied to this dataset.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$clear_filter_states(force = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$clear_filter_states()}}{
+  Removes all filter items applied to this dataset.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$clear_filter_states(force = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{force}}{(\code{logical(1)})
+flag specifying whether to include anchored filter states.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{force}}{(\code{logical(1)})
-flag specifying whether to include anchored filter states.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_call"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_call}{}}}
-\subsection{Method \code{get_call()}}{
-Gets a filter expression.
+\subsection{\code{FilteredDataset$get_call()}}{
+  Gets a filter expression.
 
 This function returns filter calls equivalent to selected items
 within each of \code{filter_states}. Configuration of the calls is constant and
 depends on \code{filter_states} type and order which are set during initialization.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_call(sid = "")}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{sid}}{(\code{character})
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$get_call(sid = "")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{sid}}{(\code{character})
 when specified, the method returns code containing conditions calls of
 \code{FilterState} objects with \code{sid} different to this \code{sid} argument.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Either a \code{list} of filter \code{call}s, or \code{NULL}.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Either a \code{list} of filter \code{call}s, or \code{NULL}.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_state}{}}}
-\subsection{Method \code{get_filter_state()}}{
-Gets states of all contained \code{FilterState} objects.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_state()}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$get_filter_state()}}{
+  Gets states of all contained \code{FilterState} objects.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$get_filter_state()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{teal_slices} object.
+  }
 }
 
-\subsection{Returns}{
-A \code{teal_slices} object.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-set_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-set_filter_state}{}}}
-\subsection{Method \code{set_filter_state()}}{
-Set filter state.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$set_filter_state(state)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$set_filter_state()}}{
+  Set filter state.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$set_filter_state(state)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{state}}{(\code{teal_slices})}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Virtual method, returns nothing and raises error.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\code{teal_slices})}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Virtual method, returns nothing and raises error.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_dataname"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_dataname}{}}}
-\subsection{Method \code{get_dataname()}}{
-Gets the name of the dataset.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_dataname()}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$get_dataname()}}{
+  Gets the name of the dataset.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$get_dataname()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A character string.
+  }
 }
 
-\subsection{Returns}{
-A character string.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_dataset"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_dataset}{}}}
-\subsection{Method \code{get_dataset()}}{
-Gets the dataset object in this \code{FilteredDataset}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_dataset(filtered = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$get_dataset()}}{
+  Gets the dataset object in this \code{FilteredDataset}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$get_dataset(filtered = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{filtered}}{(\code{logical(1)})}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The stored dataset. If \code{data.frame} or \code{MultiAssayExperiment},
+either raw or as a reactive with current filters applied (depending on \code{filtered}).
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{filtered}}{(\code{logical(1)})}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The stored dataset. If \code{data.frame} or \code{MultiAssayExperiment},
-either raw or as a reactive with current filters applied (depending on \code{filtered}).
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_filter_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_overview}{}}}
-\subsection{Method \code{get_filter_overview()}}{
-Get filter overview of a dataset.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_overview()}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$get_filter_overview()}}{
+  Get filter overview of a dataset.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$get_filter_overview()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Virtual method, returns nothing and raises an error.
+  }
 }
 
-\subsection{Returns}{
-Virtual method, returns nothing and raises an error.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_keys"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_keys}{}}}
-\subsection{Method \code{get_keys()}}{
-Gets the key columns for this dataset.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_keys()}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$get_keys()}}{
+  Gets the key columns for this dataset.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$get_keys()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Character vector of variable names
+  }
 }
 
-\subsection{Returns}{
-Character vector of variable names
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_dataset_label"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_dataset_label}{}}}
-\subsection{Method \code{get_dataset_label()}}{
-Gets the dataset label.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_dataset_label()}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$get_dataset_label()}}{
+  Gets the dataset label.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$get_dataset_label()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Character string.
+  }
 }
 
-\subsection{Returns}{
-Character string.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-ui_active"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-ui_active}{}}}
-\subsection{Method \code{ui_active()}}{
-\code{shiny} module containing active filters for a dataset, along with a title and a remove button.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$ui_active(id)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$ui_active()}}{
+  \code{shiny} module containing active filters for a dataset, along with a title and a remove button.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$ui_active(id)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
+\code{shiny} module instance id.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{shiny.tag}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{shiny.tag}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-srv_active"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-srv_active}{}}}
-\subsection{Method \code{srv_active()}}{
-Server module for a dataset active filters.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$srv_active(id)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$srv_active()}}{
+  Server module for a dataset active filters.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$srv_active(id)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
+\code{shiny} module instance id.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-ui_add"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-ui_add}{}}}
-\subsection{Method \code{ui_add()}}{
-UI module to add filter variable for this dataset.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$ui_add(id)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$ui_add()}}{
+  UI module to add filter variable for this dataset.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$ui_add(id)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
+\code{shiny} module instance id.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Virtual method, returns nothing and raises error.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Virtual method, returns nothing and raises error.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-srv_add"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-srv_add}{}}}
-\subsection{Method \code{srv_add()}}{
-Server module to add filter variable for this dataset.
+\subsection{\code{FilteredDataset$srv_add()}}{
+  Server module to add filter variable for this dataset.
 For this class \code{srv_add} calls multiple modules
 of the same name from \code{FilterStates} as \code{MAEFilteredDataset}
 contains one \code{FilterStates} object for \code{colData} and one for each experiment.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$srv_add(id)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$srv_add(id)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
+\code{shiny} module instance id.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredDataset$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredDataset$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

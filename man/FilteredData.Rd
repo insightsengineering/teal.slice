@@ -95,170 +95,179 @@ isolate(datasets$get_filter_state())
 \keyword{internal}
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-FilteredData-new}{\code{FilteredData$new()}}
-\item \href{#method-FilteredData-destroy}{\code{FilteredData$destroy()}}
-\item \href{#method-FilteredData-datanames}{\code{FilteredData$datanames()}}
-\item \href{#method-FilteredData-get_datalabel}{\code{FilteredData$get_datalabel()}}
-\item \href{#method-FilteredData-set_available_teal_slices}{\code{FilteredData$set_available_teal_slices()}}
-\item \href{#method-FilteredData-get_available_teal_slices}{\code{FilteredData$get_available_teal_slices()}}
-\item \href{#method-FilteredData-get_call}{\code{FilteredData$get_call()}}
-\item \href{#method-FilteredData-get_data}{\code{FilteredData$get_data()}}
-\item \href{#method-FilteredData-get_join_keys}{\code{FilteredData$get_join_keys()}}
-\item \href{#method-FilteredData-get_filter_overview}{\code{FilteredData$get_filter_overview()}}
-\item \href{#method-FilteredData-get_keys}{\code{FilteredData$get_keys()}}
-\item \href{#method-FilteredData-set_dataset}{\code{FilteredData$set_dataset()}}
-\item \href{#method-FilteredData-set_join_keys}{\code{FilteredData$set_join_keys()}}
-\item \href{#method-FilteredData-get_filter_state}{\code{FilteredData$get_filter_state()}}
-\item \href{#method-FilteredData-format}{\code{FilteredData$format()}}
-\item \href{#method-FilteredData-print}{\code{FilteredData$print()}}
-\item \href{#method-FilteredData-set_filter_state}{\code{FilteredData$set_filter_state()}}
-\item \href{#method-FilteredData-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
-\item \href{#method-FilteredData-clear_filter_states}{\code{FilteredData$clear_filter_states()}}
-\item \href{#method-FilteredData-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
-\item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
-\item \href{#method-FilteredData-ui_active}{\code{FilteredData$ui_active()}}
-\item \href{#method-FilteredData-srv_active}{\code{FilteredData$srv_active()}}
-\item \href{#method-FilteredData-ui_overview}{\code{FilteredData$ui_overview()}}
-\item \href{#method-FilteredData-srv_overview}{\code{FilteredData$srv_overview()}}
-\item \href{#method-FilteredData-clone}{\code{FilteredData$clone()}}
-}
+  \itemize{
+    \item \href{#method-FilteredData-initialize}{\code{FilteredData$new()}}
+    \item \href{#method-FilteredData-destroy}{\code{FilteredData$destroy()}}
+    \item \href{#method-FilteredData-datanames}{\code{FilteredData$datanames()}}
+    \item \href{#method-FilteredData-get_datalabel}{\code{FilteredData$get_datalabel()}}
+    \item \href{#method-FilteredData-set_available_teal_slices}{\code{FilteredData$set_available_teal_slices()}}
+    \item \href{#method-FilteredData-get_available_teal_slices}{\code{FilteredData$get_available_teal_slices()}}
+    \item \href{#method-FilteredData-get_call}{\code{FilteredData$get_call()}}
+    \item \href{#method-FilteredData-get_data}{\code{FilteredData$get_data()}}
+    \item \href{#method-FilteredData-get_join_keys}{\code{FilteredData$get_join_keys()}}
+    \item \href{#method-FilteredData-get_filter_overview}{\code{FilteredData$get_filter_overview()}}
+    \item \href{#method-FilteredData-get_keys}{\code{FilteredData$get_keys()}}
+    \item \href{#method-FilteredData-set_dataset}{\code{FilteredData$set_dataset()}}
+    \item \href{#method-FilteredData-set_join_keys}{\code{FilteredData$set_join_keys()}}
+    \item \href{#method-FilteredData-get_filter_state}{\code{FilteredData$get_filter_state()}}
+    \item \href{#method-FilteredData-format}{\code{FilteredData$format()}}
+    \item \href{#method-FilteredData-print}{\code{FilteredData$print()}}
+    \item \href{#method-FilteredData-set_filter_state}{\code{FilteredData$set_filter_state()}}
+    \item \href{#method-FilteredData-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
+    \item \href{#method-FilteredData-clear_filter_states}{\code{FilteredData$clear_filter_states()}}
+    \item \href{#method-FilteredData-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
+    \item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
+    \item \href{#method-FilteredData-ui_active}{\code{FilteredData$ui_active()}}
+    \item \href{#method-FilteredData-srv_active}{\code{FilteredData$srv_active()}}
+    \item \href{#method-FilteredData-ui_overview}{\code{FilteredData$ui_overview()}}
+    \item \href{#method-FilteredData-srv_overview}{\code{FilteredData$srv_overview()}}
+    \item \href{#method-FilteredData-clone}{\code{FilteredData$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-new"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-new}{}}}
-\subsection{Method \code{new()}}{
-Initialize a \code{FilteredData} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$new(data_objects, join_keys = teal.data::join_keys())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data_objects}}{(\verb{named list})
+\if{html}{\out{<a id="method-FilteredData-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-initialize}{}}}
+\subsection{\code{FilteredData$new()}}{
+  Initialize a \code{FilteredData} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$new(data_objects, join_keys = teal.data::join_keys())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{data_objects}}{(\verb{named list})
 List of data objects.
 Names of the list will be used as \code{dataname} for respective datasets.}
+      \item{\code{join_keys}}{(\code{join_keys}) optional joining keys, see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+}
 
-\item{\code{join_keys}}{(\code{join_keys}) optional joining keys, see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-destroy"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-destroy}{}}}
-\subsection{Method \code{destroy()}}{
-Destroys a \code{FilteredData} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$destroy()}\if{html}{\out{</div>}}
+\subsection{\code{FilteredData$destroy()}}{
+  Destroys a \code{FilteredData} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$destroy()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-datanames"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-datanames}{}}}
-\subsection{Method \code{datanames()}}{
-Gets \code{datanames}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$datanames()}\if{html}{\out{</div>}}
+\subsection{\code{FilteredData$datanames()}}{
+  Gets \code{datanames}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$datanames()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Details}{
+    The \code{datanames} are returned in the order in which they must be evaluated (in case of dependencies).
+  }
+  \subsection{Returns}{
+    Character vector.
+  }
 }
 
-\subsection{Details}{
-The \code{datanames} are returned in the order in which they must be evaluated (in case of dependencies).
-}
-
-\subsection{Returns}{
-Character vector.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-get_datalabel"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_datalabel}{}}}
-\subsection{Method \code{get_datalabel()}}{
-Gets data label for the dataset.
+\subsection{\code{FilteredData$get_datalabel()}}{
+  Gets data label for the dataset.
 Useful to display in \verb{Show R Code}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_datalabel(dataname)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$get_datalabel(dataname)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{dataname}}{(\code{character(1)}) name of the dataset}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Character string.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Character string.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-set_available_teal_slices"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-set_available_teal_slices}{}}}
-\subsection{Method \code{set_available_teal_slices()}}{
-Set list of external filter states available for activation.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_available_teal_slices(x)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{x}}{(\code{reactive})
+\subsection{\code{FilteredData$set_available_teal_slices()}}{
+  Set list of external filter states available for activation.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$set_available_teal_slices(x)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{x}}{(\code{reactive})
 should return \code{teal_slices}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Details}{
-Unlike adding new filter from the column, these filters can come with some prespecified settings.
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Details}{
+    Unlike adding new filter from the column, these filters can come with some prespecified settings.
 \code{teal_slices} are wrapped in a \code{reactive} so they can be updated from elsewhere in the app.
 Filters passed in \code{x} are limited to those that can be set for this \code{FilteredData} object,
 i.e. they have the correct \code{dataname} and \code{varname} (waived \code{teal_slice_fixed} as they do not have \code{varname}).
 List is accessible in \code{ui/srv_active} through \code{ui/srv_available_filters}.
+  }
+  \subsection{Returns}{
+    \code{NULL}, invisibly.
+  }
 }
 
-\subsection{Returns}{
-\code{NULL}, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-get_available_teal_slices"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_available_teal_slices}{}}}
-\subsection{Method \code{get_available_teal_slices()}}{
-Get list of filter states available for this object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_available_teal_slices()}\if{html}{\out{</div>}}
-}
-
-\subsection{Details}{
-All \code{teal_slice} objects that have been created since the beginning of the app session
+\subsection{\code{FilteredData$get_available_teal_slices()}}{
+  Get list of filter states available for this object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$get_available_teal_slices()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Details}{
+    All \code{teal_slice} objects that have been created since the beginning of the app session
 are stored in one \code{teal_slices} object. This returns a subset of that \code{teal_slices},
 describing filter states that can be set for this object.
+  }
+  \subsection{Returns}{
+    \code{reactive} that returns \code{teal_slices}.
+  }
 }
 
-\subsection{Returns}{
-\code{reactive} that returns \code{teal_slices}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-get_call"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_call}{}}}
-\subsection{Method \code{get_call()}}{
-Gets a \code{call} to filter the dataset according to the filter state.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_call(dataname)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Details}{
-It returns a \code{call} to filter the dataset only, assuming the
+\subsection{\code{FilteredData$get_call()}}{
+  Gets a \code{call} to filter the dataset according to the filter state.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$get_call(dataname)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{dataname}}{(\code{character(1)}) name of the dataset}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Details}{
+    It returns a \code{call} to filter the dataset only, assuming the
 other (filtered) datasets it depends on are available.
 
 Together with \code{self$datanames()} which returns the datasets in the correct
@@ -272,428 +281,456 @@ capturing a function call).
 The filtered dataset has the name given by \code{self$filtered_dataname(dataname)}
 
 This can be used for the \verb{Show R Code} generation.
+  }
+  \subsection{Returns}{
+    A list of \code{call}s.
+  }
 }
 
-\subsection{Returns}{
-A list of \code{call}s.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-get_data"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_data}{}}}
-\subsection{Method \code{get_data()}}{
-Gets filtered or unfiltered dataset.
+\subsection{\code{FilteredData$get_data()}}{
+  Gets filtered or unfiltered dataset.
 
 For \code{filtered = FALSE}, the original data set with \code{set_data} is returned including all attributes.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_data(dataname, filtered = TRUE)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$get_data(dataname, filtered = TRUE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{dataname}}{(\code{character(1)}) name of the dataset.}
+      \item{\code{filtered}}{(\code{logical(1)}) whether to return a filtered or unfiltered dataset.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A data object, a \code{data.frame} or a \code{MultiAssayExperiment}.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character(1)}) name of the dataset.}
-
-\item{\code{filtered}}{(\code{logical(1)}) whether to return a filtered or unfiltered dataset.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A data object, a \code{data.frame} or a \code{MultiAssayExperiment}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-get_join_keys"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_join_keys}{}}}
-\subsection{Method \code{get_join_keys()}}{
-Get join keys between two datasets.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_join_keys()}\if{html}{\out{</div>}}
+\subsection{\code{FilteredData$get_join_keys()}}{
+  Get join keys between two datasets.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$get_join_keys()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{join_keys}
+  }
 }
 
-\subsection{Returns}{
-\code{join_keys}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-get_filter_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_filter_overview}{}}}
-\subsection{Method \code{get_filter_overview()}}{
-Creates filter overview table to be displayed in the application.
+\subsection{\code{FilteredData$get_filter_overview()}}{
+  Creates filter overview table to be displayed in the application.
 One row is created per dataset, according to the \code{get_filter_overview} methods
 of the contained \code{FilteredDataset} objects.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_overview(datanames)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$get_filter_overview(datanames)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{datanames}}{(\code{character}) vector of dataset names.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{data.frame} listing the numbers of observations in all datasets.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{datanames}}{(\code{character}) vector of dataset names.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A \code{data.frame} listing the numbers of observations in all datasets.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-get_keys"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_keys}{}}}
-\subsection{Method \code{get_keys()}}{
-Get keys for the dataset.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_keys(dataname)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredData$get_keys()}}{
+  Get keys for the dataset.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$get_keys(dataname)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{dataname}}{(\code{character(1)}) name of the dataset.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Character vector of key column names.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character(1)}) name of the dataset.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Character vector of key column names.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-set_dataset"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-set_dataset}{}}}
-\subsection{Method \code{set_dataset()}}{
-Adds a dataset to this \code{FilteredData}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_dataset(data, dataname)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data}}{(\code{data.frame} or \code{MultiAssayExperiment})
+\subsection{\code{FilteredData$set_dataset()}}{
+  Adds a dataset to this \code{FilteredData}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$set_dataset(data, dataname)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{data}}{(\code{data.frame} or \code{MultiAssayExperiment})
 data to be filtered.}
-
-\item{\code{dataname}}{(\code{character(1)})
+      \item{\code{dataname}}{(\code{character(1)})
 the name of the \code{dataset} to be added to this object.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Details}{
-\code{set_dataset} creates a \code{FilteredDataset} object which keeps \code{dataset} for the filtering purpose.
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Details}{
+    \code{set_dataset} creates a \code{FilteredDataset} object which keeps \code{dataset} for the filtering purpose.
 If this data has a parent specified in the \code{join_keys} object stored in \code{private$join_keys}
 then created \code{FilteredDataset} (child) gets linked with other \code{FilteredDataset} (parent).
 "Child" dataset return filtered data then dependent on the reactive filtered data of the
 "parent". See more in documentation of \code{parent} argument in \code{DataframeFilteredDataset} constructor.
+  }
+  \subsection{Returns}{
+    \code{self}, invisibly.
+  }
 }
 
-\subsection{Returns}{
-\code{self}, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-set_join_keys"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-set_join_keys}{}}}
-\subsection{Method \code{set_join_keys()}}{
-Set the \code{join_keys}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_join_keys(join_keys)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredData$set_join_keys()}}{
+  Set the \code{join_keys}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$set_join_keys(join_keys)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{join_keys}}{(\code{join_keys}), see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{self}, invisibly.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{join_keys}}{(\code{join_keys}), see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{self}, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_filter_state}{}}}
-\subsection{Method \code{get_filter_state()}}{
-Gets states of all contained \code{FilterState} objects.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_state()}\if{html}{\out{</div>}}
+\subsection{\code{FilteredData$get_filter_state()}}{
+  Gets states of all contained \code{FilterState} objects.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$get_filter_state()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{teal_slices} object.
+  }
 }
 
-\subsection{Returns}{
-A \code{teal_slices} object.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-format"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-format}{}}}
-\subsection{Method \code{format()}}{
-Returns a formatted string representing this \code{FilteredData} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$format(show_all = FALSE, trim_lines = TRUE)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredData$format()}}{
+  Returns a formatted string representing this \code{FilteredData} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$format(show_all = FALSE, trim_lines = TRUE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slice}.}
+      \item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slice}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{character(1)} the formatted string.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slice}.}
-
-\item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slice}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{character(1)} the formatted string.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-print"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-print}{}}}
-\subsection{Method \code{print()}}{
-Prints this \code{FilteredData} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$print(...)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredData$print()}}{
+  Prints this \code{FilteredData} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$print(...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{additional arguments passed to \code{format}.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{additional arguments passed to \code{format}.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-set_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-set_filter_state}{}}}
-\subsection{Method \code{set_filter_state()}}{
-Sets active filter states.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_filter_state(state)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredData$set_filter_state()}}{
+  Sets active filter states.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$set_filter_state(state)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{state}}{(\code{teal_slices})}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}, invisibly.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\code{teal_slices})}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-remove_filter_state}{}}}
-\subsection{Method \code{remove_filter_state()}}{
-Removes one or more \code{FilterState} from a \code{FilteredData} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$remove_filter_state(state)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\code{teal_slices})
+\subsection{\code{FilteredData$remove_filter_state()}}{
+  Removes one or more \code{FilterState} from a \code{FilteredData} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$remove_filter_state(state)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{state}}{(\code{teal_slices})
 specifying \code{FilterState} objects to remove;
 \code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}, invisibly.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}, invisibly.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-clear_filter_states"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-clear_filter_states}{}}}
-\subsection{Method \code{clear_filter_states()}}{
-Remove all \code{FilterStates} of a \code{FilteredDataset} or all \code{FilterStates} of a \code{FilteredData} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$clear_filter_states(datanames = self$datanames(), force = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{datanames}}{(\code{character})
+\subsection{\code{FilteredData$clear_filter_states()}}{
+  Remove all \code{FilterStates} of a \code{FilteredDataset} or all \code{FilterStates} of a \code{FilteredData} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$clear_filter_states(datanames = self$datanames(), force = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{datanames}}{(\code{character})
 names of datasets for which to remove all filter states.
 Defaults to all datasets in this \code{FilteredData} object.}
-
-\item{\code{force}}{(\code{logical(1)})
+      \item{\code{force}}{(\code{logical(1)})
 flag specifying whether to include anchored filter states.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}, invisibly.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}, invisibly.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-ui_filter_panel"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-ui_filter_panel}{}}}
-\subsection{Method \code{ui_filter_panel()}}{
-top-level \code{shiny} module for the filter panel in the \code{teal} app.
+\subsection{\code{FilteredData$ui_filter_panel()}}{
+  top-level \code{shiny} module for the filter panel in the \code{teal} app.
 Contains 1) filter overview panel, 2) filter active panel, and 3) add filters panel.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_filter_panel(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$ui_filter_panel(id, active_datanames = self$datanames)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
-
-\item{\code{active_datanames}}{(\code{reactive})
+      \item{\code{active_datanames}}{(\code{reactive})
 defining subset of \code{self$datanames()} to be displayed.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{shiny.tag}
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{shiny.tag}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-srv_filter_panel"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-srv_filter_panel}{}}}
-\subsection{Method \code{srv_filter_panel()}}{
-Server function for filter panel.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_filter_panel(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
+\subsection{\code{FilteredData$srv_filter_panel()}}{
+  Server function for filter panel.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$srv_filter_panel(id, active_datanames = self$datanames)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
-
-\item{\code{active_datanames}}{(\code{function} or \code{reactive})
+      \item{\code{active_datanames}}{(\code{function} or \code{reactive})
 returning \code{datanames} that should be shown on the filter panel.
 Must be a subset of the \code{datanames} in this \code{FilteredData}.
 If the function returns \code{NULL} (as opposed to \code{character(0)}),
 the filter panel will be hidden.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-ui_active"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-ui_active}{}}}
-\subsection{Method \code{ui_active()}}{
-Server module responsible for displaying active filters.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_active(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
+\subsection{\code{FilteredData$ui_active()}}{
+  Server module responsible for displaying active filters.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$ui_active(id, active_datanames = self$datanames)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
-
-\item{\code{active_datanames}}{(\code{reactive})
+      \item{\code{active_datanames}}{(\code{reactive})
 defining subset of \code{self$datanames()} to be displayed.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{shiny.tag}
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{shiny.tag}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-srv_active"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-srv_active}{}}}
-\subsection{Method \code{srv_active()}}{
-Server module responsible for displaying active filters.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_active(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
+\subsection{\code{FilteredData$srv_active()}}{
+  Server module responsible for displaying active filters.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$srv_active(id, active_datanames = self$datanames)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
-
-\item{\code{active_datanames}}{(\code{reactive})
+      \item{\code{active_datanames}}{(\code{reactive})
 defining subset of \code{self$datanames()} to be displayed.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-ui_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-ui_overview}{}}}
-\subsection{Method \code{ui_overview()}}{
-Creates the UI definition for the module showing counts for each dataset
+\subsection{\code{FilteredData$ui_overview()}}{
+  Creates the UI definition for the module showing counts for each dataset
 contrasting the filtered to the full unfiltered dataset.
 
 Per dataset, it displays
 the number of rows/observations in each dataset,
 the number of unique subjects.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_overview(id)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$ui_overview(id)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
+\code{shiny} module instance id.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-srv_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-srv_overview}{}}}
-\subsection{Method \code{srv_overview()}}{
-Server function to display the number of records in the filtered and unfiltered
+\subsection{\code{FilteredData$srv_overview()}}{
+  Server function to display the number of records in the filtered and unfiltered
 data.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_overview(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$srv_overview(id, active_datanames = self$datanames)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
-
-\item{\code{active_datanames}}{(\code{reactive})
+      \item{\code{active_datanames}}{(\code{reactive})
 returning \code{datanames} that should be shown on the filter panel,
 must be a subset of the \code{datanames} argument provided to \code{ui_filter_panel};
 if the function returns \code{NULL} (as opposed to \code{character(0)}), the filter
 panel will be hidden.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{FilteredData$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilteredData$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

@@ -6,8 +6,6 @@
 \title{The \code{DataframeFilteredDataset} \code{R6} class}
 \description{
 The \code{DataframeFilteredDataset} \code{R6} class
-
-The \code{DataframeFilteredDataset} \code{R6} class
 }
 \examples{
 # use non-exported function from teal.slice
@@ -37,45 +35,44 @@ isolate(dataset$get_filter_state())
 }
 \keyword{internal}
 \section{Super class}{
-\code{\link[teal.slice:FilteredDataset]{teal.slice::FilteredDataset}} -> \code{DataframeFilteredDataset}
+\code{\link[teal.slice:FilteredDataset]{FilteredDataset}} -> \code{DataframeFilteredDataset}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-DataframeFilteredDataset-new}{\code{DataframeFilteredDataset$new()}}
-\item \href{#method-DataframeFilteredDataset-get_call}{\code{DataframeFilteredDataset$get_call()}}
-\item \href{#method-DataframeFilteredDataset-set_filter_state}{\code{DataframeFilteredDataset$set_filter_state()}}
-\item \href{#method-DataframeFilteredDataset-remove_filter_state}{\code{DataframeFilteredDataset$remove_filter_state()}}
-\item \href{#method-DataframeFilteredDataset-ui_add}{\code{DataframeFilteredDataset$ui_add()}}
-\item \href{#method-DataframeFilteredDataset-get_filter_overview}{\code{DataframeFilteredDataset$get_filter_overview()}}
-\item \href{#method-DataframeFilteredDataset-clone}{\code{DataframeFilteredDataset$clone()}}
+  \itemize{
+    \item \href{#method-DataframeFilteredDataset-initialize}{\code{DataframeFilteredDataset$new()}}
+    \item \href{#method-DataframeFilteredDataset-get_call}{\code{DataframeFilteredDataset$get_call()}}
+    \item \href{#method-DataframeFilteredDataset-set_filter_state}{\code{DataframeFilteredDataset$set_filter_state()}}
+    \item \href{#method-DataframeFilteredDataset-remove_filter_state}{\code{DataframeFilteredDataset$remove_filter_state()}}
+    \item \href{#method-DataframeFilteredDataset-ui_add}{\code{DataframeFilteredDataset$ui_add()}}
+    \item \href{#method-DataframeFilteredDataset-get_filter_overview}{\code{DataframeFilteredDataset$get_filter_overview()}}
+    \item \href{#method-DataframeFilteredDataset-clone}{\code{DataframeFilteredDataset$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details><summary>Inherited methods</summary>
+\if{html}{\out{<details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="clear_filter_states"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-clear_filter_states'><code>teal.slice::FilteredDataset$clear_filter_states()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="destroy"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-destroy'><code>teal.slice::FilteredDataset$destroy()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="format"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-format'><code>teal.slice::FilteredDataset$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataname"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataname'><code>teal.slice::FilteredDataset$get_dataname()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset'><code>teal.slice::FilteredDataset$get_dataset()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset_label"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset_label'><code>teal.slice::FilteredDataset$get_dataset_label()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_state'><code>teal.slice::FilteredDataset$get_filter_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_keys'><code>teal.slice::FilteredDataset$get_keys()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="print"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-print'><code>teal.slice::FilteredDataset$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_active'><code>teal.slice::FilteredDataset$srv_active()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_add"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_add'><code>teal.slice::FilteredDataset$srv_add()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui_active'><code>teal.slice::FilteredDataset$ui_active()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="clear_filter_states"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-clear_filter_states'><code>FilteredDataset$clear_filter_states()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="destroy"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-destroy'><code>FilteredDataset$destroy()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="format"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-format'><code>FilteredDataset$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataname"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataname'><code>FilteredDataset$get_dataname()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset'><code>FilteredDataset$get_dataset()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset_label"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset_label'><code>FilteredDataset$get_dataset_label()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_state'><code>FilteredDataset$get_filter_state()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_keys'><code>FilteredDataset$get_keys()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="print"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-print'><code>FilteredDataset$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_active'><code>FilteredDataset$srv_active()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_add"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_add'><code>FilteredDataset$srv_add()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui_active'><code>FilteredDataset$ui_active()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DataframeFilteredDataset-new"></a>}}
-\if{latex}{\out{\hypertarget{method-DataframeFilteredDataset-new}{}}}
-\subsection{Method \code{new()}}{
-Initializes this \code{DataframeFilteredDataset} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataframeFilteredDataset$new(
+\if{html}{\out{<a id="method-DataframeFilteredDataset-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-DataframeFilteredDataset-initialize}{}}}
+\subsection{\code{DataframeFilteredDataset$new()}}{
+  Initializes this \code{DataframeFilteredDataset} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DataframeFilteredDataset$new(
   dataset,
   dataname,
   keys = character(0),
@@ -83,162 +80,169 @@ Initializes this \code{DataframeFilteredDataset} object.
   parent = NULL,
   join_keys = character(0),
   label = character(0)
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataset}}{(\code{data.frame})
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{dataset}}{(\code{data.frame})
 single \code{data.frame} for which filters are rendered.}
-
-\item{\code{dataname}}{(\code{character(1)})
+      \item{\code{dataname}}{(\code{character(1)})
 syntactically valid name given to the dataset.}
-
-\item{\code{keys}}{(\code{character}) optional
+      \item{\code{keys}}{(\code{character}) optional
 vector of primary key column names.}
-
-\item{\code{parent_name}}{(\code{character(1)})
+      \item{\code{parent_name}}{(\code{character(1)})
 name of the parent dataset.}
-
-\item{\code{parent}}{(\code{reactive})
+      \item{\code{parent}}{(\code{reactive})
 that returns a filtered \code{data.frame} from other \code{FilteredDataset} named \code{parent_name}.
 Passing \code{parent} results in a \code{reactive} link that causes re-filtering of this \code{dataset}
 based on the changes in \code{parent}.}
-
-\item{\code{join_keys}}{(\code{character})
+      \item{\code{join_keys}}{(\code{character})
 vector of names of columns in this dataset to join with \code{parent} dataset.
 If column names in the parent do not match these, they should be given as the names of this vector.}
-
-\item{\code{label}}{(\code{character(1)})
+      \item{\code{label}}{(\code{character(1)})
 label to describe the dataset.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Object of class \code{DataframeFilteredDataset}, invisibly.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Object of class \code{DataframeFilteredDataset}, invisibly.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DataframeFilteredDataset-get_call"></a>}}
 \if{latex}{\out{\hypertarget{method-DataframeFilteredDataset-get_call}{}}}
-\subsection{Method \code{get_call()}}{
-Gets the subset expression.
+\subsection{\code{DataframeFilteredDataset$get_call()}}{
+  Gets the subset expression.
 
 This function returns subset expressions equivalent to selected items
 within each of \code{filter_states}. Configuration of the expressions is constant and
 depends on \code{filter_states} type and order which are set during initialization.
 This class contains single \code{FilterStates} which contains single \code{state_list}
 and all \code{FilterState} objects apply to one argument (\code{...}) in a \code{dplyr::filter} call.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataframeFilteredDataset$get_call(sid = "")}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{sid}}{(\code{character})
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DataframeFilteredDataset$get_call(sid = "")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{sid}}{(\code{character})
 when specified, the method returns code containing conditions calls of
 \code{FilterState} objects with \code{sid} different to that of this \code{sid} argument.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Either a \code{list} of length 1 containing a filter \code{call}, or \code{NULL}.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Either a \code{list} of length 1 containing a filter \code{call}, or \code{NULL}.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DataframeFilteredDataset-set_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-DataframeFilteredDataset-set_filter_state}{}}}
-\subsection{Method \code{set_filter_state()}}{
-Set filter state.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataframeFilteredDataset$set_filter_state(state)}\if{html}{\out{</div>}}
+\subsection{\code{DataframeFilteredDataset$set_filter_state()}}{
+  Set filter state.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DataframeFilteredDataset$set_filter_state(state)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{state}}{(\code{teal_slices})}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}, invisibly.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\code{teal_slices})}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DataframeFilteredDataset-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-DataframeFilteredDataset-remove_filter_state}{}}}
-\subsection{Method \code{remove_filter_state()}}{
-Remove one or more \code{FilterState} form a \code{FilteredDataset}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataframeFilteredDataset$remove_filter_state(state)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\code{teal_slices})
+\subsection{\code{DataframeFilteredDataset$remove_filter_state()}}{
+  Remove one or more \code{FilterState} form a \code{FilteredDataset}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DataframeFilteredDataset$remove_filter_state(state)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{state}}{(\code{teal_slices})
 specifying \code{FilterState} objects to remove;
 \code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}, invisibly.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}, invisibly.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DataframeFilteredDataset-ui_add"></a>}}
 \if{latex}{\out{\hypertarget{method-DataframeFilteredDataset-ui_add}{}}}
-\subsection{Method \code{ui_add()}}{
-UI module to add filter variable for this dataset.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataframeFilteredDataset$ui_add(id)}\if{html}{\out{</div>}}
+\subsection{\code{DataframeFilteredDataset$ui_add()}}{
+  UI module to add filter variable for this dataset.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DataframeFilteredDataset$ui_add(id)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
+\code{shiny} module instance id.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{shiny.tag}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{shiny.tag}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DataframeFilteredDataset-get_filter_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-DataframeFilteredDataset-get_filter_overview}{}}}
-\subsection{Method \code{get_filter_overview()}}{
-Creates row for filter overview in the form of \cr
+\subsection{\code{DataframeFilteredDataset$get_filter_overview()}}{
+  Creates row for filter overview in the form of \cr
 \code{dataname -- observations (remaining/total)} - data.frame
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataframeFilteredDataset$get_filter_overview()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DataframeFilteredDataset$get_filter_overview()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{data.frame}.
+  }
 }
 
-\subsection{Returns}{
-A \code{data.frame}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DataframeFilteredDataset-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-DataframeFilteredDataset-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataframeFilteredDataset$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{DataframeFilteredDataset$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DataframeFilteredDataset$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

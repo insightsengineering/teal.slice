@@ -68,210 +68,227 @@ if (interactive()) {
 \keyword{internal}
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-FilterStateExpr-new}{\code{FilterStateExpr$new()}}
-\item \href{#method-FilterStateExpr-destroy}{\code{FilterStateExpr$destroy()}}
-\item \href{#method-FilterStateExpr-format}{\code{FilterStateExpr$format()}}
-\item \href{#method-FilterStateExpr-print}{\code{FilterStateExpr$print()}}
-\item \href{#method-FilterStateExpr-get_state}{\code{FilterStateExpr$get_state()}}
-\item \href{#method-FilterStateExpr-set_state}{\code{FilterStateExpr$set_state()}}
-\item \href{#method-FilterStateExpr-get_call}{\code{FilterStateExpr$get_call()}}
-\item \href{#method-FilterStateExpr-server}{\code{FilterStateExpr$server()}}
-\item \href{#method-FilterStateExpr-ui}{\code{FilterStateExpr$ui()}}
-\item \href{#method-FilterStateExpr-clone}{\code{FilterStateExpr$clone()}}
-}
+  \itemize{
+    \item \href{#method-FilterStateExpr-initialize}{\code{FilterStateExpr$new()}}
+    \item \href{#method-FilterStateExpr-destroy}{\code{FilterStateExpr$destroy()}}
+    \item \href{#method-FilterStateExpr-format}{\code{FilterStateExpr$format()}}
+    \item \href{#method-FilterStateExpr-print}{\code{FilterStateExpr$print()}}
+    \item \href{#method-FilterStateExpr-get_state}{\code{FilterStateExpr$get_state()}}
+    \item \href{#method-FilterStateExpr-set_state}{\code{FilterStateExpr$set_state()}}
+    \item \href{#method-FilterStateExpr-get_call}{\code{FilterStateExpr$get_call()}}
+    \item \href{#method-FilterStateExpr-server}{\code{FilterStateExpr$server()}}
+    \item \href{#method-FilterStateExpr-ui}{\code{FilterStateExpr$ui()}}
+    \item \href{#method-FilterStateExpr-clone}{\code{FilterStateExpr$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStateExpr-new"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStateExpr-new}{}}}
-\subsection{Method \code{new()}}{
-Initialize a \code{FilterStateExpr} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$new(slice)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-FilterStateExpr-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStateExpr-initialize}{}}}
+\subsection{\code{FilterStateExpr$new()}}{
+  Initialize a \code{FilterStateExpr} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterStateExpr$new(slice)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{slice}}{(\code{teal_slice_expr})}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Object of class \code{FilterStateExpr}, invisibly.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{slice}}{(\code{teal_slice_expr})}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Object of class \code{FilterStateExpr}, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStateExpr-destroy"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-destroy}{}}}
-\subsection{Method \code{destroy()}}{
-Destroys a \code{FilterStateExpr} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$destroy()}\if{html}{\out{</div>}}
+\subsection{\code{FilterStateExpr$destroy()}}{
+  Destroys a \code{FilterStateExpr} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterStateExpr$destroy()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStateExpr-format"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-format}{}}}
-\subsection{Method \code{format()}}{
-Returns a formatted string representing this \code{FilterStateExpr} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$format(show_all = FALSE, trim_lines = TRUE)}\if{html}{\out{</div>}}
+\subsection{\code{FilterStateExpr$format()}}{
+  Returns a formatted string representing this \code{FilterStateExpr} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterStateExpr$format(show_all = FALSE, trim_lines = TRUE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
+      \item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{character(1)} the formatted string
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
-
-\item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{character(1)} the formatted string
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStateExpr-print"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-print}{}}}
-\subsection{Method \code{print()}}{
-Prints this \code{FilterStateExpr} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$print(...)}\if{html}{\out{</div>}}
+\subsection{\code{FilterStateExpr$print()}}{
+  Prints this \code{FilterStateExpr} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterStateExpr$print(...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{arguments passed to the \code{format} method}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}, invisibly.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{arguments passed to the \code{format} method}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStateExpr-get_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-get_state}{}}}
-\subsection{Method \code{get_state()}}{
-Returns a complete description of this filter state.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$get_state()}\if{html}{\out{</div>}}
+\subsection{\code{FilterStateExpr$get_state()}}{
+  Returns a complete description of this filter state.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterStateExpr$get_state()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{teal_slice} object.
+  }
 }
 
-\subsection{Returns}{
-A \code{teal_slice} object.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStateExpr-set_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-set_state}{}}}
-\subsection{Method \code{set_state()}}{
-Does nothing. Exists for compatibility.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$set_state(state)}\if{html}{\out{</div>}}
+\subsection{\code{FilterStateExpr$set_state()}}{
+  Does nothing. Exists for compatibility.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterStateExpr$set_state(state)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{state}}{(\code{teal_slice})}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{self}, invisibly.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\code{teal_slice})}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{self}, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStateExpr-get_call"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-get_call}{}}}
-\subsection{Method \code{get_call()}}{
-Get reproducible call.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$get_call(dataname)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{ignored}) for a consistency with \code{FilterState}
+\subsection{\code{FilterStateExpr$get_call()}}{
+  Get reproducible call.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterStateExpr$get_call(dataname)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{dataname}}{(\code{ignored}) for a consistency with \code{FilterState}
 
 Returns reproducible condition call for current selection relevant
 for selected variable type.
 Method is using internal reactive values which makes it reactive
 and must be executed in reactive or isolated context.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{call} or \code{NULL}
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{call} or \code{NULL}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStateExpr-server"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-server}{}}}
-\subsection{Method \code{server()}}{
-\code{shiny} module server.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$server(id, remove_callback)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
+\subsection{\code{FilterStateExpr$server()}}{
+  \code{shiny} module server.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterStateExpr$server(id, remove_callback)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
-
-\item{\code{remove_callback}}{(\code{function})
+      \item{\code{remove_callback}}{(\code{function})
 callback to handle removal of this \code{FilterState} object from \code{state_list}}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Reactive expression signaling that the remove button has been clicked.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Reactive expression signaling that the remove button has been clicked.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStateExpr-ui"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-ui}{}}}
-\subsection{Method \code{ui()}}{
-\code{shiny} module UI.
+\subsection{\code{FilterStateExpr$ui()}}{
+  \code{shiny} module UI.
 The UI for this class contains simple message stating that it is not supported.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$ui(id, parent_id = "cards")}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterStateExpr$ui(id, parent_id = "cards")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
-
-\item{\code{parent_id}}{(\code{character(1)})
+      \item{\code{parent_id}}{(\code{character(1)})
 id of the \code{FilterStates} card container.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStateExpr-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{FilterStateExpr$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterStateExpr$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }
