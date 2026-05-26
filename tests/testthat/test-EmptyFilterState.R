@@ -45,7 +45,7 @@ testthat::test_that("content_summary returns a span with 'All empty' text", {
 })
 
 # cache_state ----
-testthat::test_that("cache_state raises an error because private$get_state() does not exist", {
+testthat::test_that("cache_state raises an error if private$get_state() does not exist", {
   filter_state <- EmptyFilterState$new(
     NA,
     slice = teal_slice(dataname = "data", varname = "variable", keep_na = FALSE)
