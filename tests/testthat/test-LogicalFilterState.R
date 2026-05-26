@@ -208,7 +208,7 @@ testthat::test_that("ui_inputs renders radioButtons when multiple is FALSE", {
   testthat::expect_no_match(ui_html, "shiny-input-checkboxgroup")
 })
 
-testthat::test_that("ui_inputs renders checkboxGroupInput when multiple is TRUE", {
+testthat::test_that("ui_inputs renders the expected component when multiple is TRUE", {
   filter_state <- LogicalFilterState$new(
     logs,
     slice = teal_slice(
