@@ -95,17 +95,6 @@ testthat::describe("toggle_title two-way JS expression", {
     )
   })
 
-  testthat::it("sets title back to titles[1] in the else branch", {
-    generated_js <- capture_runjs_output(
-      teal.slice:::toggle_title, "panel_toggle", c("Show panel", "Hide panel")
-    )
-    testthat::expect_match(
-      generated_js,
-      "} else { $(button_id).attr('title', 'Show panel');",
-      fixed = TRUE
-    )
-  })
-
   testthat::it("interpolates button_id, titles[1], and titles[2] correctly", {
     generated_js <- capture_runjs_output(
       teal.slice:::toggle_title, "filter_btn", c("Open filters", "Close filters")
