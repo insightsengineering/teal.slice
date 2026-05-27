@@ -1,3 +1,16 @@
+capture_runjs_output <- function(fn, ...) {
+  captured_js <- NULL
+  testthat::with_mocked_bindings(
+    runjs = function(js_expr) {
+      captured_js <<- js_expr
+      invisible(NULL)
+    },
+    fn(...),
+    .package = "shinyjs"
+  )
+  captured_js
+}
+
 # eval_expr_with_msg ----
 testthat::describe("eval_expr_with_msg", {
   testthat::it("returns NULL invisibly on successful evaluation", {
@@ -25,19 +38,6 @@ testthat::describe("eval_expr_with_msg", {
     testthat::expect_match(error_msg, "something went wrong")
   })
 })
-
-capture_runjs_output <- function(fn, ...) {
-  captured_js <- NULL
-  testthat::with_mocked_bindings(
-    runjs = function(js_expr) {
-      captured_js <<- js_expr
-      invisible(NULL)
-    },
-    fn(...),
-    .package = "shinyjs"
-  )
-  captured_js
-}
 
 # toggle_icon (two-way branch) ----
 testthat::describe("toggle_icon two-way JS expression", {

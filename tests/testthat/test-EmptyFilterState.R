@@ -1,5 +1,5 @@
 # ui_inputs ----
-testthat::test_that("ui_inputs renders 'Variable contains missing values only' span", {
+testthat::test_that("EmptyFilterState ui_inputs renders 'Variable contains missing values only' span", {
   filter_state <- EmptyFilterState$new(
     NA,
     slice = teal_slice(dataname = "data", varname = "variable")
@@ -10,7 +10,7 @@ testthat::test_that("ui_inputs renders 'Variable contains missing values only' s
   testthat::expect_match(ui_html, "Variable contains missing values only", fixed = TRUE)
 })
 
-testthat::test_that("ui_inputs renders Keep NA checkbox when NA values exist", {
+testthat::test_that("EmptyFilterState ui_inputs renders Keep NA checkbox when NA values exist", {
   filter_state <- EmptyFilterState$new(
     NA,
     slice = teal_slice(dataname = "data", varname = "variable")
@@ -21,7 +21,7 @@ testthat::test_that("ui_inputs renders Keep NA checkbox when NA values exist", {
   testthat::expect_match(ui_html, "Keep NA", fixed = TRUE)
 })
 
-testthat::test_that("ui_inputs renders namespaced keep_na checkbox input", {
+testthat::test_that("EmptyFilterState ui_inputs renders namespaced keep_na checkbox input", {
   filter_state <- EmptyFilterState$new(
     NA,
     slice = teal_slice(dataname = "data", varname = "variable")

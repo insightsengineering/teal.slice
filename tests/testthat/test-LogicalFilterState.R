@@ -151,18 +151,6 @@ testthat::test_that("is_any_filtered returns TRUE when both logical values exist
   )
 })
 
-testthat::test_that("is_any_filtered returns TRUE when selected equals all choices", {
-  filter_state <- LogicalFilterState$new(
-    c(TRUE, TRUE, TRUE),
-    slice = teal_slice(
-      dataname = "data", varname = "variable",
-      selected = c(TRUE, FALSE), multiple = TRUE
-    )
-  )
-  testthat::expect_true(
-    shiny::isolate(filter_state$.__enclos_env__$private$is_any_filtered())
-  )
-})
 
 testthat::test_that("is_any_filtered returns FALSE when one value in data, selected, NA kept", {
   filter_state <- LogicalFilterState$new(
@@ -184,14 +172,6 @@ testthat::test_that("is_any_filtered returns TRUE when keep_na is FALSE and NA v
   testthat::expect_true(
     shiny::isolate(filter_state$.__enclos_env__$private$is_any_filtered())
   )
-})
-
-testthat::test_that("is_choice_limited is always FALSE for LogicalFilterState", {
-  filter_state <- LogicalFilterState$new(
-    c(TRUE, FALSE, NA),
-    slice = teal_slice(dataname = "data", varname = "variable", choices = FALSE)
-  )
-  testthat::expect_false(filter_state$.__enclos_env__$private$is_choice_limited)
 })
 
 

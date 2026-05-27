@@ -324,7 +324,7 @@ testthat::test_that("content_summary shows NA xmark icon when keep_na is FALSE a
   testthat::expect_match(summary_html, "text-danger")
 })
 
-testthat::test_that("content_summary shows NA check icon when keep_na is NULL", { # nolint
+testthat::test_that("content_summary shows NA check icon when keep_na is NULL", { # nolint: line_length.
   filter_state <- DatetimeFilterState$new(
     c(posixct, NA),
     slice = teal_slice(dataname = "data", varname = "variable")
