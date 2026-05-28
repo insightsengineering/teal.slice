@@ -12,7 +12,7 @@ card allows no interaction (the filter is always fixed).
 
 ### Public methods
 
-- [`FilterStateExpr$new()`](#method-FilterStateExpr-new)
+- [`FilterStateExpr$new()`](#method-FilterStateExpr-initialize)
 
 - [`FilterStateExpr$destroy()`](#method-FilterStateExpr-destroy)
 
@@ -34,7 +34,7 @@ card allows no interaction (the filter is always fixed).
 
 ------------------------------------------------------------------------
 
-### Method [`new()`](https://rdrr.io/r/methods/new.html)
+### `FilterStateExpr$new()`
 
 Initialize a `FilterStateExpr` object.
 
@@ -54,7 +54,7 @@ Object of class `FilterStateExpr`, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `destroy()`
+### `FilterStateExpr$destroy()`
 
 Destroys a `FilterStateExpr` object.
 
@@ -64,7 +64,7 @@ Destroys a `FilterStateExpr` object.
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `FilterStateExpr$format()`
 
 Returns a formatted string representing this `FilterStateExpr` object.
 
@@ -88,7 +88,7 @@ Returns a formatted string representing this `FilterStateExpr` object.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `FilterStateExpr$print()`
 
 Prints this `FilterStateExpr` object.
 
@@ -108,7 +108,7 @@ Prints this `FilterStateExpr` object.
 
 ------------------------------------------------------------------------
 
-### Method `get_state()`
+### `FilterStateExpr$get_state()`
 
 Returns a complete description of this filter state.
 
@@ -122,7 +122,7 @@ A `teal_slice` object.
 
 ------------------------------------------------------------------------
 
-### Method `set_state()`
+### `FilterStateExpr$set_state()`
 
 Does nothing. Exists for compatibility.
 
@@ -142,7 +142,7 @@ Does nothing. Exists for compatibility.
 
 ------------------------------------------------------------------------
 
-### Method `get_call()`
+### `FilterStateExpr$get_call()`
 
 Get reproducible call.
 
@@ -167,7 +167,7 @@ Get reproducible call.
 
 ------------------------------------------------------------------------
 
-### Method `server()`
+### `FilterStateExpr$server()`
 
 `shiny` module server.
 
@@ -192,7 +192,7 @@ Reactive expression signaling that the remove button has been clicked.
 
 ------------------------------------------------------------------------
 
-### Method `ui()`
+### `FilterStateExpr$ui()`
 
 `shiny` module UI. The UI for this class contains simple message stating
 that it is not supported.
@@ -213,7 +213,7 @@ that it is not supported.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `FilterStateExpr$clone()`
 
 The objects of this class are cloneable with this method.
 

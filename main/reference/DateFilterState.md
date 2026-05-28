@@ -4,14 +4,14 @@ Manages choosing a range of `Date`s.
 
 ## Super class
 
-[`teal.slice::FilterState`](https://insightsengineering.github.io/teal.slice/reference/FilterState.md)
+[`FilterState`](https://insightsengineering.github.io/teal.slice/reference/FilterState.md)
 -\> `DateFilterState`
 
 ## Methods
 
 ### Public methods
 
-- [`DateFilterState$new()`](#method-DateFilterState-new)
+- [`DateFilterState$new()`](#method-DateFilterState-initialize)
 
 - [`DateFilterState$get_call()`](#method-DateFilterState-get_call)
 
@@ -19,17 +19,17 @@ Manages choosing a range of `Date`s.
 
 Inherited methods
 
-- [`teal.slice::FilterState$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-destroy)
-- [`teal.slice::FilterState$format()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-format)
-- [`teal.slice::FilterState$get_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-get_state)
-- [`teal.slice::FilterState$print()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-print)
-- [`teal.slice::FilterState$server()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-server)
-- [`teal.slice::FilterState$set_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-set_state)
-- [`teal.slice::FilterState$ui()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-ui)
+- [`FilterState$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-destroy)
+- [`FilterState$format()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-format)
+- [`FilterState$get_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-get_state)
+- [`FilterState$print()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-print)
+- [`FilterState$server()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-server)
+- [`FilterState$set_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-set_state)
+- [`FilterState$ui()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-ui)
 
 ------------------------------------------------------------------------
 
-### Method [`new()`](https://rdrr.io/r/methods/new.html)
+### `DateFilterState$new()`
 
 Initialize a `FilterState` object.
 
@@ -85,7 +85,7 @@ Object of class `DateFilterState`, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `get_call()`
+### `DateFilterState$get_call()`
 
 Returns reproducible condition call for current selection. For this
 class returned call looks like
@@ -108,7 +108,7 @@ class returned call looks like
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `DateFilterState$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -148,7 +148,7 @@ filter_state$set_state(
   )
 )
 isolate(filter_state$get_call())
-#> is.na(x) | x >= as.Date("2026-02-28") & x <= as.Date("2026-03-05")
+#> is.na(x) | x >= as.Date("2026-05-31") & x <= as.Date("2026-06-05")
 
 # working filter in an app
 library(shinyjs)

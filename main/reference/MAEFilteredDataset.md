@@ -2,18 +2,16 @@
 
 `MAEFilteredDataset` `R6` class
 
-`MAEFilteredDataset` `R6` class
-
 ## Super class
 
-[`teal.slice::FilteredDataset`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.md)
+[`FilteredDataset`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.md)
 -\> `MAEFilteredDataset`
 
 ## Methods
 
 ### Public methods
 
-- [`MAEFilteredDataset$new()`](#method-MAEFilteredDataset-new)
+- [`MAEFilteredDataset$new()`](#method-MAEFilteredDataset-initialize)
 
 - [`MAEFilteredDataset$set_filter_state()`](#method-MAEFilteredDataset-set_filter_state)
 
@@ -27,23 +25,23 @@
 
 Inherited methods
 
-- [`teal.slice::FilteredDataset$clear_filter_states()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-clear_filter_states)
-- [`teal.slice::FilteredDataset$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-destroy)
-- [`teal.slice::FilteredDataset$format()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-format)
-- [`teal.slice::FilteredDataset$get_call()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_call)
-- [`teal.slice::FilteredDataset$get_dataname()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataname)
-- [`teal.slice::FilteredDataset$get_dataset()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataset)
-- [`teal.slice::FilteredDataset$get_dataset_label()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataset_label)
-- [`teal.slice::FilteredDataset$get_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_filter_state)
-- [`teal.slice::FilteredDataset$get_keys()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_keys)
-- [`teal.slice::FilteredDataset$print()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-print)
-- [`teal.slice::FilteredDataset$srv_active()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-srv_active)
-- [`teal.slice::FilteredDataset$srv_add()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-srv_add)
-- [`teal.slice::FilteredDataset$ui_active()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-ui_active)
+- [`FilteredDataset$clear_filter_states()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-clear_filter_states)
+- [`FilteredDataset$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-destroy)
+- [`FilteredDataset$format()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-format)
+- [`FilteredDataset$get_call()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_call)
+- [`FilteredDataset$get_dataname()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataname)
+- [`FilteredDataset$get_dataset()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataset)
+- [`FilteredDataset$get_dataset_label()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataset_label)
+- [`FilteredDataset$get_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_filter_state)
+- [`FilteredDataset$get_keys()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_keys)
+- [`FilteredDataset$print()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-print)
+- [`FilteredDataset$srv_active()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-srv_active)
+- [`FilteredDataset$srv_add()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-srv_add)
+- [`FilteredDataset$ui_active()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-ui_active)
 
 ------------------------------------------------------------------------
 
-### Method [`new()`](https://rdrr.io/r/methods/new.html)
+### `MAEFilteredDataset$new()`
 
 Initialize `MAEFilteredDataset` object.
 
@@ -81,7 +79,7 @@ Object of class `MAEFilteredDataset`, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method [`set_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `MAEFilteredDataset$set_filter_state()`
 
 Set filter state.
 
@@ -101,7 +99,7 @@ Set filter state.
 
 ------------------------------------------------------------------------
 
-### Method [`remove_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `MAEFilteredDataset$remove_filter_state()`
 
 Remove one or more `FilterState` of a `MAEFilteredDataset`.
 
@@ -123,7 +121,7 @@ Remove one or more `FilterState` of a `MAEFilteredDataset`.
 
 ------------------------------------------------------------------------
 
-### Method `ui_add()`
+### `MAEFilteredDataset$ui_add()`
 
 UI module to add filter variable for this dataset.
 
@@ -143,9 +141,9 @@ UI module to add filter variable for this dataset.
 
 ------------------------------------------------------------------------
 
-### Method `get_filter_overview()`
+### `MAEFilteredDataset$get_filter_overview()`
 
-Creates row for filter overview in the form of  
+Creates row for filter overview in the form of\
 `dataname -- observations (remaining/total) -- subjects (remaining/total)` -
 MAE
 
@@ -159,7 +157,7 @@ A `data.frame`.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `MAEFilteredDataset$clone()`
 
 The objects of this class are cloneable with this method.
 

@@ -42,12 +42,12 @@ Source:
 Kaledkowski D, Rucki P, Chlebowski A, Verissimo A, Kirar K, Kosinski M,
 Bates A, Hallal M, Burkoff N, Nasinski M, Pagacz K, Zhao J (2026).
 *teal.slice: Filter Module for 'teal' Applications*. R package version
-0.7.1.9006, <https://insightsengineering.github.io/teal.slice/>.
+0.7.1.9007, <https://insightsengineering.github.io/teal.slice/>.
 
     @Manual{,
       title = {teal.slice: Filter Module for 'teal' Applications},
       author = {Dawid Kaledkowski and Pawel Rucki and Aleksander Chlebowski and Andre Verissimo and Kartikeya Kirar and Marcin Kosinski and Andrew Bates and Mahmoud Hallal and Nikolas Burkoff and Maciej Nasinski and Konrad Pagacz and Junlue Zhao},
       year = {2026},
-      note = {R package version 0.7.1.9006},
+      note = {R package version 0.7.1.9007},
       url = {https://insightsengineering.github.io/teal.slice/},
     }

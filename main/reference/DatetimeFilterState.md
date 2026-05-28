@@ -4,14 +4,14 @@ Manages choosing a range of date-times.
 
 ## Super class
 
-[`teal.slice::FilterState`](https://insightsengineering.github.io/teal.slice/reference/FilterState.md)
+[`FilterState`](https://insightsengineering.github.io/teal.slice/reference/FilterState.md)
 -\> `DatetimeFilterState`
 
 ## Methods
 
 ### Public methods
 
-- [`DatetimeFilterState$new()`](#method-DatetimeFilterState-new)
+- [`DatetimeFilterState$new()`](#method-DatetimeFilterState-initialize)
 
 - [`DatetimeFilterState$get_call()`](#method-DatetimeFilterState-get_call)
 
@@ -19,17 +19,17 @@ Manages choosing a range of date-times.
 
 Inherited methods
 
-- [`teal.slice::FilterState$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-destroy)
-- [`teal.slice::FilterState$format()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-format)
-- [`teal.slice::FilterState$get_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-get_state)
-- [`teal.slice::FilterState$print()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-print)
-- [`teal.slice::FilterState$server()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-server)
-- [`teal.slice::FilterState$set_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-set_state)
-- [`teal.slice::FilterState$ui()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-ui)
+- [`FilterState$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-destroy)
+- [`FilterState$format()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-format)
+- [`FilterState$get_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-get_state)
+- [`FilterState$print()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-print)
+- [`FilterState$server()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-server)
+- [`FilterState$set_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-set_state)
+- [`FilterState$ui()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-ui)
 
 ------------------------------------------------------------------------
 
-### Method [`new()`](https://rdrr.io/r/methods/new.html)
+### `DatetimeFilterState$new()`
 
 Initialize a `FilterState` object. This class has an extra field,
 `private$timezone`, which is set to
@@ -91,7 +91,7 @@ Object of class `DatetimeFilterState`, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `get_call()`
+### `DatetimeFilterState$get_call()`
 
 Returns reproducible condition call for current selection. For this
 class returned call looks like
@@ -114,7 +114,7 @@ class returned call looks like
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `DatetimeFilterState$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -144,8 +144,8 @@ filter_state <- DatetimeFilterState$new(
   extract_type = character(0)
 )
 isolate(filter_state$get_call())
-#> is.na(x) | x >= as.POSIXct("2026-02-25 06:31:01", tz = "Etc/UTC") & 
-#>     x < as.POSIXct("2026-02-25 15:31:02", tz = "Etc/UTC")
+#> is.na(x) | x >= as.POSIXct("2026-05-28 00:43:15", tz = "Etc/UTC") & 
+#>     x < as.POSIXct("2026-05-28 09:43:16", tz = "Etc/UTC")
 filter_state$set_state(
   teal_slice(
     dataname = "data",
@@ -155,8 +155,8 @@ filter_state$set_state(
   )
 )
 isolate(filter_state$get_call())
-#> is.na(x) | x >= as.POSIXct("2026-02-25 06:31:04.770657", tz = "Etc/UTC") & 
-#>     x < as.POSIXct("2026-02-25 06:31:10.7707", tz = "Etc/UTC")
+#> is.na(x) | x >= as.POSIXct("2026-05-28 00:43:18.214781", tz = "Etc/UTC") & 
+#>     x < as.POSIXct("2026-05-28 00:43:24.214819", tz = "Etc/UTC")
 
 # working filter in an app
 library(shinyjs)
