@@ -284,6 +284,165 @@ testthat::test_that("format returns a properly formatted string representation",
   )
 })
 
+# content_summary ----
+testthat::test_that("content_summary shows datetime range in summary-value span", {
+  filter_state <- DatetimeFilterState$new(
+    posixct,
+    slice = teal_slice(dataname = "data", varname = "variable")
+  )
+  summary_html <- as.character(
+    shiny::isolate(filter_state$.__enclos_env__$private$content_summary())
+  )
+  testthat::expect_match(summary_html, "summary-value\">2000-01-01 12:00:00")
+  testthat::expect_match(summary_html, "&ndash;")
+  testthat::expect_match(summary_html, "2000-01-01 12:00:09")
+})
+
+testthat::test_that("content_summary shows NA check icon when keep_na is TRUE and NA values exist", {
+  filter_state <- DatetimeFilterState$new(
+    c(posixct, NA),
+    slice = teal_slice(dataname = "data", varname = "variable", keep_na = TRUE)
+  )
+  summary_html <- as.character(
+    shiny::isolate(filter_state$.__enclos_env__$private$content_summary())
+  )
+  testthat::expect_match(summary_html, "fa-check")
+  testthat::expect_match(summary_html, "text-success")
+})
+
+testthat::test_that("content_summary shows NA xmark icon when keep_na is FALSE and NA values exist", {
+  filter_state <- DatetimeFilterState$new(
+    c(posixct, NA),
+    slice = teal_slice(
+      dataname = "data", varname = "variable", keep_na = FALSE
+    )
+  )
+  summary_html <- as.character(
+    shiny::isolate(filter_state$.__enclos_env__$private$content_summary())
+  )
+  testthat::expect_match(summary_html, "fa-xmark")
+  testthat::expect_match(summary_html, "text-danger")
+})
+
+testthat::test_that("content_summary shows NA check icon when keep_na is NULL", { # nolint: line_length.
+  filter_state <- DatetimeFilterState$new(
+    c(posixct, NA),
+    slice = teal_slice(dataname = "data", varname = "variable")
+  )
+  summary_html <- as.character(
+    shiny::isolate(filter_state$.__enclos_env__$private$content_summary())
+  )
+  testthat::expect_match(summary_html, "fa-check")
+  testthat::expect_match(summary_html, "text-success")
+})
+
+testthat::test_that("content_summary omits NA span when data has no NA values", {
+  filter_state <- DatetimeFilterState$new(
+    posixct,
+    slice = teal_slice(dataname = "data", varname = "variable")
+  )
+  summary_html <- as.character(
+    shiny::isolate(filter_state$.__enclos_env__$private$content_summary())
+  )
+  testthat::expect_match(summary_html, "filter-card-summary-controls")
+  testthat::expect_no_match(summary_html, "fa-check")
+  testthat::expect_no_match(summary_html, "fa-xmark")
+})
+
+# ui_inputs ----
+testthat::test_that("ui_inputs renders start and end datetime pickers", {
+  filter_state <- DatetimeFilterState$new(
+    posixct,
+    slice = teal_slice(dataname = "data", varname = "variable")
+  )
+  ui_html <- as.character(
+    shiny::isolate(filter_state$.__enclos_env__$private$ui_inputs("test"))
+  )
+  testthat::expect_match(ui_html, 'id="test-selection_start"', fixed = TRUE)
+  testthat::expect_match(ui_html, 'id="test-selection_end"', fixed = TRUE)
+})
+
+testthat::test_that("ui_inputs renders start and end reset buttons", {
+  filter_state <- DatetimeFilterState$new(
+    posixct,
+    slice = teal_slice(dataname = "data", varname = "variable")
+  )
+  ui_html <- as.character(
+    shiny::isolate(filter_state$.__enclos_env__$private$ui_inputs("test"))
+  )
+  testthat::expect_match(ui_html, 'id="test-start_date_reset"', fixed = TRUE)
+  testthat::expect_match(ui_html, 'id="test-end_date_reset"', fixed = TRUE)
+})
+
+testthat::test_that("ui_inputs renders a 'to' separator between the two pickers", {
+  filter_state <- DatetimeFilterState$new(
+    posixct,
+    slice = teal_slice(dataname = "data", varname = "variable")
+  )
+  ui_html <- as.character(
+    shiny::isolate(filter_state$.__enclos_env__$private$ui_inputs("test"))
+  )
+  testthat::expect_match(ui_html, "selection_start.*>to<.*selection_end")
+})
+
+testthat::test_that("ui_inputs renders the timepicker flag in the picker config", {
+  filter_state <- DatetimeFilterState$new(
+    posixct,
+    slice = teal_slice(dataname = "data", varname = "variable")
+  )
+  ui_html <- as.character(
+    shiny::isolate(filter_state$.__enclos_env__$private$ui_inputs("test"))
+  )
+  testthat::expect_match(ui_html, '"timepicker":true', fixed = TRUE)
+})
+
+testthat::test_that("ui_inputs applies input-sm class to both pickers", {
+  filter_state <- DatetimeFilterState$new(
+    posixct,
+    slice = teal_slice(dataname = "data", varname = "variable")
+  )
+  ui_html <- as.character(
+    shiny::isolate(filter_state$.__enclos_env__$private$ui_inputs("test"))
+  )
+  testthat::expect_match(
+    ui_html,
+    "selection_start.*input-sm.*selection_end.*input-sm"
+  )
+})
+
+testthat::test_that("ui_inputs renders the filter_datelike_input layout wrapper", {
+  filter_state <- DatetimeFilterState$new(
+    posixct,
+    slice = teal_slice(dataname = "data", varname = "variable")
+  )
+  ui_html <- as.character(
+    shiny::isolate(filter_state$.__enclos_env__$private$ui_inputs("test"))
+  )
+  testthat::expect_match(ui_html, "filter_datelike_input", fixed = TRUE)
+})
+
+testthat::test_that("ui_inputs renders keep NA checkbox when NA values exist", {
+  filter_state <- DatetimeFilterState$new(
+    c(posixct, NA),
+    slice = teal_slice(dataname = "data", varname = "variable")
+  )
+  ui_html <- as.character(
+    shiny::isolate(filter_state$.__enclos_env__$private$ui_inputs("test"))
+  )
+  testthat::expect_match(ui_html, "Keep NA")
+})
+
+testthat::test_that("ui_inputs does not render keep NA checkbox when no NA values exist", {
+  filter_state <- DatetimeFilterState$new(
+    posixct,
+    slice = teal_slice(dataname = "data", varname = "variable")
+  )
+  ui_html <- as.character(
+    shiny::isolate(filter_state$.__enclos_env__$private$ui_inputs("test"))
+  )
+  testthat::expect_no_match(ui_html, "Keep NA")
+})
+
 # print ---
 
 testthat::test_that("print returns a properly formatted string representation", {

@@ -116,117 +116,118 @@ if (interactive()) {
 }
 \keyword{internal}
 \section{Super class}{
-\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{DatetimeFilterState}
+\code{\link[teal.slice:FilterState]{FilterState}} -> \code{DatetimeFilterState}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-DatetimeFilterState-new}{\code{DatetimeFilterState$new()}}
-\item \href{#method-DatetimeFilterState-get_call}{\code{DatetimeFilterState$get_call()}}
-\item \href{#method-DatetimeFilterState-clone}{\code{DatetimeFilterState$clone()}}
+  \itemize{
+    \item \href{#method-DatetimeFilterState-initialize}{\code{DatetimeFilterState$new()}}
+    \item \href{#method-DatetimeFilterState-get_call}{\code{DatetimeFilterState$get_call()}}
+    \item \href{#method-DatetimeFilterState-clone}{\code{DatetimeFilterState$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details><summary>Inherited methods</summary>
+\if{html}{\out{<details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy"><a href='../../teal.slice/html/FilterState.html#method-FilterState-destroy'><code>teal.slice::FilterState$destroy()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="format"><a href='../../teal.slice/html/FilterState.html#method-FilterState-format'><code>teal.slice::FilterState$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_state'><code>teal.slice::FilterState$get_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state'><code>teal.slice::FilterState$set_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href='../../teal.slice/html/FilterState.html#method-FilterState-ui'><code>teal.slice::FilterState$ui()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy"><a href='../../teal.slice/html/FilterState.html#method-FilterState-destroy'><code>FilterState$destroy()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="format"><a href='../../teal.slice/html/FilterState.html#method-FilterState-format'><code>FilterState$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_state'><code>FilterState$get_state()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>FilterState$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>FilterState$server()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state'><code>FilterState$set_state()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href='../../teal.slice/html/FilterState.html#method-FilterState-ui'><code>FilterState$ui()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DatetimeFilterState-new"></a>}}
-\if{latex}{\out{\hypertarget{method-DatetimeFilterState-new}{}}}
-\subsection{Method \code{new()}}{
-Initialize a \code{FilterState} object. This class
+\if{html}{\out{<a id="method-DatetimeFilterState-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-DatetimeFilterState-initialize}{}}}
+\subsection{\code{DatetimeFilterState$new()}}{
+  Initialize a \code{FilterState} object. This class
 has an extra field, \code{private$timezone}, which is set to \code{Sys.timezone()} by
 default. However, in case when using this module in \code{teal} app, one needs
 timezone of the app user. App user timezone is taken from \code{session$userData$timezone}
 and is set only if object is initialized in \code{shiny}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatetimeFilterState$new(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DatetimeFilterState$new(
   x,
   x_reactive = reactive(NULL),
   extract_type = character(0),
   slice
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{x}}{(\code{POSIXct} or \code{POSIXlt})
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{x}}{(\code{POSIXct} or \code{POSIXlt})
 variable to be filtered.}
-
-\item{\code{x_reactive}}{(\code{reactive})
+      \item{\code{x_reactive}}{(\code{reactive})
 returning vector of the same type as \code{x}. Is used to update
 counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
-
-\item{\code{extract_type}}{(\code{character})
+      \item{\code{extract_type}}{(\code{character})
 specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
 \item \code{"list"} \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}
 \item \code{"matrix"} \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}
 }}
-
-\item{\code{slice}}{(\code{teal_slice})
+      \item{\code{slice}}{(\code{teal_slice})
 specification of this filter state.
 \code{teal_slice} is stored in the object and \code{set_state} directly manipulates values within \code{teal_slice}.
 \code{get_state} returns \code{teal_slice} object which can be reused in other places.
 Note that \code{teal_slice} is a \code{reactiveValues}, which means it has reference semantics, i.e.
 changes made to an object are automatically reflected in all places that refer to the same \code{teal_slice}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Object of class \code{DatetimeFilterState}, invisibly.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Object of class \code{DatetimeFilterState}, invisibly.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DatetimeFilterState-get_call"></a>}}
 \if{latex}{\out{\hypertarget{method-DatetimeFilterState-get_call}{}}}
-\subsection{Method \code{get_call()}}{
-Returns reproducible condition call for current selection.
+\subsection{\code{DatetimeFilterState$get_call()}}{
+  Returns reproducible condition call for current selection.
 For this class returned call looks like
 \verb{<varname> >= as.POSIXct(<min>) & <varname> <= <max>)} with optional \verb{is.na(<varname>)}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatetimeFilterState$get_call(dataname)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DatetimeFilterState$get_call(dataname)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{dataname}}{name of data set; defaults to \code{private$get_dataname()}}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{call}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{name of data set; defaults to \code{private$get_dataname()}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{call}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DatetimeFilterState-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-DatetimeFilterState-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatetimeFilterState$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{DatetimeFilterState$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DatetimeFilterState$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

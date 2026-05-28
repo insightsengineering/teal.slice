@@ -9,116 +9,117 @@ Handles filter states in a \code{SummaryExperiment}.
 }
 \keyword{internal}
 \section{Super class}{
-\code{\link[teal.slice:FilterStates]{teal.slice::FilterStates}} -> \code{SEFilterStates}
+\code{\link[teal.slice:FilterStates]{FilterStates}} -> \code{SEFilterStates}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-SEFilterStates-new}{\code{SEFilterStates$new()}}
-\item \href{#method-SEFilterStates-set_filter_state}{\code{SEFilterStates$set_filter_state()}}
-\item \href{#method-SEFilterStates-ui_add}{\code{SEFilterStates$ui_add()}}
-\item \href{#method-SEFilterStates-srv_add}{\code{SEFilterStates$srv_add()}}
-\item \href{#method-SEFilterStates-clone}{\code{SEFilterStates$clone()}}
+  \itemize{
+    \item \href{#method-SEFilterStates-initialize}{\code{SEFilterStates$new()}}
+    \item \href{#method-SEFilterStates-set_filter_state}{\code{SEFilterStates$set_filter_state()}}
+    \item \href{#method-SEFilterStates-ui_add}{\code{SEFilterStates$ui_add()}}
+    \item \href{#method-SEFilterStates-srv_add}{\code{SEFilterStates$srv_add()}}
+    \item \href{#method-SEFilterStates-clone}{\code{SEFilterStates$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details><summary>Inherited methods</summary>
+\if{html}{\out{<details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="clear_filter_states"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-clear_filter_states'><code>teal.slice::FilterStates$clear_filter_states()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="destroy"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-destroy'><code>teal.slice::FilterStates$destroy()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="format"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-format'><code>teal.slice::FilterStates$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>teal.slice::FilterStates$get_call()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_state'><code>teal.slice::FilterStates$get_filter_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="remove_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-remove_filter_state'><code>teal.slice::FilterStates$remove_filter_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_active'><code>teal.slice::FilterStates$srv_active()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="clear_filter_states"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-clear_filter_states'><code>FilterStates$clear_filter_states()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="destroy"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-destroy'><code>FilterStates$destroy()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="format"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-format'><code>FilterStates$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>FilterStates$get_call()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_state'><code>FilterStates$get_filter_state()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>FilterStates$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="remove_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-remove_filter_state'><code>FilterStates$remove_filter_state()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_active'><code>FilterStates$srv_active()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>FilterStates$ui_active()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SEFilterStates-new"></a>}}
-\if{latex}{\out{\hypertarget{method-SEFilterStates-new}{}}}
-\subsection{Method \code{new()}}{
-Initialize \code{SEFilterStates} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$new(
+\if{html}{\out{<a id="method-SEFilterStates-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-initialize}{}}}
+\subsection{\code{SEFilterStates$new()}}{
+  Initialize \code{SEFilterStates} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{SEFilterStates$new(
   data,
   data_reactive = function(sid = "") NULL,
   dataname,
   datalabel = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data}}{(\code{SummarizedExperiment})
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{data}}{(\code{SummarizedExperiment})
 the \code{R} object which \code{subset} function is applied on.}
-
-\item{\code{data_reactive}}{(\verb{function(sid)})
+      \item{\code{data_reactive}}{(\verb{function(sid)})
 should return a \code{SummarizedExperiment} object or \code{NULL}.
 This object is needed for the \code{FilterState} counts being updated on a change in filters.
 If function returns \code{NULL} then filtered counts are not shown.
 Function has to have \code{sid} argument being a character.}
-
-\item{\code{dataname}}{(\code{character(1)})
+      \item{\code{dataname}}{(\code{character(1)})
 name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
-
-\item{\code{datalabel}}{(\code{character(1)}) optional
+      \item{\code{datalabel}}{(\code{character(1)}) optional
 text label. Should be the name of experiment.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-SEFilterStates-set_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-set_filter_state}{}}}
-\subsection{Method \code{set_filter_state()}}{
-Set filter state.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$set_filter_state(state)}\if{html}{\out{</div>}}
+\subsection{\code{SEFilterStates$set_filter_state()}}{
+  Set filter state.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{SEFilterStates$set_filter_state(state)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{state}}{(\code{teal_slices})
+\code{teal_slice} objects should contain the field \code{arg \%in\% c("subset", "select")}}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}, invisibly.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\code{teal_slices})
-\code{teal_slice} objects should contain the field \code{arg \%in\% c("subset", "select")}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-SEFilterStates-ui_add"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-ui_add}{}}}
-\subsection{Method \code{ui_add()}}{
-\code{shiny} UI module to add filter variable.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$ui_add(id)}\if{html}{\out{</div>}}
+\subsection{\code{SEFilterStates$ui_add()}}{
+  \code{shiny} UI module to add filter variable.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{SEFilterStates$ui_add(id)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
+\code{shiny} module instance id.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{shiny.tag}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{shiny.tag}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-SEFilterStates-srv_add"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-srv_add}{}}}
-\subsection{Method \code{srv_add()}}{
-\code{shiny} server module to add filter variable.
+\subsection{\code{SEFilterStates$srv_add()}}{
+  \code{shiny} server module to add filter variable.
 
 Module controls available choices to select as a filter variable.
 Selected filter variable is being removed from available choices.
@@ -126,37 +127,41 @@ Removed filter variable gets back to available choices.
 This module unlike other \code{FilterStates} classes manages two
 sets of filter variables - one for \code{colData} and another for
 \code{rowData}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$srv_add(id)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{SEFilterStates$srv_add(id)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
+\code{shiny} module instance id.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
-\code{shiny} module instance id.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-SEFilterStates-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{SEFilterStates$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{SEFilterStates$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

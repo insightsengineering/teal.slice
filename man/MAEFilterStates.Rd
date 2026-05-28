@@ -9,91 +9,88 @@ Handles filter states in a \code{MultiAssayExperiment}.
 }
 \keyword{internal}
 \section{Super class}{
-\code{\link[teal.slice:FilterStates]{teal.slice::FilterStates}} -> \code{MAEFilterStates}
+\code{\link[teal.slice:FilterStates]{FilterStates}} -> \code{MAEFilterStates}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-MAEFilterStates-new}{\code{MAEFilterStates$new()}}
-\item \href{#method-MAEFilterStates-clone}{\code{MAEFilterStates$clone()}}
+  \itemize{
+    \item \href{#method-MAEFilterStates-initialize}{\code{MAEFilterStates$new()}}
+    \item \href{#method-MAEFilterStates-clone}{\code{MAEFilterStates$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details><summary>Inherited methods</summary>
+\if{html}{\out{<details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="clear_filter_states"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-clear_filter_states'><code>teal.slice::FilterStates$clear_filter_states()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="destroy"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-destroy'><code>teal.slice::FilterStates$destroy()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="format"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-format'><code>teal.slice::FilterStates$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>teal.slice::FilterStates$get_call()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_state'><code>teal.slice::FilterStates$get_filter_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="remove_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-remove_filter_state'><code>teal.slice::FilterStates$remove_filter_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filter_state'><code>teal.slice::FilterStates$set_filter_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_active'><code>teal.slice::FilterStates$srv_active()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_add"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_add'><code>teal.slice::FilterStates$srv_add()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_add"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_add'><code>teal.slice::FilterStates$ui_add()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="clear_filter_states"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-clear_filter_states'><code>FilterStates$clear_filter_states()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="destroy"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-destroy'><code>FilterStates$destroy()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="format"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-format'><code>FilterStates$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>FilterStates$get_call()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_state'><code>FilterStates$get_filter_state()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>FilterStates$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="remove_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-remove_filter_state'><code>FilterStates$remove_filter_state()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filter_state'><code>FilterStates$set_filter_state()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_active'><code>FilterStates$srv_active()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_add"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_add'><code>FilterStates$srv_add()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>FilterStates$ui_active()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_add"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_add'><code>FilterStates$ui_add()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilterStates-new"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilterStates-new}{}}}
-\subsection{Method \code{new()}}{
-Initialize \code{MAEFilterStates} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$new(
+\if{html}{\out{<a id="method-MAEFilterStates-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilterStates-initialize}{}}}
+\subsection{\code{MAEFilterStates$new()}}{
+  Initialize \code{MAEFilterStates} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{MAEFilterStates$new(
   data,
   data_reactive = function(sid = "") NULL,
   dataname,
   datalabel = "subjects",
   keys = character(0)
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data}}{(\code{MultiAssayExperiment})
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{data}}{(\code{MultiAssayExperiment})
 the \code{R} object which \code{MultiAssayExperiment::subsetByColData} function is applied on.}
-
-\item{\code{data_reactive}}{(\verb{function(sid)})
+      \item{\code{data_reactive}}{(\verb{function(sid)})
 should return a \code{MultiAssayExperiment} object or \code{NULL}.
 This object is needed for the \code{FilterState} counts being updated
 on a change in filters. If function returns \code{NULL} then filtered counts are not shown.
 Function has to have \code{sid} argument being a character.}
-
-\item{\code{dataname}}{(\code{character(1)})
+      \item{\code{dataname}}{(\code{character(1)})
 name of the data used in the subset expression.
 Passed to the function argument attached to this \code{FilterStates}.}
-
-\item{\code{datalabel}}{(\code{character(1)}) optional
+      \item{\code{datalabel}}{(\code{character(1)}) optional
 text label.}
-
-\item{\code{keys}}{(\code{character})
+      \item{\code{keys}}{(\code{character})
 key column names.}
-
-\item{\code{varlabels}}{(\code{character})
+      \item{\code{varlabels}}{(\code{character})
 labels of the variables used in this object.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-MAEFilterStates-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilterStates-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{MAEFilterStates$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{MAEFilterStates$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

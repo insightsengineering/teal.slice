@@ -45,225 +45,239 @@ Modifying a \code{FilterState} object is possible in three scenarios:
 \keyword{internal}
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-FilterState-new}{\code{FilterState$new()}}
-\item \href{#method-FilterState-destroy}{\code{FilterState$destroy()}}
-\item \href{#method-FilterState-format}{\code{FilterState$format()}}
-\item \href{#method-FilterState-print}{\code{FilterState$print()}}
-\item \href{#method-FilterState-set_state}{\code{FilterState$set_state()}}
-\item \href{#method-FilterState-get_state}{\code{FilterState$get_state()}}
-\item \href{#method-FilterState-get_call}{\code{FilterState$get_call()}}
-\item \href{#method-FilterState-server}{\code{FilterState$server()}}
-\item \href{#method-FilterState-ui}{\code{FilterState$ui()}}
-\item \href{#method-FilterState-clone}{\code{FilterState$clone()}}
-}
+  \itemize{
+    \item \href{#method-FilterState-initialize}{\code{FilterState$new()}}
+    \item \href{#method-FilterState-destroy}{\code{FilterState$destroy()}}
+    \item \href{#method-FilterState-format}{\code{FilterState$format()}}
+    \item \href{#method-FilterState-print}{\code{FilterState$print()}}
+    \item \href{#method-FilterState-set_state}{\code{FilterState$set_state()}}
+    \item \href{#method-FilterState-get_state}{\code{FilterState$get_state()}}
+    \item \href{#method-FilterState-get_call}{\code{FilterState$get_call()}}
+    \item \href{#method-FilterState-server}{\code{FilterState$server()}}
+    \item \href{#method-FilterState-ui}{\code{FilterState$ui()}}
+    \item \href{#method-FilterState-clone}{\code{FilterState$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-new"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-new}{}}}
-\subsection{Method \code{new()}}{
-Initialize a \code{FilterState} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$new(
+\if{html}{\out{<a id="method-FilterState-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-initialize}{}}}
+\subsection{\code{FilterState$new()}}{
+  Initialize a \code{FilterState} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterState$new(
   x,
   x_reactive = reactive(NULL),
   slice,
   extract_type = character(0)
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{x}}{(\code{vector})
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{x}}{(\code{vector})
 variable to be filtered.}
-
-\item{\code{x_reactive}}{(\code{reactive})
+      \item{\code{x_reactive}}{(\code{reactive})
 returning vector of the same type as \code{x}. Is used to update
 counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
-
-\item{\code{slice}}{(\code{teal_slice})
+      \item{\code{slice}}{(\code{teal_slice})
 specification of this filter state.
 \code{teal_slice} is stored in the object and \code{set_state} directly manipulates values within \code{teal_slice}.
 \code{get_state} returns \code{teal_slice} object which can be reused in other places.
 Note that \code{teal_slice} is a \code{reactiveValues}, which means it has reference semantics, i.e.
 changes made to an object are automatically reflected in all places that refer to the same \code{teal_slice}.}
-
-\item{\code{extract_type}}{(\code{character})
+      \item{\code{extract_type}}{(\code{character})
 specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
 \item \code{"list"} \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}
 \item \code{"matrix"} \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}
 }}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Object of class \code{FilterState}, invisibly.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Object of class \code{FilterState}, invisibly.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-destroy"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-destroy}{}}}
-\subsection{Method \code{destroy()}}{
-Destroys a \code{FilterState} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$destroy()}\if{html}{\out{</div>}}
+\subsection{\code{FilterState$destroy()}}{
+  Destroys a \code{FilterState} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterState$destroy()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-format"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-format}{}}}
-\subsection{Method \code{format()}}{
-Returns a formatted string representing this \code{FilterState} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$format(show_all = FALSE, trim_lines = TRUE)}\if{html}{\out{</div>}}
+\subsection{\code{FilterState$format()}}{
+  Returns a formatted string representing this \code{FilterState} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterState$format(show_all = FALSE, trim_lines = TRUE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
+      \item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{character(1)} the formatted string
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{show_all}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
-
-\item{\code{trim_lines}}{(\code{logical(1)}) passed to \code{format.teal_slice}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{character(1)} the formatted string
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-print"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-print}{}}}
-\subsection{Method \code{print()}}{
-Prints this \code{FilterState} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$print(...)}\if{html}{\out{</div>}}
+\subsection{\code{FilterState$print()}}{
+  Prints this \code{FilterState} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterState$print(...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{additional arguments}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{additional arguments}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-set_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-set_state}{}}}
-\subsection{Method \code{set_state()}}{
-Sets mutable parameters of the filter state.
+\subsection{\code{FilterState$set_state()}}{
+  Sets mutable parameters of the filter state.
 \itemize{
 \item \code{fixed} state is prevented from changing state
 \item \code{anchored} state is prevented from removing state
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$set_state(state)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterState$set_state(state)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{state}}{(\code{teal_slice})}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{self} invisibly
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\code{teal_slice})}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{self} invisibly
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-get_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-get_state}{}}}
-\subsection{Method \code{get_state()}}{
-Returns a complete description of the filter state.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_state()}\if{html}{\out{</div>}}
+\subsection{\code{FilterState$get_state()}}{
+  Returns a complete description of the filter state.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterState$get_state()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{teal_slice} object.
+  }
 }
 
-\subsection{Returns}{
-A \code{teal_slice} object.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-get_call"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-get_call}{}}}
-\subsection{Method \code{get_call()}}{
-Returns reproducible condition call for current selection relevant
+\subsection{\code{FilterState$get_call()}}{
+  Returns reproducible condition call for current selection relevant
 for selected variable type.
 Method is using internal reactive values which makes it reactive
 and must be executed in reactive or isolated context.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_call()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterState$get_call()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-server"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-server}{}}}
-\subsection{Method \code{server()}}{
-\code{shiny} module server.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$server(id, remove_callback)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
+\subsection{\code{FilterState$server()}}{
+  \code{shiny} module server.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterState$server(id, remove_callback)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
-
-\item{\code{remove_callback}}{(\code{function})
+      \item{\code{remove_callback}}{(\code{function})
 callback to handle removal of this \code{FilterState} object from \code{state_list}}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Reactive expression signaling that remove button has been clicked.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Reactive expression signaling that remove button has been clicked.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-ui"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-ui}{}}}
-\subsection{Method \code{ui()}}{
-\code{shiny} UI module.
+\subsection{\code{FilterState$ui()}}{
+  \code{shiny} UI module.
 The UI for this class contains simple message stating that it is not supported.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id, parent_id = "cards")}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterState$ui(id, parent_id = "cards")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})
 \code{shiny} module instance id.}
+      \item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}
+    }
+    \if{html}{\out{</div>}}
+  }
+}
 
-\item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{FilterState$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{FilterState$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }
