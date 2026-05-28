@@ -1,8 +1,8 @@
 Type: Package
 Package: teal.slice
 Title: Filter Module for 'teal' Applications
-Version: 0.7.1.9006
-Date: 2026-02-25
+Version: 0.7.1.9007
+Date: 2026-05-28
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9533-457X")),
@@ -76,8 +76,8 @@ Config/Needs/verdepcheck: rstudio/shiny, rstudio/bslib, mllg/checkmate,
     bioc::SummarizedExperiment, rstudio/rmarkdown, r-lib/testthat,
     r-lib/withr, bioc::matrixStats
 Config/Needs/website: insightsengineering/nesttemplate
+Config/roxygen2/version: 8.0.0
 Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
-Config/roxygen2/version: 8.0.0
