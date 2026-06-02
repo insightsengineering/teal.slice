@@ -13,7 +13,7 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-2212-339X")),
     person("Lluís", "Revilla Sancho", , "lluis.revilla_sancho@roche.com", role = "aut",
            comment = c(ORCID = "0000-0001-9747-2570")),
-    person("Dony", "Unardi", , "unardid@gene.com", role = "rev", "cre"),
+    person("Dony", "Unardi", , "unardid@gene.com", role = c("rev", "cre")),
     person("Kartikeya", "Kirar", , "kartikeya.kirar@businesspartner.roche.com", role = "aut"),
     person("Marcin", "Kosinski", , "marcin.kosinski.mk1@roche.com", role = "aut"),
     person("Chendi", "Liao", role = "aut"),
