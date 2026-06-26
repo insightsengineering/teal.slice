@@ -137,7 +137,7 @@ teal_slice <- function(dataname,
     formal_args$fixed <- TRUE
     ts_expr_args <- c("dataname", "id", "expr", "fixed", "anchored", "title")
     formal_args <- formal_args[ts_expr_args]
-    ans <- do.call(reactiveValues, c(formal_args, list(...)))
+    ans <- withReactiveDomain(NULL, do.call(reactiveValues, c(formal_args, list(...))))
     class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
   } else if (!missing(varname)) {
     checkmate::assert_string(varname)
@@ -160,7 +160,7 @@ teal_slice <- function(dataname,
     } else {
       checkmate::assert_string(id)
     }
-    ans <- do.call(reactiveValues, args)
+    ans <- withReactiveDomain(NULL, do.call(reactiveValues, args))
     class(ans) <- c("teal_slice_var", "teal_slice", class(ans))
   } else {
     stop("Must provide either `expr` or `varname`.")
