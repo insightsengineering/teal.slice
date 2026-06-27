@@ -1,11 +1,23 @@
 # Changelog
 
-## teal.slice 0.7.1.9007
+## teal.slice 0.8.0
+
+CRAN release: 2026-06-04
 
 #### Enhancements
 
 - Relaxed assertions on `teal_slices` to ignore duplicated `teal_slice`
-  elements.
+  elements
+  ([\#675](https://github.com/insightsengineering/teal.slice/issues/675)).
+
+#### Bug fixes
+
+- Fixed variable label not being displayed when filtering a factor
+  column
+  ([\#679](https://github.com/insightsengineering/teal.slice/issues/679)).
+- Fixed spurious warning about modified range choices now only raised
+  after prettifying the range
+  ([\#677](https://github.com/insightsengineering/teal.slice/issues/677)).
 
 ## teal.slice 0.7.1
 
