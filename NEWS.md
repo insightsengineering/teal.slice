@@ -1,8 +1,15 @@
-# teal.slice 0.7.1.9007
+# teal.slice 0.8.0.9000
+
+# teal.slice 0.8.0
 
 ### Enhancements
 
-* Relaxed assertions on  `teal_slices` to ignore duplicated `teal_slice` elements.
+* Relaxed assertions on `teal_slices` to ignore duplicated `teal_slice` elements (#675).
+
+### Bug fixes
+
+* Fixed variable label not being displayed when filtering a factor column (#679).
+* Fixed spurious warning about modified range choices now only raised after prettifying the range (#677).
 
 # teal.slice 0.7.1
 
