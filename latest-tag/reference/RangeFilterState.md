@@ -4,14 +4,14 @@ Manages choosing a numeric range.
 
 ## Super class
 
-[`teal.slice::FilterState`](https://insightsengineering.github.io/teal.slice/reference/FilterState.md)
+[`FilterState`](https://insightsengineering.github.io/teal.slice/reference/FilterState.md)
 -\> `RangeFilterState`
 
 ## Methods
 
 ### Public methods
 
-- [`RangeFilterState$new()`](#method-RangeFilterState-new)
+- [`RangeFilterState$new()`](#method-RangeFilterState-initialize)
 
 - [`RangeFilterState$get_call()`](#method-RangeFilterState-get_call)
 
@@ -21,17 +21,17 @@ Manages choosing a numeric range.
 
 Inherited methods
 
-- [`teal.slice::FilterState$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-destroy)
-- [`teal.slice::FilterState$format()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-format)
-- [`teal.slice::FilterState$get_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-get_state)
-- [`teal.slice::FilterState$print()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-print)
-- [`teal.slice::FilterState$server()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-server)
-- [`teal.slice::FilterState$set_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-set_state)
-- [`teal.slice::FilterState$ui()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-ui)
+- [`FilterState$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-destroy)
+- [`FilterState$format()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-format)
+- [`FilterState$get_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-get_state)
+- [`FilterState$print()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-print)
+- [`FilterState$server()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-server)
+- [`FilterState$set_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-set_state)
+- [`FilterState$ui()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-ui)
 
 ------------------------------------------------------------------------
 
-### Method [`new()`](https://rdrr.io/r/methods/new.html)
+### `RangeFilterState$new()`
 
 Initialize a `FilterState` object for range selection.
 
@@ -87,7 +87,7 @@ Object of class `RangeFilterState`, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `get_call()`
+### `RangeFilterState$get_call()`
 
 Returns reproducible condition call for current selection. For this
 class returned call looks like
@@ -110,7 +110,7 @@ class returned call looks like
 
 ------------------------------------------------------------------------
 
-### Method `get_keep_inf()`
+### `RangeFilterState$get_keep_inf()`
 
 Returns current `keep_inf` selection.
 
@@ -124,7 +124,7 @@ Returns current `keep_inf` selection.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `RangeFilterState$clone()`
 
 The objects of this class are cloneable with this method.
 

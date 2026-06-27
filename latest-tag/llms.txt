@@ -53,12 +53,14 @@ modules. It provides:
 ## Installation
 
 ``` r
+
 install.packages('teal.slice')
 ```
 
 Alternatively, you might want to use the development version.
 
 ``` r
+
 # install.packages("pak")
 pak::pak("insightsengineering/teal.slice")
 ```
@@ -79,23 +81,6 @@ Showcase
 If you encounter a bug or have a feature request, please file an issue.
 For questions, discussions, and updates, use the `teal` channel in the
 [`pharmaverse` slack workspace](https://pharmaverse.slack.com).
-
-## Stargazers and Forkers
-
-### Stargazers over time
-
-[![Stargazers over
-time](https://starchart.cc/insightsengineering/teal.slice.svg)](https://starchart.cc/insightsengineering/teal.slice)
-
-### Stargazers
-
-[![Stargazers repo roster for
-@insightsengineering/teal.slice](http://reporoster.com/stars/insightsengineering/teal.slice)](https://github.com/insightsengineering/teal.slice/stargazers)
-
-### Forkers
-
-[![Forkers repo roster for
-@insightsengineering/teal.slice](http://reporoster.com/forks/insightsengineering/teal.slice)](https://github.com/insightsengineering/teal.slice/network/members)
 
 # Package index
 

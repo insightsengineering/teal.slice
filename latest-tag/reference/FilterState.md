@@ -53,7 +53,7 @@ Modifying a `FilterState` object is possible in three scenarios:
 
 ### Public methods
 
-- [`FilterState$new()`](#method-FilterState-new)
+- [`FilterState$new()`](#method-FilterState-initialize)
 
 - [`FilterState$destroy()`](#method-FilterState-destroy)
 
@@ -75,7 +75,7 @@ Modifying a `FilterState` object is possible in three scenarios:
 
 ------------------------------------------------------------------------
 
-### Method [`new()`](https://rdrr.io/r/methods/new.html)
+### `FilterState$new()`
 
 Initialize a `FilterState` object.
 
@@ -131,7 +131,7 @@ Object of class `FilterState`, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `destroy()`
+### `FilterState$destroy()`
 
 Destroys a `FilterState` object.
 
@@ -141,7 +141,7 @@ Destroys a `FilterState` object.
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `FilterState$format()`
 
 Returns a formatted string representing this `FilterState` object.
 
@@ -165,7 +165,7 @@ Returns a formatted string representing this `FilterState` object.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `FilterState$print()`
 
 Prints this `FilterState` object.
 
@@ -181,7 +181,7 @@ Prints this `FilterState` object.
 
 ------------------------------------------------------------------------
 
-### Method `set_state()`
+### `FilterState$set_state()`
 
 Sets mutable parameters of the filter state.
 
@@ -205,7 +205,7 @@ Sets mutable parameters of the filter state.
 
 ------------------------------------------------------------------------
 
-### Method `get_state()`
+### `FilterState$get_state()`
 
 Returns a complete description of the filter state.
 
@@ -219,7 +219,7 @@ A `teal_slice` object.
 
 ------------------------------------------------------------------------
 
-### Method `get_call()`
+### `FilterState$get_call()`
 
 Returns reproducible condition call for current selection relevant for
 selected variable type. Method is using internal reactive values which
@@ -231,7 +231,7 @@ makes it reactive and must be executed in reactive or isolated context.
 
 ------------------------------------------------------------------------
 
-### Method `server()`
+### `FilterState$server()`
 
 `shiny` module server.
 
@@ -256,7 +256,7 @@ Reactive expression signaling that remove button has been clicked.
 
 ------------------------------------------------------------------------
 
-### Method `ui()`
+### `FilterState$ui()`
 
 `shiny` UI module. The UI for this class contains simple message stating
 that it is not supported.
@@ -277,7 +277,7 @@ that it is not supported.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `FilterState$clone()`
 
 The objects of this class are cloneable with this method.
 

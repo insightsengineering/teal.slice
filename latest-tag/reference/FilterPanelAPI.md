@@ -17,7 +17,7 @@ the filter panel API.
 
 ### Public methods
 
-- [`FilterPanelAPI$new()`](#method-FilterPanelAPI-new)
+- [`FilterPanelAPI$new()`](#method-FilterPanelAPI-initialize)
 
 - [`FilterPanelAPI$get_filter_state()`](#method-FilterPanelAPI-get_filter_state)
 
@@ -31,7 +31,7 @@ the filter panel API.
 
 ------------------------------------------------------------------------
 
-### Method [`new()`](https://rdrr.io/r/methods/new.html)
+### `FilterPanelAPI$new()`
 
 Initialize a `FilterPanelAPI` object.
 
@@ -47,7 +47,7 @@ Initialize a `FilterPanelAPI` object.
 
 ------------------------------------------------------------------------
 
-### Method [`get_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilterPanelAPI$get_filter_state()`
 
 Gets the reactive values from the active `FilterState` objects of the
 `FilteredData` object.
@@ -66,7 +66,7 @@ with active filters.
 
 ------------------------------------------------------------------------
 
-### Method [`set_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilterPanelAPI$set_filter_state()`
 
 Sets active filter states.
 
@@ -86,7 +86,7 @@ Sets active filter states.
 
 ------------------------------------------------------------------------
 
-### Method [`remove_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilterPanelAPI$remove_filter_state()`
 
 Remove one or more `FilterState` of a `FilteredDataset` in the
 `FilteredData` object.
@@ -109,7 +109,7 @@ Remove one or more `FilterState` of a `FilteredDataset` in the
 
 ------------------------------------------------------------------------
 
-### Method [`clear_filter_states()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilterPanelAPI$clear_filter_states()`
 
 Remove all `FilterStates` of the `FilteredData` object.
 
@@ -130,7 +130,7 @@ Remove all `FilterStates` of the `FilteredData` object.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `FilterPanelAPI$clone()`
 
 The objects of this class are cloneable with this method.
 

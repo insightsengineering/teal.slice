@@ -49,7 +49,7 @@ Common arguments are:
 
 ### Public methods
 
-- [`FilteredData$new()`](#method-FilteredData-new)
+- [`FilteredData$new()`](#method-FilteredData-initialize)
 
 - [`FilteredData$destroy()`](#method-FilteredData-destroy)
 
@@ -103,7 +103,7 @@ Common arguments are:
 
 ------------------------------------------------------------------------
 
-### Method [`new()`](https://rdrr.io/r/methods/new.html)
+### `FilteredData$new()`
 
 Initialize a `FilteredData` object.
 
@@ -125,7 +125,7 @@ Initialize a `FilteredData` object.
 
 ------------------------------------------------------------------------
 
-### Method `destroy()`
+### `FilteredData$destroy()`
 
 Destroys a `FilteredData` object.
 
@@ -135,7 +135,7 @@ Destroys a `FilteredData` object.
 
 ------------------------------------------------------------------------
 
-### Method `datanames()`
+### `FilteredData$datanames()`
 
 Gets `datanames`.
 
@@ -154,7 +154,7 @@ Character vector.
 
 ------------------------------------------------------------------------
 
-### Method `get_datalabel()`
+### `FilteredData$get_datalabel()`
 
 Gets data label for the dataset. Useful to display in `Show R Code`.
 
@@ -174,7 +174,7 @@ Character string.
 
 ------------------------------------------------------------------------
 
-### Method `set_available_teal_slices()`
+### `FilteredData$set_available_teal_slices()`
 
 Set list of external filter states available for activation.
 
@@ -204,7 +204,7 @@ they have the correct `dataname` and `varname` (waived
 
 ------------------------------------------------------------------------
 
-### Method `get_available_teal_slices()`
+### `FilteredData$get_available_teal_slices()`
 
 Get list of filter states available for this object.
 
@@ -225,7 +225,7 @@ for this object.
 
 ------------------------------------------------------------------------
 
-### Method `get_call()`
+### `FilteredData$get_call()`
 
 Gets a `call` to filter the dataset according to the filter state.
 
@@ -264,7 +264,7 @@ A list of `call`s.
 
 ------------------------------------------------------------------------
 
-### Method `get_data()`
+### `FilteredData$get_data()`
 
 Gets filtered or unfiltered dataset.
 
@@ -291,7 +291,7 @@ A data object, a `data.frame` or a `MultiAssayExperiment`.
 
 ------------------------------------------------------------------------
 
-### Method `get_join_keys()`
+### `FilteredData$get_join_keys()`
 
 Get join keys between two datasets.
 
@@ -305,7 +305,7 @@ Get join keys between two datasets.
 
 ------------------------------------------------------------------------
 
-### Method `get_filter_overview()`
+### `FilteredData$get_filter_overview()`
 
 Creates filter overview table to be displayed in the application. One
 row is created per dataset, according to the `get_filter_overview`
@@ -327,7 +327,7 @@ A `data.frame` listing the numbers of observations in all datasets.
 
 ------------------------------------------------------------------------
 
-### Method `get_keys()`
+### `FilteredData$get_keys()`
 
 Get keys for the dataset.
 
@@ -347,7 +347,7 @@ Character vector of key column names.
 
 ------------------------------------------------------------------------
 
-### Method `set_dataset()`
+### `FilteredData$set_dataset()`
 
 Adds a dataset to this `FilteredData`.
 
@@ -381,7 +381,7 @@ reactive filtered data of the "parent". See more in documentation of
 
 ------------------------------------------------------------------------
 
-### Method `set_join_keys()`
+### `FilteredData$set_join_keys()`
 
 Set the `join_keys`.
 
@@ -402,7 +402,7 @@ Set the `join_keys`.
 
 ------------------------------------------------------------------------
 
-### Method [`get_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilteredData$get_filter_state()`
 
 Gets states of all contained `FilterState` objects.
 
@@ -416,7 +416,7 @@ A `teal_slices` object.
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `FilteredData$format()`
 
 Returns a formatted string representing this `FilteredData` object.
 
@@ -440,7 +440,7 @@ Returns a formatted string representing this `FilteredData` object.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `FilteredData$print()`
 
 Prints this `FilteredData` object.
 
@@ -456,7 +456,7 @@ Prints this `FilteredData` object.
 
 ------------------------------------------------------------------------
 
-### Method [`set_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilteredData$set_filter_state()`
 
 Sets active filter states.
 
@@ -476,7 +476,7 @@ Sets active filter states.
 
 ------------------------------------------------------------------------
 
-### Method [`remove_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilteredData$remove_filter_state()`
 
 Removes one or more `FilterState` from a `FilteredData` object.
 
@@ -498,7 +498,7 @@ Removes one or more `FilterState` from a `FilteredData` object.
 
 ------------------------------------------------------------------------
 
-### Method [`clear_filter_states()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilteredData$clear_filter_states()`
 
 Remove all `FilterStates` of a `FilteredDataset` or all `FilterStates`
 of a `FilteredData` object.
@@ -525,7 +525,7 @@ of a `FilteredData` object.
 
 ------------------------------------------------------------------------
 
-### Method `ui_filter_panel()`
+### `FilteredData$ui_filter_panel()`
 
 top-level `shiny` module for the filter panel in the `teal` app.
 Contains 1) filter overview panel, 2) filter active panel, and 3) add
@@ -551,7 +551,7 @@ filters panel.
 
 ------------------------------------------------------------------------
 
-### Method `srv_filter_panel()`
+### `FilteredData$srv_filter_panel()`
 
 Server function for filter panel.
 
@@ -578,7 +578,7 @@ Server function for filter panel.
 
 ------------------------------------------------------------------------
 
-### Method `ui_active()`
+### `FilteredData$ui_active()`
 
 Server module responsible for displaying active filters.
 
@@ -602,7 +602,7 @@ Server module responsible for displaying active filters.
 
 ------------------------------------------------------------------------
 
-### Method `srv_active()`
+### `FilteredData$srv_active()`
 
 Server module responsible for displaying active filters.
 
@@ -626,7 +626,7 @@ Server module responsible for displaying active filters.
 
 ------------------------------------------------------------------------
 
-### Method `ui_overview()`
+### `FilteredData$ui_overview()`
 
 Creates the UI definition for the module showing counts for each dataset
 contrasting the filtered to the full unfiltered dataset.
@@ -646,7 +646,7 @@ dataset, the number of unique subjects.
 
 ------------------------------------------------------------------------
 
-### Method `srv_overview()`
+### `FilteredData$srv_overview()`
 
 Server function to display the number of records in the filtered and
 unfiltered data.
@@ -674,7 +674,7 @@ unfiltered data.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `FilteredData$clone()`
 
 The objects of this class are cloneable with this method.
 

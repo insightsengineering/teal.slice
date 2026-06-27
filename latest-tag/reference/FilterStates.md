@@ -18,7 +18,7 @@ implemented for `data.frame`, `matrix`, `SummarizedExperiment`, and
 
 ### Public methods
 
-- [`FilterStates$new()`](#method-FilterStates-new)
+- [`FilterStates$new()`](#method-FilterStates-initialize)
 
 - [`FilterStates$destroy()`](#method-FilterStates-destroy)
 
@@ -48,7 +48,7 @@ implemented for `data.frame`, `matrix`, `SummarizedExperiment`, and
 
 ------------------------------------------------------------------------
 
-### Method [`new()`](https://rdrr.io/r/methods/new.html)
+### `FilterStates$new()`
 
 Initializes `FilterStates` object by setting `dataname`, and
 `datalabel`.
@@ -92,7 +92,7 @@ Object of class `FilterStates`, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `destroy()`
+### `FilterStates$destroy()`
 
 Destroys a `FilterStates` object.
 
@@ -102,7 +102,7 @@ Destroys a `FilterStates` object.
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `FilterStates$format()`
 
 Returns a formatted string representing this `FilterStates` object.
 
@@ -126,7 +126,7 @@ Returns a formatted string representing this `FilterStates` object.
 
 ------------------------------------------------------------------------
 
-### Method `get_call()`
+### `FilterStates$get_call()`
 
 Filter call
 
@@ -185,7 +185,7 @@ as `dataname <- dataname`.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `FilterStates$print()`
 
 Prints this `FilterStates` object.
 
@@ -201,7 +201,7 @@ Prints this `FilterStates` object.
 
 ------------------------------------------------------------------------
 
-### Method [`remove_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilterStates$remove_filter_state()`
 
 Remove one or more `FilterState`s from the `state_list` along with their
 UI elements.
@@ -224,7 +224,7 @@ UI elements.
 
 ------------------------------------------------------------------------
 
-### Method [`get_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilterStates$get_filter_state()`
 
 Gets reactive values from active `FilterState` objects.
 
@@ -242,7 +242,7 @@ Object of class `teal_slices`.
 
 ------------------------------------------------------------------------
 
-### Method [`set_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilterStates$set_filter_state()`
 
 Sets active `FilterState` objects.
 
@@ -262,7 +262,7 @@ Function that raises an error.
 
 ------------------------------------------------------------------------
 
-### Method [`clear_filter_states()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilterStates$clear_filter_states()`
 
 Remove all `FilterState` objects from this `FilterStates` object.
 
@@ -283,7 +283,7 @@ Remove all `FilterState` objects from this `FilterStates` object.
 
 ------------------------------------------------------------------------
 
-### Method `ui_active()`
+### `FilterStates$ui_active()`
 
 `shiny` UI definition that stores `FilterState` UI elements. Populated
 with elements created with `renderUI` in the module server.
@@ -304,7 +304,7 @@ with elements created with `renderUI` in the module server.
 
 ------------------------------------------------------------------------
 
-### Method `srv_active()`
+### `FilterStates$srv_active()`
 
 `shiny` server module.
 
@@ -324,7 +324,7 @@ with elements created with `renderUI` in the module server.
 
 ------------------------------------------------------------------------
 
-### Method `ui_add()`
+### `FilterStates$ui_add()`
 
 `shiny` UI module to add filter variable.
 
@@ -344,7 +344,7 @@ with elements created with `renderUI` in the module server.
 
 ------------------------------------------------------------------------
 
-### Method `srv_add()`
+### `FilterStates$srv_add()`
 
 `shiny` server module to add filter variable.
 
@@ -368,7 +368,7 @@ filter variable adds it back to available choices.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `FilterStates$clone()`
 
 The objects of this class are cloneable with this method.
 

@@ -4,14 +4,14 @@
 
 ## Super class
 
-[`teal.slice::FilterState`](https://insightsengineering.github.io/teal.slice/reference/FilterState.md)
+[`FilterState`](https://insightsengineering.github.io/teal.slice/reference/FilterState.md)
 -\> `EmptyFilterState`
 
 ## Methods
 
 ### Public methods
 
-- [`EmptyFilterState$new()`](#method-EmptyFilterState-new)
+- [`EmptyFilterState$new()`](#method-EmptyFilterState-initialize)
 
 - [`EmptyFilterState$get_call()`](#method-EmptyFilterState-get_call)
 
@@ -19,17 +19,17 @@
 
 Inherited methods
 
-- [`teal.slice::FilterState$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-destroy)
-- [`teal.slice::FilterState$format()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-format)
-- [`teal.slice::FilterState$get_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-get_state)
-- [`teal.slice::FilterState$print()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-print)
-- [`teal.slice::FilterState$server()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-server)
-- [`teal.slice::FilterState$set_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-set_state)
-- [`teal.slice::FilterState$ui()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-ui)
+- [`FilterState$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-destroy)
+- [`FilterState$format()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-format)
+- [`FilterState$get_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-get_state)
+- [`FilterState$print()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-print)
+- [`FilterState$server()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-server)
+- [`FilterState$set_state()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-set_state)
+- [`FilterState$ui()`](https://insightsengineering.github.io/teal.slice/reference/FilterState.html#method-ui)
 
 ------------------------------------------------------------------------
 
-### Method [`new()`](https://rdrr.io/r/methods/new.html)
+### `EmptyFilterState$new()`
 
 Initialize `EmptyFilterState` object.
 
@@ -85,7 +85,7 @@ Object of class `EmptyFilterState`, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `get_call()`
+### `EmptyFilterState$get_call()`
 
 Returns reproducible condition call for current selection relevant for
 selected variable type. Uses internal reactive values, hence must be
@@ -107,7 +107,7 @@ called in reactive or isolated context.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `EmptyFilterState$clone()`
 
 The objects of this class are cloneable with this method.
 

@@ -8,8 +8,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>FilterStates subclass for SummarizedExperiments — SEFilterStates • teal.slice</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="FilterStates subclass for SummarizedExperiments — SEFilterStates">
 <meta name="description" content="Handles filter states in a SummaryExperiment.">
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,6 +58,7 @@
     <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/release-candidate">release-candidate</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
+<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.8.0">v0.8.0</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.7.1">v0.7.1</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.7.1-rc1">v0.7.1-rc1</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.7.0">v0.7.0</a>
@@ -90,7 +91,7 @@
 
       <h1>
 <code>FilterStates</code> subclass for <code>SummarizedExperiment</code>s</h1>
-      <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.slice/blob/v0.7.1/R/FilterStatesSE.R" class="external-link"><code>R/FilterStatesSE.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.slice/blob/v0.8.0/R/FilterStatesSE.R" class="external-link"><code>R/FilterStatesSE.R</code></a></small>
       <div class="d-none name"><code>SEFilterStates.Rd</code></div>
     </div>
 
@@ -102,7 +103,7 @@
     <div class="section level2">
     <h2 id="super-class">Super class<a class="anchor" aria-label="anchor" href="#super-class"></a>
 </h2>
-    <p><code><a href="FilterStates.html">teal.slice::FilterStates</a></code> -&gt; <code>SEFilterStates</code></p>
+    <p><code><a href="FilterStates.html">FilterStates</a></code> -&gt; <code>SEFilterStates</code></p>
     </div>
     <div class="section level2">
     <h2 id="methods">Methods<a class="anchor" aria-label="anchor" href="#methods"></a>
@@ -111,9 +112,9 @@
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a>
 </h3>
-
+<p></p>
 <ul>
-<li><p><a href="#method-SEFilterStates-new"><code>SEFilterStates$new()</code></a></p></li>
+<li><p><a href="#method-SEFilterStates-initialize"><code>SEFilterStates$new()</code></a></p></li>
 <li><p><a href="#method-SEFilterStates-set_filter_state"><code>SEFilterStates$set_filter_state()</code></a></p></li>
 <li><p><a href="#method-SEFilterStates-ui_add"><code>SEFilterStates$ui_add()</code></a></p></li>
 <li><p><a href="#method-SEFilterStates-srv_add"><code>SEFilterStates$srv_add()</code></a></p></li>
@@ -121,19 +122,20 @@
 </ul>
 </div>
 <p><details><summary>Inherited methods</summary><ul>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="clear_filter_states"><a href="FilterStates.html#method-clear_filter_states"><code>teal.slice::FilterStates$clear_filter_states()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="destroy"><a href="FilterStates.html#method-destroy"><code>teal.slice::FilterStates$destroy()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="format"><a href="FilterStates.html#method-format"><code>teal.slice::FilterStates$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href="FilterStates.html#method-get_call"><code>teal.slice::FilterStates$get_call()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href="FilterStates.html#method-get_filter_state"><code>teal.slice::FilterStates$get_filter_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href="FilterStates.html#method-print"><code>teal.slice::FilterStates$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="remove_filter_state"><a href="FilterStates.html#method-remove_filter_state"><code>teal.slice::FilterStates$remove_filter_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_active"><a href="FilterStates.html#method-srv_active"><code>teal.slice::FilterStates$srv_active()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href="FilterStates.html#method-ui_active"><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="clear_filter_states"><a href="FilterStates.html#method-clear_filter_states"><code>FilterStates$clear_filter_states()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="destroy"><a href="FilterStates.html#method-destroy"><code>FilterStates$destroy()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="format"><a href="FilterStates.html#method-format"><code>FilterStates$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href="FilterStates.html#method-get_call"><code>FilterStates$get_call()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href="FilterStates.html#method-get_filter_state"><code>FilterStates$get_filter_state()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href="FilterStates.html#method-print"><code>FilterStates$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="remove_filter_state"><a href="FilterStates.html#method-remove_filter_state"><code>FilterStates$remove_filter_state()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_active"><a href="FilterStates.html#method-srv_active"><code>FilterStates$srv_active()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href="FilterStates.html#method-ui_active"><code>FilterStates$ui_active()</code></a></span></li>
 </ul></details></p>
 <hr>
-<a id="method-SEFilterStates-new"></a><div class="section">
-<h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a>
+<a id="method-SEFilterStates-initialize"></a><div class="section">
+<h3 id="sefilterstates-new-">
+<code>SEFilterStates$new()</code><a class="anchor" aria-label="anchor" href="#sefilterstates-new-"></a>
 </h3>
 <p>Initialize <code>SEFilterStates</code> object.</p>
 <div class="section">
@@ -150,7 +152,7 @@
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a>
 </h4>
@@ -161,22 +163,19 @@
 <dd><p>(<code>SummarizedExperiment</code>)
 the <code>R</code> object which <code>subset</code> function is applied on.</p></dd>
 
-
-<dt><code>data_reactive</code></dt>
+      <dt><code>data_reactive</code></dt>
 <dd><p>(<code>function(sid)</code>)
 should return a <code>SummarizedExperiment</code> object or <code>NULL</code>.
 This object is needed for the <code>FilterState</code> counts being updated on a change in filters.
 If function returns <code>NULL</code> then filtered counts are not shown.
 Function has to have <code>sid</code> argument being a character.</p></dd>
 
-
-<dt><code>dataname</code></dt>
+      <dt><code>dataname</code></dt>
 <dd><p>(<code>character(1)</code>)
 name of the data used in the expression
 specified to the function argument attached to this <code>FilterStates</code>.</p></dd>
 
-
-<dt><code>datalabel</code></dt>
+      <dt><code>datalabel</code></dt>
 <dd><p>(<code>character(1)</code>) optional
 text label. Should be the name of experiment.</p></dd>
 
@@ -187,10 +186,12 @@ text label. Should be the name of experiment.</p></dd>
 </div>
 
 </div>
+
 <p></p>
 <hr>
 <a id="method-SEFilterStates-set_filter_state"></a><div class="section">
-<h3 id="method-set-filter-state-">Method <code><a href="filter_state_api.html">set_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-set-filter-state-"></a>
+<h3 id="sefilterstates-set-filter-state-">
+<code>SEFilterStates$set_filter_state()</code><a class="anchor" aria-label="anchor" href="#sefilterstates-set-filter-state-"></a>
 </h3>
 <p>Set filter state.</p>
 <div class="section">
@@ -202,7 +203,7 @@ text label. Should be the name of experiment.</p></dd>
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a>
 </h4>
@@ -218,6 +219,7 @@ text label. Should be the name of experiment.</p></dd>
 <p></p>
 </div>
 </div>
+<p></p>
 <div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a>
 </h4>
@@ -225,10 +227,12 @@ text label. Should be the name of experiment.</p></dd>
 </div>
 
 </div>
+
 <p></p>
 <hr>
 <a id="method-SEFilterStates-ui_add"></a><div class="section">
-<h3 id="method-ui-add-">Method <code>ui_add()</code><a class="anchor" aria-label="anchor" href="#method-ui-add-"></a>
+<h3 id="sefilterstates-ui-add-">
+<code>SEFilterStates$ui_add()</code><a class="anchor" aria-label="anchor" href="#sefilterstates-ui-add-"></a>
 </h3>
 <p><code>shiny</code> UI module to add filter variable.</p>
 <div class="section">
@@ -240,7 +244,7 @@ text label. Should be the name of experiment.</p></dd>
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a>
 </h4>
@@ -256,6 +260,7 @@ text label. Should be the name of experiment.</p></dd>
 <p></p>
 </div>
 </div>
+<p></p>
 <div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a>
 </h4>
@@ -263,10 +268,12 @@ text label. Should be the name of experiment.</p></dd>
 </div>
 
 </div>
+
 <p></p>
 <hr>
 <a id="method-SEFilterStates-srv_add"></a><div class="section">
-<h3 id="method-srv-add-">Method <code>srv_add()</code><a class="anchor" aria-label="anchor" href="#method-srv-add-"></a>
+<h3 id="sefilterstates-srv-add-">
+<code>SEFilterStates$srv_add()</code><a class="anchor" aria-label="anchor" href="#sefilterstates-srv-add-"></a>
 </h3>
 <p><code>shiny</code> server module to add filter variable.</p>
 <p>Module controls available choices to select as a filter variable.
@@ -284,7 +291,7 @@ sets of filter variables - one for <code>colData</code> and another for
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a>
 </h4>
@@ -300,6 +307,7 @@ sets of filter variables - one for <code>colData</code> and another for
 <p></p>
 </div>
 </div>
+<p></p>
 <div class="section">
 <h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a>
 </h4>
@@ -307,10 +315,12 @@ sets of filter variables - one for <code>colData</code> and another for
 </div>
 
 </div>
+
 <p></p>
 <hr>
 <a id="method-SEFilterStates-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a>
+<h3 id="sefilterstates-clone-">
+<code>SEFilterStates$clone()</code><a class="anchor" aria-label="anchor" href="#sefilterstates-clone-"></a>
 </h3>
 <p>The objects of this class are cloneable with this method.</p>
 <div class="section">
@@ -322,7 +332,7 @@ sets of filter variables - one for <code>colData</code> and another for
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a>
 </h4>
@@ -339,6 +349,7 @@ sets of filter variables - one for <code>colData</code> and another for
 </div>
 
 </div>
+
 
     </div>
 

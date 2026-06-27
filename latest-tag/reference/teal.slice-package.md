@@ -16,10 +16,12 @@ Useful links:
 
 ## Author
 
-**Maintainer**: Dawid Kaledkowski <dawid.kaledkowski@roche.com>
-([ORCID](https://orcid.org/0000-0001-9533-457X))
+**Maintainer**: Dony Unardi <unardid@gene.com> \[reviewer\]
 
 Authors:
+
+- Dawid Kaledkowski <dawid.kaledkowski@roche.com>
+  ([ORCID](https://orcid.org/0000-0001-9533-457X))
 
 - Pawel Rucki <pawel.rucki@roche.com>
 
@@ -29,9 +31,14 @@ Authors:
 - Andre Verissimo <andre.verissimo@roche.com>
   ([ORCID](https://orcid.org/0000-0002-2212-339X))
 
+- Lluís Revilla Sancho <lluis.revilla_sancho@roche.com>
+  ([ORCID](https://orcid.org/0000-0001-9747-2570))
+
 - Kartikeya Kirar <kartikeya.kirar@businesspartner.roche.com>
 
 - Marcin Kosinski <marcin.kosinski.mk1@roche.com>
+
+- Chendi Liao
 
 - Andrew Bates
 
@@ -46,9 +53,5 @@ Authors:
 - Junlue Zhao
 
 Other contributors:
-
-- Chendi Liao <chendi.liao@roche.com> \[reviewer\]
-
-- Dony Unardi <unardid@gene.com> \[reviewer\]
 
 - F. Hoffmann-La Roche AG \[copyright holder, funder\]

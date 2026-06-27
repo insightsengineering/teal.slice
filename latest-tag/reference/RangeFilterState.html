@@ -8,8 +8,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>FilterState object for numeric data — RangeFilterState • teal.slice</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="FilterState object for numeric data — RangeFilterState">
 <meta name="description" content="Manages choosing a numeric range.">
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,6 +58,7 @@
     <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/release-candidate">release-candidate</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
+<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.8.0">v0.8.0</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.7.1">v0.7.1</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.7.1-rc1">v0.7.1-rc1</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.7.0">v0.7.0</a>
@@ -90,7 +91,7 @@
 
       <h1>
 <code>FilterState</code> object for numeric data</h1>
-      <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.slice/blob/v0.7.1/R/FilterStateRange.R" class="external-link"><code>R/FilterStateRange.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.slice/blob/v0.8.0/R/FilterStateRange.R" class="external-link"><code>R/FilterStateRange.R</code></a></small>
       <div class="d-none name"><code>RangeFilterState.Rd</code></div>
     </div>
 
@@ -102,7 +103,7 @@
     <div class="section level2">
     <h2 id="super-class">Super class<a class="anchor" aria-label="anchor" href="#super-class"></a>
 </h2>
-    <p><code><a href="FilterState.html">teal.slice::FilterState</a></code> -&gt; <code>RangeFilterState</code></p>
+    <p><code><a href="FilterState.html">FilterState</a></code> -&gt; <code>RangeFilterState</code></p>
     </div>
     <div class="section level2">
     <h2 id="methods">Methods<a class="anchor" aria-label="anchor" href="#methods"></a>
@@ -111,26 +112,27 @@
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a>
 </h3>
-
+<p></p>
 <ul>
-<li><p><a href="#method-RangeFilterState-new"><code>RangeFilterState$new()</code></a></p></li>
+<li><p><a href="#method-RangeFilterState-initialize"><code>RangeFilterState$new()</code></a></p></li>
 <li><p><a href="#method-RangeFilterState-get_call"><code>RangeFilterState$get_call()</code></a></p></li>
 <li><p><a href="#method-RangeFilterState-get_keep_inf"><code>RangeFilterState$get_keep_inf()</code></a></p></li>
 <li><p><a href="#method-RangeFilterState-clone"><code>RangeFilterState$clone()</code></a></p></li>
 </ul>
 </div>
 <p><details><summary>Inherited methods</summary><ul>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy"><a href="FilterState.html#method-destroy"><code>teal.slice::FilterState$destroy()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="format"><a href="FilterState.html#method-format"><code>teal.slice::FilterState$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href="FilterState.html#method-get_state"><code>teal.slice::FilterState$get_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href="FilterState.html#method-print"><code>teal.slice::FilterState$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href="FilterState.html#method-server"><code>teal.slice::FilterState$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href="FilterState.html#method-set_state"><code>teal.slice::FilterState$set_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href="FilterState.html#method-ui"><code>teal.slice::FilterState$ui()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy"><a href="FilterState.html#method-destroy"><code>FilterState$destroy()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="format"><a href="FilterState.html#method-format"><code>FilterState$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href="FilterState.html#method-get_state"><code>FilterState$get_state()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href="FilterState.html#method-print"><code>FilterState$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href="FilterState.html#method-server"><code>FilterState$server()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href="FilterState.html#method-set_state"><code>FilterState$set_state()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href="FilterState.html#method-ui"><code>FilterState$ui()</code></a></span></li>
 </ul></details></p>
 <hr>
-<a id="method-RangeFilterState-new"></a><div class="section">
-<h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a>
+<a id="method-RangeFilterState-initialize"></a><div class="section">
+<h3 id="rangefilterstate-new-">
+<code>RangeFilterState$new()</code><a class="anchor" aria-label="anchor" href="#rangefilterstate-new-"></a>
 </h3>
 <p>Initialize a <code>FilterState</code> object for range selection.</p>
 <div class="section">
@@ -147,7 +149,7 @@
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a>
 </h4>
@@ -158,16 +160,14 @@
 <dd><p>(<code>numeric</code>)
 variable to be filtered.</p></dd>
 
-
-<dt><code>x_reactive</code></dt>
+      <dt><code>x_reactive</code></dt>
 <dd><p>(<code>reactive</code>)
 returning vector of the same type as <code>x</code>. Is used to update
 counts following the change in values of the filtered dataset.
 If it is set to <code>reactive(NULL)</code> then counts based on filtered
 dataset are not shown.</p></dd>
 
-
-<dt><code>extract_type</code></dt>
+      <dt><code>extract_type</code></dt>
 <dd>
 <p>(<code>character</code>)
 specifying whether condition calls should be prefixed by <code>dataname</code>. Possible values:</p>
@@ -178,8 +178,7 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 </ul>
 </dd>
 
-
-<dt><code>slice</code></dt>
+      <dt><code>slice</code></dt>
 <dd><p>(<code>teal_slice</code>)
 specification of this filter state.
 <code>teal_slice</code> is stored in the object and <code>set_state</code> directly manipulates values within <code>teal_slice</code>.
@@ -192,6 +191,7 @@ changes made to an object are automatically reflected in all places that refer t
 <p></p>
 </div>
 </div>
+<p></p>
 <div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a>
 </h4>
@@ -199,10 +199,12 @@ changes made to an object are automatically reflected in all places that refer t
 </div>
 
 </div>
+
 <p></p>
 <hr>
 <a id="method-RangeFilterState-get_call"></a><div class="section">
-<h3 id="method-get-call-">Method <code>get_call()</code><a class="anchor" aria-label="anchor" href="#method-get-call-"></a>
+<h3 id="rangefilterstate-get-call-">
+<code>RangeFilterState$get_call()</code><a class="anchor" aria-label="anchor" href="#rangefilterstate-get-call-"></a>
 </h3>
 <p>Returns reproducible condition call for current selection.
 For this class returned call looks like
@@ -217,7 +219,7 @@ optional <code>is.na(&lt;varname&gt;)</code> and <code>is.finite(&lt;varname&gt;
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a>
 </h4>
@@ -232,6 +234,7 @@ optional <code>is.na(&lt;varname&gt;)</code> and <code>is.finite(&lt;varname&gt;
 <p></p>
 </div>
 </div>
+<p></p>
 <div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a>
 </h4>
@@ -239,10 +242,12 @@ optional <code>is.na(&lt;varname&gt;)</code> and <code>is.finite(&lt;varname&gt;
 </div>
 
 </div>
+
 <p></p>
 <hr>
 <a id="method-RangeFilterState-get_keep_inf"></a><div class="section">
-<h3 id="method-get-keep-inf-">Method <code>get_keep_inf()</code><a class="anchor" aria-label="anchor" href="#method-get-keep-inf-"></a>
+<h3 id="rangefilterstate-get-keep-inf-">
+<code>RangeFilterState$get_keep_inf()</code><a class="anchor" aria-label="anchor" href="#rangefilterstate-get-keep-inf-"></a>
 </h3>
 <p>Returns current <code>keep_inf</code> selection.</p>
 <div class="section">
@@ -254,7 +259,7 @@ optional <code>is.na(&lt;varname&gt;)</code> and <code>is.finite(&lt;varname&gt;
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a>
 </h4>
@@ -262,10 +267,12 @@ optional <code>is.na(&lt;varname&gt;)</code> and <code>is.finite(&lt;varname&gt;
 </div>
 
 </div>
+
 <p></p>
 <hr>
 <a id="method-RangeFilterState-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a>
+<h3 id="rangefilterstate-clone-">
+<code>RangeFilterState$clone()</code><a class="anchor" aria-label="anchor" href="#rangefilterstate-clone-"></a>
 </h3>
 <p>The objects of this class are cloneable with this method.</p>
 <div class="section">
@@ -277,7 +284,7 @@ optional <code>is.na(&lt;varname&gt;)</code> and <code>is.finite(&lt;varname&gt;
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a>
 </h4>
@@ -294,6 +301,7 @@ optional <code>is.na(&lt;varname&gt;)</code> and <code>is.finite(&lt;varname&gt;
 </div>
 
 </div>
+
 
     </div>
 

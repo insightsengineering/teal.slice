@@ -2,18 +2,16 @@
 
 The `DataframeFilteredDataset` `R6` class
 
-The `DataframeFilteredDataset` `R6` class
-
 ## Super class
 
-[`teal.slice::FilteredDataset`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.md)
+[`FilteredDataset`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.md)
 -\> `DataframeFilteredDataset`
 
 ## Methods
 
 ### Public methods
 
-- [`DataframeFilteredDataset$new()`](#method-DataframeFilteredDataset-new)
+- [`DataframeFilteredDataset$new()`](#method-DataframeFilteredDataset-initialize)
 
 - [`DataframeFilteredDataset$get_call()`](#method-DataframeFilteredDataset-get_call)
 
@@ -29,22 +27,22 @@ The `DataframeFilteredDataset` `R6` class
 
 Inherited methods
 
-- [`teal.slice::FilteredDataset$clear_filter_states()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-clear_filter_states)
-- [`teal.slice::FilteredDataset$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-destroy)
-- [`teal.slice::FilteredDataset$format()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-format)
-- [`teal.slice::FilteredDataset$get_dataname()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataname)
-- [`teal.slice::FilteredDataset$get_dataset()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataset)
-- [`teal.slice::FilteredDataset$get_dataset_label()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataset_label)
-- [`teal.slice::FilteredDataset$get_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_filter_state)
-- [`teal.slice::FilteredDataset$get_keys()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_keys)
-- [`teal.slice::FilteredDataset$print()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-print)
-- [`teal.slice::FilteredDataset$srv_active()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-srv_active)
-- [`teal.slice::FilteredDataset$srv_add()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-srv_add)
-- [`teal.slice::FilteredDataset$ui_active()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-ui_active)
+- [`FilteredDataset$clear_filter_states()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-clear_filter_states)
+- [`FilteredDataset$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-destroy)
+- [`FilteredDataset$format()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-format)
+- [`FilteredDataset$get_dataname()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataname)
+- [`FilteredDataset$get_dataset()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataset)
+- [`FilteredDataset$get_dataset_label()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataset_label)
+- [`FilteredDataset$get_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_filter_state)
+- [`FilteredDataset$get_keys()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_keys)
+- [`FilteredDataset$print()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-print)
+- [`FilteredDataset$srv_active()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-srv_active)
+- [`FilteredDataset$srv_add()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-srv_add)
+- [`FilteredDataset$ui_active()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-ui_active)
 
 ------------------------------------------------------------------------
 
-### Method [`new()`](https://rdrr.io/r/methods/new.html)
+### `DataframeFilteredDataset$new()`
 
 Initializes this `DataframeFilteredDataset` object.
 
@@ -101,7 +99,7 @@ Object of class `DataframeFilteredDataset`, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `get_call()`
+### `DataframeFilteredDataset$get_call()`
 
 Gets the subset expression.
 
@@ -132,7 +130,7 @@ Either a `list` of length 1 containing a filter `call`, or `NULL`.
 
 ------------------------------------------------------------------------
 
-### Method [`set_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `DataframeFilteredDataset$set_filter_state()`
 
 Set filter state.
 
@@ -152,7 +150,7 @@ Set filter state.
 
 ------------------------------------------------------------------------
 
-### Method [`remove_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `DataframeFilteredDataset$remove_filter_state()`
 
 Remove one or more `FilterState` form a `FilteredDataset`.
 
@@ -174,7 +172,7 @@ Remove one or more `FilterState` form a `FilteredDataset`.
 
 ------------------------------------------------------------------------
 
-### Method `ui_add()`
+### `DataframeFilteredDataset$ui_add()`
 
 UI module to add filter variable for this dataset.
 
@@ -194,9 +192,9 @@ UI module to add filter variable for this dataset.
 
 ------------------------------------------------------------------------
 
-### Method `get_filter_overview()`
+### `DataframeFilteredDataset$get_filter_overview()`
 
-Creates row for filter overview in the form of  
+Creates row for filter overview in the form of\
 `dataname -- observations (remaining/total)` - data.frame
 
 #### Usage
@@ -209,7 +207,7 @@ A `data.frame`.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `DataframeFilteredDataset$clone()`
 
 The objects of this class are cloneable with this method.
 

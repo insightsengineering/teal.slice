@@ -72,6 +72,7 @@ and will raise an error.
 #### 1. Setting the filter state
 
 ``` r
+
 library(teal.slice)
 
 datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
@@ -91,6 +92,7 @@ set_filter_state(
 #### 2. Updating filter states. \*Works only in the `shiny` reactive context.
 
 ``` r
+
 set_filter_state(
   datasets = datasets,
   filter = teal_slices(
@@ -102,6 +104,7 @@ set_filter_state(
 #### 3. Getting the filter state
 
 ``` r
+
 get_filter_state(datasets)
 ```
 
@@ -154,6 +157,7 @@ get_filter_state(datasets)
 #### 4. Removing filter states
 
 ``` r
+
 remove_filter_state(
   datasets = datasets,
   filter = teal_slices(
@@ -165,6 +169,7 @@ remove_filter_state(
 #### 5. Clearing the filter state
 
 ``` r
+
 clear_filter_states(datasets)
 ```
 
@@ -181,6 +186,7 @@ function:
     set.
 
 ``` r
+
 set_filter_state(
   datasets,
   teal_slices(
@@ -197,6 +203,7 @@ set_filter_state(
     variables except the four will be available to choose from.
 
 ``` r
+
 set_filter_state(
   datasets,
   teal_slices(
@@ -224,6 +231,7 @@ set_filter_state(
 All the instructions herein can be utilized to build a `shiny` app.
 
 ``` r
+
 library(shiny)
 library(bslib)
 ```
@@ -236,6 +244,7 @@ library(bslib)
     ##     page
 
 ``` r
+
 # initializing FilteredData
 datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
 

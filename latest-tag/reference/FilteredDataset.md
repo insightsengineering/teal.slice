@@ -10,7 +10,7 @@ filter/subset expression applied for specific components of the dataset.
 
 ### Public methods
 
-- [`FilteredDataset$new()`](#method-FilteredDataset-new)
+- [`FilteredDataset$new()`](#method-FilteredDataset-initialize)
 
 - [`FilteredDataset$destroy()`](#method-FilteredDataset-destroy)
 
@@ -48,7 +48,7 @@ filter/subset expression applied for specific components of the dataset.
 
 ------------------------------------------------------------------------
 
-### Method [`new()`](https://rdrr.io/r/methods/new.html)
+### `FilteredDataset$new()`
 
 Initializes this `FilteredDataset` object.
 
@@ -85,7 +85,7 @@ Object of class `FilteredDataset`, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `destroy()`
+### `FilteredDataset$destroy()`
 
 Destroys a `FilteredDataset` object.
 
@@ -95,7 +95,7 @@ Destroys a `FilteredDataset` object.
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `FilteredDataset$format()`
 
 Returns a formatted string representing this `FilteredDataset` object.
 
@@ -119,7 +119,7 @@ The formatted character string.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `FilteredDataset$print()`
 
 Prints this `FilteredDataset` object.
 
@@ -135,7 +135,7 @@ Prints this `FilteredDataset` object.
 
 ------------------------------------------------------------------------
 
-### Method [`clear_filter_states()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilteredDataset$clear_filter_states()`
 
 Removes all filter items applied to this dataset.
 
@@ -156,7 +156,7 @@ Removes all filter items applied to this dataset.
 
 ------------------------------------------------------------------------
 
-### Method `get_call()`
+### `FilteredDataset$get_call()`
 
 Gets a filter expression.
 
@@ -183,7 +183,7 @@ Either a `list` of filter `call`s, or `NULL`.
 
 ------------------------------------------------------------------------
 
-### Method [`get_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilteredDataset$get_filter_state()`
 
 Gets states of all contained `FilterState` objects.
 
@@ -197,7 +197,7 @@ A `teal_slices` object.
 
 ------------------------------------------------------------------------
 
-### Method [`set_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `FilteredDataset$set_filter_state()`
 
 Set filter state.
 
@@ -217,7 +217,7 @@ Virtual method, returns nothing and raises error.
 
 ------------------------------------------------------------------------
 
-### Method `get_dataname()`
+### `FilteredDataset$get_dataname()`
 
 Gets the name of the dataset.
 
@@ -231,7 +231,7 @@ A character string.
 
 ------------------------------------------------------------------------
 
-### Method `get_dataset()`
+### `FilteredDataset$get_dataset()`
 
 Gets the dataset object in this `FilteredDataset`.
 
@@ -253,7 +253,7 @@ raw or as a reactive with current filters applied (depending on
 
 ------------------------------------------------------------------------
 
-### Method `get_filter_overview()`
+### `FilteredDataset$get_filter_overview()`
 
 Get filter overview of a dataset.
 
@@ -267,7 +267,7 @@ Virtual method, returns nothing and raises an error.
 
 ------------------------------------------------------------------------
 
-### Method `get_keys()`
+### `FilteredDataset$get_keys()`
 
 Gets the key columns for this dataset.
 
@@ -281,7 +281,7 @@ Character vector of variable names
 
 ------------------------------------------------------------------------
 
-### Method `get_dataset_label()`
+### `FilteredDataset$get_dataset_label()`
 
 Gets the dataset label.
 
@@ -295,7 +295,7 @@ Character string.
 
 ------------------------------------------------------------------------
 
-### Method `ui_active()`
+### `FilteredDataset$ui_active()`
 
 `shiny` module containing active filters for a dataset, along with a
 title and a remove button.
@@ -316,7 +316,7 @@ title and a remove button.
 
 ------------------------------------------------------------------------
 
-### Method `srv_active()`
+### `FilteredDataset$srv_active()`
 
 Server module for a dataset active filters.
 
@@ -336,7 +336,7 @@ Server module for a dataset active filters.
 
 ------------------------------------------------------------------------
 
-### Method `ui_add()`
+### `FilteredDataset$ui_add()`
 
 UI module to add filter variable for this dataset.
 
@@ -356,7 +356,7 @@ Virtual method, returns nothing and raises error.
 
 ------------------------------------------------------------------------
 
-### Method `srv_add()`
+### `FilteredDataset$srv_add()`
 
 Server module to add filter variable for this dataset. For this class
 `srv_add` calls multiple modules of the same name from `FilterStates` as
@@ -379,7 +379,7 @@ and one for each experiment.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `FilteredDataset$clone()`
 
 The objects of this class are cloneable with this method.
 

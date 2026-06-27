@@ -4,14 +4,14 @@ Stores any object as inert entity. Filtering is not supported.
 
 ## Super class
 
-[`teal.slice::FilteredDataset`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.md)
+[`FilteredDataset`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.md)
 -\> `DefaultFilteredDataset`
 
 ## Methods
 
 ### Public methods
 
-- [`DefaultFilteredDataset$new()`](#method-DefaultFilteredDataset-new)
+- [`DefaultFilteredDataset$new()`](#method-DefaultFilteredDataset-initialize)
 
 - [`DefaultFilteredDataset$format()`](#method-DefaultFilteredDataset-format)
 
@@ -33,18 +33,18 @@ Stores any object as inert entity. Filtering is not supported.
 
 Inherited methods
 
-- [`teal.slice::FilteredDataset$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-destroy)
-- [`teal.slice::FilteredDataset$get_dataname()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataname)
-- [`teal.slice::FilteredDataset$get_dataset()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataset)
-- [`teal.slice::FilteredDataset$get_dataset_label()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataset_label)
-- [`teal.slice::FilteredDataset$get_keys()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_keys)
-- [`teal.slice::FilteredDataset$print()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-print)
-- [`teal.slice::FilteredDataset$srv_active()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-srv_active)
-- [`teal.slice::FilteredDataset$srv_add()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-srv_add)
+- [`FilteredDataset$destroy()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-destroy)
+- [`FilteredDataset$get_dataname()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataname)
+- [`FilteredDataset$get_dataset()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataset)
+- [`FilteredDataset$get_dataset_label()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_dataset_label)
+- [`FilteredDataset$get_keys()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-get_keys)
+- [`FilteredDataset$print()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-print)
+- [`FilteredDataset$srv_active()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-srv_active)
+- [`FilteredDataset$srv_add()`](https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html#method-srv_add)
 
 ------------------------------------------------------------------------
 
-### Method [`new()`](https://rdrr.io/r/methods/new.html)
+### `DefaultFilteredDataset$new()`
 
 Initializes this `DefaultFilteredDataset` object.
 
@@ -72,7 +72,7 @@ Object of class `DefaultFilteredDataset`, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `DefaultFilteredDataset$format()`
 
 Returns a formatted string representing this `DefaultFilteredDataset`
 object.
@@ -98,7 +98,7 @@ The formatted string.
 
 ------------------------------------------------------------------------
 
-### Method `get_call()`
+### `DefaultFilteredDataset$get_call()`
 
 #### Usage
 
@@ -116,7 +116,7 @@ The formatted string.
 
 ------------------------------------------------------------------------
 
-### Method [`get_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `DefaultFilteredDataset$get_filter_state()`
 
 #### Usage
 
@@ -128,7 +128,7 @@ The formatted string.
 
 ------------------------------------------------------------------------
 
-### Method [`set_filter_state()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `DefaultFilteredDataset$set_filter_state()`
 
 #### Usage
 
@@ -146,7 +146,7 @@ The formatted string.
 
 ------------------------------------------------------------------------
 
-### Method [`clear_filter_states()`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)
+### `DefaultFilteredDataset$clear_filter_states()`
 
 #### Usage
 
@@ -164,9 +164,9 @@ The formatted string.
 
 ------------------------------------------------------------------------
 
-### Method `get_filter_overview()`
+### `DefaultFilteredDataset$get_filter_overview()`
 
-Creates row for filter overview in the form of  
+Creates row for filter overview in the form of\
 `dataname` - unsupported data class
 
 #### Usage
@@ -179,7 +179,7 @@ A `data.frame`.
 
 ------------------------------------------------------------------------
 
-### Method `ui_active()`
+### `DefaultFilteredDataset$ui_active()`
 
 Overwrites parent method.
 
@@ -207,7 +207,7 @@ An empty `div`.
 
 ------------------------------------------------------------------------
 
-### Method `ui_add()`
+### `DefaultFilteredDataset$ui_add()`
 
 Overwrites parent method.
 
@@ -231,7 +231,7 @@ An empty `div`.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `DefaultFilteredDataset$clone()`
 
 The objects of this class are cloneable with this method.
 

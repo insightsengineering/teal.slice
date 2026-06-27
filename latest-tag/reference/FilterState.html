@@ -8,8 +8,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>FilterState abstract class — FilterState • teal.slice</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="FilterState abstract class — FilterState">
 <meta name="description" content="Abstract class to encapsulate single filter state.">
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,6 +58,7 @@
     <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/release-candidate">release-candidate</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
+<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.8.0">v0.8.0</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.7.1">v0.7.1</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.7.1-rc1">v0.7.1-rc1</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.7.0">v0.7.0</a>
@@ -90,7 +91,7 @@
 
       <h1>
 <code>FilterState</code> abstract class</h1>
-      <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.slice/blob/v0.7.1/R/FilterState.R" class="external-link"><code>R/FilterState.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.slice/blob/v0.8.0/R/FilterState.R" class="external-link"><code>R/FilterState.R</code></a></small>
       <div class="d-none name"><code>FilterState.Rd</code></div>
     </div>
 
@@ -144,9 +145,9 @@ trigger the <code>get_call</code> method and every <code>R</code> function call 
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a>
 </h3>
-
+<p></p>
 <ul>
-<li><p><a href="#method-FilterState-new"><code>FilterState$new()</code></a></p></li>
+<li><p><a href="#method-FilterState-initialize"><code>FilterState$new()</code></a></p></li>
 <li><p><a href="#method-FilterState-destroy"><code>FilterState$destroy()</code></a></p></li>
 <li><p><a href="#method-FilterState-format"><code>FilterState$format()</code></a></p></li>
 <li><p><a href="#method-FilterState-print"><code>FilterState$print()</code></a></p></li>
@@ -160,8 +161,9 @@ trigger the <code>get_call</code> method and every <code>R</code> function call 
 </div>
 <p></p>
 <hr>
-<a id="method-FilterState-new"></a><div class="section">
-<h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a>
+<a id="method-FilterState-initialize"></a><div class="section">
+<h3 id="filterstate-new-">
+<code>FilterState$new()</code><a class="anchor" aria-label="anchor" href="#filterstate-new-"></a>
 </h3>
 <p>Initialize a <code>FilterState</code> object.</p>
 <div class="section">
@@ -178,7 +180,7 @@ trigger the <code>get_call</code> method and every <code>R</code> function call 
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a>
 </h4>
@@ -189,16 +191,14 @@ trigger the <code>get_call</code> method and every <code>R</code> function call 
 <dd><p>(<code>vector</code>)
 variable to be filtered.</p></dd>
 
-
-<dt><code>x_reactive</code></dt>
+      <dt><code>x_reactive</code></dt>
 <dd><p>(<code>reactive</code>)
 returning vector of the same type as <code>x</code>. Is used to update
 counts following the change in values of the filtered dataset.
 If it is set to <code>reactive(NULL)</code> then counts based on filtered
 dataset are not shown.</p></dd>
 
-
-<dt><code>slice</code></dt>
+      <dt><code>slice</code></dt>
 <dd><p>(<code>teal_slice</code>)
 specification of this filter state.
 <code>teal_slice</code> is stored in the object and <code>set_state</code> directly manipulates values within <code>teal_slice</code>.
@@ -206,8 +206,7 @@ specification of this filter state.
 Note that <code>teal_slice</code> is a <code>reactiveValues</code>, which means it has reference semantics, i.e.
 changes made to an object are automatically reflected in all places that refer to the same <code>teal_slice</code>.</p></dd>
 
-
-<dt><code>extract_type</code></dt>
+      <dt><code>extract_type</code></dt>
 <dd>
 <p>(<code>character</code>)
 specifying whether condition calls should be prefixed by <code>dataname</code>. Possible values:</p>
@@ -223,6 +222,7 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 <p></p>
 </div>
 </div>
+<p></p>
 <div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a>
 </h4>
@@ -230,10 +230,12 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 </div>
 
 </div>
+
 <p></p>
 <hr>
 <a id="method-FilterState-destroy"></a><div class="section">
-<h3 id="method-destroy-">Method <code>destroy()</code><a class="anchor" aria-label="anchor" href="#method-destroy-"></a>
+<h3 id="filterstate-destroy-">
+<code>FilterState$destroy()</code><a class="anchor" aria-label="anchor" href="#filterstate-destroy-"></a>
 </h3>
 <p>Destroys a <code>FilterState</code> object.</p>
 <div class="section">
@@ -246,12 +248,13 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 </div>
 </div>
 
-
 </div>
+
 <p></p>
 <hr>
 <a id="method-FilterState-format"></a><div class="section">
-<h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a>
+<h3 id="filterstate-format-">
+<code>FilterState$format()</code><a class="anchor" aria-label="anchor" href="#filterstate-format-"></a>
 </h3>
 <p>Returns a formatted string representing this <code>FilterState</code> object.</p>
 <div class="section">
@@ -263,7 +266,7 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a>
 </h4>
@@ -273,8 +276,7 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 <dt><code>show_all</code></dt>
 <dd><p>(<code>logical(1)</code>) passed to <code>format.teal_slice</code></p></dd>
 
-
-<dt><code>trim_lines</code></dt>
+      <dt><code>trim_lines</code></dt>
 <dd><p>(<code>logical(1)</code>) passed to <code>format.teal_slice</code></p></dd>
 
 
@@ -282,6 +284,7 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 <p></p>
 </div>
 </div>
+<p></p>
 <div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a>
 </h4>
@@ -289,10 +292,12 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 </div>
 
 </div>
+
 <p></p>
 <hr>
 <a id="method-FilterState-print"></a><div class="section">
-<h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a>
+<h3 id="filterstate-print-">
+<code>FilterState$print()</code><a class="anchor" aria-label="anchor" href="#filterstate-print-"></a>
 </h3>
 <p>Prints this <code>FilterState</code> object.</p>
 <div class="section">
@@ -304,7 +309,7 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a>
 </h4>
@@ -321,16 +326,19 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 </div>
 
 </div>
+
 <p></p>
 <hr>
 <a id="method-FilterState-set_state"></a><div class="section">
-<h3 id="method-set-state-">Method <code>set_state()</code><a class="anchor" aria-label="anchor" href="#method-set-state-"></a>
+<h3 id="filterstate-set-state-">
+<code>FilterState$set_state()</code><a class="anchor" aria-label="anchor" href="#filterstate-set-state-"></a>
 </h3>
 <p>Sets mutable parameters of the filter state.</p>
 <ul>
 <li><p><code>fixed</code> state is prevented from changing state</p></li>
 <li><p><code>anchored</code> state is prevented from removing state</p></li>
 </ul>
+<p></p>
 <div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a>
 </h4>
@@ -340,7 +348,7 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a>
 </h4>
@@ -355,6 +363,7 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 <p></p>
 </div>
 </div>
+<p></p>
 <div class="section">
 <h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a>
 </h4>
@@ -362,10 +371,12 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 </div>
 
 </div>
+
 <p></p>
 <hr>
 <a id="method-FilterState-get_state"></a><div class="section">
-<h3 id="method-get-state-">Method <code>get_state()</code><a class="anchor" aria-label="anchor" href="#method-get-state-"></a>
+<h3 id="filterstate-get-state-">
+<code>FilterState$get_state()</code><a class="anchor" aria-label="anchor" href="#filterstate-get-state-"></a>
 </h3>
 <p>Returns a complete description of the filter state.</p>
 <div class="section">
@@ -377,7 +388,7 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a>
 </h4>
@@ -385,10 +396,12 @@ specifying whether condition calls should be prefixed by <code>dataname</code>. 
 </div>
 
 </div>
+
 <p></p>
 <hr>
 <a id="method-FilterState-get_call"></a><div class="section">
-<h3 id="method-get-call-">Method <code>get_call()</code><a class="anchor" aria-label="anchor" href="#method-get-call-"></a>
+<h3 id="filterstate-get-call-">
+<code>FilterState$get_call()</code><a class="anchor" aria-label="anchor" href="#filterstate-get-call-"></a>
 </h3>
 <p>Returns reproducible condition call for current selection relevant
 for selected variable type.
@@ -404,12 +417,13 @@ and must be executed in reactive or isolated context.</p>
 </div>
 </div>
 
-
 </div>
+
 <p></p>
 <hr>
 <a id="method-FilterState-server"></a><div class="section">
-<h3 id="method-server-">Method <code>server()</code><a class="anchor" aria-label="anchor" href="#method-server-"></a>
+<h3 id="filterstate-server-">
+<code>FilterState$server()</code><a class="anchor" aria-label="anchor" href="#filterstate-server-"></a>
 </h3>
 <p><code>shiny</code> module server.</p>
 <div class="section">
@@ -421,7 +435,7 @@ and must be executed in reactive or isolated context.</p>
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a>
 </h4>
@@ -432,8 +446,7 @@ and must be executed in reactive or isolated context.</p>
 <dd><p>(<code>character(1)</code>)
 <code>shiny</code> module instance id.</p></dd>
 
-
-<dt><code>remove_callback</code></dt>
+      <dt><code>remove_callback</code></dt>
 <dd><p>(<code>function</code>)
 callback to handle removal of this <code>FilterState</code> object from <code>state_list</code></p></dd>
 
@@ -442,6 +455,7 @@ callback to handle removal of this <code>FilterState</code> object from <code>st
 <p></p>
 </div>
 </div>
+<p></p>
 <div class="section">
 <h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a>
 </h4>
@@ -449,10 +463,12 @@ callback to handle removal of this <code>FilterState</code> object from <code>st
 </div>
 
 </div>
+
 <p></p>
 <hr>
 <a id="method-FilterState-ui"></a><div class="section">
-<h3 id="method-ui-">Method <code>ui()</code><a class="anchor" aria-label="anchor" href="#method-ui-"></a>
+<h3 id="filterstate-ui-">
+<code>FilterState$ui()</code><a class="anchor" aria-label="anchor" href="#filterstate-ui-"></a>
 </h3>
 <p><code>shiny</code> UI module.
 The UI for this class contains simple message stating that it is not supported.</p>
@@ -465,7 +481,7 @@ The UI for this class contains simple message stating that it is not supported.<
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a>
 </h4>
@@ -476,8 +492,7 @@ The UI for this class contains simple message stating that it is not supported.<
 <dd><p>(<code>character(1)</code>)
 <code>shiny</code> module instance id.</p></dd>
 
-
-<dt><code>parent_id</code></dt>
+      <dt><code>parent_id</code></dt>
 <dd><p>(<code>character(1)</code>) id of the <code>FilterStates</code> card container</p></dd>
 
 
@@ -487,10 +502,12 @@ The UI for this class contains simple message stating that it is not supported.<
 </div>
 
 </div>
+
 <p></p>
 <hr>
 <a id="method-FilterState-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a>
+<h3 id="filterstate-clone-">
+<code>FilterState$clone()</code><a class="anchor" aria-label="anchor" href="#filterstate-clone-"></a>
 </h3>
 <p>The objects of this class are cloneable with this method.</p>
 <div class="section">
@@ -502,7 +519,7 @@ The UI for this class contains simple message stating that it is not supported.<
 <p></p>
 </div>
 </div>
-
+<p></p>
 <div class="section">
 <h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a>
 </h4>
@@ -519,6 +536,7 @@ The UI for this class contains simple message stating that it is not supported.<
 </div>
 
 </div>
+
 
     </div>
 
