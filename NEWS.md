@@ -1,4 +1,8 @@
-# teal.slice 0.8.0.9001
+# teal.slice 0.8.1
+
+### Bug fixes
+
+* Fixed `teal_slice` reactive values due to `shiny` package update (#682, #685).
 
 # teal.slice 0.8.0
 
