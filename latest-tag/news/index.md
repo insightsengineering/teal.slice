@@ -1,5 +1,13 @@
 # Changelog
 
+## teal.slice 0.8.1
+
+#### Bug fixes
+
+- Fixed `teal_slice` reactive values due to `shiny` package update
+  ([\#682](https://github.com/insightsengineering/teal.slice/issues/682),
+  [\#685](https://github.com/insightsengineering/teal.slice/issues/685)).
+
 ## teal.slice 0.8.0
 
 CRAN release: 2026-06-04
