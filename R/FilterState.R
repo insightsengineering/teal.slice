@@ -107,7 +107,7 @@ FilterState <- R6::R6Class( # nolint
             varlabel
           }
 
-        private$state_history <- reactiveVal(list())
+        private$state_history <- withReactiveDomain(NULL, reactiveVal(list()))
 
         invisible(self)
       })
