@@ -34,7 +34,7 @@ FilteredDataset <- R6::R6Class( # nolint
       logger::log_debug("Instantiating { class(self)[1] }, dataname: { dataname }")
       checkmate::assert_character(keys, any.missing = FALSE)
       checkmate::assert_character(label, null.ok = TRUE)
-      private$allow_add <- reactiveVal(TRUE)
+      private$allow_add <- withReactiveDomain(NULL, reactiveVal(TRUE))
       private$dataset <- dataset
       private$dataname <- dataname
       private$keys <- keys

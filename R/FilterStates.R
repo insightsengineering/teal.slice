@@ -64,7 +64,7 @@ FilterStates <- R6::R6Class( # nolint
       }
       private$data <- data
       private$data_reactive <- data_reactive
-      private$state_list <- reactiveVal()
+      private$state_list <- withReactiveDomain(NULL, reactiveVal())
 
       # Clears state list when finalizing the object
       private$session_bindings[["clear_state_list"]] <- list(
