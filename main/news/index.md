@@ -1,6 +1,9 @@
 # Changelog
 
-## teal.slice 0.8.1.9001
+## teal.slice 0.8.2
+
+- Fixed shiny session clean up due to `shiny` package update
+  ([\#682](https://github.com/insightsengineering/teal.slice/issues/682))
 
 ## teal.slice 0.8.1
 
