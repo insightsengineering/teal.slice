@@ -1,8 +1,10 @@
 # Changelog
 
-## teal.slice 0.8.1.9000
+## teal.slice 0.8.1.9001
 
 ## teal.slice 0.8.1
+
+CRAN release: 2026-07-02
 
 #### Bug fixes
 
