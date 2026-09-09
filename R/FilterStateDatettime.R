@@ -122,7 +122,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
   # public methods ----
 
   public = list(
-
     #' @description
     #' Initialize a `FilterState` object. This class
     #' has an extra field, `private$timezone`, which is set to `Sys.timezone()` by
