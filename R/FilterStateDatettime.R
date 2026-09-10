@@ -122,7 +122,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
   # public methods ----
 
   public = list(
-
     #' @description
     #' Initialize a `FilterState` object. This class
     #' has an extra field, `private$timezone`, which is set to `Sys.timezone()` by
@@ -297,7 +296,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
         values[1] <- choices[1L]
       }
 
-      if (values[2] > choices[2L] | values[2] < choices[1L]) {
+      if (values[2] > choices[2L] || values[2] < choices[1L]) {
         warning(
           sprintf(
             "Value: '%s' is outside of the range for the column '%s' in dataset '%s', setting maximum possible value.",

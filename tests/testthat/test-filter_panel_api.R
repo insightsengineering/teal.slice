@@ -119,7 +119,6 @@ testthat::test_that("FilterPanelAPI$clear_filter_states remove the filters of th
 })
 
 
-
 # WRAPPER FUNCTIONS ----
 # get_filter_state ----
 testthat::test_that("get_filter_state returns `teal_slices` with features identical to those in input", {

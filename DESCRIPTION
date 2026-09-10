@@ -30,9 +30,9 @@ Description: Data filtering module for 'teal' applications.  Allows for
     'MultiAssayExperiment' objects. Also displays filtered and unfiltered
     observation counts.
 License: Apache License 2.0
-URL: https://insightsengineering.github.io/teal.slice/,
-    https://github.com/insightsengineering/teal.slice/
-BugReports: https://github.com/insightsengineering/teal.slice/issues
+URL: https://pharmaverse.github.io/teal.slice/,
+    https://github.com/pharmaverse/teal.slice/
+BugReports: https://github.com/pharmaverse/teal.slice/issues
 Depends:
     R (>= 4.0)
 Imports:
@@ -72,13 +72,13 @@ VignetteBuilder:
 Config/Needs/verdepcheck: rstudio/shiny, rstudio/bslib, mllg/checkmate,
     tidyverse/dplyr, rstudio/htmltools, jeroen/jsonlite, daroczig/logger,
     plotly/plotly, r-lib/R6, daattali/shinycssloaders, daattali/shinyjs,
-    dreamRs/shinyWidgets, insightsengineering/teal.data,
-    insightsengineering/teal.logger, insightsengineering/teal.widgets,
+    dreamRs/shinyWidgets, pharmaverse/teal.data,
+    pharmaverse/teal.logger, pharmaverse/teal.widgets,
     rstudio/DT, yihui/knitr, bioc::MultiAssayExperiment,
     bioc::SummarizedExperiment, rstudio/rmarkdown, r-lib/testthat,
     r-lib/withr, bioc::matrixStats
 Config/Needs/website: insightsengineering/nesttemplate
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0
 Encoding: UTF-8
 Language: en-US
 LazyData: true

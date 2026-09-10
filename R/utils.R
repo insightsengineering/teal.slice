@@ -64,7 +64,6 @@ make_c_call <- function(choices) {
 }
 
 
-
 #' Encodes ids to be used in JavaScript and Shiny
 #'
 #' @description
