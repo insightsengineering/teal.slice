@@ -2,7 +2,7 @@
 
 ### Bug fixes
 
-* Fixed placement of add filter button to avoid conflicting with sidebar resizing (#1714).
+* Fixed placement of add filter button to avoid conflicting with sidebar resizing (#694).
 
 # teal.slice 0.8.2
 
