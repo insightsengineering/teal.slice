@@ -289,10 +289,20 @@
   align-items: center;
   width: 3.5rem;
   margin-left: -4rem;
+  padding-right: 8px;
+}
+
+.teal-slice-dataset-filter .accordion-item .accordion-title {
+  padding-left: 8px;
+  width: 100%;
+}
+
+.teal-slice-dataset-filter .accordion-item > .accordion-header {
+  display: flex;
 }
 
 .teal-slice.filter-util-icons a {
-  z-index: 100;
+  z-index: calc(1000 + 2); /* Above bslib sidebar resize handler */
 }
 
 .teal-slice.filter-util-icons .filter-icon {
@@ -314,7 +324,7 @@
 .teal-slice.available-filters a {
   position: relative;
   display: flex;
-  z-index: 100;
+  z-index: calc(1000 + 2); /* Above bslib sidebar resize handler */
 }
 
 .teal-slice.available-filters .available-menu {

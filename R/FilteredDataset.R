@@ -249,12 +249,12 @@ FilteredDataset <- R6::R6Class( # nolint
                     id = session$ns("dataset_filter_accordion"),
                     class = "teal-slice-dataset-filter",
                     bslib::accordion_panel(
-                      dataname,
+                      tags$span(dataname, uiOutput(session$ns("active_filter_badge"))),
+                      value = dataname,
                       style = "padding: 0; margin: 0;",
                       bslib::page_fluid(
                         id = session$ns("whole_ui"),
                         style = "margin: 0; padding: 0;",
-                        uiOutput(session$ns("active_filter_badge")),
                         div(
                           id = session$ns("filter_util_icons"),
                           class = "teal-slice filter-util-icons",
@@ -309,22 +309,13 @@ FilteredDataset <- R6::R6Class( # nolint
                       )
                     )
                   ),
+                  # We need to dynamically move filter_util_icons as they cannot be created in header without
+                  # preventing the click event to propapagate and collapse/show the accordion.
                   tags$script(
                     HTML(
                       sprintf(
-                        "
-            $(document).ready(function() {
-              $('#%s').appendTo('#%s > .accordion-item > .accordion-header');
-              $('#%s > .accordion-item > .accordion-header').css({
-                'display': 'flex'
-              });
-              $('#%s').appendTo('#%s .accordion-header .accordion-title');
-            });
-          ",
+                        "$(document).ready(() => $('#%s').appendTo('#%s > .accordion-item > .accordion-header'))",
                         session$ns("filter_util_icons"),
-                        session$ns("dataset_filter_accordion"),
-                        session$ns("dataset_filter_accordion"),
-                        session$ns("active_filter_badge"),
                         session$ns("dataset_filter_accordion")
                       )
                     )
