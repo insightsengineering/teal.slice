@@ -251,7 +251,7 @@ DateFilterState <- R6::R6Class( # nolint
     },
     remove_out_of_bounds_values = function(values) {
       choices <- private$get_choices()
-      if (values[1] < choices[1L] | values[1] > choices[2L]) {
+      if (values[1] < choices[1L] || values[1] > choices[2L]) {
         warning(
           sprintf(
             "Value: %s is outside of the possible range for column %s of dataset %s, setting minimum possible value.",
@@ -261,7 +261,7 @@ DateFilterState <- R6::R6Class( # nolint
         values[1] <- choices[1L]
       }
 
-      if (values[2] > choices[2L] | values[2] < choices[1L]) {
+      if (values[2] > choices[2L] || values[2] < choices[1L]) {
         warning(
           sprintf(
             "Value: %s is outside of the possible range for column %s of dataset %s, setting maximum possible value.",
