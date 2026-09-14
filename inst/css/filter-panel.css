@@ -306,7 +306,7 @@
 }
 
 .teal-slice.filter-util-icons a {
-  z-index: calc(var(--above-sidebar-z-index));
+  z-index: var(--above-sidebar-z-index);
 }
 
 .teal-slice.filter-util-icons .filter-icon {
@@ -328,7 +328,7 @@
 .teal-slice.available-filters a {
   position: relative;
   display: flex;
-  z-index: calc(var(--above-sidebar-z-index));
+  z-index: var(--above-sidebar-z-index);
 }
 
 .teal-slice.available-filters .available-menu {
