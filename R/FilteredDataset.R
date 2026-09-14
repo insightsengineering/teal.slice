@@ -310,7 +310,7 @@ FilteredDataset <- R6::R6Class( # nolint
                     )
                   ),
                   # We need to dynamically move filter_util_icons as they cannot be created in header without
-                  # preventing the click event to propapagate and collapse/show the accordion.
+                  # preventing the click event to propagate and collapse/show the accordion.
                   tags$script(
                     HTML(
                       sprintf(
