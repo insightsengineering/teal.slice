@@ -52,18 +52,11 @@ modules. It provides:
 
 ## Installation
 
-``` r
-
-install.packages('teal.slice')
-```
+[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``'teal.slice'``)`
 
 Alternatively, you might want to use the development version.
 
-``` r
-
-# install.packages("pak")
-pak::pak("insightsengineering/teal.slice")
-```
+`# install.packages("pak")`` ``pak``::`[`pak`](https://pak.r-lib.org/reference/pak.html)`(``"insightsengineering/teal.slice"``)`
 
 ## Usage
 
