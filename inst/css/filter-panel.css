@@ -1,5 +1,9 @@
 /* teal.slice filter-panel css */
 
+.teal-slice {
+  --above-sidebar-z-index: calc(1000 + 2); /* Above bslib sidebar resize handler */
+}
+
 .teal-slice .add-panel {
   background: white;
   border-radius: 3px;
@@ -302,7 +306,7 @@
 }
 
 .teal-slice.filter-util-icons a {
-  z-index: calc(1000 + 2); /* Above bslib sidebar resize handler */
+  z-index: calc(var(--above-sidebar-z-index));
 }
 
 .teal-slice.filter-util-icons .filter-icon {
@@ -324,7 +328,7 @@
 .teal-slice.available-filters a {
   position: relative;
   display: flex;
-  z-index: calc(1000 + 2); /* Above bslib sidebar resize handler */
+  z-index: calc(var(--above-sidebar-z-index));
 }
 
 .teal-slice.available-filters .available-menu {
