@@ -2,12 +2,6 @@
 
 ### Bug fixes
 
-* Fixed the numeric filter's histogram plot visually overflowing its container
-  (e.g. observed in `shinylive` apps until the browser window was resized) (#1708).
-* Fixed placement of add filter button to avoid conflicting with sidebar resizing (#694).
-
-### Bug fixes
-
 * Fixed placement of add filter button to avoid conflicting with sidebar resizing (#694).
 
 # teal.slice 0.8.2
