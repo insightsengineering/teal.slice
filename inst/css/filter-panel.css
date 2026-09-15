@@ -49,6 +49,7 @@
 }
 
 .teal-slice.choices-state {
+  position: relative;
   margin-bottom: 0.45rem;
 }
 
