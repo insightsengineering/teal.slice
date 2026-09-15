@@ -891,7 +891,10 @@ FilteredData <- R6::R6Class( # nolint
           tags$a(
             id = ns("show"),
             class = "available-menu",
-            bsicons::bs_icon("plus-square", size = "1.4rem", class = "teal-slice filter-icon", fill = "#fff"),
+            bsicons::bs_icon(
+              "plus-square",
+              class = "teal-slice filter-icon", fill = "#fff", height = "1.41rem", width = "1.4rem"
+            ),
           ),
           tags$div(
             style = "min-width: 15em;",

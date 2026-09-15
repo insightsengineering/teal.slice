@@ -1,4 +1,8 @@
-# teal.slice 0.8.2.9000
+# teal.slice 0.8.2.9001
+
+### Bug fixes
+
+* Fixed placement of add filter button to avoid conflicting with sidebar resizing (#694).
 
 ### Bug fixes
 
@@ -7,7 +11,7 @@
 
 # teal.slice 0.8.2
 
-* Fixed shiny session clean up due to `shiny` package update (#682)
+* Fixed shiny session clean up due to `shiny` package update (#682).
 
 # teal.slice 0.8.1
 
