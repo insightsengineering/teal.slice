@@ -31,7 +31,6 @@ EmptyFilterState <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
-
     #' @description
     #' Initialize `EmptyFilterState` object.
     #'

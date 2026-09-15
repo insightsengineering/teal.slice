@@ -101,7 +101,6 @@ LogicalFilterState <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
-
     #' @description
     #' Initialize a `FilterState` object.
     #'

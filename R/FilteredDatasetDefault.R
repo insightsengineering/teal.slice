@@ -24,7 +24,6 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
-
     #' @description
     #' Initializes this `DefaultFilteredDataset` object.
     #'
