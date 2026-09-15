@@ -45,6 +45,7 @@
 }
 
 .teal-slice.choices-state {
+  position: relative;
   margin-bottom: 0.45rem;
 }
 
@@ -64,6 +65,13 @@
 
 .teal-slice.choices-state>div.form-group {
   margin: 0em;
+}
+
+.teal-slice.choices-state .html-widget,
+.teal-slice.choices-state .js-plotly-plot,
+.teal-slice.choices-state .js-plotly-plot .plot-container {
+  max-height: 50px;
+  overflow: hidden;
 }
 
 .teal-slice .parent-hideable-list-group>.accordion:not([data-label=""]):before {

@@ -1,5 +1,10 @@
 # teal.slice 0.8.2.9000
 
+### Bug fixes
+
+* Fixed the numeric filter's histogram plot visually overflowing its container
+  (e.g. observed in `shinylive` apps until the browser window was resized) (#1708).
+
 # teal.slice 0.8.2
 
 * Fixed shiny session clean up due to `shiny` package update (#682)
