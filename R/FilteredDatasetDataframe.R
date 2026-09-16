@@ -37,7 +37,6 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
 
   # public fields ----
   public = list(
-
     #' @description
     #' Initializes this `DataframeFilteredDataset` object.
     #'
