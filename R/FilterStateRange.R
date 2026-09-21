@@ -471,7 +471,7 @@ RangeFilterState <- R6::R6Class( # nolint
           # Prepare for histogram construction.
           plot_data <- c(private$plot_data, source = session$ns("histogram_plot"))
 
-          trigger_event_data <- reactiveVal(NULL)
+          trigger_event_data <- reactiveVal(TRUE)
 
           # Display histogram, adding a second trace that contains filtered data.
           output$plot <- plotly::renderPlotly({
@@ -479,7 +479,6 @@ RangeFilterState <- R6::R6Class( # nolint
             histogram <- do.call(plotly::layout, c(list(p = histogram), private$plot_layout()))
             histogram <- do.call(plotly::config, c(list(p = histogram), private$plot_config()))
             histogram <- do.call(plotly::add_histogram, c(list(p = histogram), private$plot_filtered()))
-            trigger_event_data(TRUE)
             histogram
           })
 
