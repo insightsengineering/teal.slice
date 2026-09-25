@@ -210,7 +210,8 @@ RangeFilterState <- R6::R6Class( # nolint
             margin = list(b = 17, l = 0, r = 0, t = 0, autoexpand = FALSE),
             plot_bgcolor = "#FFFFFF00",
             paper_bgcolor = "#FFFFFF00",
-            shapes = shapes
+            shapes = shapes,
+            autosize = TRUE
           )
         })
         private$plot_config <- reactive({
@@ -471,7 +472,7 @@ RangeFilterState <- R6::R6Class( # nolint
           # Prepare for histogram construction.
           plot_data <- c(private$plot_data, source = session$ns("histogram_plot"))
 
-          trigger_event_data <- reactiveVal(NULL)
+          trigger_event_data <- reactiveVal(FALSE)
 
           # Display histogram, adding a second trace that contains filtered data.
           output$plot <- plotly::renderPlotly({
