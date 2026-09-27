@@ -19,7 +19,7 @@
 #'  specify which variables are allowed to be filtered; see `Details`.
 #' @param count_type
 #' _This is a new feature. Do kindly share your opinions on
-#' [`teal.slice`'s GitHub repository](https://github.com/insightsengineering/teal.slice/)._
+#' [`teal.slice`'s GitHub repository](https://github.com/pharmaverse/teal.slice/)._
 #'
 #'  (`character(1)`) string specifying how observations are tallied by these filter states.
 #'  Possible options:

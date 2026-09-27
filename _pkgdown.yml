@@ -1,5 +1,5 @@
 ---
-url: https://insightsengineering.github.io/teal.slice
+url: https://pharmaverse.github.io/teal.slice
 
 template:
   package: nesttemplate
@@ -20,7 +20,7 @@ navbar:
           href: unit-test-report-non-cran/
     github:
       icon: fa-github
-      href: https://github.com/insightsengineering/teal.slice
+      href: https://github.com/pharmaverse/teal.slice
 
 reference:
   - title: "`teal` filter-panel API"

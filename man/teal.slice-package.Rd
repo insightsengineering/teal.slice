@@ -11,9 +11,9 @@
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://insightsengineering.github.io/teal.slice/}
-  \item \url{https://github.com/insightsengineering/teal.slice/}
-  \item Report bugs at \url{https://github.com/insightsengineering/teal.slice/issues}
+  \item \url{https://pharmaverse.github.io/teal.slice/}
+  \item \url{https://github.com/pharmaverse/teal.slice/}
+  \item Report bugs at \url{https://github.com/pharmaverse/teal.slice/issues}
 }
 
 }
