@@ -88,7 +88,9 @@ testthat::describe("datasets passed to filter data", {
     app_driver <- local_app_driver()
     selector <- "#filter_panel-active * div.accordion-body * button.accordion-button > div.accordion-title"
     app_driver$wait_for_idle(timeout = default_idle_timeout)
-    text <- app_driver$get_text(selector)
+    # bslib (>= 0.11.0) pretty-prints tag-based accordion titles with
+    # surrounding whitespace/newlines, so trim before comparing.
+    text <- trimws(app_driver$get_text(selector))
     testthat::expect_equal(text, c("iris", "mtcars"))
   })
   it("creates Filter Data panel for all of them", {
