@@ -86,11 +86,12 @@ testthat::describe("Toggle button shows and hide", {
 testthat::describe("datasets passed to filter data", {
   it("creates Active Filter Summary panel for all of them", {
     app_driver <- local_app_driver()
-    selector <- "#filter_panel-active * div.accordion-body * button.accordion-button > div.accordion-title"
+    selector <- paste(
+      "#filter_panel-active div.accordion-body button.accordion-button",
+      "div.accordion-title span.teal-slice-dataname"
+    )
     app_driver$wait_for_idle(timeout = default_idle_timeout)
-    # bslib (>= 0.11.0) pretty-prints tag-based accordion titles with
-    # surrounding whitespace/newlines, so trim before comparing.
-    text <- trimws(app_driver$get_text(selector))
+    text <- app_driver$get_text(selector)
     testthat::expect_equal(text, c("iris", "mtcars"))
   })
   it("creates Filter Data panel for all of them", {
