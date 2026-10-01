@@ -86,7 +86,7 @@ testthat::describe("Toggle button shows and hide", {
 testthat::describe("datasets passed to filter data", {
   it("creates Active Filter Summary panel for all of them", {
     app_driver <- local_app_driver()
-    selector <- "#filter_panel-active * div.accordion-body * button.accordion-button > div.accordion-title"
+    selector <- "#filter_panel-active span.teal-slice-dataname"
     app_driver$wait_for_idle(timeout = default_idle_timeout)
     text <- app_driver$get_text(selector)
     testthat::expect_equal(text, c("iris", "mtcars"))
