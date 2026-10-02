@@ -249,7 +249,8 @@ FilteredDataset <- R6::R6Class( # nolint
                     id = session$ns("dataset_filter_accordion"),
                     class = "teal-slice-dataset-filter",
                     bslib::accordion_panel(
-                      tags$span(dataname, uiOutput(session$ns("active_filter_badge"), inline = TRUE)),
+                      tags$span(dataname, class = "teal-slice-dataname"),
+                      uiOutput(session$ns("active_filter_badge"), inline = TRUE),
                       value = dataname,
                       style = "padding: 0; margin: 0;",
                       bslib::page_fluid(

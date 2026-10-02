@@ -1,4 +1,4 @@
-# teal.slice 0.8.2.9002
+# teal.slice 0.8.2.9003
 
 ### Bug fixes
 
