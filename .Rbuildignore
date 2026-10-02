@@ -45,3 +45,6 @@ coverage.*
 ^.revdeprefs\.yaml$
 ^revdep$
 ^\.covrignore$
+^AGENTS\.md$
+^CLAUDE\.md$
+^vignettes/_AGENTS\.Rmd$

@@ -1,0 +1,61 @@
+---
+# This file generates AGENTS.md in the package root.
+# It is not part of the package build or the pkgdown site.
+# To regenerate it, run from the package root:
+# rmarkdown::render("vignettes/_AGENTS.Rmd", output_file = file.path("AGENTS.md"), output_dir = ".")
+output:
+  github_document:
+    html_preview: false
+params:
+  url: "https://raw.githubusercontent.com/insightsengineering/teal/refs/heads/main/SHARED_AGENTS.md"
+---
+# teal.slice R Package Development Guide
+
+## Package Overview
+
+`teal.slice` is part of the `teal` framework and provides the filter panel used in `teal` applications.
+It allows users to interactively filter data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment` and `matrix`),
+displays filtered/unfiltered observation counts and generates reproducible filtering code.
+
+## Development Context
+
+It provides 3 main features to the framework:
+
+- `teal_slice` / `teal_slices`: plain S3 objects (built on `shiny::reactiveValues`) that store the specification of a filter and of the filter panel
+  - `teal_slice()` defines one filter on a variable (`dataname`, `varname`, `selected`, `keep_na`, `fixed`, `anchored`, ...) or a custom expression (`id`, `expr`)
+  - `teal_slices()` is a collection of `teal_slice` with panel-wide settings (`include_varnames`, `exclude_varnames`, `count_type`, `allow_add`)
+- `FilteredData` R6 class that holds the data, manages the filter states and serves the shiny modules of the filter panel (`ui/srv_filter_panel`, `ui/srv_active`, `ui/srv_overview`, `ui/srv_available_filters`)
+- Reproducible filter calls so that filtering is part of the code shown by "Show R code" and the reporter
+
+See `vignettes/teal-slice-classes.Rmd` for the detailed class design and `vignettes/filter-panel-for-developers.Rmd` for the public API usage.
+
+### Relationships with other packages
+
+Direct dependencies:
+
+- `teal.data`: provides `join_keys` used to determine parent/child relationships between datasets.
+  - A child dataset (e.g. `ADAE`) is filtered also by the filters of its parent (e.g. `ADSL`) through a join on the keys.
+  - Any issue with `join_keys` should be addressed in `teal.data`.
+- `teal.widgets`: reusable UI components used in the filter cards.
+- `MultiAssayExperiment` and `SummarizedExperiment` are in `Suggests`; code paths that use them must check `requireNamespace()` and tests must use `testthat::skip_if_not_installed()`.
+
+Usage in other framework packages:
+
+- `teal`: the main consumer of this package.
+  - `teal::init(filter = teal_slices(...))` takes the filter specification; `teal` has its own `teal::teal_slices()` that extends `teal.slice::teal_slices()` with `module_specific` and `mapping` arguments.
+  - `teal` creates the `FilteredData` object via `teal.slice::init_filtered_data()` from the `teal_data` object, renders the filter panel and appends the code from `get_filter_expr()` to the object passed to the modules.
+  - Snapshot manager and module-specific filters in `teal` rely on the shared state of `teal_slice` objects.
+
+### Workflows
+
+- Before fixing an issue consider that this package is part of teal framework, so a bug that manifests in this package might have a different origin.
+- Changes to the public API (`FilteredData` public methods, `teal_slice(s)` arguments, exported functions) can break `teal` and must be verified against it.
+
+```{r teal_content, echo=FALSE, results='asis'}
+# Append common shared instructions from teal framework
+common_claude_url <- params$url
+common_claude_path <- tempfile()
+download.file(url = common_claude_url, destfile = common_claude_path, quiet = TRUE)
+common_claude_shared <- readLines(common_claude_path)
+cat(common_claude_shared, sep = "\n")
+```
