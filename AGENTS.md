@@ -69,7 +69,7 @@ Usage in other framework packages:
   `teal_slice(s)` arguments, exported functions) can break `teal` and
   must be verified against it.
 
-# Teal Framework Agents Instructions
+<!-- markdownlint-disable-file MD002 MD041 -->
 
 This package is part of the teal framework. The following configuration
 applies to all packages within the teal framework.
@@ -82,15 +82,14 @@ Follow the standard R package structure with teal-specific conventions:
 
 ``` text
 package_name/
-├── .gitlab-ci.yml    # CI/CD workflows (if package hosted in Gitlab)
-├── .github           # CI/CD workflows (if package hosted in GitHub)
+├── .github           # CI/CD workflows
 ├── R/                # R source code
 ├── tests/testthat/   # Unit tests using testthat
 ├── vignettes/        # Long-form documentation
 ├── inst/             # Package assets
 ├── AGENTS.md         # Development guide for AI agents (this file)
 ├── DESCRIPTION       # Package metadata
-├── NAMESPACE         # Exports and imports automa
+├── NAMESPACE         # Exports and imports
 ├── NEWS.md           # Change log
 ├── README.md         # Package overview
 ├── _pkgdown.yml      # Documentation website config
@@ -147,16 +146,6 @@ Avoid importing package functions via roxygen2 (`#' @import pkg`)tags in
 favor of explicit namespacing for clarity when appropriate. When needed
 prefer specific imports over full package imports.
 
-### Code Style for Modules
-
-- **Use `tidyverse` style**: Write clear, readable code using `dplyr`,
-  `ggplot2` patterns
-- **Use `magrittr` pipes in reproducible execution**: For code executed
-  for `teal_data`/`qenv` data objects with `eval_code()` and `within()`
-- **Use crane and gtsummary**: For statistical tables and summaries
-- **Error handling**: Implement proper validation using `checkmate` and
-  `shiny::validate(teal::need_input(...))`
-
 ## Testing Framework
 
 ### Testing Philosophy
@@ -211,14 +200,7 @@ manages the versions automatically on the `main` branch.
 
 ## CI/CD and Development Workflow
 
-### Gitlab Workflows (if package hosted in Gitlab)
-
-`.gitlab-ci.yml` reuses CI/CD tasks, such as running all unit tests,
-`R CMD check`, code quality checks, style checks and website generation.
-
-### GitHub Workflows (if package hosted in GitHub)
-
-Use r.pkg.template workflows for consistency:
+Prefer to reuse templates from r.pkg.template. Main checks in place are:
 
 - `check.yaml`: R CMD check, unit tests, coverage
 - `docs.yaml`: Documentation building and deployment
