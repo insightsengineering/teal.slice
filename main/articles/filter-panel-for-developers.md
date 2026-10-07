@@ -71,14 +71,35 @@ and will raise an error.
 
 #### 1. Setting the filter state
 
-[`library`](https://rdrr.io/r/base/library.html)`(`[`teal.slice`](https://insightsengineering.github.io/teal.slice/)`)`` `` ``datasets`` ``<-`` `[`init_filtered_data`](https://insightsengineering.github.io/teal.slice/reference/init_filtered_data.md)`(`[`list`](https://rdrr.io/r/base/list.html)`(``iris ``=`` ``iris``, mtcars ``=`` ``mtcars``)``)`` `` `[`set_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`` `` datasets ``=`` ``datasets``,`` `` filter ``=`` `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`` `` `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"iris"``, varname ``=`` ``"Species"``, selected ``=`` ``"virginica"``, keep_na ``=`` ``FALSE``)``,`` `` `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"mtcars"``, id ``=`` ``"4 cyl"``, title ``=`` ``"4 Cylinders"``, expr ``=`` ``"cyl == 4"``)``,`` `` `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"mtcars"``, varname ``=`` ``"mpg"``, selected ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``20.0``, ``25.0``)``, keep_na ``=`` ``FALSE``, keep_inf ``=`` ``FALSE``)``,`` `` include_varnames ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(``iris ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"Species"``, ``"Sepal.Length"``)``)``,`` `` exclude_varnames ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(``mtcars ``=`` ``"cyl"``)`` `` ``)`` ``)`
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`teal.slice`](https://insightsengineering.github.io/teal.slice/)`)`\
+\
+`datasets`` ``<-`` `[`init_filtered_data`](https://insightsengineering.github.io/teal.slice/reference/init_filtered_data.md)`(`[`list`](https://rdrr.io/r/base/list.html)`(``iris ``=`` ``iris``, mtcars ``=`` ``mtcars``)``)`\
+\
+[`set_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`\
+`  datasets ``=`` ``datasets``,`\
+`  filter ``=`` `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`\
+`    `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"iris"``, varname ``=`` ``"Species"``, selected ``=`` ``"virginica"``, keep_na ``=`` ``FALSE``)``,`\
+`    `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"mtcars"``, id ``=`` ``"4 cyl"``, title ``=`` ``"4 Cylinders"``, expr ``=`` ``"cyl == 4"``)``,`\
+`    `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"mtcars"``, varname ``=`` ``"mpg"``, selected ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``20.0``, ``25.0``)``, keep_na ``=`` ``FALSE``, keep_inf ``=`` ``FALSE``)``,`\
+`    include_varnames ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(``iris ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"Species"``, ``"Sepal.Length"``)``)``,`\
+`    exclude_varnames ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(``mtcars ``=`` ``"cyl"``)`\
+`  ``)`\
+`)`
 
 #### 2. Updating filter states. \*Works only in the `shiny` reactive context.
 
-[`set_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`` `` datasets ``=`` ``datasets``,`` `` filter ``=`` `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`` `` `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"mtcars"``, varname ``=`` ``"mpg"``, selected ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``22.0``, ``25.0``)``)`` `` ``)`` ``)`
+\
+[`set_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`\
+`  datasets ``=`` ``datasets``,`\
+`  filter ``=`` `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`\
+`    `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"mtcars"``, varname ``=`` ``"mpg"``, selected ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``22.0``, ``25.0``)``)`\
+`  ``)`\
+`)`
 
 #### 3. Getting the filter state
 
+\
 [`get_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(``datasets``)`
 
     ## {
@@ -129,10 +150,17 @@ and will raise an error.
 
 #### 4. Removing filter states
 
-[`remove_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`` `` datasets ``=`` ``datasets``,`` `` filter ``=`` `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`` `` `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"iris"``, varname ``=`` ``"Species"``)`` `` ``)`` ``)`
+\
+[`remove_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`\
+`  datasets ``=`` ``datasets``,`\
+`  filter ``=`` `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`\
+`    `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"iris"``, varname ``=`` ``"Species"``)`\
+`  ``)`\
+`)`
 
 #### 5. Clearing the filter state
 
+\
 [`clear_filter_states`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(``datasets``)`
 
 ### Controlling settings of the filter panel
@@ -147,13 +175,31 @@ function:
     of `iris` and two columns of `mtcars` will be able to have filters
     set.
 
-[`set_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`` `` ``datasets``,`` `` `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`` `` include_varnames ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(`` `` iris ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"Species"``, ``"Sepal.Length"``)``,`` `` mtcard ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"cyl"``, ``"mpg"``)`` `` ``)`` `` ``)`` ``)`
+\
+[`set_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`\
+`  ``datasets``,`\
+`  `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`\
+`    include_varnames ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(`\
+`      iris ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"Species"``, ``"Sepal.Length"``)``,`\
+`      mtcard ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"cyl"``, ``"mpg"``)`\
+`    ``)`\
+`  ``)`\
+`)`
 
 2.  `exclude_varnames` defines which columns in the used data sets are
     **not** allowed to be filtered on. In the following example all
     variables except the four will be available to choose from.
 
-[`set_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`` `` ``datasets``,`` `` `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`` `` exclude_varnames ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(`` `` iris ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"Species"``, ``"Sepal.Length"``)``,`` `` mtcard ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"cyl"``, ``"mpg"``)`` `` ``)`` `` ``)`` ``)`
+\
+[`set_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`\
+`  ``datasets``,`\
+`  `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`\
+`    exclude_varnames ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(`\
+`      iris ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"Species"``, ``"Sepal.Length"``)``,`\
+`      mtcard ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"cyl"``, ``"mpg"``)`\
+`    ``)`\
+`  ``)`\
+`)`
 
 3.  `count_type` defines how observation counts are displayed in filter
     cards
@@ -170,7 +216,9 @@ function:
 
 All the instructions herein can be utilized to build a `shiny` app.
 
-[`library`](https://rdrr.io/r/base/library.html)`(`[`shiny`](https://shiny.posit.co/)`)`` `[`library`](https://rdrr.io/r/base/library.html)`(`[`bslib`](https://rstudio.github.io/bslib/)`)`
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`shiny`](https://shiny.posit.co/)`)`\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`bslib`](https://rstudio.github.io/bslib/)`)`
 
     ## 
     ## Attaching package: 'bslib'
@@ -179,4 +227,77 @@ All the instructions herein can be utilized to build a `shiny` app.
     ## 
     ##     page
 
-`# initializing FilteredData`` ``datasets`` ``<-`` `[`init_filtered_data`](https://insightsengineering.github.io/teal.slice/reference/init_filtered_data.md)`(`[`list`](https://rdrr.io/r/base/list.html)`(``iris ``=`` ``iris``, mtcars ``=`` ``mtcars``)``)`` `` ``# setting initial filters`` `[`set_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`` `` datasets ``=`` ``datasets``,`` `` filter ``=`` `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`` `` `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"iris"``, varname ``=`` ``"Species"``, selected ``=`` ``"virginica"``, keep_na ``=`` ``FALSE``)``,`` `` `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"mtcars"``, id ``=`` ``"4 cyl"``, title ``=`` ``"4 Cylinders"``, expr ``=`` ``"cyl == 4"``)``,`` `` `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"mtcars"``, varname ``=`` ``"mpg"``, selected ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``20.0``, ``25.0``)``, keep_na ``=`` ``FALSE``, keep_inf ``=`` ``FALSE``)``,`` `` include_varnames ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(``iris ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"Species"``, ``"Sepal.Length"``)``)``,`` `` exclude_varnames ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(``mtcars ``=`` ``"cyl"``)``,`` `` count_type ``=`` ``"all"``,`` `` allow_add ``=`` ``TRUE`` `` ``)`` ``)`` `` ``ui`` ``<-`` ``bslib``::`[`page_fluid`](https://rstudio.github.io/bslib/reference/page.html)`(`` `` ``bslib``::`[`layout_column_wrap`](https://rstudio.github.io/bslib/reference/layout_column_wrap.html)`(`` `` style ``=`` ``htmltools``::`[`css`](https://rstudio.github.io/htmltools/reference/css.html)`(``grid_template_columns ``=`` ``"2fr 1fr"``)``,`` `` ``tags``$``div``(`` `` ``tags``$``div``(`` `` `[`actionButton`](https://rdrr.io/pkg/shiny/man/actionButton.html)`(``"add_species_filter"``, ``"Set iris$Species filter"``)``,`` `` `[`actionButton`](https://rdrr.io/pkg/shiny/man/actionButton.html)`(``"remove_species_filter"``, ``"Remove iris$Species filter"``)``,`` `` `[`actionButton`](https://rdrr.io/pkg/shiny/man/actionButton.html)`(``"remove_all_filters"``, ``"Remove all filters"``)`` `` ``)``,`` `` `[`verbatimTextOutput`](https://rdrr.io/pkg/shiny/man/textOutput.html)`(``"rcode"``)``,`` `` `[`verbatimTextOutput`](https://rdrr.io/pkg/shiny/man/textOutput.html)`(``"filter_state"``)`` `` ``)``,`` `` ``datasets``$``ui_filter_panel``(``"filter_panel"``)`` `` ``)`` ``)`` `` ``server`` ``<-`` ``function``(``input``, ``output``, ``session``)`` ``{`` `` ``# calling filter panel module`` `` ``datasets``$``srv_filter_panel``(``"filter_panel"``)`` `` `` ``# displaying actual filter states`` `` ``output``$``filter_state`` ``<-`` `[`renderPrint`](https://rdrr.io/pkg/shiny/man/renderPrint.html)`(`[`print`](https://rdrr.io/r/base/print.html)`(`[`get_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(``datasets``)``, trim ``=`` ``FALSE``)``)`` `` `` ``# displaying reproducible filter call`` `` ``output``$``rcode`` ``<-`` `[`renderText`](https://rdrr.io/pkg/shiny/man/renderPrint.html)`(`` `` `[`paste`](https://rdrr.io/r/base/paste.html)`(`` `` `[`sapply`](https://rdrr.io/r/base/lapply.html)`(`[`c`](https://rdrr.io/r/base/c.html)`(``"iris"``, ``"mtcars"``)``, ``datasets``$``get_call``)``,`` `` collapse ``=`` ``"\n"`` `` ``)`` `` ``)`` `` `` ``# programmatic interaction with FilteredData`` `` `[`observeEvent`](https://rdrr.io/pkg/shiny/man/observeEvent.html)`(``input``$``add_species_filter``, ``{`` `` `[`set_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`` `` ``datasets``,`` `` `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`` `` `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"iris"``, varname ``=`` ``"Species"``, selected ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"setosa"``, ``"versicolor"``)``)`` `` ``)`` `` ``)`` `` ``}``)`` `` `` ``# programmatic removal of the FilterState`` `` `[`observeEvent`](https://rdrr.io/pkg/shiny/man/observeEvent.html)`(``input``$``remove_species_filter``, ``{`` `` `[`remove_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`` `` ``datasets``,`` `` `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`` `` `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"iris"``, varname ``=`` ``"Species"``)`` `` ``)`` `` ``)`` `` ``}``)`` `` `[`observeEvent`](https://rdrr.io/pkg/shiny/man/observeEvent.html)`(``input``$``remove_all_filters``, `[`clear_filter_states`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(``datasets``)``)`` ``}`` `` ``if`` ``(`[`interactive`](https://rdrr.io/r/base/interactive.html)`(``)``)`` ``{`` `` `[`shinyApp`](https://rdrr.io/pkg/shiny/man/shinyApp.html)`(``ui``, ``server``)`` ``}`
+\
+`# initializing FilteredData`\
+`datasets`` ``<-`` `[`init_filtered_data`](https://insightsengineering.github.io/teal.slice/reference/init_filtered_data.md)`(`[`list`](https://rdrr.io/r/base/list.html)`(``iris ``=`` ``iris``, mtcars ``=`` ``mtcars``)``)`\
+\
+`# setting initial filters`\
+[`set_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`\
+`  datasets ``=`` ``datasets``,`\
+`  filter ``=`` `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`\
+`    `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"iris"``, varname ``=`` ``"Species"``, selected ``=`` ``"virginica"``, keep_na ``=`` ``FALSE``)``,`\
+`    `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"mtcars"``, id ``=`` ``"4 cyl"``, title ``=`` ``"4 Cylinders"``, expr ``=`` ``"cyl == 4"``)``,`\
+`    `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"mtcars"``, varname ``=`` ``"mpg"``, selected ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``20.0``, ``25.0``)``, keep_na ``=`` ``FALSE``, keep_inf ``=`` ``FALSE``)``,`\
+`    include_varnames ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(``iris ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"Species"``, ``"Sepal.Length"``)``)``,`\
+`    exclude_varnames ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(``mtcars ``=`` ``"cyl"``)``,`\
+`    count_type ``=`` ``"all"``,`\
+`    allow_add ``=`` ``TRUE`\
+`  ``)`\
+`)`\
+\
+`ui`` ``<-`` ``bslib``::`[`page_fluid`](https://rstudio.github.io/bslib/reference/page.html)`(`\
+`  ``bslib``::`[`layout_column_wrap`](https://rstudio.github.io/bslib/reference/layout_column_wrap.html)`(`\
+`    style ``=`` ``htmltools``::`[`css`](https://rstudio.github.io/htmltools/reference/css.html)`(``grid_template_columns ``=`` ``"2fr 1fr"``)``,`\
+`    ``tags``$``div``(`\
+`      ``tags``$``div``(`\
+`        `[`actionButton`](https://rdrr.io/pkg/shiny/man/actionButton.html)`(``"add_species_filter"``, ``"Set iris$Species filter"``)``,`\
+`        `[`actionButton`](https://rdrr.io/pkg/shiny/man/actionButton.html)`(``"remove_species_filter"``, ``"Remove iris$Species filter"``)``,`\
+`        `[`actionButton`](https://rdrr.io/pkg/shiny/man/actionButton.html)`(``"remove_all_filters"``, ``"Remove all filters"``)`\
+`      ``)``,`\
+`      `[`verbatimTextOutput`](https://rdrr.io/pkg/shiny/man/textOutput.html)`(``"rcode"``)``,`\
+`      `[`verbatimTextOutput`](https://rdrr.io/pkg/shiny/man/textOutput.html)`(``"filter_state"``)`\
+`    ``)``,`\
+`    ``datasets``$``ui_filter_panel``(``"filter_panel"``)`\
+`  ``)`\
+`)`\
+\
+`server`` ``<-`` ``function``(``input``, ``output``, ``session``)`` ``{`\
+`  ``# calling filter panel module`\
+`  ``datasets``$``srv_filter_panel``(``"filter_panel"``)`\
+\
+`  ``# displaying actual filter states`\
+`  ``output``$``filter_state`` ``<-`` `[`renderPrint`](https://rdrr.io/pkg/shiny/man/renderPrint.html)`(`[`print`](https://rdrr.io/r/base/print.html)`(`[`get_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(``datasets``)``, trim ``=`` ``FALSE``)``)`\
+\
+`  ``# displaying reproducible filter call`\
+`  ``output``$``rcode`` ``<-`` `[`renderText`](https://rdrr.io/pkg/shiny/man/renderPrint.html)`(`\
+`    `[`paste`](https://rdrr.io/r/base/paste.html)`(`\
+`      `[`sapply`](https://rdrr.io/r/base/lapply.html)`(`[`c`](https://rdrr.io/r/base/c.html)`(``"iris"``, ``"mtcars"``)``, ``datasets``$``get_call``)``,`\
+`      collapse ``=`` ``"\n"`\
+`    ``)`\
+`  ``)`\
+\
+`  ``# programmatic interaction with FilteredData`\
+`  `[`observeEvent`](https://rdrr.io/pkg/shiny/man/observeEvent.html)`(``input``$``add_species_filter``, ``{`\
+`    `[`set_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`\
+`      ``datasets``,`\
+`      `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`\
+`        `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"iris"``, varname ``=`` ``"Species"``, selected ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"setosa"``, ``"versicolor"``)``)`\
+`      ``)`\
+`    ``)`\
+`  ``}``)`\
+\
+`  ``# programmatic removal of the FilterState`\
+`  `[`observeEvent`](https://rdrr.io/pkg/shiny/man/observeEvent.html)`(``input``$``remove_species_filter``, ``{`\
+`    `[`remove_filter_state`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(`\
+`      ``datasets``,`\
+`      `[`teal_slices`](https://insightsengineering.github.io/teal.slice/reference/teal_slices.md)`(`\
+`        `[`teal_slice`](https://insightsengineering.github.io/teal.slice/reference/teal_slice.md)`(``dataname ``=`` ``"iris"``, varname ``=`` ``"Species"``)`\
+`      ``)`\
+`    ``)`\
+`  ``}``)`\
+`  `[`observeEvent`](https://rdrr.io/pkg/shiny/man/observeEvent.html)`(``input``$``remove_all_filters``, `[`clear_filter_states`](https://insightsengineering.github.io/teal.slice/reference/filter_state_api.md)`(``datasets``)``)`\
+`}`\
+\
+`if`` ``(`[`interactive`](https://rdrr.io/r/base/interactive.html)`(``)``)`` ``{`\
+`  `[`shinyApp`](https://rdrr.io/pkg/shiny/man/shinyApp.html)`(``ui``, ``server``)`\
+`}`

@@ -148,7 +148,7 @@ filter_state$set_state(
   )
 )
 isolate(filter_state$get_call())
-#> is.na(x) | x >= as.Date("2026-09-17") & x <= as.Date("2026-09-22")
+#> is.na(x) | x >= as.Date("2026-10-10") & x <= as.Date("2026-10-15")
 
 # working filter in an app
 library(shinyjs)
