@@ -29,10 +29,10 @@ repos:
           - shinycssloaders
           - shinyjs
           - shinyWidgets
-          - insightsengineering/teal.code
-          - insightsengineering/teal.data
-          - insightsengineering/teal.logger
-          - insightsengineering/teal.widgets
+          - pharmaverse/teal.code
+          - pharmaverse/teal.data
+          - pharmaverse/teal.logger
+          - pharmaverse/teal.widgets
       - id: spell-check
         name: Check spelling with `spelling`
         exclude: >
